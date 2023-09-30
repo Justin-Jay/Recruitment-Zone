@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- xmlns:th="http://www.thymeleaf.org"-->
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <!-- Bootstrap CSS -->
+    <!-- CDN Bootstrap CSS -->
+    <!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
+    <!-- Local Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <!--CUSTOM Application css -->
+    <link rel="stylesheet" th:href="@{/css/scapstyles.css}" >
+    <!--    <link rel="stylesheet" type="text/css" href="/static/css/recruitmentZoneStyles.css">-->
+    <!--        <script defer src="/static/js/bootstrap.bundle.min.js"></script>-->
+    <title>Spring Batch</title>
+</head>
+<body>
+
+<!--Body-->
+<div class="container-fluid">
+    <div class="jumbotron">
+        <!--TOP Navbar-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/indexPage}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/ToDoList}">To Do List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/EmailManagement}">Email Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/RestaurantManagement}">Restaurant Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/Calculate}">Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/BatchPage}">Batch Processing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           th:href="@{/DesignPatterns}">Design Patterns</a>
+                    </li>
+                    <!--                   <li class="nav-item dropdown">
+                                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                               Dropdown
+                                           </a>
+                                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                               <a class="dropdown-item" href="#">Action</a>
+                                               <a class="dropdown-item" href="#">Another action</a>
+                                               <div class="dropdown-divider"></div>
+                                               <a class="dropdown-item" href="#">Something else here</a>
+                                           </div>
+                                       </li>
+                                       <li class="nav-item">
+                                           <a class="nav-link disabled" href="#">Disabled</a>
+                                       </li>-->
+                </ul>
+            </div>
+            <div class="loginButton">
+                <a class="btn btn-light" th:href="@{/Login}" role="button">Login</a>
+            </div>
+        </nav>
+        <hr class="my-4">
+        <!--Body-->
+        <span class="d-block p-2 bg-dark text-white"><h2 class="display-4">Batch Processing with Spring Batch & Spring Boot</h2></span>
+        <hr class="my-4">
+        <h5>
+            Batch Processing with spring batch first of all requires your application to be connected to a Database.
+            This is because Spring Batch persists useful data<br>
+            about the processing of your batch process into tables you can use to learn more<br>
+            about the process as well as information about previous instances of the batch.<br>
+            <br>
+            While this information is useful for you as a developer to gain insight into the process. It is critical for
+            Spring Batch to work.<br>
+            <br>
+            Starting the journey, you wil be required to not only have your database created, you are required to have
+            the following list of tables available<br>
+            for Spring Batch to initialize and process the first batch.<br>
+            <br>
+            This list is valid as of July 2023 and should by no means be used as a replacement for the information
+            available on the Spring Documentation.<br>
+            <br>
+            Once all the tables are created, we need to insert run the three insert queries.<br>
+        </h5>
+        <hr class="my-4">
+        <!--PAGE ELEMENT -->
+        <div class="w-100">
+            <div class="row mb-12">
+                <div class="col-md-auto">
+                    <h5>BATCH_JOB_INSTANCE</h5>
+                    <p>
+                        CREATE TABLE BATCH_JOB_INSTANCE ( <br>
+                        JOB_INSTANCE_ID BIGINT NOT NULL PRIMARY KEY ,<br>
+                        VERSION BIGINT ,<br>
+                        JOB_NAME VARCHAR(100) NOT NULL,<br>
+                        JOB_KEY VARCHAR(32) NOT NULL,<br>
+                        constraint JOB_INST_UN unique (JOB_NAME, JOB_KEY));<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <h5>BATCH_JOB_EXECUTION</h5>
+                    <p>
+                        CREATE TABLE BATCH_JOB_EXECUTION (<br>
+                        JOB_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY ,<br>
+                        VERSION BIGINT ,<br>
+                        JOB_INSTANCE_ID BIGINT NOT NULL,<br>
+                        CREATE_TIME DATETIME(6) NOT NULL,<br>
+                        START_TIME DATETIME(6) DEFAULT NULL ,<br>
+                        END_TIME DATETIME(6) DEFAULT NULL ,<br>
+                        STATUS VARCHAR(10) ,<br>
+                        EXIT_CODE VARCHAR(2500) ,<br>
+                        EXIT_MESSAGE VARCHAR(2500) ,<br>
+                        LAST_UPDATED DATETIME(6),<br>
+                        JOB_CONFIGURATION_LOCATION VARCHAR(2500) NULL,<br>
+                        constraint JOB_INST_EXEC_FK foreign key (JOB_INSTANCE_ID)<br>
+                        references BATCH_JOB_INSTANCE(JOB_INSTANCE_ID));<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <h5>BATCH_JOB_EXECUTION_PARAMS</h5>
+                    <p>
+                        CREATE TABLE BATCH_JOB_EXECUTION_PARAMS (<br>
+                        JOB_EXECUTION_ID BIGINT NOT NULL ,<br>
+                        TYPE_CD VARCHAR(6) NOT NULL ,<br>
+                        KEY_NAME VARCHAR(100) NOT NULL ,<br>
+                        STRING_VAL VARCHAR(250) ,<br>
+                        DATE_VAL DATETIME(6) DEFAULT NULL ,<br>
+                        LONG_VAL BIGINT ,<br>
+                        DOUBLE_VAL DOUBLE PRECISION ,<br>
+                        IDENTIFYING CHAR(1) NOT NULL ,<br>
+                        constraint JOB_EXEC_PARAMS_FK foreign key (JOB_EXECUTION_ID)<br>
+                        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID));<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <h5>BATCH_STEP_EXECUTION</h5>
+                    <p>
+                        CREATE TABLE BATCH_STEP_EXECUTION (<br>
+                        STEP_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY ,<br>
+                        VERSION BIGINT NOT NULL,<br>
+                        STEP_NAME VARCHAR(100) NOT NULL,<br>
+                        JOB_EXECUTION_ID BIGINT NOT NULL,<br>
+                        START_TIME DATETIME(6) NOT NULL ,<br>
+                        END_TIME DATETIME(6) DEFAULT NULL ,<br>
+                        STATUS VARCHAR(10) ,<br>
+                        COMMIT_COUNT BIGINT ,<br>
+                        READ_COUNT BIGINT ,<br>
+                        FILTER_COUNT BIGINT ,<br>
+                        WRITE_COUNT BIGINT ,<br>
+                        READ_SKIP_COUNT BIGINT ,<br>
+                        WRITE_SKIP_COUNT BIGINT ,<br>
+                        PROCESS_SKIP_COUNT BIGINT ,<br>
+                        ROLLBACK_COUNT BIGINT ,<br>
+                        EXIT_CODE VARCHAR(2500) ,<br>
+                        EXIT_MESSAGE VARCHAR(2500) ,<br>
+                        LAST_UPDATED DATETIME(6),<br>
+                        constraint JOB_EXEC_STEP_FK foreign key (JOB_EXECUTION_ID)<br>
+                        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID));<br>
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row mb-12">
+                <div class="col-md-auto">
+                    <h5>BATCH_STEP_EXECUTION_CONTEXT</h5>
+                    <p>
+                        CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT (<br>
+                        STEP_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,<br>
+                        SHORT_CONTEXT VARCHAR(2500) NOT NULL,<br>
+                        SERIALIZED_CONTEXT TEXT ,<br>
+                        constraint STEP_EXEC_CTX_FK foreign key (STEP_EXECUTION_ID)<br>
+                        references BATCH_STEP_EXECUTION(STEP_EXECUTION_ID));<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <h5>BATCH_JOB_EXECUTION_CONTEXT</h5>
+                    <p>
+                    </p>
+                    CREATE TABLE BATCH_JOB_EXECUTION_CONTEXT (<br>
+                    JOB_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,<br>
+                    SHORT_CONTEXT VARCHAR(2500) NOT NULL,<br>
+                    SERIALIZED_CONTEXT TEXT ,<br>
+                    constraint JOB_EXEC_CTX_FK foreign key (JOB_EXECUTION_ID)<br>
+                    references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID));<br>
+                </div>
+                <div class="col-md-auto">
+                    <h5>BATCH_STEP_EXECUTION_SEQ</h5>
+                    <p>
+                        CREATE TABLE BATCH_STEP_EXECUTION_SEQ (<br>
+                        ID BIGINT NOT NULL,<br>
+                        UNIQUE_KEY CHAR(1) NOT NULL,<br>
+                        constraint UNIQUE_KEY_UN unique (UNIQUE_KEY));<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <h5>BATCH_JOB_EXECUTION_SEQ</h5>
+                    <p>
+                        CREATE TABLE BATCH_JOB_EXECUTION_SEQ (<br>
+                        ID BIGINT NOT NULL,<br>
+                        UNIQUE_KEY CHAR(1) NOT NULL,<br>
+                        constraint UNIQUE_KEY_UN unique (UNIQUE_KEY));<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <h5>BATCH_JOB_SEQ</h5>
+                    <p>
+                        CREATE TABLE BATCH_JOB_SEQ (<br>
+                        ID BIGINT NOT NULL,<br>
+                        UNIQUE_KEY CHAR(1) NOT NULL,<br>
+                        constraint UNIQUE_KEY_UN unique (UNIQUE_KEY));<br>
+                    </p>
+
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row mb-6">
+                <div class="col-md-auto">
+                    <p>
+                        INSERT INTO BATCH_JOB_SEQ (ID, UNIQUE_KEY) select * from (select 0 as ID, '0' as UNIQUE_KEY)
+                        as<br>
+                        tmp where not exists(select * from BATCH_JOB_SEQ);<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <p>
+                        INSERT INTO BATCH_STEP_EXECUTION_SEQ (ID, UNIQUE_KEY) select * from (select 0 as ID, '0' as<br>
+                        UNIQUE_KEY) as tmp where not exists(select * from BATCH_STEP_EXECUTION_SEQ);<br>
+                    </p>
+                </div>
+                <div class="col-md-auto">
+                    <p>
+                        INSERT INTO BATCH_JOB_EXECUTION_SEQ (ID, UNIQUE_KEY) select * from (select 0 as ID, '0' as<br>
+                        UNIQUE_KEY) as tmp where not exists(select * from BATCH_JOB_EXECUTION_SEQ);<br>
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row mb-12">
+                <div class="col-md-auto">
+                    <span class="d-block p-2 bg-dark text-white"><h3 class="display-4">Using Spring Batch</h3></span>
+                    <h4>
+                        The Table bellow can be populated using spring batch on the backend of this website.<br>
+                        The table will be ready from a CSV file containing a list of street addresses<br>
+                        The addresses are random and hold no value.<br>
+                    </h4>
+                </div>
+            </div>
+            <hr class="my-4">
+        </div>
+        <!--Database Extract example-->
+            <div class="row mb-12">
+                <div class="col-md-12">
+                    <h3>Address Directory</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                        <tr>
+                        <tbody>
+                        <tr th:each="address : ${addresses}">
+                            <td th:text="${address.street}"/>
+                        </tr>
+
+                        <!-- <tr th:each="address : ${theAddresses}">
+                             <td th:text="${address.street}">Street address</td>
+                         </tr>-->
+                        <!-- <p th:text="${address.street}">Test</p>
+            -->
+                        </tbody>
+
+                        </thead>
+
+
+                        <tr th:each="address : ${addresses}">
+
+                            <p>Street: </p>
+                            <td th:text="${address.street}"></td>
+                        </tr>
+
+                    </table>
+                    <a class="btn btn-primary btn-lg" href="" role="button"> Click here to populate the table</a>
+                    <div/>
+                </div>
+            </div>
+            <!--BOTTOM Navbar-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/indexPage}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/ToDoList}">To Do List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/EmailManagement}">Email Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/RestaurantManagement}">Restaurant Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/Calculate}">Calculator</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/BatchPage}">Batch Processing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:href="@{/DesignPatterns}">Design Patterns</a>
+                        </li>
+                        <!--                   <li class="nav-item dropdown">
+                                               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                   Dropdown
+                                               </a>
+                                               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                   <a class="dropdown-item" href="#">Action</a>
+                                                   <a class="dropdown-item" href="#">Another action</a>
+                                                   <div class="dropdown-divider"></div>
+                                                   <a class="dropdown-item" href="#">Something else here</a>
+                                               </div>
+                                           </li>
+                                           <li class="nav-item">
+                                               <a class="nav-link disabled" href="#">Disabled</a>
+                                           </li>-->
+                    </ul>
+                </div>
+                <!--FOOTER-->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <span class="text-muted">Black Light Code &copy</span>
+                        </div>
+                    </div>
+                </footer>
+            </nav>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>Add Vacancy</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="jumbotron">
+        <h1>Add New Vacancy</h1>
+        <form th:action="@{/vacancies/add}" method="post" th:object="${vacancy}">
+            <!-- Form fields for vacancy details -->
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" th:field="*{title}" required>
+
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" th:field="*{description}" required>
+
+            <label for="industry">Industry:</label>
+            <input type="text" id="industry" name="industry" th:field="*{industry}" required>
+
+            <label for="startDate">Vacancy Start Date:</label>
+            <input type="text" id="startDate" name="startDate" th:field="*{startDate}" required>
+
+            <label for="endDate">Vacancy Expiration Date:</label>
+            <input type="text" id="endDate" name="endDate" th:field="*{endDate}" required>
+
+            <!-- Add more form fields as needed -->
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

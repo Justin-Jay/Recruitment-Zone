@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>Apply for Vacancy</title>
+</head>
+<body>
+
+
+<div class="container-fluid">
+    <div class="jumbotron">
+        <h1>Apply for a Vacancy</h1>
+        <form th:action="@{/candidates/apply}" method="post" th:object="${candidate}" enctype="multipart/form-data">
+            <!-- Form fields for candidate details -->
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" th:field="*{name}" required>
+
+            <!-- Add more form fields for other candidate details -->
+
+            <!-- File input for uploading a resume -->
+            <label for="resume">CV Attachment (MaxFile Size:25mb):</label>
+            <input type="file" id="resume" name="resume" accept=".pdf, .docx" required>
+
+            <!-- Submit button to trigger the form submission -->
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>
