@@ -5,11 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import za.co.RecruitmentZone.Entity.ApplicationUser;
 import za.co.RecruitmentZone.Entity.Role;
 import za.co.RecruitmentZone.repository.RoleRepository;
-import za.co.RecruitmentZone.repository.UserRepository;
+import za.co.RecruitmentZone.repository.ApplicationUserRepository;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +21,7 @@ public class RecruitmentZoneApplication {
     }
 
     @Bean
-    public CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner run(RoleRepository roleRepository, ApplicationUserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
 			//if (roleRepository.findRoleByAuthority("ADMIN").isPresent()) return;

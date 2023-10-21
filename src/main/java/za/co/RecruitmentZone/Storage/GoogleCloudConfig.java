@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.configuration;
+package za.co.RecruitmentZone.Storage;
 
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.Storage;

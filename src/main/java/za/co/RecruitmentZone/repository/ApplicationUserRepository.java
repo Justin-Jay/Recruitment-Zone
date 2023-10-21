@@ -8,6 +8,6 @@ import za.co.RecruitmentZone.Entity.ApplicationUser;
 import java.util.Optional;
 
 @EnableJpaRepositories
-public interface UserRepository extends CrudRepository<ApplicationUser, Integer> {
+public interface ApplicationUserRepository extends CrudRepository<ApplicationUser, Integer> {
     Optional<ApplicationUser> findApplicationUserByUsername(String username);
 }

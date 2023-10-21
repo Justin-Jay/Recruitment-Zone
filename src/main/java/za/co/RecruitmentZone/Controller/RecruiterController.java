@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.co.RecruitmentZone.service.RecruiterEventService;
+import za.co.RecruitmentZone.Vacancy.VacancyManagement;
 
 @RestController
 @RequestMapping("/recruiter")
@@ -16,9 +16,9 @@ public class RecruiterController {
     // Add Vacancy
 
 
-    RecruiterEventService recruiterEventService;
+    VacancyManagement recruiterEventService;
 
-    public RecruiterController(RecruiterEventService recruiterEventService) {
+    public RecruiterController(VacancyManagement recruiterEventService) {
         this.recruiterEventService = recruiterEventService;
     }
 

@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import za.co.RecruitmentZone.repository.UserRepository;
+import za.co.RecruitmentZone.repository.ApplicationUserRepository;
 
 
 @Service
@@ -14,9 +14,9 @@ public class UserService implements UserDetailsService {
 
     Logger log = LoggerFactory.getLogger(UserService.class);
 
-    UserRepository userRepository;
+    ApplicationUserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(ApplicationUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -54,4 +54,6 @@ public class UserService implements UserDetailsService {
         return optionalUser.orElse(null);
 
     }*/
+
+
 }

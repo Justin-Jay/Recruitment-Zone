@@ -1,28 +1,25 @@
-package za.co.RecruitmentZone.service;
+package za.co.RecruitmentZone.Vacancy;
 
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import za.co.RecruitmentZone.Entity.ApplicationUser;
-import za.co.RecruitmentZone.Entity.Vacancy;
-import za.co.RecruitmentZone.repository.UserRepository;
-import za.co.RecruitmentZone.repository.VacancyRepository;
+import za.co.RecruitmentZone.repository.ApplicationUserRepository;
 
 import java.util.Optional;
 
+
 @Service
-public class RecruiterEventService {
-    Logger log = LoggerFactory.getLogger(RecruiterEventService.class);
+@Transactional
+@RequiredArgsConstructor
+public class VacancyManagement {
+    Logger log = LoggerFactory.getLogger(VacancyManagement.class);
 
     VacancyRepository vacancyRepository;
-    private final UserRepository userRepository;
-
-    public RecruiterEventService(VacancyRepository vacancyRepository,
-                                 UserRepository userRepository) {
-        this.vacancyRepository = vacancyRepository;
-        this.userRepository = userRepository;
-    }
+    private final ApplicationUserRepository userRepository;
 
     // event publisher
     public String activateVacancy(Integer vacancyID) {
@@ -165,6 +162,13 @@ public class RecruiterEventService {
         }
     }
 
+    public void complete(Order order) {
 
+        orders.save(order.complete());
+
+        events.publishEvent(new OrderCompleted(order.getId()));
+
+        log.info("Finish order completion.");
+    }
 
 }

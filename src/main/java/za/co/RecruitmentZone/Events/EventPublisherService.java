@@ -3,9 +3,7 @@ package za.co.RecruitmentZone.Events;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.RecruitmentZone.Storage.StorageController;
-import za.co.RecruitmentZone.Vacancy.VacancyExpiredEvent;
-import za.co.RecruitmentZone.Vacancy.VacancyPublishedEvent;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 
