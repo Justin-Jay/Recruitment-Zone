@@ -10,7 +10,6 @@ import za.co.RecruitmentZone.vacancy.util.Vacancy;
 import za.co.RecruitmentZone.vacancy.util.VacancyStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -26,25 +25,26 @@ public class VacancyEventListener {
 
     // NEW VACANCY
     @EventListener
-    public void onNewVacancyEvent(NewVacancyEvent event) {
+    public void onVacancyCreateEvent(VacancyCreateEvent event) {
         // Your event handling logic
 
         // Upload the file using the storage controller
         //  MultipartFile file = event.get// Obtain the file to upload
         //eventPublisherService.uploadFile(file);
 
-
         try {
             Vacancy v = event.getVacancy();
+            v.setStatus(VacancyStatus.PENDING);
             vacancyRepository.save(v);
 
         } catch (Exception e) {
             log.info("FAILED TO SAVE NEW EVENT");
         }
     }
+
     // AMEND VACANCY
     @EventListener
-    public void onAmendedVacancyEvent(AmendedVacancyEvent event) {
+    public void onVacancyAmendedEvent(VacancyAmendedEvent event) {
         try {
             // Assuming vacancyId is a field in VacancyActivatedEvent
             Optional<Vacancy> optionalVacancy = vacancyRepository.findById(event.getVacancy().getId());
@@ -106,7 +106,7 @@ public class VacancyEventListener {
 
             if (optionalVacancy.isPresent()) {
                 Vacancy vacancy = optionalVacancy.get();
-                if (vacancy.getStatus() == VacancyStatus.ACTIVE) {
+                if (!(vacancy.getStatus() == VacancyStatus.EXPIRED)) {
                     vacancy.setStatus(VacancyStatus.EXPIRED);
                     vacancyRepository.save(vacancy);
                     log.info("Vacancy with ID {} is set to expired.", vacancy.getId());

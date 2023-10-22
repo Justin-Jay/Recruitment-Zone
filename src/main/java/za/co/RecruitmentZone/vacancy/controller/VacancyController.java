@@ -3,8 +3,6 @@ package za.co.RecruitmentZone.vacancy.controller;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -55,7 +53,7 @@ public class VacancyController {
             Gson gson = new Gson();
             String json = gson.toJson(vacancy);
 
-            vacancyService.publishNewVacancyEvent(json);
+            vacancyService.publishVacancyCreateEvent(json);
 
         } catch (Exception e) {
             log.info("FAILED TO POST EVENT " + e.getMessage());

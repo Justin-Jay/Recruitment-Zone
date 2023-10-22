@@ -5,17 +5,17 @@ import za.co.RecruitmentZone.vacancy.util.Vacancy;
 
 import java.time.Clock;
 
-public class VacancyExpiredEvent extends ApplicationEvent {
+public class VacancyAmendedEvent extends ApplicationEvent {
     private Integer vacancyID;
 
     private Vacancy vacancy;
 
 
-    public VacancyExpiredEvent(Object source, Clock clock) {
+    public VacancyAmendedEvent(Object source, Clock clock) {
         super(source, clock);
     }
 
-    public VacancyExpiredEvent(Object source, Integer vacancyID) {
+    public VacancyAmendedEvent(Object source, Integer vacancyID) {
         super(source);
         this.vacancyID = vacancyID;
     }

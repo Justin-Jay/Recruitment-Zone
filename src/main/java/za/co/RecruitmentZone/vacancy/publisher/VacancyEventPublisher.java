@@ -1,19 +1,16 @@
 package za.co.RecruitmentZone.vacancy.publisher;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import za.co.RecruitmentZone.admin.controller.AdminController;
-import za.co.RecruitmentZone.entity.ApplicationUser;
-import za.co.RecruitmentZone.vacancy.events.AmendedVacancyEvent;
-import za.co.RecruitmentZone.vacancy.events.NewVacancyEvent;
+import za.co.RecruitmentZone.vacancy.events.VacancyAmendedEvent;
+import za.co.RecruitmentZone.vacancy.events.VacancyCreateEvent;
 import za.co.RecruitmentZone.vacancy.events.VacancyActivatedEvent;
 import za.co.RecruitmentZone.vacancy.util.Vacancy;
 
 import java.time.Clock;
-import java.util.Optional;
 
 @Service
 public class VacancyEventPublisher {
@@ -23,9 +20,10 @@ public class VacancyEventPublisher {
     public VacancyEventPublisher(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
-    public boolean publishNewVacancyEvent(Vacancy vacancy) {
+    public boolean publishVacancyCreateEvent(Vacancy vacancy) {
         try {
-            NewVacancyEvent event = new NewVacancyEvent(vacancy);
+            Clock baseClock = Clock.systemDefaultZone();
+            VacancyCreateEvent event = new VacancyCreateEvent(vacancy,baseClock);
             eventPublisher.publishEvent(event);
             return true;
         } catch (Exception e) {
@@ -34,9 +32,10 @@ public class VacancyEventPublisher {
         }
     }
 
-    public boolean publishAmendedVacancyEvent(Vacancy vacancy) {
+    public boolean publishVacancyAmendedEvent(Vacancy vacancy) {
         try {
-            AmendedVacancyEvent event = new AmendedVacancyEvent(vacancy);
+            Clock baseClock = Clock.systemDefaultZone();
+            VacancyAmendedEvent event = new VacancyAmendedEvent(vacancy,baseClock);
             eventPublisher.publishEvent(event);
             return true;
         } catch (Exception e) {
@@ -49,6 +48,17 @@ public class VacancyEventPublisher {
     public boolean publishVacancyActivatedEvent(Integer vacancyID) {
         try {
             VacancyActivatedEvent event = new VacancyActivatedEvent(vacancyID);
+            eventPublisher.publishEvent(event);
+            return true;
+        } catch (Exception e) {
+            log.info("Unable to post event");
+            return false;
+        }
+    }
+
+    public boolean publishVacancySuspendedEvent(Integer vacancyID) {
+        try {
+            VacancySuspendedEvent event = new VacancySuspendedEvent(vacancyID);
             eventPublisher.publishEvent(event);
             return true;
         } catch (Exception e) {

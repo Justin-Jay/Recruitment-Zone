@@ -4,17 +4,13 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import za.co.RecruitmentZone.vacancy.events.AmendedVacancyEvent;
-import za.co.RecruitmentZone.vacancy.events.NewVacancyEvent;
-import za.co.RecruitmentZone.vacancy.events.VacancyActivatedEvent;
+import za.co.RecruitmentZone.vacancy.events.VacancyCreateEvent;
 import za.co.RecruitmentZone.vacancy.publisher.VacancyEventPublisher;
 import za.co.RecruitmentZone.vacancy.repository.VacancyRepository;
 import za.co.RecruitmentZone.vacancy.util.Vacancy;
 import za.co.RecruitmentZone.vacancy.util.VacancyStatus;
 
-import java.time.Clock;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class VacancyService {
@@ -32,14 +28,13 @@ public class VacancyService {
     }
 
 
-    public boolean publishNewVacancyEvent(String json) {
+    public boolean publishVacancyCreateEvent(String json) {
         boolean result = false;
         try {
             Gson gson = new Gson();
             Vacancy newVacancy = gson.fromJson(json, Vacancy.class);
             log.info("User Saved");
-            newVacancy.setStatus(VacancyStatus.PENDING);
-            result = vacancyEventPublisher.publishNewVacancyEvent(new NewVacancyEvent(newVacancy).getVacancy());
+            result = vacancyEventPublisher.publishVacancyCreateEvent(newVacancy);
 
         } catch (Exception e) {
             log.info("Unable to save" + e.getMessage());
@@ -54,7 +49,7 @@ public class VacancyService {
             Gson gson = new Gson();
             Vacancy newVacancy = gson.fromJson(json, Vacancy.class);
             log.info("User Saved");
-            result = vacancyEventPublisher.publishAmendedVacancyEvent(new AmendedVacancyEvent(newVacancy).getVacancy());
+            result = vacancyEventPublisher.publishVacancyAmendedEvent(newVacancy);
 
         } catch (Exception e) {
             log.info("Unable to save" + e.getMessage());
