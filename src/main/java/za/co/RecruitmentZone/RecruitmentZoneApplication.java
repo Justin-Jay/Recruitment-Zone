@@ -5,9 +5,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import za.co.RecruitmentZone.Entity.ApplicationUser;
-import za.co.RecruitmentZone.Entity.Role;
-import za.co.RecruitmentZone.repository.RoleRepository;
+import za.co.RecruitmentZone.entity.ApplicationUser;
+import za.co.RecruitmentZone.role.Role;
+import za.co.RecruitmentZone.role.RoleRepository;
 import za.co.RecruitmentZone.repository.ApplicationUserRepository;
 
 import java.util.HashSet;
