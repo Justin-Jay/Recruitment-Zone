@@ -3,11 +3,9 @@ package za.co.RecruitmentZone.entity;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import za.co.RecruitmentZone.role.Role;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -111,4 +109,10 @@ public class ApplicationUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+
+
+
+
 }

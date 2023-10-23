@@ -1,54 +1,68 @@
 package za.co.RecruitmentZone.entity;
-import za.co.RecruitmentZone.vacancy.util.Vacancy;
-import za.co.RecruitmentZone.util.Email;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Entity
 public class Recruiter {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String FirstName;
-    private String LastName;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer recruiterID;
+    private String first_name;
+    private String last_name;
     private String password;
     private String role;
-    private String UserName;
-    private Email email;
+    private String email_address;
 
-    // Relationship: A recruiter can have multiple vacancies
-    @OneToMany(mappedBy = "recruiter")
-    private List<Vacancy> vacancies = new ArrayList<>();
+    // Replace object references with IDs
+    @ElementCollection
+    @CollectionTable(name = "recruiter_vacancies", joinColumns = @JoinColumn(name = "recruiterID"))
+    @Column(name = "vacancyID")
+    private List<Integer> vacancyIDs = new ArrayList<>();
 
     public Recruiter() {
     }
 
-    public Recruiter(Long id, String firstName, String lastName, String password, String role, String userName, Email email, List<Vacancy> vacancies) {
-        this.id = id;
-        FirstName = firstName;
-        LastName = lastName;
+    public Recruiter(String first_name, String last_name, String password, String role, String email_address, List<Integer> vacancyIDs) {
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.password = password;
         this.role = role;
-        UserName = userName;
-        this.email = email;
-        this.vacancies = vacancies;
+        this.email_address = email_address;
+        this.vacancyIDs = vacancyIDs;
     }
 
-    public String getFirstName() {
-        return FirstName;
+    // Other getters and setters
+
+    // Getters and setters for vacancyIds
+
+    public List<Integer> getVacancyIDs() {
+        return vacancyIDs;
     }
 
-    public void setFirstName(String firstName) {
-        FirstName = firstName;
+    public void setVacancyIDs(List<Integer> vacancyIDs) {
+        this.vacancyIDs = vacancyIDs;
     }
 
-    public String getLastName() {
-        return LastName;
+    public Integer getRecruiterID() {
+        return recruiterID;
     }
 
-    public void setLastName(String lastName) {
-        LastName = lastName;
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getPassword() {
@@ -67,27 +81,11 @@ public class Recruiter {
         this.role = role;
     }
 
-    public String getUserName() {
-        return UserName;
+    public String getEmail_address() {
+        return email_address;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
-    }
-
-    public List<Vacancy> getVacancies() {
-        return vacancies;
-    }
-
-    public void setVacancies(List<Vacancy> vacancies) {
-        this.vacancies = vacancies;
+    public void setEmail_address(String email_address) {
+        this.email_address = email_address;
     }
 }

@@ -1,96 +1,102 @@
 package za.co.RecruitmentZone.entity;
-import za.co.RecruitmentZone.vacancy.util.Vacancy;
-import za.co.RecruitmentZone.util.Email;
-
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Entity
 public class Candidate {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Email email;
-    private String FirstName;
-    private String LastName;
-    private String IDNumber;
-    private String PhoneNumber;
-    private String Province;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer candidateID;
+    private String email_address;
+    private String first_name;
+    private String last_name;
+    private String id_number;
+    private String phone_number;
+    private String province;
     private String cvFilePath; // Store the path to the CV file
 
-    // Relationship: Many candidates can apply for many vacancies
-    @ManyToMany
-    @JoinTable(
-            name = "applications",
-            joinColumns = @JoinColumn(name = "candidate_id"),
-            inverseJoinColumns = @JoinColumn(name = "vacancy_id")
-    )
-    private List<Vacancy> appliedVacancies = new ArrayList<>();
+    // Replace object references with IDs
+    @ElementCollection
+    @CollectionTable(name = "applications", joinColumns = @JoinColumn(name = "candidateID"))
+    @Column(name = "vacancy_id")
+    private List<Integer> candidateVacancyIDs = new ArrayList<>();
 
     // Constructors, getters, and setters
-
 
     public Candidate() {
     }
 
-    public Candidate(Long id, Email email, String firstName, String lastName, String IDNumber, String phoneNumber, String province, String cvFilePath, List<Vacancy> appliedVacancies) {
-        this.id = id;
-        this.email = email;
-        FirstName = firstName;
-        LastName = lastName;
-        this.IDNumber = IDNumber;
-        PhoneNumber = phoneNumber;
-        Province = province;
+    public Candidate(String email_address, String firstname, String lastname, String id_number, String phonenumber, String province, String cvFilePath, List<Integer> candidateVacancyIDs) {
+        this.email_address = email_address;
+        first_name = firstname;
+        last_name = lastname;
+        this.id_number = id_number;
+        phone_number = phonenumber;
+        this.province = province;
         this.cvFilePath = cvFilePath;
-        this.appliedVacancies = appliedVacancies;
+        this.candidateVacancyIDs = candidateVacancyIDs;
     }
 
-    public Email getEmail() {
-        return email;
+    // Other getters and setters
+
+    // Getters and setters for appliedVacancyIds
+
+    public List<Integer> getcandidateVacancyIDs() {
+        return candidateVacancyIDs;
     }
 
-    public void setEmail(Email email) {
-        this.email = email;
+    public void setAppliedVacancyIds(List<Integer> candidateVacancyIDs) {
+        this.candidateVacancyIDs = candidateVacancyIDs;
     }
 
-    public String getFirstName() {
-        return FirstName;
+    public String getEmail_address() {
+        return email_address;
     }
 
-    public void setFirstName(String firstName) {
-        FirstName = firstName;
+    public void setEmail_address(String email_address) {
+        this.email_address = email_address;
     }
 
-    public String getLastName() {
-        return LastName;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setLastName(String lastName) {
-        LastName = lastName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getIDNumber() {
-        return IDNumber;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setIDNumber(String IDNumber) {
-        this.IDNumber = IDNumber;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
-    public String getPhoneNumber() {
-        return PhoneNumber;
+    public String getId_number() {
+        return id_number;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
+    public void setId_number(String id_number) {
+        this.id_number = id_number;
     }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
 
     public String getProvince() {
-        return Province;
+        return province;
     }
 
     public void setProvince(String province) {
-        Province = province;
+        this.province = province;
     }
 
     public String getCvFilePath() {
@@ -101,11 +107,11 @@ public class Candidate {
         this.cvFilePath = cvFilePath;
     }
 
-    public List<Vacancy> getAppliedVacancies() {
-        return appliedVacancies;
+    public List<Integer> getCandidateVacancyIDs() {
+        return candidateVacancyIDs;
     }
 
-    public void setAppliedVacancies(List<Vacancy> appliedVacancies) {
-        this.appliedVacancies = appliedVacancies;
+    public void setCandidateVacancyIDs(List<Integer> candidateVacancyIDs) {
+        this.candidateVacancyIDs = candidateVacancyIDs;
     }
 }
