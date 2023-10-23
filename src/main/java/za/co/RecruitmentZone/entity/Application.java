@@ -1,7 +1,4 @@
 package za.co.RecruitmentZone.entity;
-import za.co.RecruitmentZone.entity.Candidate;
-import za.co.RecruitmentZone.entity.ApplicationUser;
-import za.co.RecruitmentZone.util.Email;
 
 import jakarta.persistence.*;
 
@@ -20,7 +17,7 @@ public class Application {
     private String Province;
     private String cvFilePath; // Store the path to the CV file
     @Column(name= "candidateID")
-    private Integer candidate;  // Add this field for the candidate relationship
+    private Integer candidateID;  // Add this field for the candidate relationship
     @Column(name= "vacancyID")
     private Integer applicationVacancyID;
     // Other application fields (e.g., name, email, resume, etc.)
@@ -31,7 +28,7 @@ public class Application {
     public Application() {
     }
 
-    public Application(String emailAddress, String firstName, String lastName, String IDNumber, String phoneNumber, String province, String cvFilePath, Integer candidate, Integer applicationVacancyID) {
+    public Application(String emailAddress, String firstName, String lastName, String IDNumber, String phoneNumber, String province, String cvFilePath, Integer candidateID, Integer applicationVacancyID) {
         EmailAddress = emailAddress;
         FirstName = firstName;
         LastName = lastName;
@@ -39,7 +36,7 @@ public class Application {
         PhoneNumber = phoneNumber;
         Province = province;
         this.cvFilePath = cvFilePath;
-        this.candidate = candidate;
+        this.candidateID = candidateID;
         this.applicationVacancyID = applicationVacancyID;
     }
 
@@ -107,12 +104,12 @@ public class Application {
         this.cvFilePath = cvFilePath;
     }
 
-    public Integer getCandidate() {
-        return candidate;
+    public Integer getCandidateID() {
+        return candidateID;
     }
 
-    public void setCandidate(Integer candidate) {
-        this.candidate = candidate;
+    public void setCandidateID(Integer candidateID) {
+        this.candidateID = candidateID;
     }
 
     public Integer getApplicationVacancyID() {

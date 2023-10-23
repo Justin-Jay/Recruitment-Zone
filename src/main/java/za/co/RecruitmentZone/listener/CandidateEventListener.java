@@ -1,19 +1,13 @@
 package za.co.RecruitmentZone.listener;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.tika.Tika;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
+import za.co.RecruitmentZone.entity.Application;
 import za.co.RecruitmentZone.entity.Candidate;
 import za.co.RecruitmentZone.events.Candidate.CandidateAppliedEvent;
-import za.co.RecruitmentZone.events.Candidate.FileUploadEvent;
-import za.co.RecruitmentZone.service.EventOrchestration.CandidateEventManagement;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 @Component
 public class CandidateEventListener {
@@ -24,12 +18,16 @@ public class CandidateEventListener {
 
     @EventListener
     public void onCandidateAppliedEvent(CandidateAppliedEvent event) {
-        Candidate candidate = event.getCandidate();
-        String resumeFilePath = event.getResumeFilePath();
+        Application newApplication = event.getApplication();
+        Integer candidateID = newApplication.getCandidateID();
+        Integer vacancyID = newApplication.getApplicationVacancyID();
+        String cvFilePth = newApplication.getCvFilePath();
 
         // Call the applyForVacancy method from CandidateService
-       // CandidateEventManagement.publishCandidateAppliedEvent(candidate);
+
     }
+
+    // send emailNotification to candidate
 
 
 

@@ -1,36 +1,44 @@
 package za.co.RecruitmentZone.events.Candidate;
 
 import org.springframework.context.ApplicationEvent;
+import za.co.RecruitmentZone.entity.Application;
 import za.co.RecruitmentZone.entity.Candidate;
+
+import java.time.Clock;
 
 // Define a custom event for candidate application
 public class CandidateAppliedEvent extends ApplicationEvent {
-    private Candidate candidate;
-    private String resumeFilePath;
 
-    public CandidateAppliedEvent(Object source, Candidate candidate, String resumeFilePath) {
+    private Integer applicationID;
+
+    private Application application;
+
+    public CandidateAppliedEvent(Object source, Clock clock) {
+        super(source, clock);
+    }
+
+    public CandidateAppliedEvent(Object source, Integer applicationID) {
         super(source);
-        this.candidate = candidate;
-        this.resumeFilePath = resumeFilePath;
+        this.applicationID = applicationID;
     }
 
     // Getters for candidate and resumeFilePath
 
 
-    public Candidate getCandidate() {
-        return candidate;
+    public Integer getApplicationID() {
+        return applicationID;
     }
 
-    public void setCandidate(Candidate candidate) {
-        this.candidate = candidate;
+    public void setApplicationID(Integer applicationID) {
+        this.applicationID = applicationID;
     }
 
-    public String getResumeFilePath() {
-        return resumeFilePath;
+    public Application getApplication() {
+        return application;
     }
 
-    public void setResumeFilePath(String resumeFilePath) {
-        this.resumeFilePath = resumeFilePath;
+    public void setApplication(Application application) {
+        this.application = application;
     }
 }
 

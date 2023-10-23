@@ -2,83 +2,67 @@ package za.co.RecruitmentZone.controller;
 
 import com.google.gson.Gson;
 import jakarta.validation.Valid;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import za.co.RecruitmentZone.candidate.service.CandidateService;
 import za.co.RecruitmentZone.entity.Application;
-import za.co.RecruitmentZone.entity.ApplicationUser;
-import za.co.RecruitmentZone.entity.Candidate;
-import za.co.RecruitmentZone.repository.ApplicationRepository;
-import za.co.RecruitmentZone.service.EventOrchestration.CandidateEventManagement;
-import za.co.RecruitmentZone.storage.GoogleCloudStorageService;
-import za.co.RecruitmentZone.storage.StorageController;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
+import za.co.RecruitmentZone.service.EventOrchestration.CandidateService;
+import za.co.RecruitmentZone.service.FileService;
 
 @Controller
-@RequestMapping("/candidates")
+@RequestMapping("/apply")
 @CrossOrigin("*")
 public class CandidateController {
 
-    private ApplicationRepository applicationRepository;
-    private final CandidateEventManagement candidateEventManagement;
 
-    GoogleCloudStorageService googleCloudStorageService;
+    private final CandidateService candidateEventManagement;
+
+
     private final Logger log = LoggerFactory.getLogger(CandidateController.class);
 
-    public CandidateController(ApplicationRepository applicationRepository, CandidateEventManagement candidateEventManagement, GoogleCloudStorageService googleCloudStorageService) {
-        this.applicationRepository = applicationRepository;
+    public CandidateController(CandidateService candidateEventManagement) {
         this.candidateEventManagement = candidateEventManagement;
-        this.googleCloudStorageService = googleCloudStorageService;
     }
 
     // Folder where uploaded files will be stored
-    private static final String UPLOAD_FOLDER = "uploads/";
+    @PostMapping("/submitApplication")
+    public String submitApplication(@Valid @ModelAttribute Application application,
+                                    BindingResult bindingResult,
+                                    @RequestParam("file") MultipartFile file,
+                                    RedirectAttributes redirectAttributes) {
 
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file,
-                             @RequestParam("name") String name,
-                             RedirectAttributes redirectAttributes) {
-        // Check if file is empty
-        if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "Please select a file to upload.");
-            return "redirect:/uploadStatus";
+        if (bindingResult.hasErrors()) {
+            return "applicationForm";
         }
+
+        // Additional validations like checking for already submitted application, etc.
 
         try {
+            // Attempt to store the file securely
+            String storedFileName = FileService.uploadFile(file);
 
-            uploadFile(file);
+            if (storedFileName == null) {
+                redirectAttributes.addFlashAttribute("message", "File upload failed.");
+                return "redirect:/uploadStatus";
+            }
 
-            redirectAttributes.addFlashAttribute("message",
-                    "File '" + file.getOriginalFilename() + "' uploaded successfully!");
+            application.setCvFilePath(storedFileName); // Save the stored file name in the application object
 
-
+            // Other logic to process the application, such as publishing an event
+            Gson gson = new Gson();
+            String json = gson.toJson(application);
+            candidateEventManagement.publishCandidateAppliedEvent(json);
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message",
-                    "Failed to upload '" + file.getOriginalFilename() + "'");
+            log.info("FAILED TO POST EVENT " + e.getMessage());
         }
 
-        return "redirect:/uploadStatus";
+        return "redirect:/vacancies";
     }
-
-
 
 
 

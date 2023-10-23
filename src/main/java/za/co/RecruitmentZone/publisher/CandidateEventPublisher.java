@@ -1,25 +1,15 @@
 package za.co.RecruitmentZone.publisher;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.entity.Application;
-import za.co.RecruitmentZone.entity.ApplicationUser;
 import za.co.RecruitmentZone.entity.Candidate;
 import za.co.RecruitmentZone.entity.Vacancy;
 import za.co.RecruitmentZone.events.Candidate.CandidateAppliedEvent;
-import za.co.RecruitmentZone.events.Candidate.FileUploadEvent;
-import za.co.RecruitmentZone.events.Vacancy.VacancyActivatedEvent;
-import za.co.RecruitmentZone.events.Vacancy.VacancyAmendedEvent;
 import za.co.RecruitmentZone.events.Vacancy.VacancyCreateEvent;
-import za.co.RecruitmentZone.events.Vacancy.VacancyExpiredEvent;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.time.Clock;
 
 @Service
@@ -45,12 +35,7 @@ public class CandidateEventPublisher {
     public boolean publishCandidateAppliedEvent(Application application) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
-            Candidate candidate = application.getCandidate();
-
-
-            String candidateResumeFilePath = uploadFile(file);
-            CandidateAppliedEvent event = new CandidateAppliedEvent(this,candidate,candidateResumeFilePath);
-
+            CandidateAppliedEvent event = new CandidateAppliedEvent(application,baseClock);
             eventPublisher.publishEvent(event);
             return true;
         } catch (Exception e) {

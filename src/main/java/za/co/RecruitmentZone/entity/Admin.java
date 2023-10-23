@@ -8,12 +8,11 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String FirstName;
-    private String LastName;
+    private String first_name;
+    private String last_name;
     private String password;
     private  String role;
-    private String UserName;
-    private Email email;
+    private String email_address;
 
     // Relationship: A recruitment manager can add/remove multiple recruiters
     // Constructors, getters, and setters
@@ -21,30 +20,32 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(Long id, String firstName, String lastName, String password, String role, String userName, Email email) {
-        this.id = id;
-        FirstName = firstName;
-        LastName = lastName;
+    public Admin(String first_name, String last_name, String password, String role, String email_address) {
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.password = password;
         this.role = role;
-        UserName = userName;
-        this.email = email;
+        this.email_address = email_address;
     }
 
-    public String getFirstName() {
-        return FirstName;
+    public Integer getId() {
+        return id;
     }
 
-    public void setFirstName(String firstName) {
-        FirstName = firstName;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public String getLastName() {
-        return LastName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public void setLastName(String lastName) {
-        LastName = lastName;
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getPassword() {
@@ -63,20 +64,11 @@ public class Admin {
         this.role = role;
     }
 
-    public String getUserName() {
-        return UserName;
+    public String getEmail_address() {
+        return email_address;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
+    public void setEmail_address(String email_address) {
+        this.email_address = email_address;
     }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
-    }
-
 }
