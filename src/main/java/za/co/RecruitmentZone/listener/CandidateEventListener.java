@@ -27,6 +27,8 @@ public class CandidateEventListener {
 
     }
 
+
+
     // send emailNotification to candidate
 
 

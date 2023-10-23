@@ -26,6 +26,37 @@ public class WebSecurityConfig {
         return new ProviderManager(daoAuthenticationProvider);
     }
 
+/*
+
+
+    /admin
+
+        /users
+            : add user
+            : update user
+
+       ***
+
+    /recruitment-manager
+
+        /recruiters
+            : add recruiter
+            : update recruiter
+
+    /recruiter
+
+        /vacancies
+            : add vacancy
+            : update vacancy
+
+    /guest
+        /home
+            - apply
+*/
+
+
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity

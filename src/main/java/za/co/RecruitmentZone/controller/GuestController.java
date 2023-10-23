@@ -5,27 +5,32 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.Application;
+import za.co.RecruitmentZone.entity.Vacancy;
 import za.co.RecruitmentZone.service.EventOrchestration.CandidateService;
 import za.co.RecruitmentZone.service.FileService;
+import za.co.RecruitmentZone.service.VacancyService;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/apply")
+@RequestMapping("/guest")
 @CrossOrigin("*")
-public class CandidateController {
+public class GuestController {
+    private final VacancyService vacancyService;
+    private final CandidateService candidateService;
+    private final FileService fileService;
+    private final Logger log = LoggerFactory.getLogger(GuestController.class);
 
-
-    private final CandidateService candidateEventManagement;
-
-
-    private final Logger log = LoggerFactory.getLogger(CandidateController.class);
-
-    public CandidateController(CandidateService candidateEventManagement) {
-        this.candidateEventManagement = candidateEventManagement;
+    public GuestController(VacancyService vacancyService, CandidateService candidateService, FileService fileService) {
+        this.vacancyService = vacancyService;
+        this.candidateService = candidateService;
+        this.fileService = fileService;
     }
 
     // Folder where uploaded files will be stored
@@ -43,7 +48,7 @@ public class CandidateController {
 
         try {
             // Attempt to store the file securely
-            String storedFileName = FileService.uploadFile(file);
+            String storedFileName = fileService.uploadFile(file);
 
             if (storedFileName == null) {
                 redirectAttributes.addFlashAttribute("message", "File upload failed.");
@@ -55,8 +60,7 @@ public class CandidateController {
             // Other logic to process the application, such as publishing an event
             Gson gson = new Gson();
             String json = gson.toJson(application);
-            candidateEventManagement.publishCandidateAppliedEvent(json);
-
+            candidateService.publishCandidateAppliedEvent(json);
         } catch (Exception e) {
             log.info("FAILED TO POST EVENT " + e.getMessage());
         }
@@ -64,7 +68,13 @@ public class CandidateController {
         return "redirect:/vacancies";
     }
 
-
+    @GetMapping("/list-active-vacancies")
+    public String listVacancies(Model model) {
+        // Retrieve and display a list of vacancies
+        List<Vacancy> vacancies = vacancyService.getActiveVacancies();
+        model.addAttribute("vacancies", vacancies);
+        return "list-vacancies";
+    }
 
 
 }

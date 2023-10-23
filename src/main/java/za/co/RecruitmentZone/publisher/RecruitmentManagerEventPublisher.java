@@ -5,10 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import za.co.RecruitmentZone.entity.Recruiter;
+import za.co.RecruitmentZone.entity.ApplicationUser;
 import za.co.RecruitmentZone.events.Recruiter.RecruiterCreateEvent;
 
 import java.time.Clock;
+import java.util.List;
 
 @Service
 public class RecruitmentManagerEventPublisher {
@@ -23,7 +24,7 @@ public class RecruitmentManagerEventPublisher {
     public boolean publishRecruiterCreateEvent(String json){
         try {
             Gson gson = new Gson();
-            Recruiter newRecruiter = gson.fromJson(json, Recruiter.class);
+            ApplicationUser newRecruiter = gson.fromJson(json, ApplicationUser.class);
             Clock baseClock = Clock.systemDefaultZone();
             RecruiterCreateEvent event = new RecruiterCreateEvent(newRecruiter,baseClock);
             eventPublisher.publishEvent(event);
@@ -33,7 +34,6 @@ public class RecruitmentManagerEventPublisher {
             return false;
         }
     }
-
 
 
     // Add Recruiter

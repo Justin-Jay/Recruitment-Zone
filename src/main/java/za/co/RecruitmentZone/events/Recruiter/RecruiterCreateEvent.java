@@ -2,14 +2,13 @@ package za.co.RecruitmentZone.events.Recruiter;
 
 import org.springframework.context.ApplicationEvent;
 import za.co.RecruitmentZone.entity.ApplicationUser;
-import za.co.RecruitmentZone.entity.Recruiter;
 
 import java.time.Clock;
 
 public class RecruiterCreateEvent extends ApplicationEvent {
     private Integer recruiterID;
 
-    private Recruiter recruiter;
+    private ApplicationUser user;
 
 
     public RecruiterCreateEvent(Object source, Clock clock) {
@@ -29,12 +28,12 @@ public class RecruiterCreateEvent extends ApplicationEvent {
         this.recruiterID = recruiterID;
     }
 
-    public Recruiter getRecruiter() {
-        return recruiter;
+    public ApplicationUser getUser() {
+        return user;
     }
 
-    public void setRecruiter(Recruiter recruiter) {
-        this.recruiter = recruiter;
+    public void setUser(ApplicationUser user) {
+        this.user = user;
     }
 }
 

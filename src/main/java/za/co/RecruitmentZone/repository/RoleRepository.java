@@ -10,4 +10,6 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface RoleRepository extends CrudRepository<Role,Integer> {
     Optional<Role> findRoleByAuthority(String authority);
+
+    Optional<Role> findRoleBy(String authority);
 }
