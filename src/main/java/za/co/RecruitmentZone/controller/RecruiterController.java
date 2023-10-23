@@ -10,10 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import za.co.RecruitmentZone.entity.Vacancy;
 import za.co.RecruitmentZone.entity.VacancyDTO;
-import za.co.RecruitmentZone.service.EventOrchestration.RecruiterService;
 import za.co.RecruitmentZone.service.VacancyService;
-
-import java.util.List;
 
 
 @Controller

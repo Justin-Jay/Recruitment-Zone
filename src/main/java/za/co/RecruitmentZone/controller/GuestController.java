@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.Application;
 import za.co.RecruitmentZone.entity.Vacancy;
-import za.co.RecruitmentZone.service.EventOrchestration.CandidateService;
+import za.co.RecruitmentZone.service.CandidateService;
 import za.co.RecruitmentZone.service.FileService;
 import za.co.RecruitmentZone.service.VacancyService;
 

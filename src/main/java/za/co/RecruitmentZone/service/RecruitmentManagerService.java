@@ -1,12 +1,10 @@
-package za.co.RecruitmentZone.service.EventOrchestration;
+package za.co.RecruitmentZone.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import za.co.RecruitmentZone.repository.ApplicationUserRepository;
 import za.co.RecruitmentZone.publisher.RecruitmentManagerEventPublisher;
-
-import java.util.List;
 
 @Service
 public class RecruitmentManagerService {

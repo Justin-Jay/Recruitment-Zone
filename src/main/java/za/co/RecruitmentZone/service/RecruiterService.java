@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.service.EventOrchestration;
+package za.co.RecruitmentZone.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

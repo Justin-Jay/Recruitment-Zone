@@ -1,23 +1,11 @@
-package za.co.RecruitmentZone.service.EventOrchestration;
+package za.co.RecruitmentZone.service;
 
 import com.google.gson.Gson;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.entity.Application;
-import za.co.RecruitmentZone.events.Candidate.CandidateAppliedEvent;
 import za.co.RecruitmentZone.publisher.CandidateEventPublisher;
-import za.co.RecruitmentZone.repository.CandidateRepository;
-import za.co.RecruitmentZone.entity.Candidate;
-import za.co.RecruitmentZone.service.FileService;
-import za.co.RecruitmentZone.storage.GoogleCloudStorageService;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.time.Clock;
 
 @Service
 public class CandidateService {

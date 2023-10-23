@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import za.co.RecruitmentZone.service.EventOrchestration.RecruitmentManagerService;
+import za.co.RecruitmentZone.service.RecruitmentManagerService;
 
 @Controller
 @RequestMapping("/recruitment-managers")
