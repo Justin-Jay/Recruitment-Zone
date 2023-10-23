@@ -1,12 +1,9 @@
 package za.co.RecruitmentZone.publisher;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import za.co.RecruitmentZone.entity.ApplicationUser;
 import za.co.RecruitmentZone.entity.Vacancy;
 import za.co.RecruitmentZone.events.Vacancy.VacancyAmendedEvent;
 import za.co.RecruitmentZone.events.Vacancy.VacancyCreateEvent;

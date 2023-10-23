@@ -1,7 +1,6 @@
 package za.co.RecruitmentZone.events.Vacancy;
 
 import org.springframework.context.ApplicationEvent;
-import za.co.RecruitmentZone.entity.ApplicationUser;
 import za.co.RecruitmentZone.entity.Vacancy;
 
 import java.time.Clock;

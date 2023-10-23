@@ -1,13 +1,13 @@
 package za.co.RecruitmentZone.publisher;
 
-import com.google.gson.Gson;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import za.co.RecruitmentZone.entity.ApplicationUserDTO;
+import za.co.RecruitmentZone.entity.UserDTO;
 import za.co.RecruitmentZone.events.ApplicationUser.ApplicationUserCreateEvent;
-
 import java.time.Clock;
 
 @Component
@@ -20,16 +20,18 @@ public class ApplicationUserEventPublisher {
         this.eventPublisher = eventPublisher;
     }
 
-    public boolean publishApplicationUserCreateEvent(ApplicationUserDTO userDTO){
+    @Bean
+    public String publishApplicationUserCreateEvent(UserDTO newUser) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
-            ApplicationUserCreateEvent event = new ApplicationUserCreateEvent(userDTO,baseClock);
-            eventPublisher.publishEvent(event);
-            return true;
+            ApplicationUserCreateEvent applicationUserCreateEvent = new ApplicationUserCreateEvent(newUser,baseClock);
+            eventPublisher.publishEvent(applicationUserCreateEvent);
+            return "SUCCESSFUL";
         } catch (Exception e) {
-            log.info("");
-            return false;
+            log.info(e.getMessage());
         }
+
+        return "FAILED";
     }
 
 

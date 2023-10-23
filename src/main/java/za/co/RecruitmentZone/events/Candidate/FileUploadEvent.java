@@ -2,7 +2,6 @@ package za.co.RecruitmentZone.events.Candidate;
 
 import org.springframework.context.ApplicationEvent;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.RecruitmentZone.entity.ApplicationUser;
 
 import java.time.Clock;
 

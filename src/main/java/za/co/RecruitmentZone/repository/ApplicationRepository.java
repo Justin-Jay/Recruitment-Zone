@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import za.co.RecruitmentZone.entity.Application;
-import za.co.RecruitmentZone.entity.ApplicationUser;
 
 import java.util.List;
 

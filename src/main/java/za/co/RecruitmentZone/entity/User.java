@@ -4,12 +4,11 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class ApplicationUser implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,19 +30,18 @@ public class ApplicationUser implements UserDetails {
 
     private Set<Role> authorities;
 
-    public ApplicationUser() {
+    public User() {
+        super();
+        this.authorities= new HashSet<>();
     }
 
-    public ApplicationUser(String first_name, String last_name, String email_address, String username, String password, Set<Role> authorities) {
+    public User(String first_name, String last_name, String email_address, String username, String password, Set<Role> authorities) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email_address = email_address;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
-    }
-
-    public ApplicationUser(String role, String password) {
     }
 
     public Integer getUserID() {
@@ -94,7 +92,7 @@ public class ApplicationUser implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ApplicationUser that = (ApplicationUser) o;
+        User that = (User) o;
         return Objects.equals(userID, that.userID) && Objects.equals(first_name, that.first_name) && Objects.equals(last_name, that.last_name) && Objects.equals(email_address, that.email_address) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(authorities, that.authorities);
     }
 

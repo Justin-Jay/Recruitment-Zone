@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.service;
+package za.co.RecruitmentZone.storage;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -13,12 +13,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @Service
-public class FileService {
+public class FileUploadService {
 
 
     private GoogleCloudStorageService googleCloudStorageService;
 
-    public FileService(GoogleCloudStorageService googleCloudStorageService) {
+    public FileUploadService(GoogleCloudStorageService googleCloudStorageService) {
         this.googleCloudStorageService = googleCloudStorageService;
     }
 

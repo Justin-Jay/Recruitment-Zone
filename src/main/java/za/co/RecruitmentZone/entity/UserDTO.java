@@ -1,24 +1,29 @@
 package za.co.RecruitmentZone.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-public class ApplicationUserDTO {
+public class UserDTO {
+    private Integer userID;
     private String first_name;
     private String last_name;
     private String email_address;
-    private String role;
+    private String username;
 
-    public ApplicationUserDTO() {
+    public UserDTO() {
     }
 
-    public ApplicationUserDTO(String first_name, String last_name, String email_address, String role) {
+    public UserDTO(Integer userID, String first_name, String last_name, String email_address, String username) {
+        this.userID = userID;
         this.first_name = first_name;
         this.last_name = last_name;
         this.email_address = email_address;
-        this.role = role;
+        this.username = username;
+    }
+
+    public Integer getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Integer userID) {
+        this.userID = userID;
     }
 
     public String getFirst_name() {
@@ -45,11 +50,11 @@ public class ApplicationUserDTO {
         this.email_address = email_address;
     }
 
-    public String getRole() {
-        return role;
+    public String getUsername() {
+        return username;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -1,19 +1,7 @@
 package za.co.RecruitmentZone;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import za.co.RecruitmentZone.entity.ApplicationUser;
-import za.co.RecruitmentZone.entity.Role;
-import za.co.RecruitmentZone.repository.RoleRepository;
-import za.co.RecruitmentZone.repository.ApplicationUserRepository;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @SpringBootApplication
 public class RecruitmentZoneApplication {

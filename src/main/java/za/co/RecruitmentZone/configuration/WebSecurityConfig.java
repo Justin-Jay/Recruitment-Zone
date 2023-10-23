@@ -26,44 +26,33 @@ public class WebSecurityConfig {
         return new ProviderManager(daoAuthenticationProvider);
     }
 
-/*
-
-
-    /admin
-
-        /users
-            : add user
-            : update user
-
-       ***
-
-    /recruitment-manager
-
-        /recruiters
-            : add recruiter
-            : update recruiter
-
-    /recruiter
-
-        /vacancies
-            : add vacancy
-            : update vacancy
-
-    /guest
-        /home
-            - apply
-*/
-
-
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf-> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .build();
     }
+
+/*
+
+
+    /admin
+        /CreateUser
+        /UpdateUserDetails
+        /password reset ?
+
+    /vacancies
+            /Create Vacancy
+            /View Vacancies
+                /Update Vacancy Status
+                /Update vacancy Details
+
+    /candidate
+        /home
+         : View Active Vacancies
+         : Submit Application
+*/
 
 
 }
