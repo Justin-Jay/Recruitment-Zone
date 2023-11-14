@@ -1,8 +1,7 @@
 package za.co.RecruitmentZone.events.Candidate;
 
 import org.springframework.context.ApplicationEvent;
-import za.co.RecruitmentZone.entity.Application;
-import za.co.RecruitmentZone.entity.Candidate;
+import za.co.RecruitmentZone.entity.domain.Application;
 
 import java.time.Clock;
 

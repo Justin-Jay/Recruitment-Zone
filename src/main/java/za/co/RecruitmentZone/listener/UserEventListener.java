@@ -1,3 +1,4 @@
+/*
 package za.co.RecruitmentZone.listener;
 
 import org.slf4j.Logger;
@@ -42,3 +43,4 @@ public class UserEventListener {
     // send email ?
 
 }
+*/

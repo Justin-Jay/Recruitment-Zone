@@ -1,3 +1,4 @@
+/*
 package za.co.RecruitmentZone.listener;
 
 
@@ -7,8 +8,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.modulith.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import za.co.RecruitmentZone.entity.Vacancy;
-import za.co.RecruitmentZone.entity.VacancyStatus;
+import za.co.RecruitmentZone.entity.domain.Vacancy;
+import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 import za.co.RecruitmentZone.events.Vacancy.VacancyActivatedEvent;
 import za.co.RecruitmentZone.events.Vacancy.VacancyAmendedEvent;
 import za.co.RecruitmentZone.events.Vacancy.VacancyCreateEvent;
@@ -133,3 +134,4 @@ public class VacancyEventListener {
 
 
 }
+*/

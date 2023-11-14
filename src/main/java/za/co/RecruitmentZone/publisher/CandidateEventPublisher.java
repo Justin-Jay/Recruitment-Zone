@@ -1,12 +1,13 @@
+/*
 package za.co.RecruitmentZone.publisher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import za.co.RecruitmentZone.entity.Application;
-import za.co.RecruitmentZone.entity.Candidate;
-import za.co.RecruitmentZone.entity.Vacancy;
+import za.co.RecruitmentZone.entity.domain.Application;
+import za.co.RecruitmentZone.entity.domain.Candidate;
+import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.events.Candidate.CandidateAppliedEvent;
 import za.co.RecruitmentZone.events.Vacancy.VacancyCreateEvent;
 
@@ -48,6 +49,7 @@ public class CandidateEventPublisher {
 
 
 
+*/
 /*
     public String suspendVacancy(Integer vacancyID) {
 
@@ -72,8 +74,10 @@ public class CandidateEventPublisher {
 
     }
 
-*/
+*//*
 
+
+*/
 /*    public String rejectCandidate(Integer candidateID){
         try {
 
@@ -128,6 +132,8 @@ public class CandidateEventPublisher {
             log.info(e.getMessage());
             return "failed reject Candidate";
         }
-    }*/
+    }*//*
+
 
 }
+*/

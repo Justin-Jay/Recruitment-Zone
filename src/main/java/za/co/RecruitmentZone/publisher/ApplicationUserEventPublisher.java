@@ -1,3 +1,4 @@
+/*
 package za.co.RecruitmentZone.publisher;
 
 
@@ -6,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import za.co.RecruitmentZone.entity.UserDTO;
+import za.co.RecruitmentZone.entity.User;
 import za.co.RecruitmentZone.events.ApplicationUser.ApplicationUserCreateEvent;
 import java.time.Clock;
 
@@ -21,7 +22,7 @@ public class ApplicationUserEventPublisher {
     }
 
     @Bean
-    public String publishApplicationUserCreateEvent(UserDTO newUser) {
+    public String publishApplicationUserCreateEvent(User newUser) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
             ApplicationUserCreateEvent applicationUserCreateEvent = new ApplicationUserCreateEvent(newUser,baseClock);
@@ -36,3 +37,4 @@ public class ApplicationUserEventPublisher {
 
 
 }
+*/

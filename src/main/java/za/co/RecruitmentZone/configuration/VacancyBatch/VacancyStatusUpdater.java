@@ -2,14 +2,13 @@ package za.co.RecruitmentZone.configuration.VacancyBatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import za.co.RecruitmentZone.entity.Vacancy;
-import za.co.RecruitmentZone.entity.VacancyStatus;
+import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
+import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.repository.VacancyRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -30,8 +29,13 @@ public class VacancyStatusUpdater {
             List<Vacancy> vacancies = (List<Vacancy>) vacancyRepository.findAll();
 
             for (Vacancy vacancy : vacancies) {
-                LocalDateTime startDate = vacancy.getStartDate();
-                LocalDateTime endDate = vacancy.getEndDate();
+
+                String start = vacancy.getPublish_date();
+                String end = vacancy.getEnd_date();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+                LocalDateTime startDate = LocalDateTime.parse(start, formatter);
+                LocalDateTime endDate = LocalDateTime.parse(end, formatter);
 
                 if (startDate.isBefore(currentDate) || startDate.isEqual(currentDate)) {
                     if (endDate.isBefore(currentDate) || endDate.isEqual(currentDate)) {

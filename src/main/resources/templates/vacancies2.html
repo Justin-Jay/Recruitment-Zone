@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<li th:fragment="vacancies(vacancy)" th:classappend="${vacancy.active?'active':''}">
+    <div class="container mt-4">
+        <table class="table table-bordered table-striped">
+            <tbody>
+            <tr th:each="vacancy : ${vacancies}">
+                <td th:text="*{vacancy.getStartDate()}"></td>
+                <td th:text="*{vacancy.description}"></td>
+                <td th:text="*{vacancy.recruitername}"></td>
+                <td th:text="*{vacancy.expirationdate}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>
+</html>

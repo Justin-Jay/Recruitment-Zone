@@ -10,46 +10,40 @@ public class RecruitmentZoneApplication {
         SpringApplication.run(RecruitmentZoneApplication.class, args);
     }
 
- /*   @Bean
+/*
+    @Bean
     public CommandLineRunner run(RoleRepository roleRepository, ApplicationUserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
-            //if (roleRepository.findRoleByAuthority("ADMIN").isPresent()) return;
+            if (roleRepository.findRoleByAuthority("ADMIN").isPresent())
+            {
+                return;
+            }
+
             Role adminRole = roleRepository.save(new Role("ADMIN"));
 
-            Role recruiterRole = roleRepository.save(new Role("RECRUITER"));
+            roleRepository.save(adminRole);
 
-            Role recruitmentManagerRole = roleRepository.save(new Role("RECRUITMENT_MANAGER"));
+            Set<Role> roles = new HashSet<>();
+            roles.add(adminRole);
 
-
-
-            ApplicationUser admin = new ApplicationUser("ADMIN", passwordEncoder.encode("password"));
-
-            ApplicationUser recruiter = new ApplicationUser("RECRUITER", passwordEncoder.encode("password"));
-            ApplicationUser recruitmentManager = new ApplicationUser("RECRUITMENT_MANAGER", passwordEncoder.encode("password"));
-
+            ApplicationUser admin = new ApplicationUser("first_name","last_name","last_name", passwordEncoder.encode("password"), roles);
 
             userRepository.save(admin);
 
-            userRepository.save(recruiter);
 
-            userRepository.save(recruitmentManager);
+            // Role recruiterRole = roleRepository.save(new Role("RECRUITER"));
 
-            ApplicationUser justin = new ApplicationUser();
-            justin.setFirst_name("Justin");
-            justin.setLast_name("Maboshego");
-            justin.setEmail_address("Justin.Maboshego@kiunga.co.za");
-            justin.setUsername("Justin.Maboshego@kiunga.co.za");
-            justin.setPassword("Khum0Ramo@1992");
-            Optional<Role> justinsRole = roleRepository.findRoleByAuthority("ADMIN");
-            if (justinsRole.isPresent())
-            { justin.setAuthorities(justinsRole.orElseGet(null));
+            // Role recruitmentManagerRole = roleRepository.save(new Role("RECRUITMENT_MANAGER"));
 
-            }
+            //ApplicationUser recruiter = new ApplicationUser(recruiterRole, passwordEncoder.encode("password"));
+            //ApplicationUser recruitmentManager = new ApplicationUser(recruitmentManagerRole, passwordEncoder.encode("password"));
 
+            // userRepository.save(recruiter);
 
+            // userRepository.save(recruitmentManager);
         };
     }
-
 */
+
 }
