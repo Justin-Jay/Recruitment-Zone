@@ -12,7 +12,6 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
-
 <!--TOP Navbar-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -39,34 +38,8 @@
     </div>
 </nav>
 
-<div class="header"><h2>Vacancies</h2></div>
-<hr/>
 <div class="container mt-4">
-    <table class="table table-bordered table-striped">
-        <tbody>
-        <tr th:each="vacancy : ${activeVacancies}">
-            <td th:text="*{vacancy.getPublish_date()}"></td>
-            <td th:text="*{vacancy.getEnd_date()}"></td>
-            <td th:text="*{vacancy.getStatus()}"></td>
-            <td th:text="*{vacancy.getJobID()}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="table table-bordered table-striped">
-        <tbody>
-        <tr th:each="job : ${jobs}">
-            <td th:text="*{job.getJobTitle()}"></td>
-            <td th:text="*{job.getEmpType()}"></td>
-            <td th:text="*{job.getCategory()}"></td>
-            <td th:text="*{job.getIndustry()}"></td>
-            <td th:text="*{job.getJobDescription()}"></td>
-            <td th:text="*{job.getJobID()}"></td>
-            <td th:text="*{job.getLocation()}"></td>
-            <td th:text="*{job.getRequirements()}"></td>
-            <td th:text="*{job.getSeniority_level()}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <h1>ADD BLOG</h1>
 </div>
 <!--BOTTOM Navbar-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -98,7 +71,6 @@
         </div>
     </footer>
 </nav>
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

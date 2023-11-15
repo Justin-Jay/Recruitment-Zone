@@ -1,6 +1,5 @@
 package za.co.RecruitmentZone.controller.web;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,34 @@ public class RecruitmentZoneWebController {
         this.recruitmentZoneService = recruitmentZoneService;
     }
 
+
+
+        /*    </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/manageblog.html}">Manage Blog</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/createblog}">Create Blog</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/updateblog}">Update Blog</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/manageapplications}">Manage Applications</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/applicationForm}">Application Form</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/managevacancies}">Manage Vacancies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/createvacancy}">Create Vacancy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/updatevacancy}">Update Vacancy</a>
+            </li>*/
+
     // Home pages
     @GetMapping("/")
     public String home(Model model) {
@@ -34,16 +61,23 @@ public class RecruitmentZoneWebController {
         model.addAttribute("vacancies", vacancies);
         return "home";
     }
-    @GetMapping("/blog")
-    public String viewBlog(Model model) {
-        List<Blog> blogs = null;
+    @GetMapping("/vacancies")
+    public String vacancies(Model model) {
+        List<Vacancy> activeVacancies = new ArrayList<>();
+        List<Job> jobs = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
         try {
-            blogs = recruitmentZoneService.getBlogs();
+            activeVacancies = recruitmentZoneService.getActiveVacancies();
+            activeVacancies.forEach(n->ids.add(n.getJobID()));
+            ids.forEach(n->jobs.add(recruitmentZoneService.getJobsByID(n).orElseThrow()));
+
         } catch (Exception e) {
-            log.info("Exception trying to retrieve blogs");
+            log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
         }
-        model.addAttribute("blogs", blogs);
-        return "blog/manageblog";
+
+        model.addAttribute("activeVacancies", activeVacancies);
+        model.addAttribute("jobs", jobs);
+        return "vacancies";
     }
     @GetMapping("/aboutus")
     public String aboutUs() {
@@ -54,20 +88,58 @@ public class RecruitmentZoneWebController {
         return "contactus";
     }
 
-
-    @GetMapping("/vacancies")
-    public String viewVacancies(Model model) {
-        List<Vacancy> activeVacancies = null;
+    @GetMapping("/blog")
+    public String blog(Model model) {
+        List<Blog> blogs = new ArrayList<>();
         try {
-            activeVacancies = recruitmentZoneService.getActiveVacancies();
-
+            blogs = recruitmentZoneService.getBlogs();
         } catch (Exception e) {
-            log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
+            log.info("Exception trying to retrieve blogs");
         }
-
-        model.addAttribute("activeVacancies", activeVacancies);
-        return "vacancies";
+        model.addAttribute("blogs", blogs);
+        return "blog";
     }
+
+    @GetMapping("/addblog")
+    public String addBlog(Model model) {
+        List<Blog> blogs = new ArrayList<>();
+        try {
+            blogs = recruitmentZoneService.getBlogs();
+        } catch (Exception e) {
+            log.info("Exception trying to retrieve blogs");
+        }
+        model.addAttribute("blogs", blogs);
+        return "blogPages/addblog";
+    }
+/*
+    @GetMapping("/createblog")
+    public String showCreateBlogForm(Model model) {
+        model.addAttribute("blog", new Blog());
+        return "createblog";
+    }
+    @PostMapping("/createblog")
+    public String createBlog(@Valid @ModelAttribute Blog blog, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "createvacancy";
+        }
+        recruitmentZoneService.createBlog(blog);
+        return "redirect:/manageblog";
+    }
+
+
+    @GetMapping("/manageEmployees")
+    public String manageEmployees(Model model) {
+        List<Employee> employees = null;
+        try {
+            employees = recruitmentZoneService.getEmployees();
+        } catch (Exception e) {
+            log.info("Exception trying to retrieve blogs");
+        }
+        model.addAttribute("employees", employees);
+        return "manageEmployees";
+    }
+
+
 
     @GetMapping("/applications")
     public String viewApplications(Model model) {
@@ -104,12 +176,12 @@ public class RecruitmentZoneWebController {
     @GetMapping("/create")
     public String showCreateVacancyForm(Model model) {
         model.addAttribute("vacancy", new Vacancy());
-        return "create-vacancy";
+        return "createvacancy";
     }
     @PostMapping("/create")
     public String createVacancy(@Valid @ModelAttribute Vacancy vacancy, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "create-vacancy";
+            return "createvacancy";
         }
         recruitmentZoneService.createVacancy(vacancy);
         return "redirect:/vacancies";
@@ -128,7 +200,7 @@ public class RecruitmentZoneWebController {
     @RequestMapping("/showForm")
     public String showForm() {
         return "helloworld-form";
-    }
+    }*/
     // my own
 
 

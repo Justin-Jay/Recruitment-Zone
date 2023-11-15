@@ -37,6 +37,9 @@ public class RecruitmentZoneService {
         return blogService.getBlogs();
     }
 
+    public Blog createBlog(Blog blog){
+        return blogService.createBlog(blog);
+    }
 
     // CANDIDATE
 
@@ -55,6 +58,11 @@ public class RecruitmentZoneService {
     public List<Job> getJobs() {
         return jobService.getJobs();
     }
+
+    public Optional<Job> getJobsByID(Long id) {
+        return jobService.getJobsByID(id);
+    }
+
 
 
     // VACANCY

@@ -7,6 +7,7 @@ import za.co.RecruitmentZone.entity.domain.Job;
 import za.co.RecruitmentZone.repository.JobRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JobService {
@@ -19,6 +20,12 @@ public class JobService {
     public List<Job> getJobs(){
         return jobRepository.findAll();
     }
+
+    public Optional<Job> getJobsByID(Long id){
+        return jobRepository.findById(id);
+    }
+
+
 
 
 }
