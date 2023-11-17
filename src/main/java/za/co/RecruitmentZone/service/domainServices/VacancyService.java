@@ -22,20 +22,19 @@ public class VacancyService {
     public List<Vacancy> getAllVacancies(){
         return vacancyRepository.findAllVacancies();
     }
-    public List<Vacancy> getActiveVacancies(){
-        return vacancyRepository.findByActiveTrue();
+    public List<Vacancy> getActiveVacancies(String status){
+        return vacancyRepository.findStatusVacancies(status);
     }
-    public void deleteVacancy(Integer id){
+    public void deleteVacancy(Long id){
         vacancyRepository.deleteById(id);
     }
 
-    public Optional<Vacancy> findById(Integer id){
+    public Optional<Vacancy> findById(Long id){
         return vacancyRepository.findById(id);
     }
 
-    public boolean save(Vacancy vacancy){
-        Vacancy v = vacancyRepository.save(vacancy);
-        return true;
+    public Vacancy save(Vacancy vacancy){
+        return vacancyRepository.save(vacancy);
     }
 
     public List<Vacancy> getEmployeeVacancies(Integer id){

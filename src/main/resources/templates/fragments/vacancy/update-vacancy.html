@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div th:insert="fragments/layout/header">Header</div>
+
+    <div class="container-fluid"><h2>View Vacancy</h2></div>
+    <hr/>
+<!--    <div th:insert="fragments/vacancy/vacancy">Vacancy</div>-->
+    <!--FORM TO UPDATE JOB -->
+
+    <form action="#" th:action="@{/save-vacancy}" th:object="${Vacancy}" th:method="POST">
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+        <input type="hidden" name="vacancyID" th:value="*{vacancyID}" />
+        <label>
+            <input type="text" th:field="*{jobTitle}"
+                   class="form-control" placeholder="Job Title"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{jobDescription}"
+                   class="form-control" placeholder="Description"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{seniority_level}"
+                   class="form-control" placeholder="seniority level"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{category}"
+                   class="form-control" placeholder="category"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{requirements}"
+                   class="form-control" placeholder="requirements"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{location}"
+                   class="form-control" placeholder="location"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{industry}"
+                   class="form-control" placeholder="industry"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{publish_date}"
+                   class="form-control" placeholder="publish_date"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{end_date}"
+                   class="form-control" placeholder="end_date"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{jobType}"
+                   class="form-control" placeholder="Job Type"/>
+        </label>
+        <label>
+            <input type="text" th:field="*{empType}"
+                   class="form-control" placeholder="Employment Type"/>
+        </label>
+        <button type="submit" class="btn btn-primary">Save Updated Vacancy</button>
+    </form>
+
+    <!--BOTTOM Navbar-->
+    <div th:insert="fragments/layout/footer">Footer</div>
+
+</div>
+
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -12,75 +12,31 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
-<!--TOP Navbar-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/vacancies}">Vacancies</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/blog}">Blog</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/contactus}">Contact Us</a>
-            </li>
-        </ul>
-    </div>
-    <div class="loginButton">
-        <a class="btn btn-light" th:href="@{/Login}" role="button">Login</a>
-    </div>
-</nav>
 
-<div class="container mt-4">
+
+<div class="container-fluid">
+    <div th:insert="fragments/layout/header">Header</div>
+
+    <div class="header"><h2>Blog</h2></div>
+    <hr/>
     <table class="table table-bordered table-striped">
         <tbody>
-          <tr th:each="blog : ${blogs}">
-              <td th:text="*{blog.getBlogTitle()}"></td>
-              <td th:text="*{blog.getBlogDescription()}"></td>
-              <td th:text="*{blog.getBlogID()}"></td>
-              <td th:text="*{blog.getEmployeeID()}"></td>
-          </tr>
+        <tr th:each="blog : ${blogs}">
+            <td th:text="*{blog.getBlogTitle()}"></td>
+            <td th:text="*{blog.getBlogDescription()}"></td>
+            <td th:text="*{blog.getBlogID()}"></td>
+            <td th:text="*{blog.getEmployeeID()}"></td>
+        </tr>
         </tbody>
     </table>
 
+    <!--BOTTOM Navbar-->
+    <div th:insert="fragments/layout/footer">Footer</div>
+
 </div>
-<!--BOTTOM Navbar-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/vacancies}">Vacancies</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/blog}">Blog</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/contactus}">Contact Us</a>
-            </li>
-        </ul>
-    </div>
-    <!--FOOTER-->
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <span class="text-muted">Black Light Code &copy</span>
-            </div>
-        </div>
-    </footer>
-</nav>
+
+
+
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

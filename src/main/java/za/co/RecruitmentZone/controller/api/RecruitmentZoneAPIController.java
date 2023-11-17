@@ -25,9 +25,6 @@ public class RecruitmentZoneAPIController {
     }
 
 
-
-
-
 /*    @GetMapping("/addVacancy")
     public ResponseEntity<Vacancy> createVacancy(@RequestBody VacancyFormData vacancy) {
         Vacancy newVacancy = vacancyService.createVacancy(vacancy);
@@ -51,7 +48,7 @@ public class RecruitmentZoneAPIController {
     }
 
     @DeleteMapping("/deleteVacancy/{id}")
-    public ResponseEntity<String> deleteVacancy(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteVacancy(@PathVariable Long id) {
         boolean vacancyDeleted = vacancyService.deleteVacancy(id);
         if (vacancyDeleted) {
             return new ResponseEntity<>("Vacancy Deleted", HttpStatus.CREATED);
@@ -61,7 +58,7 @@ public class RecruitmentZoneAPIController {
     }
 
     @PutMapping("/updateVacancyStatus/{id}/status")
-    public ResponseEntity<Vacancy> updateVacancyStatus(@PathVariable Integer id, @RequestBody VacancyStatus newStatus) {
+    public ResponseEntity<Vacancy> updateVacancyStatus(@PathVariable Long id, @RequestBody String newStatus) {
         try {
             vacancyService.updateStatus(id, newStatus);
             return new ResponseEntity<>(HttpStatus.OK);

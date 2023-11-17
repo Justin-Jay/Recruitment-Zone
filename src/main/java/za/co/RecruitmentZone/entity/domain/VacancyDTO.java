@@ -1,15 +1,6 @@
 package za.co.RecruitmentZone.entity.domain;
 
-import jakarta.persistence.*;
-import za.co.RecruitmentZone.entity.Enums.EmpType;
-import za.co.RecruitmentZone.entity.Enums.JobType;
-import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
-
-@Entity
-@Table(name="vacancy")
-public class Vacancy {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class VacancyDTO {
     private Long vacancyID;
     private String jobTitle;
     private String jobDescription;
@@ -20,16 +11,16 @@ public class Vacancy {
     private String industry;
     private String publish_date;
     private String end_date;
-    private String status;
     private String jobType;
-
+    private String status;
     private String empType;
-    @Column(name = "employeeID")
-    private Long employeeID; // contact name , contact number contact email
-    public Vacancy() {
+    private Long employeeID;
+
+    public VacancyDTO() {
     }
 
-    public Vacancy(String jobTitle, String jobDescription, String seniority_level, String category, String requirements, String location, String industry, String publish_date, String end_date, String jobType, String empType, Long employeeID) {
+    public VacancyDTO(Long vacancyID, String jobTitle, String jobDescription, String seniority_level, String category, String requirements, String location, String industry, String publish_date, String end_date, String jobType, String status, String empType,Long employeeID) {
+        this.vacancyID = vacancyID;
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.seniority_level = seniority_level;
@@ -40,16 +31,33 @@ public class Vacancy {
         this.publish_date = publish_date;
         this.end_date = end_date;
         this.jobType = jobType;
+        this.status = status;
         this.empType = empType;
+        this.employeeID=employeeID;
+    }
+
+    public Long getEmployeeID() {
+        return employeeID;
+    }
+
+    public void setEmployeeID(Long employeeID) {
         this.employeeID = employeeID;
     }
 
-    public void setVacancyID(Long vacancyID) {
-        this.vacancyID = vacancyID;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Long getVacancyID() {
         return vacancyID;
+    }
+
+    public void setVacancyID(Long vacancyID) {
+        this.vacancyID = vacancyID;
     }
 
     public String getJobTitle() {
@@ -124,14 +132,6 @@ public class Vacancy {
         this.end_date = end_date;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getJobType() {
         return jobType;
     }
@@ -148,17 +148,9 @@ public class Vacancy {
         this.empType = empType;
     }
 
-    public Long getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
-    }
-
     @Override
     public String toString() {
-        return "Vacancy{" +
+        return "VacancyDTO{" +
                 "jobTitle='" + jobTitle + '\'' +
                 ", jobDescription='" + jobDescription + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
@@ -168,10 +160,8 @@ public class Vacancy {
                 ", industry='" + industry + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
-                ", status='" + status + '\'' +
                 ", jobType='" + jobType + '\'' +
                 ", empType='" + empType + '\'' +
-                ", employeeID=" + employeeID +
                 '}';
     }
 }

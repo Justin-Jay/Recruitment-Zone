@@ -1,0 +1,48 @@
+<div class="container mt-4">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+        <tr>
+            <th>Vacancy ID</th>
+            <th>Job Title</th>
+            <th>Job Description</th>
+            <th>Category</th>
+            <th>Requirements</th>
+            <th>Location</th>
+            <th>Industry</th>
+            <th>Publish Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Job Type</th>
+            <th>Employment Type</th>
+            <th>Employee ID</th>
+            <th>Action</th> <!-- New column for the "View Job" link -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vacancy : ${Vacancy}">
+            <td th:text="*{vacancy.vacancyID}"></td>
+            <td th:text="*{vacancy.jobTitle}"></td>
+            <td th:text="*{vacancy.jobDescription}"></td>
+            <td th:text="*{vacancy.category}"></td>
+            <td th:text="*{vacancy.requirements}"></td>
+            <td th:text="*{vacancy.location}"></td>
+            <td th:text="*{vacancy.industry}"></td>
+            <td th:text="*{vacancy.publish_date}"></td>
+            <td th:text="*{vacancy.end_date}"></td>
+            <td th:text="*{vacancy.status}"></td>
+            <td th:text="*{vacancy.jobType}"></td>
+            <td th:text="*{vacancy.empType}"></td>
+            <td th:text="*{vacancy.employeeID}"></td>
+            <td>
+                <form th:action="@{/update-vacancy}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button type="submit" class="btn btn-primary">Update Vacancy</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

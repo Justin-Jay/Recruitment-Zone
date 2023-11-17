@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.configuration.VacancyBatch;
+package za.co.RecruitmentZone.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,8 @@ import za.co.RecruitmentZone.repository.VacancyRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static za.co.RecruitmentZone.entity.Enums.VacancyStatus.EXPIRED;
 
 @Component
 public class VacancyStatusUpdater {
@@ -39,13 +41,13 @@ public class VacancyStatusUpdater {
 
                 if (startDate.isBefore(currentDate) || startDate.isEqual(currentDate)) {
                     if (endDate.isBefore(currentDate) || endDate.isEqual(currentDate)) {
-                        if (vacancy.getStatus() != VacancyStatus.EXPIRED) {
-                            vacancy.setStatus(VacancyStatus.EXPIRED);
+                        if (vacancy.getStatus().equalsIgnoreCase("EXPIRED")) {
+                            vacancy.setStatus("EXPIRED");
                             vacancyRepository.save(vacancy);
                         }
                     } else {
-                        if (vacancy.getStatus() != VacancyStatus.ACTIVE) {
-                            vacancy.setStatus(VacancyStatus.ACTIVE);
+                        if (vacancy.getStatus().equalsIgnoreCase("ACTIVE")) {
+                            vacancy.setStatus("ACTIVE");
                             vacancyRepository.save(vacancy);
                         }
                     }

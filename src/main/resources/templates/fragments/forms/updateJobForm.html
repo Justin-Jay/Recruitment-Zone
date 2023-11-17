@@ -1,0 +1,13 @@
+<div class="container-fluid">
+    <form th:action="@{/updateJob}" th:method="post">
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+        <input type="hidden" name="jobID" th:value="*{job.getJobID()}"/>
+        <!-- Submit button to trigger the form submission -->
+        <label></label>
+        <button type="submit" class="btn btn-primary">Update Job</button>
+    </form>
+
+    <label>
+        <input class="edit" value="Create a TodoMVC template">
+    </label>
+</div>

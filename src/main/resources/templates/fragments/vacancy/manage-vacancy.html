@@ -12,13 +12,14 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
+
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
 
-    <div class="header"><h2>Contact Us</h2></div>
+    <div class="container-fluid"><h2>Manage Jobs</h2></div>
     <hr/>
-    <div class="container mt-4">
-    </div>
+    <div th:insert="fragments/job/job">Job</div>
+
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>
 
