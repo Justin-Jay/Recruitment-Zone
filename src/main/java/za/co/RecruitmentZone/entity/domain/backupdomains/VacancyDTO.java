@@ -1,7 +1,7 @@
-package za.co.RecruitmentZone.entity.domain;
+/*
+package za.co.RecruitmentZone.entity.domain.backupdomains;
 
 public class VacancyDTO {
-    private Long vacancyID;
     private String jobTitle;
     private String jobDescription;
     private String seniority_level;
@@ -19,8 +19,7 @@ public class VacancyDTO {
     public VacancyDTO() {
     }
 
-    public VacancyDTO(Long vacancyID, String jobTitle, String jobDescription, String seniority_level, String category, String requirements, String location, String industry, String publish_date, String end_date, String jobType, String status, String empType,Long employeeID) {
-        this.vacancyID = vacancyID;
+    public VacancyDTO(String jobTitle, String jobDescription, String seniority_level, String category, String requirements, String location, String industry, String publish_date, String end_date, String jobType, String status, String empType,Long employeeID) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.seniority_level = seniority_level;
@@ -52,13 +51,6 @@ public class VacancyDTO {
         this.status = status;
     }
 
-    public Long getVacancyID() {
-        return vacancyID;
-    }
-
-    public void setVacancyID(Long vacancyID) {
-        this.vacancyID = vacancyID;
-    }
 
     public String getJobTitle() {
         return jobTitle;
@@ -165,3 +157,4 @@ public class VacancyDTO {
                 '}';
     }
 }
+*/

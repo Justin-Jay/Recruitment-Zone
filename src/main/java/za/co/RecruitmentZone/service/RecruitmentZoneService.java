@@ -3,7 +3,6 @@ package za.co.RecruitmentZone.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 import za.co.RecruitmentZone.entity.domain.*;
 import za.co.RecruitmentZone.service.domainServices.*;
 
@@ -55,14 +54,14 @@ public class RecruitmentZoneService {
     public List<Vacancy> getAllVacancies() {
         return vacancyService.getAllVacancies();
     }
-    public List<Vacancy> getActiveVacancies(String status) {
-        return vacancyService.getActiveVacancies(status);
+    public void saveVacancy(Vacancy vacancy){
+        vacancyService.save(vacancy);
     }
 
-    public Vacancy saveVacancy(Vacancy vacancy){
+ /*   public Boolean saveVacancy(Vacancy vacancy){
+
         return vacancyService.save(vacancy);
-    }
-
+    }*/
 
     // APPLICATIONS
     public List<Application> getApplications() {
@@ -78,9 +77,7 @@ public class RecruitmentZoneService {
         }
     }
 
-    public List<Vacancy> getEmployeeVacancies(Integer employee_id) {
-        return vacancyService.getEmployeeVacancies(employee_id);
-    }
+
 
     public Vacancy findVacancyById(Long vacancyID) {  // Changed from Long to Integer
         Vacancy vacancy = null;
@@ -95,25 +92,6 @@ public class RecruitmentZoneService {
 
     // update the vacancy status to expired using repository
 
-    public boolean setVacancyStatusToExpired(Long vacancyID) {
-        Optional<Vacancy> optionalVacancy = vacancyService.findById(vacancyID);
-        if (optionalVacancy.isPresent()) {
-            Vacancy vacancy = optionalVacancy.get();
-            vacancy.setStatus("EXPIRED");
-            vacancyService.save(vacancy);
-            return true;
-        } else {
-            // handle the case where the vacancy is not found
-            return false;
-        }
-    }
-
-    public void updateStatus(Long id, String newStatus) throws Exception {
-        Vacancy vacancy = vacancyService.findById(id)
-                .orElseThrow(() -> new Exception("Vacancy not found"));
-        vacancy.setStatus(newStatus);
-        vacancyService.save(vacancy);
-    }
 
 /*    public boolean createVacancy(Vacancy vacancy) {
         // Create a new Vacancy entity and populate it from the DTO

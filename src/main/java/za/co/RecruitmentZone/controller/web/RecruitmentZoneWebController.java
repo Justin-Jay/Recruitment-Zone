@@ -1,16 +1,17 @@
 package za.co.RecruitmentZone.controller.web;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import za.co.RecruitmentZone.entity.domain.*;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -26,25 +27,73 @@ public class RecruitmentZoneWebController {
     // Home pages
     @GetMapping("/")
     public String home(Model model) {
-        List<Vacancy> vacancies = recruitmentZoneService.getAllVacancies();
-        log.info("Total Vacancies: " + vacancies.size());
-        model.addAttribute("totalNumberOfVacancies", vacancies.size());
-        model.addAttribute("vacancies", vacancies);
+       // List<Vacancy> vacancies = recruitmentZoneService.getAllVacancies();
+       // log.info("Total Vacancies: " + vacancies.size());
+       // model.addAttribute("totalNumberOfVacancies", vacancies.size());
+       // model.addAttribute("vacancies", vacancies);
         return "home";
     }
 
     @GetMapping("/vacancies")
     public String vacancies(Model model) {
-        List<Vacancy> activeVacancies = new ArrayList<>();
+        List<Vacancy> allVacancies = new ArrayList<>();
         try {
-            activeVacancies = recruitmentZoneService.getAllVacancies();
+            allVacancies = recruitmentZoneService.getAllVacancies();
         } catch (Exception e) {
-            log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
+            log.info("Exception trying to retrieve vacancies, retrieving all vacancies ");
         }
-        model.addAttribute("activeVacancies", activeVacancies);
+        model.addAttribute("vacancies", allVacancies);
         return "vacancies";
     }
 
+    @GetMapping("/add-vacancy")
+    public String showCreateVacancyForm(Model model) {
+        model.addAttribute("vacancy", new Vacancy());
+        return "fragments/vacancy/add-vacancy";
+    }
+
+    /*    @GetMapping("/manage-vacancies")
+        public String manageVacancies(Model model) {
+            List<Vacancy> vacancies = new ArrayList<>();
+            try {
+                vacancies = recruitmentZoneService.getAllVacancies();
+            } catch (Exception e) {
+                log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
+            }
+            model.addAttribute("Vacancies", vacancies);
+            return "fragments/vacancy/manage-vacancies";
+        }*/
+    @PostMapping("/view-vacancy")
+    public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
+        Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
+        log.info("Looking for {}", vacancyID);
+        log.info(optionalVacancy.toString());
+        model.addAttribute("vacancy", optionalVacancy);
+        return "fragments/vacancy/view-vacancy";
+    }
+    @PostMapping("/save-vacancy")
+    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "fragments/vacancy/add-vacancy";
+        }
+        recruitmentZoneService.saveVacancy(vacancy);
+        return "redirect:vacancies";
+    }
+    @PostMapping("/update-vacancy")
+    public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
+        Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
+        model.addAttribute("vacancy", vacancy);
+        return "fragments/vacancy/update-vacancy";
+    }
+
+    @PostMapping("/save-updated-vacancy")
+    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "fragments/vacancy/update-vacancy";
+        }
+        recruitmentZoneService.saveVacancy(vacancy);
+        return "redirect:vacancies";
+    }
 
     @GetMapping("/manageVacancies")
     public String manageVacancies(Model model) {
@@ -58,61 +107,6 @@ public class RecruitmentZoneWebController {
         return "fragments/vacancy/manage-vacancies";
     }
 
-/*    @GetMapping("/manage-vacancies")
-    public String manageVacancies(Model model) {
-        List<Vacancy> vacancies = new ArrayList<>();
-        try {
-            vacancies = recruitmentZoneService.getAllVacancies();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
-        }
-        model.addAttribute("Vacancies", vacancies);
-        return "fragments/vacancy/manage-vacancies";
-    }*/
-    @PostMapping("/view-vacancy")
-    public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
-        Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
-        log.info("Looking for {}",vacancyID);
-        log.info(optionalVacancy.toString());
-  /*      Vacancy vacancyView = null;
-        if (optionalVacancy.isPresent()) {
-            vacancyView = optionalVacancy.get();
-        }*/
-        model.addAttribute("Vacancy", optionalVacancy);
-        return "fragments/vacancy/view-vacancy";
-    }
-    @PostMapping("/update-vacancy")
-    public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
-        Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
-        VacancyDTO vacancyDTO = new VacancyDTO(optionalVacancy.getVacancyID(),optionalVacancy.getJobTitle(),optionalVacancy.getJobDescription(),optionalVacancy.getSeniority_level(),
-                optionalVacancy.getCategory(),optionalVacancy.getRequirements(),optionalVacancy.getLocation(),optionalVacancy.getIndustry(),optionalVacancy.getPublish_date()
-        ,optionalVacancy.getEnd_date(),optionalVacancy.getJobType(), optionalVacancy.getStatus(), optionalVacancy.getEmpType(),optionalVacancy.getEmployeeID());
-   /*     Vacancy vacancyView = null;
-        if (optionalVacancy.isPresent()) {
-            vacancyView = optionalVacancy.get();
-        }*/
-        model.addAttribute("Vacancy", vacancyDTO);
-        return "fragments/vacancy/update-vacancy";
-    }
-    @PostMapping("/save-vacancy")
-    public String saveVacancy(@ModelAttribute("Vacancy") VacancyDTO vacancy, Model model) {
-        Vacancy v = recruitmentZoneService.findVacancyById(vacancy.getVacancyID());
-        v.setVacancyID(v.getVacancyID());
-        v.setJobTitle(vacancy.getJobTitle());
-        v.setJobTitle(vacancy.getJobDescription());
-        v.setJobTitle(vacancy.getSeniority_level());
-        v.setJobTitle(vacancy.getCategory());
-        v.setJobTitle(vacancy.getRequirements());
-        v.setJobTitle(vacancy.getIndustry());
-        v.setJobTitle(vacancy.getPublish_date());
-        v.setJobTitle(vacancy.getEnd_date());
-        v.setJobTitle(vacancy.getJobType());
-        v.setJobTitle(vacancy.getStatus());
-        v.setJobTitle(vacancy.getEmpType());
-        Vacancy savedVacancy = recruitmentZoneService.saveVacancy(v);
-        model.addAttribute("Vacancy", savedVacancy);
-        return "fragments/vacancy/view-vacancy";
-    }
 /*    @PostMapping("/add")
     public String addRecruiter(@ModelAttribute Recruiter recruiter) {
         // Process form submission to add a new recruiter
@@ -122,23 +116,23 @@ public class RecruitmentZoneWebController {
 
     @GetMapping("/aboutus")
     public String aboutUs() {
-        return "aboutus";
+        return "fragments/info/about-us";
     }
 
     @GetMapping("/contactus")
     public String contactus() {
-        return "contactus";
+        return "fragments/info/contact-us";
     }
 
     @GetMapping("/blog")
     public String blog(Model model) {
-        List<Blog> blogs = new ArrayList<>();
+    /*    List<Blog> blogs = new ArrayList<>();
         try {
             blogs = recruitmentZoneService.getBlogs();
         } catch (Exception e) {
             log.info("Exception trying to retrieve blogs");
         }
-        model.addAttribute("blogs", blogs);
+        model.addAttribute("blogs", blogs);*/
         return "blog";
     }
 

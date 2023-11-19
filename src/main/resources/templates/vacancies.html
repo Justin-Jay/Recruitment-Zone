@@ -13,91 +13,18 @@
 </head>
 <body>
 
-<!--TOP Navbar-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/vacancies}">Vacancies</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/blog}">Blog</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/contactus}">Contact Us</a>
-            </li>
-        </ul>
-    </div>
-    <div class="loginButton">
-        <a class="btn btn-light" th:href="@{/Login}" role="button">Login</a>
-    </div>
-</nav>
+<div class="container-fluid">
+    <div th:insert="fragments/layout/header">Header</div>
 
-<div class="header"><h2>Vacancies</h2></div>
-<hr/>
-<div class="container mt-4">
-    <table class="table table-bordered table-striped">
-        <tbody>
-        <tr th:each="vacancy : ${activeVacancies}">
-            <td th:text="*{vacancy.getPublish_date()}"></td>
-            <td th:text="*{vacancy.getEnd_date()}"></td>
-            <td th:text="*{vacancy.getStatus()}"></td>
-            <td th:text="*{vacancy.getJobID()}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="table table-bordered table-striped">
-        <tbody>
-        <tr th:each="job : ${jobs}">
-            <td th:text="*{job.getJobTitle()}"></td>
-            <td th:text="*{job.getEmpType()}"></td>
-            <td th:text="*{job.getCategory()}"></td>
-            <td th:text="*{job.getIndustry()}"></td>
-            <td th:text="*{job.getJobDescription()}"></td>
-            <td th:text="*{job.getJobID()}"></td>
-            <td th:text="*{job.getLocation()}"></td>
-            <td th:text="*{job.getRequirements()}"></td>
-            <td th:text="*{job.getSeniority_level()}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<!--BOTTOM Navbar-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/vacancies}">Vacancies</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/blog}">Blog</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/contactus}">Contact Us</a>
-            </li>
-        </ul>
+    <div th:insert="fragments/vacancy/vacancy">Vacancies</div>
+
+    <div class="container-fluid">
+        <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-vacancy}">Add Vacancy</a>
     </div>
-    <!--FOOTER-->
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <span class="text-muted">Black Light Code &copy</span>
-            </div>
-        </div>
-    </footer>
-</nav>
+    <!--BOTTOM Navbar-->
+    <div th:insert="fragments/layout/footer">Footer</div>
+
+</div>
 
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

@@ -57,7 +57,7 @@ public class RecruitmentZoneAPIController {
         }
     }
 
-    @PutMapping("/updateVacancyStatus/{id}/status")
+/*    @PutMapping("/updateVacancyStatus/{id}/status")
     public ResponseEntity<Vacancy> updateVacancyStatus(@PathVariable Long id, @RequestBody String newStatus) {
         try {
             vacancyService.updateStatus(id, newStatus);
@@ -65,7 +65,7 @@ public class RecruitmentZoneAPIController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
 /*    @PutMapping("/updateVacancyDetails/{id}")
     public ResponseEntity<Vacancy> updateVacancyDetails(@PathVariable Integer id, @RequestBody VacancyDTO vacancyDTO) {

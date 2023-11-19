@@ -1,3 +1,4 @@
+/*
 package za.co.RecruitmentZone.service;
 
 import org.slf4j.Logger;
@@ -58,3 +59,4 @@ public class VacancyStatusUpdater {
         }
     }
 }
+*/
