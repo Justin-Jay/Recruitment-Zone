@@ -20,12 +20,10 @@ public class VacancyService {
     }
 
     public List<Vacancy> getAllVacancies(){
-        return vacancyRepository.findAllVacancies();
+        return vacancyRepository.findAll();
     }
-    public List<Vacancy> getActiveVacancies(String status){
-        return vacancyRepository.findStatusVacancies(status);
-    }
-    public void deleteVacancy(Long id){
+
+      public void deleteVacancy(Long id){
         vacancyRepository.deleteById(id);
     }
 
@@ -37,7 +35,5 @@ public class VacancyService {
         return vacancyRepository.save(vacancy);
     }
 
-    public List<Vacancy> getEmployeeVacancies(Integer id){
-        return vacancyRepository.findByEmployeeID(id);
-    }
+
 }

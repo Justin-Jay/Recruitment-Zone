@@ -9,66 +9,31 @@ public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long applicationID;
-    private String submissionDate;
-    @Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
-    @ManyToOne
-    @JoinColumn(name = "candidateID")
-    private Candidate candidate;
-    @Column(name = "jobID")
-    private Long jobID;
+    private String date_received;
+
     public Application() {
     }
 
-    public Application(String submissionDate, ApplicationStatus status, Long jobID) {
-        this.submissionDate = submissionDate;
-        this.status = status;
-        this.jobID = jobID;
+    public Application(String date_received) {
+        this.date_received = date_received;
     }
 
     public Long getApplicationID() {
         return applicationID;
     }
 
-    public String getSubmissionDate() {
-        return submissionDate;
+    public String getDate_received() {
+        return date_received;
     }
 
-    public void setSubmissionDate(String submissionDate) {
-        this.submissionDate = submissionDate;
-    }
-
-    public ApplicationStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ApplicationStatus status) {
-        this.status = status;
-    }
-
-    public Candidate getCandidate() {
-        return candidate;
-    }
-
-    public void setCandidate(Candidate candidate) {
-        this.candidate = candidate;
-    }
-
-    public Long getJobID() {
-        return jobID;
-    }
-
-    public void setJobID(Long jobID) {
-        this.jobID = jobID;
+    public void setDate_received(String date_received) {
+        this.date_received = date_received;
     }
 
     @Override
     public String toString() {
         return "Application{" +
-                "applicationID=" + applicationID +
-                ", submissionDate='" + submissionDate + '\'' +
-                ", status=" + status +
-                ", jobID=" + jobID +
+                "date_received='" + date_received + '\'' +
                 '}';
     }
 }
