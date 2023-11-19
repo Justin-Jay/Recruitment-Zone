@@ -7,10 +7,10 @@ import java.util.Set;
 @Entity
 @Table(name = "employee")
 public class Employee {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @Column(name = "id")
+    private Long id;
     @Column(name = "username", unique = true)
     private String username;
     @Column(name = "first_name")
@@ -25,6 +25,7 @@ public class Employee {
     public Employee() {
     }
 
+
     public Employee(String username, String first_name, String last_name, String email_address, String contact_number) {
         this.username = username;
         this.first_name = first_name;
@@ -33,8 +34,12 @@ public class Employee {
         this.contact_number = contact_number;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

@@ -27,10 +27,10 @@ public class RecruitmentZoneWebController {
     // Home pages
     @GetMapping("/")
     public String home(Model model) {
-       // List<Vacancy> vacancies = recruitmentZoneService.getAllVacancies();
-       // log.info("Total Vacancies: " + vacancies.size());
-       // model.addAttribute("totalNumberOfVacancies", vacancies.size());
-       // model.addAttribute("vacancies", vacancies);
+        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
+        log.info("Total Vacancies: " + vacancies.size());
+        model.addAttribute("totalNumberOfVacancies", vacancies.size());
+        model.addAttribute("vacancies", vacancies);
         return "home";
     }
 

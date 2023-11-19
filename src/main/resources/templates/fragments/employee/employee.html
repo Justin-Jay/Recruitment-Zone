@@ -1,0 +1,34 @@
+<div class="container-fluid">
+    <hr>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Employee ID</th>
+            <th>Username</th>
+            <th>Employee First Name</th>
+            <th>Employee Last Name</th>
+            <th>Employee Email Address</th>
+            <th>Employee Contact Number</th>
+            <th>View Employee</th><!-- New column for the "View Employee" link -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.id}"></td>
+            <td th:text="${employee.username}"></td>
+            <td th:text="${employee.first_name}"></td>
+            <td th:text="${employee.last_name}"></td>
+            <td th:text="${employee.email_address}"></td>
+            <td th:text="${employee.contact_number}"></td>
+            <td>
+                <form th:action="@{/update-employee}" th:method="post">
+                    <!-- Hidden input field to include the id in the POST request -->
+                    <input type="hidden" name="id" th:value="*{employee.id}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button type="submit" class="btn btn-primary">Update Employee</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

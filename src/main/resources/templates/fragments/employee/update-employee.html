@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div th:insert="fragments/layout/header">Header</div>
+
+    <div class="container-fluid"><h2>View Blog</h2></div>
+    <hr/>
+<div class="container-fluid">
+    <form action="#" th:action="@{/save-updated-employee}" th:object="${employee}" th:method="POST">
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+        <input type="hidden" th:field="*{id}" />
+        <div class="md-10">
+            <label for="first_name" >Employee First Name: </label>
+            <input type="text" th:field="*{first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="First Name"/>
+        </div>
+
+        <div class="md-10">
+            <label for="last_name" >Employee Last Name: </label>
+            <input type="text" th:field="*{last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Last Name"/>
+        </div>
+
+        <div class="md-10">
+            <label for="contact_number" >Employee Contact Number: </label>
+            <input type="text" th:field="*{contact_number}" class="form-control mb-4 w-25" id="contact_number" placeholder="Contact Number"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Updated Employee</button>
+    </form>
+
+</div>
+
+
+    <!--BOTTOM Navbar-->
+    <div th:insert="fragments/layout/footer">Footer</div>
+
+</div>
+
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

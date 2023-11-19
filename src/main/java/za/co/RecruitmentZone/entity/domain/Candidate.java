@@ -13,6 +13,7 @@ public class Candidate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long candidateID;
     private String first_name;
+    private String username;
     public Candidate() {
         // received
     }

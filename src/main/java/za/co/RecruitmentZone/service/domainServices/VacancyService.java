@@ -35,4 +35,8 @@ public class VacancyService {
         vacancyRepository.deleteById(id);
     }
 
+    public List<Vacancy> getActiveVacancies(){
+        return vacancyRepository.findAll();
+    }
+
 }

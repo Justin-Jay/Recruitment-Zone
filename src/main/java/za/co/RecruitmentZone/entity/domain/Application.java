@@ -22,19 +22,16 @@ public class Application {
         return applicationID;
     }
 
+    public void setApplicationID(Long applicationID) {
+        this.applicationID = applicationID;
+    }
+
     public String getDate_received() {
         return date_received;
     }
 
     public void setDate_received(String date_received) {
         this.date_received = date_received;
-    }
-
-    @Override
-    public String toString() {
-        return "Application{" +
-                "date_received='" + date_received + '\'' +
-                '}';
     }
 }
 

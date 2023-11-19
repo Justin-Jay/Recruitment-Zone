@@ -12,20 +12,13 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
+
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
-    <div class="container-fluid">
-        <div class="row-cols-auto">
-            <header class="alert-heading">
-                <h1>Page Does Not Exist</h1>
-            </header>
-            <div class="container-fluid">
-                <form th:action="@{/}" th:method="Get">
-                    <button class="btn btn-dark">Home Page</button>
-                </form>
-            </div>
-        </div>
-    </div>
+
+    <div class="container-fluid"><h2>View Employee</h2></div>
+    <hr/>
+    <div th:insert="fragments/employee/employee">Employees</div>
 
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>

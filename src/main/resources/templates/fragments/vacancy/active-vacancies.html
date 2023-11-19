@@ -1,0 +1,28 @@
+<div class="container-fluid">
+
+    <h3>Vacancies</h3>
+    <hr>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Vacancy ID</th>
+            <th>Job Title</th>
+            <th>Apply Now</th><!-- New column for the "View Job" link -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vacancy : ${vacancies}">
+            <td th:text="${vacancy.vacancyID}"></td>
+            <td th:text="${vacancy.jobTitle}"></td>
+            <td>
+                <form th:action="@{/apply-now}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
