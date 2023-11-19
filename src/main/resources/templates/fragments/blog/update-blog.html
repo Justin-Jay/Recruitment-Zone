@@ -13,28 +13,29 @@
 </head>
 <body>
 
-
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
 
-    <div class="header"><h2>Blog</h2></div>
+    <div class="container-fluid"><h2>View Blog</h2></div>
     <hr/>
-    <table class="table table-bordered table-striped">
-        <tbody>
-        <tr th:each="blog : ${blogs}">
-            <td th:text="*{blog.getBlogTitle()}"></td>
-            <td th:text="*{blog.getBlogDescription()}"></td>
-            <td th:text="*{blog.getBlogID()}"></td>
-            <td th:text="*{blog.getEmployeeID()}"></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <form action="#" th:action="@{/save-updated-blog}" th:object="${blog}" th:method="POST">
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+        <input type="hidden" name="blogID" th:field="*{blogID}" />
+        <div class="md-10">
+            <label for="blog_title"  >Blog Title: </label>
+            <input type="text" th:field="*{blog_title}" class="form-control mb-4 w-25" id="blog_title" placeholder="Blog Title"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Updated Blog</button>
+    </form>
+
+</div>
+
 
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
-
 
 
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>

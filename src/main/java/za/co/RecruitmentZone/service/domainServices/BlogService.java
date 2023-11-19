@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import za.co.RecruitmentZone.entity.domain.Blog;
+import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.repository.BlogRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BlogService {
@@ -22,8 +24,12 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
-    public Blog createBlog(Blog blog){
+    public Blog save(Blog blog){
         return blogRepository.save(blog);
+    }
+
+    public Optional<Blog> findById(Long id){
+        return blogRepository.findById(id);
     }
 
 }

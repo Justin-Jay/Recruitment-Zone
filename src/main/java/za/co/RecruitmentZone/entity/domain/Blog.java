@@ -12,6 +12,10 @@ public class Blog {
     public Blog() {
     }
 
+    public void setBlogID(Long blogID) {
+        this.blogID = blogID;
+    }
+
     public Long getBlogID() {
         return blogID;
     }

@@ -32,4 +32,12 @@ public class Vacancy {
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
     }
+
+    @Override
+    public String toString() {
+        return "Vacancy{" +
+                "vacancyID=" + vacancyID +
+                ", jobTitle='" + jobTitle + '\'' +
+                '}';
+    }
 }
