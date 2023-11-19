@@ -23,10 +23,6 @@ public class VacancyService {
         return vacancyRepository.findAll();
     }
 
-      public void deleteVacancy(Long id){
-        vacancyRepository.deleteById(id);
-    }
-
     public Optional<Vacancy> findById(Long id){
         return vacancyRepository.findById(id);
     }
@@ -35,5 +31,8 @@ public class VacancyService {
         return vacancyRepository.save(vacancy);
     }
 
+    public void deleteVacancy(Long id){
+        vacancyRepository.deleteById(id);
+    }
 
 }

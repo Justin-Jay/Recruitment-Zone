@@ -28,14 +28,25 @@ public class RecruitmentZoneService {
     }
 
     // BLOGS
-
+// findBlogByID / saveBlog / findBlogByID
     public List<Blog> getBlogs() {
         return blogService.getBlogs();
     }
 
-    public Blog createBlog(Blog blog){
-        return blogService.createBlog(blog);
+    public void saveBlog(Blog blog){
+        blogService.save(blog);
     }
+
+    public Blog findBlogByID(Long blogID){
+        Blog blog = null;
+        Optional<Blog> optionalBlog = blogService.findById(blogID);
+        if (optionalBlog.isPresent()){
+            blog = optionalBlog.get();
+        }
+        return blog;
+    }
+
+
 
     // CANDIDATE
 

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div th:insert="fragments/layout/header">Header</div>
+
+    <div class="container-fluid"><h2>Add Blog</h2></div>
+    <hr/>
+
+    <div class="container-fluid">
+        <form action="#" th:action="@{/save-blog}" th:object="${blog}" method="POST">
+            <label>
+                Blog Title: <input type="text" th:field="*{blog_title}" placeholder="Enter The Title" class="form-control">
+            </label>
+            <button type="submit" class="btn btn-primary btn-sm mb-3">Save blog</button>
+        </form>
+    </div>
+
+
+    <!--BOTTOM Navbar-->
+    <div th:insert="fragments/layout/footer">Footer</div>
+
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

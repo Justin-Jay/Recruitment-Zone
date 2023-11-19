@@ -34,86 +34,6 @@ public class RecruitmentZoneWebController {
         return "home";
     }
 
-    @GetMapping("/vacancies")
-    public String vacancies(Model model) {
-        List<Vacancy> allVacancies = new ArrayList<>();
-        try {
-            allVacancies = recruitmentZoneService.getAllVacancies();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve vacancies, retrieving all vacancies ");
-        }
-        model.addAttribute("vacancies", allVacancies);
-        return "vacancies";
-    }
-
-    @GetMapping("/add-vacancy")
-    public String showCreateVacancyForm(Model model) {
-        model.addAttribute("vacancy", new Vacancy());
-        return "fragments/vacancy/add-vacancy";
-    }
-
-    /*    @GetMapping("/manage-vacancies")
-        public String manageVacancies(Model model) {
-            List<Vacancy> vacancies = new ArrayList<>();
-            try {
-                vacancies = recruitmentZoneService.getAllVacancies();
-            } catch (Exception e) {
-                log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
-            }
-            model.addAttribute("Vacancies", vacancies);
-            return "fragments/vacancy/manage-vacancies";
-        }*/
-    @PostMapping("/view-vacancy")
-    public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
-        Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
-        log.info("Looking for {}", vacancyID);
-        log.info(optionalVacancy.toString());
-        model.addAttribute("vacancy", optionalVacancy);
-        return "fragments/vacancy/view-vacancy";
-    }
-    @PostMapping("/save-vacancy")
-    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "fragments/vacancy/add-vacancy";
-        }
-        recruitmentZoneService.saveVacancy(vacancy);
-        return "redirect:vacancies";
-    }
-    @PostMapping("/update-vacancy")
-    public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
-        Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
-        model.addAttribute("vacancy", vacancy);
-        return "fragments/vacancy/update-vacancy";
-    }
-
-    @PostMapping("/save-updated-vacancy")
-    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "fragments/vacancy/update-vacancy";
-        }
-        recruitmentZoneService.saveVacancy(vacancy);
-        return "redirect:vacancies";
-    }
-
-    @GetMapping("/manageVacancies")
-    public String manageVacancies(Model model) {
-        List<Vacancy> vacancies = new ArrayList<>();
-        try {
-            vacancies = recruitmentZoneService.getAllVacancies();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
-        }
-        model.addAttribute("Vacancies", vacancies);
-        return "fragments/vacancy/manage-vacancies";
-    }
-
-/*    @PostMapping("/add")
-    public String addRecruiter(@ModelAttribute Recruiter recruiter) {
-        // Process form submission to add a new recruiter
-        recruiterService.addRecruiter(recruiter);
-        return "redirect:/recruiters";
-    }*/
-
     @GetMapping("/aboutus")
     public String aboutUs() {
         return "fragments/info/about-us";
@@ -124,29 +44,6 @@ public class RecruitmentZoneWebController {
         return "fragments/info/contact-us";
     }
 
-    @GetMapping("/blog")
-    public String blog(Model model) {
-    /*    List<Blog> blogs = new ArrayList<>();
-        try {
-            blogs = recruitmentZoneService.getBlogs();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve blogs");
-        }
-        model.addAttribute("blogs", blogs);*/
-        return "blog";
-    }
-
-    @GetMapping("/addblog")
-    public String addBlog(Model model) {
-        List<Blog> blogs = new ArrayList<>();
-        try {
-            blogs = recruitmentZoneService.getBlogs();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve blogs");
-        }
-        model.addAttribute("blogs", blogs);
-        return "blogPages/addblog";
-    }
 
 
 
