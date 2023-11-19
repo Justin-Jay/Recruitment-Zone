@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import za.co.RecruitmentZone.entity.domain.Candidate;
+import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.repository.CandidateRepository;
 
 import java.util.List;
@@ -21,6 +22,10 @@ public class CandidateService {
     public List<Candidate> getCandidates() {
         return candidateRepository.findAll();
     }
+    public Candidate save(Candidate candidate){
+        return candidateRepository.save(candidate);
+    }
+
 
 
 }

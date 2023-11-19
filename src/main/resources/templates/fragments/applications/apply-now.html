@@ -12,27 +12,27 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
+
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
+
+    <div class="container-fluid"><h2>Apply Now</h2></div>
+    <hr/>
+
     <div class="container-fluid">
-        <div class="row-cols-auto">
-            <header class="alert-heading">
-                <h1>Page Does Not Exist</h1>
-            </header>
-            <div class="container-fluid">
-                <form th:action="@{/}" th:method="Get">
-                    <button class="btn btn-dark">Home Page</button>
-                </form>
-            </div>
-        </div>
+        <form action="#" th:action="@{/save-application}" th:object="${submission}" method="POST">
+            <label>
+                First Name: <input type="text" th:field="*{first_name}" placeholder="Enter First Name" class="form-control">
+            </label>
+            <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>
+        </form>
     </div>
+
 
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
-
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

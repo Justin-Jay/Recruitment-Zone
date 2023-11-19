@@ -14,24 +14,16 @@
 <body>
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
-    <div class="container-fluid">
-        <div class="row-cols-auto">
-            <header class="alert-heading">
-                <h1>Page Does Not Exist</h1>
-            </header>
-            <div class="container-fluid">
-                <form th:action="@{/}" th:method="Get">
-                    <button class="btn btn-dark">Home Page</button>
-                </form>
-            </div>
-        </div>
-    </div>
 
+    <div th:insert="fragments/employee/employee">Employee Administration</div>
+
+    <div class="container-fluid">
+        <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-employee}">Add Employee</a>
+    </div>
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
-
 
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
