@@ -7,31 +7,30 @@ import jakarta.persistence.*;
 public class Candidate {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "candidateID") //candidateID
     private Long candidateID;
-    @Column(name = "first_name")
+
     private String first_name;
-    @Column(name = "last_name")
+
     private String last_name;
-    @Column(name = "id_number")
+
     private String id_number;
-    @Column(name = "email_address")
+
     private String email_address;
-    @Column(name = "phone_number")
+
     private String phone_number;
-    @Column(name = "current_province")
+
     private String current_province;
-    @Column(name = "current_role")
+
     private String current_role;
-    @Column(name = "current_employer")
+
     private String current_employer;
-    @Column(name = "seniority_level")
+
     private String seniority_level;
-    @Column(name = "education_level")
+
     private String education_level;
-    @Column(name = "relocation")
+
     private Boolean relocation;
-    @Column(name = "cvFilePath")
+
     private String cvFilePath;
 
     public Candidate() {

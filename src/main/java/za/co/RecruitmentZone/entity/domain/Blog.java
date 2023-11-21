@@ -7,15 +7,15 @@ import jakarta.persistence.*;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "blogID")
+
     private Long blogID;
-    @Column(name = "blog_title")
+
     private String blog_title;
-    @Column(name="blogDescription")
+
     private String blog_description;
-    @Column(name = "body")
+
     private String body;
-    @Column(name = "employeeID")
+
     private Long employeeID;
 
     public Blog() {

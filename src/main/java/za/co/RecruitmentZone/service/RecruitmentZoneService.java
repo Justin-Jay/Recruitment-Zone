@@ -133,6 +133,16 @@ public class RecruitmentZoneService {
         Application application = new Application();
         LocalDate date = LocalDate.now();
         application.setDate_received(date.toString());
+        application.setSubmission_date(date.toString());
+        application.setStatus(1);
+        // set application information
+        /*
+        date_received
+     submission_date
+status
+candidateID
+ vacancyID
+ ;*/
         application = applicationService.save(application);
 
         CandidateApplication ca = new CandidateApplication();

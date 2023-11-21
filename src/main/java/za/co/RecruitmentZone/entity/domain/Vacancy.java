@@ -3,41 +3,21 @@ package za.co.RecruitmentZone.entity.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="vacancy")
+@Table(name = "vacancy")
 public class Vacancy {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "vacancyID")
     private Long vacancyID;
-    @Column(name = "jobTitle")
     private String job_title;
-
-    @Column(name = "jobDescription")
     private String job_description;
-    @Column(name = "seniority_level")
     private String seniority_level;
-
-    @Column(name = "requirements")
     private String requirements;
-
-    @Column(name = "location")
     private String location;
-
-    @Column(name = "Industry")
     private String industry;
-
-    @Column(name = "publish_date")
     private String publish_date;
-
-    @Column(name = "end_date")
     private String end_date;
-
-    @Column(name = "status")
     private int status;
-
-    @Column(name = "jobType")
     private String job_type;
-    @Column(name = "empType")
     private String emp_type;
 
     public Vacancy() {

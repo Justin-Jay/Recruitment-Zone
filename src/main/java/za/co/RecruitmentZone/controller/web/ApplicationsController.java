@@ -36,6 +36,8 @@ public class ApplicationsController {
         if (bindingResult.hasErrors()) {
             return "fragments/applications/apply-now";
         }
+        String filePath = "C://FILE";
+        candidate.setCvFilePath(filePath);
         boolean result = recruitmentZoneService.saveSubmission(candidate);
         if (result) {
             redirectAttributes.addAttribute("successMessage", "success");
