@@ -20,10 +20,56 @@
     <hr/>
 
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-application}" th:object="${submission}" method="POST">
+        <form action="#" th:action="@{/save-application}" th:object="${candidate}" method="POST">
             <label>
                 First Name: <input type="text" th:field="*{first_name}" placeholder="Enter First Name" class="form-control">
             </label>
+
+            <label>
+                Last Name: <input type="text" th:field="*{last_name}" placeholder="Enter Last Name" class="form-control">
+            </label>
+
+            <label>
+                ID Number: <input type="text" th:field="*{id_number}" placeholder="ID Number" class="form-control">
+            </label>
+
+            <label>
+                Email Address: <input type="email" th:field="*{email_address}" placeholder="Enter Email Address" class="form-control">
+            </label>
+
+            <label>
+                Phone Number: <input type="text" th:field="*{phone_number}" placeholder="Enter Phone Number" class="form-control">
+            </label>
+
+            <label>
+                Contact Number: <input type="text" th:field="*{current_province}" placeholder="Enter Current Province" class="form-control">
+            </label>
+
+            <label>
+                Current Role: <input type="text" th:field="*{current_role}" placeholder="Enter Current Role" class="form-control">
+            </label>
+
+            <label>
+                Current Employer: <input type="text" th:field="*{current_employer}" placeholder="Enter Current Employer" class="form-control">
+            </label>
+
+            <label>
+                Seniority Level: <input type="text" th:field="*{seniority_level}" placeholder="Enter Seniority Level" class="form-control">
+            </label>
+
+            <label>
+                First Name: <input type="text" th:field="*{education_level}" placeholder="Enter Education Level" class="form-control">
+            </label>
+
+            <label>
+                Relocation: <input type="text" th:field="*{relocation}" placeholder="Willing to relocate?" class="form-control">
+            </label>
+
+            <label>
+                Attach CV: <input type="text" th:field="*{cvFilePath}" placeholder="AttachCV" class="form-control">
+            </label>
+
+
             <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>
         </form>
     </div>

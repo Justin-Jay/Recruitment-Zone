@@ -7,6 +7,16 @@
         <tr>
             <th>Vacancy ID</th>
             <th>Job Title</th>
+            <th>job_description</th>
+            <th>seniority_level</th>
+            <th>requirements</th>
+            <th>location</th>
+            <th>industry</th>
+            <th>publish_date</th>
+            <th>end_date</th>
+            <th>status</th>
+            <th>job_type</th>
+            <th>emp_type</th>
             <th>View Vacancy</th><!-- New column for the "View Job" link -->
         </tr>
         </thead>
@@ -14,6 +24,16 @@
         <tr th:each="vacancy : ${vacancies}">
             <td th:text="${vacancy.vacancyID}"></td>
             <td th:text="${vacancy.jobTitle}"></td>
+            <td th:text="${vacancy.job_description}"></td>
+            <td th:text="${vacancy.seniority_level}"></td>
+            <td th:text="${vacancy.requirements}"></td>
+            <td th:text="${vacancy.location}"></td>
+            <td th:text="${vacancy.industry}"></td>
+            <td th:text="${vacancy.publish_date}"></td>
+            <td th:text="${vacancy.end_date}"></td>
+            <td th:text="${vacancy.status}"></td>
+            <td th:text="${vacancy.job_type}"></td>
+            <td th:text="${vacancy.emp_type}"></td>
             <td>
                 <form th:action="@{/update-vacancy}" th:method="post">
                     <!-- Hidden input field to include the vacancyID in the POST request -->

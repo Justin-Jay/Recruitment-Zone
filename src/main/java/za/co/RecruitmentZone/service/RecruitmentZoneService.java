@@ -127,10 +127,8 @@ public class RecruitmentZoneService {
         return applicationService.findApplications();
     }
 
-    public boolean saveSubmission(VacancySubmission submission) {
-        Candidate candidate = new Candidate();
-        candidate.setFirst_name(submission.getFirst_name());
-        candidate = candidateService.save(candidate);
+    public boolean saveSubmission(Candidate candidate) {
+        candidateService.save(candidate);
 
         Application application = new Application();
         LocalDate date = LocalDate.now();

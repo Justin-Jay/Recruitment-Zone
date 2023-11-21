@@ -74,16 +74,6 @@ public class VacancyController {
         return "redirect:vacancies";
     }
 
-    @GetMapping("/manageVacancies")
-    public String manageVacancies(Model model) {
-        List<Vacancy> vacancies = new ArrayList<>();
-        try {
-            vacancies = recruitmentZoneService.getAllVacancies();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve employee vacancies, retrieving all active vacancies ");
-        }
-        model.addAttribute("Vacancies", vacancies);
-        return "fragments/vacancy/manage-vacancies";
-    }
+
 
 }

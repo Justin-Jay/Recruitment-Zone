@@ -1,9 +1,9 @@
 package za.co.RecruitmentZone.entity.domain;
 public class VacancySubmission {
     // everything we need from the vacancy submission form
-
+    // takes in a form which has everything required to create a candidate and an application for a vacancy
+    private Candidate candidate;
     private String first_name;
-
     private Long applicationID;
 
     public VacancySubmission() {

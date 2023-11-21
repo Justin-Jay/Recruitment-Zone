@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
       lang="en">
 <head>
     <!-- Required meta tags -->
@@ -21,9 +21,19 @@
 
     <div class="container-fluid">
         <form action="#" th:action="@{/save-blog}" th:object="${blog}" method="POST">
+
             <label>
                 Blog Title: <input type="text" th:field="*{blog_title}" placeholder="Enter The Title" class="form-control">
             </label>
+
+            <label>
+                Blog Description: <input type="text" th:field="*{blog_description}" placeholder="Enter The Description" class="form-control">
+            </label>
+
+            <label>
+                Body: <input type="text" th:field="*{body}" placeholder="Enter The Body" class="form-control">
+            </label>
+
             <button type="submit" class="btn btn-primary btn-sm mb-3">Save blog</button>
         </form>
     </div>

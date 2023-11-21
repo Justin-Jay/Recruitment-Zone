@@ -5,6 +5,9 @@
         <tr>
             <th>Blog ID</th>
             <th>Blog Title</th>
+            <th>Blog Description</th>
+            <th>Body</th>
+            <th>EmployeeID</th>
             <th>View Blog</th><!-- New column for the "View Job" link -->
         </tr>
         </thead>
@@ -12,6 +15,9 @@
         <tr th:each="blog : ${blogs}">
             <td th:text="${blog.blogID}"></td>
             <td th:text="${blog.blog_title}"></td>
+            <td th:text="${blog.blog_description}"></td>
+            <td th:text="${blog.body}"></td>
+            <td th:text="${blog.employeeID}"></td>
             <td>
                 <form th:action="@{/update-blog}" th:method="post">
                     <!-- Hidden input field to include the vacancyID in the POST request -->
