@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <hr>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Blog ID</th>
+            <th>Blog Title</th>
+            <th>View Blog</th><!-- New column for the "View Job" link -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="blog : ${blogs}">
+            <td th:text="${blog.blogID}"></td>
+            <td th:text="${blog.blog_title}"></td>
+            <td>
+                <form th:action="@{/update-blog}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button type="submit" class="btn btn-primary">Update Blog</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

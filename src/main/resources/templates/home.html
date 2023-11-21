@@ -13,19 +13,18 @@
 </head>
 <body>
 <!--TOP Navbar-->
-
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
 
     <div class="container-fluid"><h1>Recruitment Zone</h1></div>
-
+    <!--<div th:if="${#bools.isTrue(application)}" class="alert alert-danger">
+        Application Submitted Successfully.
+    </div>-->
     <div th:insert="fragments/vacancy/active-vacancies">Active Vacancies</div>
-
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
-
 
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

@@ -7,8 +7,11 @@ import jakarta.persistence.*;
 public class EmployeeBlog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "employeeID")
     private Long employeeID;
+    @Column(name = "blogID")
     private Long bigID;
 
     public EmployeeBlog() {
@@ -21,6 +24,10 @@ public class EmployeeBlog {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getEmployeeID() {
@@ -37,5 +44,14 @@ public class EmployeeBlog {
 
     public void setBigID(Long bigID) {
         this.bigID = bigID;
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeBlog{" +
+                "id=" + id +
+                ", employeeID=" + employeeID +
+                ", bigID=" + bigID +
+                '}';
     }
 }

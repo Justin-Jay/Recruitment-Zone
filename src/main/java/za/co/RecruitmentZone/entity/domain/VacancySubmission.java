@@ -9,7 +9,16 @@ public class VacancySubmission {
     public VacancySubmission() {
     }
 
-    public VacancySubmission(String first_name) {
+    public VacancySubmission(String first_name, Long applicationID) {
+        this.first_name = first_name;
+        this.applicationID = applicationID;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
         this.first_name = first_name;
     }
 
@@ -21,11 +30,11 @@ public class VacancySubmission {
         this.applicationID = applicationID;
     }
 
-    public String getFirst_name() {
-        return first_name;
-    }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    @Override
+    public String toString() {
+        return "VacancySubmission{" +
+                "first_name='" + first_name + '\'' +
+                ", applicationID=" + applicationID +
+                '}';
     }
 }

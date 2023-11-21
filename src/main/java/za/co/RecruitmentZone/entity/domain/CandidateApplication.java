@@ -7,23 +7,28 @@ import jakarta.persistence.*;
 public class CandidateApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "applicationID")
     private Long applicationID;
+    @Column(name = "candidateID")
     private Long candidateID;
+
+    public CandidateApplication() {
+    }
 
     public CandidateApplication(Long applicationID, Long candidateID) {
         this.applicationID = applicationID;
         this.candidateID = candidateID;
     }
 
-    public CandidateApplication() {
-
-    }
-
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getApplicationID() {
         return applicationID;
@@ -44,7 +49,8 @@ public class CandidateApplication {
     @Override
     public String toString() {
         return "CandidateApplication{" +
-                "applicationID=" + applicationID +
+                "id=" + id +
+                ", applicationID=" + applicationID +
                 ", candidateID=" + candidateID +
                 '}';
     }

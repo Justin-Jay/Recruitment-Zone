@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.domain.Application;
 import za.co.RecruitmentZone.entity.domain.Candidate;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
@@ -45,27 +46,27 @@ public class ApplicationsController {
         return "fragments/applications/apply-now";
     }
 
-/*    @PostMapping("/view-vacancy")
-    public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
-        Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
-        log.info("Looking for {}", vacancyID);
-        log.info(optionalVacancy.toString());
-        model.addAttribute("vacancy", optionalVacancy);
-        return "fragments/vacancy/view-vacancy";
-    }*/
+    /*    @PostMapping("/view-vacancy")
+        public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
+            Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
+            log.info("Looking for {}", vacancyID);
+            log.info(optionalVacancy.toString());
+            model.addAttribute("vacancy", optionalVacancy);
+            return "fragments/vacancy/view-vacancy";
+        }*/
     @PostMapping("/save-application")
-    public String saveSubmission(@Valid @ModelAttribute("submission")VacancySubmission submission, BindingResult bindingResult,Model model) {
+    public String saveSubmission(@Valid @ModelAttribute("submission") VacancySubmission submission, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "fragments/applications/apply-now";
         }
-        boolean result =  recruitmentZoneService.saveSubmission(submission);
-        model.addAttribute("result",result);
-        List<Vacancy> activeVacancies = recruitmentZoneService.getActiveVacancies();
-        model.addAttribute("result",result);
-        model.addAttribute("totalNumberOfVacancies", activeVacancies.size());
-        model.addAttribute("vacancies", activeVacancies);
+        boolean result = recruitmentZoneService.saveSubmission(submission);
+        if (result) {
+            redirectAttributes.addAttribute("successMessage", "success");
+        }
         return "redirect:/";
     }
+
+
 /*    @PostMapping("/update-vacancy")
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
