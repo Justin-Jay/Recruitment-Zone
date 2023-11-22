@@ -13,14 +13,30 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
 
-    <div class="header"><h2>Contact Us</h2></div>
-    <hr/>
-    <div class="container mt-4">
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row">
+                <!--TOP Navbar-->
+                <div th:replace="fragments/layout/header">Header</div>
+            </div>
+        </div>
+
+        <!--    <div class="container-fluid">
+                ABOVE CARD GROUP
+            </div>-->
+        <div class="container-fluid">
+            <h2>Contact Us</h2>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!--BOTTOM Navbar-->
+                <div th:replace="fragments/layout/footer">Footer</div>
+            </div>
+        </div>
     </div>
-    <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+
 
 </div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>

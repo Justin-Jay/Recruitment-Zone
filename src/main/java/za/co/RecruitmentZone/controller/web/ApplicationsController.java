@@ -32,17 +32,18 @@ public class ApplicationsController {
 
 
     @PostMapping("/save-application")
-    public String saveSubmission(@Valid @ModelAttribute("candidate") Candidate candidate, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String saveSubmission(@Valid @ModelAttribute("candidate") Candidate candidate, BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                                 @RequestParam(name = "vacancyID", required = false)Long vacancyID) {
         if (bindingResult.hasErrors()) {
             return "fragments/applications/apply-now";
         }
         String filePath = "C://FILE";
         candidate.setCvFilePath(filePath);
-        boolean result = recruitmentZoneService.saveSubmission(candidate);
+        boolean result = recruitmentZoneService.saveSubmission(vacancyID,candidate);
         if (result) {
             redirectAttributes.addAttribute("successMessage", "success");
         }
-        return "redirect:/";
+        return "redirect:/vacancy-page";
     }
 
 

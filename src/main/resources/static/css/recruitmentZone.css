@@ -29,3 +29,48 @@ right: 100px;
 .red-text {
   color: red;
 }
+
+/* Default styles for larger screens */
+.navbar-large {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Default styles for smaller screens */
+.navbar-small {
+  display: none;
+}
+
+/* Styles for the burger menu */
+#menu-toggle {
+  display: none;
+}
+
+.menu-content {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 50px; /* Adjust as needed based on your design */
+  left: 0;
+  background-color: #f9f9f9;
+  padding: 10px;
+  width: 100%;
+}
+
+/* Media query for smaller screens */
+@media only screen and (max-width: 600px) {
+  .navbar-large {
+    display: none;
+  }
+
+  .navbar-small {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #menu-toggle:checked + .menu-content {
+    display: flex;
+  }
+}

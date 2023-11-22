@@ -1,32 +1,20 @@
-<div class="container-fluid">
+<div class="row-cols-auto">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" th:href="@{/}">Recruitment Zone</a>
         <!-- Toggle button for smaller devices -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/vacancies}">Vacancies</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/blogs}">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/contactus}">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/employee-admin}">Employee Administration</a>
-                </li>
-            </ul>
-        </div>
-        <div class="loginButton">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" th:href="@{/vacancy-administration}">Vacancy Administration</a>
+                <a class="nav-link" th:href="@{/blogs}">Blog</a>
+                <a class="nav-link" th:href="@{/aboutus}">About Us</a>
+                <a class="nav-link" th:href="@{/contactus}">Contact Us</a>
+                <a class="nav-link" th:href="@{/employee-admin}">Employee Administration</a>
+            </div>
             <a class="btn btn-light" th:href="@{/log-in}" role="button">Login</a>
         </div>
     </nav>

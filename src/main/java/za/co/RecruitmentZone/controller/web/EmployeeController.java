@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import za.co.RecruitmentZone.entity.domain.Blog;
 import za.co.RecruitmentZone.entity.domain.Employee;
 import za.co.RecruitmentZone.entity.domain.EmployeeDTO;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
@@ -36,7 +35,7 @@ public class EmployeeController {
             log.info("Exception trying to retrieve employees, retrieving all employees ");
         }
         model.addAttribute("employees", allEmployees);
-        return "employee-admin";
+        return "fragments/employee/employee-admin";
     }
     @GetMapping("/add-employee")
     public String showCreateEmployeeForm(Model model) {
@@ -59,7 +58,7 @@ public class EmployeeController {
             return "fragments/employee/add-employee";
         }
         recruitmentZoneService.saveEmployee(employeeDTO);
-        return "redirect:employee-admin";
+        return "redirect:/fragments/employee/employee-admin";
     }
 
     @PostMapping("/update-employee")
@@ -76,7 +75,7 @@ public class EmployeeController {
             return "fragments/employee/update-employee";
         }
         recruitmentZoneService.saveEmployee(employee);
-        return "redirect:employee-admin";
+        return "redirect:/fragments/employee/employee-admin";
     }
 
 

@@ -21,6 +21,8 @@
 
     <div class="container-fluid">
         <form action="#" th:action="@{/save-application}" th:object="${candidate}" method="POST">
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" name="vacancyID" th:value="${vacancyID}"/>
             <label>
                 First Name: <input type="text" th:field="*{first_name}" placeholder="Enter First Name" class="form-control">
             </label>

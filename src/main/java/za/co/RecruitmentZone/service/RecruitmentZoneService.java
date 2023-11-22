@@ -127,27 +127,27 @@ public class RecruitmentZoneService {
         return applicationService.findApplications();
     }
 
-    public boolean saveSubmission(Candidate candidate) {
-        candidateService.save(candidate);
+    public boolean saveSubmission(Long vacancyID, Candidate candidate) {
+        // save candidate
+
+        Candidate newCandidate = candidateService.save(candidate);
 
         Application application = new Application();
         LocalDate date = LocalDate.now();
         application.setDate_received(date.toString());
         application.setSubmission_date(date.toString());
         application.setStatus(1);
-        // set application information
-        /*
-        date_received
-     submission_date
-status
-candidateID
- vacancyID
- ;*/
+        application.setCandidateID(newCandidate.getCandidateID());
+        application.setVacancyID(vacancyID);
+
+
         application = applicationService.save(application);
 
         CandidateApplication ca = new CandidateApplication();
         ca.setApplicationID(application.getApplicationID());
         ca.setCandidateID(candidate.getCandidateID());
+
+
         candidateApplicationService.save(ca);
         return true;
     }

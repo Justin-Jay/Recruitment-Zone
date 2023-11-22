@@ -24,7 +24,7 @@ public class VacancyController {
     }
 
     // Vacancies
-    @GetMapping("/vacancies")
+    @GetMapping("/vacancy-administration")
     public String vacancies(Model model) {
         List<Vacancy> allVacancies = new ArrayList<>();
         try {
@@ -33,7 +33,7 @@ public class VacancyController {
             log.info("Exception trying to retrieve vacancies, retrieving all vacancies ");
         }
         model.addAttribute("vacancies", allVacancies);
-        return "vacancies";
+        return "fragments/vacancy/vacancy-administration";
     }
 
     @GetMapping("/add-vacancy")
@@ -56,7 +56,7 @@ public class VacancyController {
             return "fragments/vacancy/add-vacancy";
         }
         recruitmentZoneService.saveVacancy(vacancy);
-        return "redirect:vacancies";
+        return "redirect:/vacancy-administration";
     }
     @PostMapping("/update-vacancy")
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
@@ -71,9 +71,25 @@ public class VacancyController {
             return "fragments/vacancy/update-vacancy";
         }
         recruitmentZoneService.saveVacancy(vacancy);
-        return "redirect:vacancies";
+        return "redirect:/vacancy-administration";
     }
-
+/*    @GetMapping("/vacancy-page")
+    public String vacancyPage(Model model,@RequestParam(name = "successMessage", required = false)String successMessage) {
+        // Handle the message parameter as needed
+        if (successMessage!=null){
+            if (successMessage.equalsIgnoreCase("success")){
+                model.addAttribute("application", false);
+            }
+            else {
+                model.addAttribute("application", false);
+            }
+        }
+        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
+        log.info("Total Vacancies: " + vacancies.size());
+        model.addAttribute("totalNumberOfVacancies", vacancies.size());
+        model.addAttribute("vacancies", vacancies);
+        return "fragments/vacancy/vacancy-page";
+    }*/
 
 
 }

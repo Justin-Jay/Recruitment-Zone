@@ -22,18 +22,12 @@
             </div>
         </div>
 
-        <div class="container-fluid">
+ <!--       <div class="container-fluid">
             ABOVE CARD GROUP
-        </div>
+        </div>-->
         <div class="container-fluid">
-            <div class="card-group">
-                <div class="row">
-                    <div class="card col-4" th:each="vacancy: ${vacancies}">
-                        <div class="card-body" th:replace="fragments/vacancy/card-fragment :: vacancyCard(${vacancy})">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div th:insert="fragments/employee/employee">Employee Administration</div>
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-employee}">Add Employee</a>
         </div>
 
         <div class="container-fluid">
@@ -46,8 +40,6 @@
 
 
 </div>
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
 </body>
 </html>

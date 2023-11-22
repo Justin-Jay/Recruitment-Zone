@@ -12,19 +12,31 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
+
+
+
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
-
-    <div th:insert="fragments/employee/employee">Employee Administration</div>
-
-    <div class="container-fluid">
-        <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-employee}">Add Employee</a>
+    <div class="row">
+        <div class="container-fluid">
+            <!--TOP Navbar-->
+            <div th:insert="fragments/layout/header">Header</div>
+        </div>
     </div>
-    <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+
+    <div class="row">
+        <!-- PAGE CONTENTS-->
+
+    </div>
+
+
+    <div class="row">
+        <div class="container-fluid">
+            <!--BOTTOM Navbar-->
+            <div th:insert="fragments/layout/footer">Footer</div>
+        </div>
+    </div>
 
 </div>
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
