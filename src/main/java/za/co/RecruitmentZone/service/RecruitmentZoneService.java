@@ -155,9 +155,8 @@ private final EmailEventPublisher emailEventPublisher;
         log.info(message.toString());
     }
 
-    public boolean saveSubmission(VacancySubmission submission) {
-        Candidate candidate = new Candidate();
-        candidate.setFirst_name(submission.getFirst_name());
+    public boolean saveSubmission(Candidate candidate) {
+
         candidate = candidateService.save(candidate);
 
         Application application = new Application();

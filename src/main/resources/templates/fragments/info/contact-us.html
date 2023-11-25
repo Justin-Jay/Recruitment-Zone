@@ -25,15 +25,15 @@
             ABOVE CARD GROUP
         </div>-->
     <div class="container-fluid">
+        <p th:if="${messageSent}">Message has been sent....</p>
+    </div>
+
+    <div class="container-fluid">
         <h2>Contact Us</h2>
         <div class="justify-content-center">
                 <span>
                    Complete the form bellow and an agent will be in touch.
                 </span>
-        </div>
-
-        <div th:if="${messageSent}">
-            <p> Message has been sent....</p>
         </div>
 
         <div class="justify-content-center">

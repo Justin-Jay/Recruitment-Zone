@@ -38,7 +38,7 @@ public class CommunicationService {
         log.info("websiteMessage subject"+websiteMessage.getSubject());
         message.setSubject(websiteMessage.getSubject());
         log.info("Sending message"+message);
-        javaMailSender.send(message);
+        //javaMailSender.send(message);
         log.info("Email Sent...");
     }
 
