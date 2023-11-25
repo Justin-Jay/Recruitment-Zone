@@ -139,7 +139,7 @@ private final EmailEventPublisher emailEventPublisher;
     public void websiteQueryReceived(ContactMessage message) {
         // send message using virtual thread
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
-
+            log.info("About to submit");
             executor.submit(() -> {
                 // Perform repo IO operation
                 communicationService.sendSimpleEmail(message);

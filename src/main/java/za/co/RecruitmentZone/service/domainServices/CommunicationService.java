@@ -1,10 +1,6 @@
 package za.co.RecruitmentZone.service.domainServices;
 
 
-import jakarta.mail.*;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.search.FromTerm;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,23 +23,26 @@ public class CommunicationService {
     String kiungaMailAddress;
     @Value("${spring.mail.password}")
     String kiungaMailPassword;
-    @Value("${mail.domain.address}")
-    String mailDomainAddress;
 
-    @Value("${imap.domain.address}")
-    String IMAP;
+    private final JavaMailSender javaMailSender;
+    public CommunicationService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
     public void sendSimpleEmail(ContactMessage websiteMessage) {
+        log.info("Sending simple Email");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(kiungaMailAddress);
         message.setTo(websiteMessage.getToEmail());
         message.setText(websiteMessage.getMessageBody());
+        log.info("websiteMessage subject"+websiteMessage.getSubject());
         message.setSubject(websiteMessage.getSubject());
-        JavaMailSender mailSender = getJavaMailSender();
-        mailSender.send(message);
+        log.info("Sending message"+message);
+        javaMailSender.send(message);
         log.info("Email Sent...");
     }
 
-    public void forwardMessage(Message message) {
+/*    public void forwardMessage(Message message) {
        try { String recipientAddress = "websitequeries@kiunga.co.za";
 
            JavaMailSenderImpl mailSender = getJavaMailSender();
@@ -64,10 +63,10 @@ public class CommunicationService {
        catch (MessagingException | IOException exception){
            log.info(exception.getMessage());
        }
-    }
+    }*/
 
 
-    public void deleteEmailBySender(String senderEmail) {
+/*    public void deleteEmailBySender(String senderEmail) {
       try {  String recipientAddress = "justinjay87@gmail.com";
           // Get a new Session object
           Session session = Session.getInstance(getMailProperties());
@@ -112,7 +111,7 @@ public class CommunicationService {
       catch (MessagingException exception){
           log.debug(exception.getMessage());
       }
-    }
+    }*/
 
 
 /*   public void mailFileWriter(Message[] messages) throws MessagingException {
@@ -146,36 +145,5 @@ public class CommunicationService {
 
 
 
-    public Properties getMailProperties() {
-        Properties props = new Properties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.info", "true");
-        props.put("mail.smtp.ssl.trust", mailDomainAddress);
-        props.put("mail.store.protocol", "imap");
-        props.put("mail.imap.host", IMAP);
-        props.put("mail.imap.port", "993");
-        props.put("mail.imap.ssl.enable", "true");
-        props.put("mail.imap.ssl.trust",IMAP);
-        return props;
-    }
 
-    public JavaMailSenderImpl getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(mailDomainAddress);
-        mailSender.setPort(465);
-
-        mailSender.setUsername(kiungaMailAddress);
-        mailSender.setPassword(kiungaMailPassword);
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        // uncomment the bellow for mail debug
-        props.put("mail.debug", "true");
-        props.put("mail.smtp.ssl.trust", mailDomainAddress);
-        return mailSender;
-    }
 }

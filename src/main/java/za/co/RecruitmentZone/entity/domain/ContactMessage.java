@@ -7,7 +7,7 @@ public class ContactMessage {
 
     private String messageBody;
 
-    private final String toEmail = "websitequeries@kiunga.co.za";
+    private final String toEmail = "justin.maboshego@gmail.com";
     String subject;
 
     public ContactMessage() {
@@ -29,6 +29,7 @@ public class ContactMessage {
     public void setSubject(String subject) {
         this.subject = subject;
     }
+
     public String getName() {
         return name;
     }

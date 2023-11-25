@@ -33,11 +33,12 @@ public class CommunicationController {
     }
 
     @PostMapping("/send-message")
-    public String sendMessage(@Valid @ModelAttribute("message") ContactMessage message, BindingResult bindingResult, Model model) {
+    public String sendMessage(@Valid @ModelAttribute("message")ContactMessage message, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("success",Boolean.FALSE);
             return "fragments/info/contact-us";
         }
+        log.info("Website message received");
         recruitmentZoneService.websiteQueryReceived(message);
         model.addAttribute("messageSent",Boolean.TRUE);
         return "redirect:/contact-us";
