@@ -12,21 +12,52 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
-<!--TOP Navbar-->
-
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
 
-    <div class="container-fluid"><h1>Recruitment Zone</h1></div>
+    <div class="container-fluid">
 
-    <div th:insert="fragments/vacancy/active-vacancies">Active Vacancies</div>
+        <div class="container-fluid">
+            <div class="row">
+                <!--TOP Navbar-->
+                <div th:replace="fragments/layout/header">Header</div>
+            </div>
+        </div>
 
-    <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+        <div class="container-fluid">
+            <div class="row">
+                <h2>Can i search?</h2>
+            </div>
+
+        </div>
+
+
+        <div class="container-fluid">
+            <div class="card-group">
+                <div class="row">
+                    <div class="card col-4" th:each="vacancy: ${vacancies}">
+                        <div class="card-body" th:replace="fragments/vacancy/card-fragment :: vacancyCard(${vacancy})">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <!--BOTTOM Navbar-->
+                <div th:replace="fragments/layout/footer">Footer</div>
+            </div>
+        </div>
+
+
+    </div>
+
 
 </div>
 
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
 </body>
 </html>

@@ -13,14 +13,57 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
 
-    <div class="header"><h2>Contact Us</h2></div>
-    <hr/>
-    <div class="container mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <!--TOP Navbar-->
+            <div th:replace="fragments/layout/header">Header</div>
+        </div>
     </div>
-    <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+
+    <!--    <div class="container-fluid">
+            ABOVE CARD GROUP
+        </div>-->
+    <div class="container-fluid">
+        <p th:if="${messageSent}">Message has been sent....</p>
+    </div>
+
+    <div class="container-fluid">
+        <h2>Contact Us</h2>
+        <div class="justify-content-center">
+                <span>
+                   Complete the form bellow and an agent will be in touch.
+                </span>
+        </div>
+
+        <div class="justify-content-center">
+            <form class="row g-3" action="#" th:action="@{/send-message}" th:object="${contactMessage}" method="POST">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" th:field="${contactMessage.name}" class="form-control"  id="name">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" th:field="${contactMessage.email}" class="form-control" id="email">
+                </div>
+                <div class="col-12">
+                    <label for="message" class="form-label">Message:</label>
+                    <textarea class="form-control" th:field="${contactMessage.messageBody}"  id="message"></textarea>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!--BOTTOM Navbar-->
+            <div th:replace="fragments/layout/footer">Footer</div>
+        </div>
+    </div>
+
 
 </div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>

@@ -25,7 +25,6 @@ public class Employee {
     public Employee() {
     }
 
-
     public Employee(String username, String first_name, String last_name, String email_address, String contact_number) {
         this.username = username;
         this.first_name = first_name;
@@ -80,5 +79,17 @@ public class Employee {
 
     public void setContact_number(String contact_number) {
         this.contact_number = contact_number;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email_address='" + email_address + '\'' +
+                ", contact_number='" + contact_number + '\'' +
+                '}';
     }
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="container-fluid">
+            <!--TOP Navbar-->
+            <div th:insert="fragments/layout/header">Header</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- PAGE CONTENTS-->
+
+    </div>
+
+
+    <div class="row">
+        <div class="container-fluid">
+            <!--BOTTOM Navbar-->
+            <div th:insert="fragments/layout/footer">Footer</div>
+        </div>
+    </div>
+
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

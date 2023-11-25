@@ -22,8 +22,40 @@
     <div class="container-fluid">
         <form action="#" th:action="@{/save-vacancy}" th:object="${vacancy}" method="POST">
             <label>
-                Job Title: <input type="text" th:field="*{jobTitle}" placeholder="Enter The Title" class="form-control">
+                Job Title: <input type="text" th:field="*{job_title}" placeholder="Enter The Job Title" class="form-control">
             </label>
+            <label>
+                Job Description: <input type="text" th:field="*{job_description}" placeholder="Enter The Job Description" class="form-control">
+            </label>
+            <label>
+                Seniority Level: <input type="text" th:field="*{seniority_level}" placeholder="Enter The Seniority Level" class="form-control">
+            </label>
+            <label>
+                Requirements: <input type="text" th:field="*{requirements}" placeholder="Enter Requirements:" class="form-control">
+            </label>
+            <label>
+                Job Location: <input type="text" th:field="*{location}" placeholder="Enter The Job Location" class="form-control">
+            </label>
+            <label>
+                Industry: <input type="text" th:field="*{industry}" placeholder="Enter The Job industry" class="form-control">
+            </label>
+            <label>
+                Date Published: <input type="date" th:field="*{publish_date}" placeholder="Enter The Date to be published" class="form-control">
+            </label>
+            <label>
+                Expiry Date: <input type="date" th:field="*{end_date}" placeholder="Enter The Expiration Date" class="form-control">
+            </label>
+            <label>
+                Enter Status: <input type="number" th:field="*{status}" placeholder="Enter The Status" class="form-control">
+            </label>
+            <label>
+                Job Type: <input type="text" th:field="*{job_type}" placeholder="Contract / Permanent" class="form-control">
+            </label>
+            <label>
+                Employment Type: <input type="text" th:field="*{emp_type}" placeholder="Full-Time / Part Time" class="form-control">
+            </label>
+
+
             <button type="submit" class="btn btn-primary btn-sm mb-3">Save vacancy</button>
         </form>
     </div>

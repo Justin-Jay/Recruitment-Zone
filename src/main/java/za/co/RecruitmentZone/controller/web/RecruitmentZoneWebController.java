@@ -25,8 +25,17 @@ public class RecruitmentZoneWebController {
     }
 
     // Home pages
-    @GetMapping("/")
-    public String home(Model model) {
+    @GetMapping(value = {"/", "/home"})
+    public String home(Model model,@RequestParam(name = "successMessage", required = false)String successMessage) {
+        // Handle the message parameter as needed
+        if (successMessage!=null){
+            if (successMessage.equalsIgnoreCase("success")){
+                model.addAttribute("application", false);
+            }
+            else {
+                model.addAttribute("application", false);
+            }
+        }
         List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
         log.info("Total Vacancies: " + vacancies.size());
         model.addAttribute("totalNumberOfVacancies", vacancies.size());
@@ -39,10 +48,7 @@ public class RecruitmentZoneWebController {
         return "fragments/info/about-us";
     }
 
-    @GetMapping("/contactus")
-    public String contactus() {
-        return "fragments/info/contact-us";
-    }
+
 
 
 

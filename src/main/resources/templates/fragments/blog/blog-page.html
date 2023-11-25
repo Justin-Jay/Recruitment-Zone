@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row">
+                <!--TOP Navbar-->
+                <div th:replace="fragments/layout/header">Header</div>
+            </div>
+        </div>
+
+        <!--    <div class="container-fluid">
+                ABOVE CARD GROUP
+            </div>-->
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <h3>Blogs</h3>
+                <hr>
+            </div>
+
+            <div class="container">
+                <div class="row col-auto" th:each="blog: ${blogs}">
+                    <div class="col-md-8">
+                        <div th:insert="fragments/blog/blog-fragment :: blogCard(${blog})">
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!--BOTTOM Navbar-->
+                <div th:replace="fragments/layout/footer">Footer</div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

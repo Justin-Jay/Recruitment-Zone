@@ -8,12 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import za.co.RecruitmentZone.entity.domain.Blog;
-import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @CrossOrigin("*")
@@ -36,8 +34,9 @@ public class BlogController {
             log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
         }
         model.addAttribute("blogs", allBlogs);
-        return "blogs";
+        return "/fragments/blog/blog-page";
     }
+
     @GetMapping("/add-blog")
     public String showCreateBlogForm(Model model) {
         model.addAttribute("blog", new Blog());
@@ -58,7 +57,7 @@ public class BlogController {
             return "fragments/blog/add-blog";
         }
         recruitmentZoneService.saveBlog(blog);
-        return "redirect:blogs";
+        return "redirect:/blog-administration";
     }
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
@@ -73,8 +72,18 @@ public class BlogController {
             return "fragments/blog/update-blog";
         }
         recruitmentZoneService.saveBlog(blog);
-        return "redirect:blogs";
+        return "redirect:/blog-administration";
     }
 
-
+    @GetMapping("/blog-administration")
+    public String blogAdministration(Model model) {
+        List<Blog> allBlogs = new ArrayList<>();
+        try {
+            allBlogs = recruitmentZoneService.getBlogs();
+        } catch (Exception e) {
+            log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
+        }
+        model.addAttribute("blogs", allBlogs);
+        return "/fragments/blog/blog-administration";
+    }
 }

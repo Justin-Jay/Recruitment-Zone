@@ -46,4 +46,23 @@ public class RecruitmentZoneApplication {
     }
 */
 
+
+    /*public static void main(String[] args)   {
+		SpringApplication.run(MailManagerApplication.class, args);
+		ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+		EmailService service = context.getBean("EmailService", EmailService.class);
+
+		ArrayList<String> emailAddresses = new ArrayList<>();
+		emailAddresses.add("no-reply@property24.com");
+		// emailAddresses.add("Sonng@musicafrica.com");
+
+		// change the bellow for loop constraint in order to loop through multiple email addresses
+		for(int i=0;i<1;i++){
+			log.info("Email Count = "+i);
+			log.info("Email Address to search: "+emailAddresses.get(i));
+			service.deleteEmailBySender(emailAddresses.get(i));
+		}
+
+
+	}*/
 }

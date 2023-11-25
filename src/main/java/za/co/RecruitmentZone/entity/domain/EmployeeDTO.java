@@ -10,10 +10,10 @@ public class EmployeeDTO {
     public EmployeeDTO() {
     }
 
-    public EmployeeDTO(String firstName, String lastName, String contactNumber) {
-        first_name = firstName;
-        last_name = lastName;
-        contact_number = contactNumber;
+    public EmployeeDTO(String first_name, String last_name, String contact_number) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.contact_number = contact_number;
     }
 
     public String getFirst_name() {
@@ -38,5 +38,14 @@ public class EmployeeDTO {
 
     public void setContact_number(String contact_number) {
         this.contact_number = contact_number;
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeDTO{" +
+                "first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", contact_number='" + contact_number + '\'' +
+                '}';
     }
 }

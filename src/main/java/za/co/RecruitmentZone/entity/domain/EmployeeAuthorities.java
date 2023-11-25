@@ -9,9 +9,9 @@ public class EmployeeAuthorities {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+    @Column(name = "employee_id")
+    private Long employee_id;
+    @Column(name = "authority")
     private String authority;
 
     // Constructors, getters, and setters
@@ -19,19 +19,42 @@ public class EmployeeAuthorities {
     public EmployeeAuthorities() {
     }
 
-    public EmployeeAuthorities(Employee employee, String authority) {
-        this.employee = employee;
+    public EmployeeAuthorities(Long employee_id, String authority) {
+        this.employee_id = employee_id;
         this.authority = authority;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Long getEmployee_id() {
+        return employee_id;
+    }
+
+    public void setEmployee_id(Long employee_id) {
+        this.employee_id = employee_id;
     }
 
     public String getAuthority() {
         return authority;
     }
 
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
 
+    @Override
+    public String toString() {
+        return "EmployeeAuthorities{" +
+                "id=" + id +
+                ", employee_id=" + employee_id +
+                ", authority='" + authority + '\'' +
+                '}';
+    }
 }
 
