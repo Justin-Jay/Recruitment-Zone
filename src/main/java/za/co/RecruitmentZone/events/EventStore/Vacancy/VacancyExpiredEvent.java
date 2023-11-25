@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.events.Vacancy;
+package za.co.RecruitmentZone.events.EventStore.Vacancy;
 
 import org.springframework.context.ApplicationEvent;
 import za.co.RecruitmentZone.entity.domain.Vacancy;

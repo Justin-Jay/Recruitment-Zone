@@ -14,14 +14,20 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
-
-    <div class="container-fluid"><h2>View Blog</h2></div>
+    <div>
+        <div th:insert="fragments/layout/header">Header</div>
+    </div>
     <hr/>
-    <div th:insert="fragments/blog/blog">Blog</div>
+    <div>
+        <!--        <div th:insert="fragments/blog/blog">Blog</div>-->
+        <div th:replace="fragments/blog/blog :: blogView(${blog})"></div>
+    </div>
 
-    <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+    <div>
+        <!--BOTTOM Navbar-->
+        <div th:insert="fragments/layout/footer">Footer</div>
+    </div>
+
 
 </div>
 

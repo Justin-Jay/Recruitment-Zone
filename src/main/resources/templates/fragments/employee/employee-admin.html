@@ -26,8 +26,16 @@
             ABOVE CARD GROUP
         </div>-->
         <div class="container-fluid">
-            <div th:insert="fragments/employee/employee">Employee Administration</div>
-            <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-employee}">Add Employee</a>
+            <div class="container-fluid">
+
+                <div class="float-end">
+                    <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-employee}">Add Employee</a>
+                </div>
+            </div>
+            <div class="align-content-center">
+                <div id="employee-admin-table" th:replace="fragments/employee/employee">Employee Administration</div>
+            </div>
+
         </div>
 
         <div class="container-fluid">

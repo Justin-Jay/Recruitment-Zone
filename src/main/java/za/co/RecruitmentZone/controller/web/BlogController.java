@@ -34,8 +34,9 @@ public class BlogController {
             log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
         }
         model.addAttribute("blogs", allBlogs);
-        return "/fragments/blog/blogs";
+        return "/fragments/blog/blog-page";
     }
+
     @GetMapping("/add-blog")
     public String showCreateBlogForm(Model model) {
         model.addAttribute("blog", new Blog());
@@ -56,7 +57,7 @@ public class BlogController {
             return "fragments/blog/add-blog";
         }
         recruitmentZoneService.saveBlog(blog);
-        return "redirect:/fragments/blog/blogs";
+        return "redirect:/blog-administration";
     }
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
@@ -71,8 +72,18 @@ public class BlogController {
             return "fragments/blog/update-blog";
         }
         recruitmentZoneService.saveBlog(blog);
-        return "redirect:/fragments/blog/blogs";
+        return "redirect:/blog-administration";
     }
 
-
+    @GetMapping("/blog-administration")
+    public String blogAdministration(Model model) {
+        List<Blog> allBlogs = new ArrayList<>();
+        try {
+            allBlogs = recruitmentZoneService.getBlogs();
+        } catch (Exception e) {
+            log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
+        }
+        model.addAttribute("blogs", allBlogs);
+        return "/fragments/blog/blog-administration";
+    }
 }

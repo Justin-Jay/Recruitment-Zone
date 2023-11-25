@@ -37,4 +37,12 @@ public class VacancySubmission {
                 ", applicationID=" + applicationID +
                 '}';
     }
+
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
+    }
 }

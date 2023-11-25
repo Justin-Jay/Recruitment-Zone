@@ -48,10 +48,7 @@ public class RecruitmentZoneWebController {
         return "fragments/info/about-us";
     }
 
-    @GetMapping("/contactus")
-    public String contactus() {
-        return "fragments/info/contact-us";
-    }
+
 
 
 

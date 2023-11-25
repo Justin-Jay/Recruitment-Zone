@@ -14,13 +14,19 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
-
-    <div class="container-fluid"><h2>Apply Now</h2></div>
-    <hr/>
-
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-application}" th:object="${candidate}" method="POST">
+
+        <div th:insert="fragments/layout/header">Header</div>
+    </div>
+    <hr/>
+    <div class="container-fluid">
+
+
+    </div>
+    <hr/>
+    <div class="container-fluid">
+        <div class="container-fluid"><h2>Apply Now</h2></div>
+        <form action="#" th:action="@{/save-application}" th:object="${submission}" method="POST">
             <!-- Hidden input field to include the vacancyID in the POST request -->
             <input type="hidden" name="vacancyID" th:value="${vacancyID}"/>
             <label>
@@ -77,8 +83,11 @@
     </div>
 
 
-    <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+    <div class="container-fluid">
+        <!--BOTTOM Navbar-->
+        <div th:insert="fragments/layout/footer">Footer</div>
+
+    </div>
 
 </div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>

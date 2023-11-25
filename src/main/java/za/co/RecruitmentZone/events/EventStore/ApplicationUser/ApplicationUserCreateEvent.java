@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.events.ApplicationUser;
+package za.co.RecruitmentZone.events.EventStore.ApplicationUser;
 
 import org.springframework.context.ApplicationEvent;
 
@@ -6,7 +6,6 @@ import java.time.Clock;
 
 public class ApplicationUserCreateEvent extends ApplicationEvent {
     private Integer userID;
-
     public ApplicationUserCreateEvent(Object source, Clock clock) {
         super(source, clock);
     }

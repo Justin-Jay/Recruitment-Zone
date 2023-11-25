@@ -1,5 +1,5 @@
 /*
-package za.co.RecruitmentZone.listener;
+package za.co.RecruitmentZone.events.listener;
 
 
 import org.slf4j.Logger;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
-import za.co.RecruitmentZone.events.Vacancy.VacancyActivatedEvent;
-import za.co.RecruitmentZone.events.Vacancy.VacancyAmendedEvent;
-import za.co.RecruitmentZone.events.Vacancy.VacancyCreateEvent;
-import za.co.RecruitmentZone.events.Vacancy.VacancyExpiredEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyActivatedEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyAmendedEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyCreateEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyExpiredEvent;
 import za.co.RecruitmentZone.repository.VacancyRepository;
 
 import java.time.LocalDateTime;

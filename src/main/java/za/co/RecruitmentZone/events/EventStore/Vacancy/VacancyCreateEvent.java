@@ -1,21 +1,20 @@
-package za.co.RecruitmentZone.events.Vacancy;
+package za.co.RecruitmentZone.events.EventStore.Vacancy;
 
 import org.springframework.context.ApplicationEvent;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
 
 import java.time.Clock;
 
-public class VacancyAmendedEvent extends ApplicationEvent {
+public class VacancyCreateEvent extends ApplicationEvent {
     private Integer vacancyID;
 
     private Vacancy vacancy;
 
-
-    public VacancyAmendedEvent(Object source, Clock clock) {
+    public VacancyCreateEvent(Object source, Clock clock) {
         super(source, clock);
     }
 
-    public VacancyAmendedEvent(Object source, Integer vacancyID) {
+    public VacancyCreateEvent(Object source, Integer vacancyID) {
         super(source);
         this.vacancyID = vacancyID;
     }
@@ -32,7 +31,7 @@ public class VacancyAmendedEvent extends ApplicationEvent {
         return vacancy;
     }
 
-    public void setVacancy(Vacancy vacancy) {
+    public void setVacancy( Vacancy vacancy) {
         this.vacancy = vacancy;
     }
 }

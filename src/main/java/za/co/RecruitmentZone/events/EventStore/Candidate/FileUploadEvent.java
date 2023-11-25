@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.events.Candidate;
+package za.co.RecruitmentZone.events.EventStore.Candidate;
 
 import org.springframework.context.ApplicationEvent;
 import org.springframework.web.multipart.MultipartFile;
@@ -7,7 +7,6 @@ import java.time.Clock;
 
 public class FileUploadEvent extends ApplicationEvent {
     private String fileName;
-
     MultipartFile multipartFile;
 
     public FileUploadEvent(Object source, Clock clock) {

@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.domain.Candidate;
+import za.co.RecruitmentZone.entity.domain.VacancySubmission;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 import java.util.ArrayList;
@@ -26,20 +27,19 @@ public class ApplicationsController {
 
     @PostMapping("/apply-now")
     public String showVacancyApplicationForm(Model model) {
-        model.addAttribute("candidate", new Candidate());
+        model.addAttribute("submission", new VacancySubmission());
         return "fragments/applications/apply-now";
     }
 
 
     @PostMapping("/save-application")
-    public String saveSubmission(@Valid @ModelAttribute("candidate") Candidate candidate, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                                 @RequestParam(name = "vacancyID", required = false)Long vacancyID) {
+    public String saveSubmission(@Valid @ModelAttribute("submission") VacancySubmission submission, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "fragments/applications/apply-now";
         }
         String filePath = "C://FILE";
-        candidate.setCvFilePath(filePath);
-        boolean result = recruitmentZoneService.saveSubmission(vacancyID,candidate);
+        submission.getCandidate().setCvFilePath(filePath);
+        boolean result = recruitmentZoneService.saveSubmission(submission);
         if (result) {
             redirectAttributes.addAttribute("successMessage", "success");
         }

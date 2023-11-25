@@ -1,5 +1,5 @@
 /*
-package za.co.RecruitmentZone.publisher;
+package za.co.RecruitmentZone.events.publisher;
 
 
 import org.slf4j.Logger;
@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import za.co.RecruitmentZone.entity.User;
-import za.co.RecruitmentZone.events.ApplicationUser.ApplicationUserCreateEvent;
+import za.co.RecruitmentZone.events.EventStore.ApplicationUser.ApplicationUserCreateEvent;
 import java.time.Clock;
 
 @Component

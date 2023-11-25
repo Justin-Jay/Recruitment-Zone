@@ -1,27 +1,27 @@
 /*
-package za.co.RecruitmentZone.publisher;
+package za.co.RecruitmentZone.events.publisher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import za.co.RecruitmentZone.entity.domain.Application;
-import za.co.RecruitmentZone.entity.domain.Candidate;
+import org.springframework.stereotype.Component;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
-import za.co.RecruitmentZone.events.Candidate.CandidateAppliedEvent;
-import za.co.RecruitmentZone.events.Vacancy.VacancyCreateEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyAmendedEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyCreateEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyActivatedEvent;
+import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyExpiredEvent;
 
 import java.time.Clock;
 
-@Service
-public class CandidateEventPublisher {
+@Component
+public class VacancyEventPublisher {
     private final ApplicationEventPublisher eventPublisher;
-    private final Logger log = LoggerFactory.getLogger(CandidateEventPublisher.class);
+    private final Logger log = LoggerFactory.getLogger(VacancyEventPublisher.class);
 
-    public CandidateEventPublisher(ApplicationEventPublisher eventPublisher) {
+    public VacancyEventPublisher(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
-    public boolean publishVacancyCreateEvent( Vacancy vacancy) {
+    public boolean publishVacancyCreateEvent(Vacancy vacancy) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
             VacancyCreateEvent event = new VacancyCreateEvent(vacancy,baseClock);
@@ -33,21 +33,45 @@ public class CandidateEventPublisher {
         }
     }
 
-    public boolean publishCandidateAppliedEvent(Application application) {
+    public boolean publishVacancyAmendedEvent(Vacancy vacancy) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
-            CandidateAppliedEvent event = new CandidateAppliedEvent(application,baseClock);
+            VacancyAmendedEvent event = new VacancyAmendedEvent(vacancy,baseClock);
             eventPublisher.publishEvent(event);
             return true;
         } catch (Exception e) {
             log.info("Unable to post event");
             return false;
         }
-
     }
 
 
+    public boolean publishVacancyActivatedEvent(Integer vacancyID) {
+        try {
+            Clock baseClock = Clock.systemDefaultZone();
+            VacancyActivatedEvent event = new VacancyActivatedEvent(vacancyID,baseClock);
+            eventPublisher.publishEvent(event);
+            return true;
+        } catch (Exception e) {
+            log.info("Unable to post event");
+            return false;
+        }
+    }
 
+    public boolean publishVacancyExpiredEvent(Integer vacancyID) {
+        try {
+            Clock baseClock = Clock.systemDefaultZone();
+            VacancyExpiredEvent event = new VacancyExpiredEvent(vacancyID,baseClock);
+            eventPublisher.publishEvent(event);
+            return true;
+        } catch (Exception e) {
+            log.info("Unable to post event");
+            return false;
+        }
+    }
+
+//    publishVacancyActivatedEvent
+          //  publishVacancyExpiredEvent
 
 */
 /*

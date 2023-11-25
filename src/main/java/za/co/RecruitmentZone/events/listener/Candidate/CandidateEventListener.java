@@ -1,5 +1,5 @@
 /*
-package za.co.RecruitmentZone.listener;
+package za.co.RecruitmentZone.events.listener;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.slf4j.Logger;
@@ -8,7 +8,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import za.co.RecruitmentZone.entity.domain.Application;
 import za.co.RecruitmentZone.entity.domain.Candidate;
-import za.co.RecruitmentZone.events.Candidate.CandidateAppliedEvent;
+import za.co.RecruitmentZone.events.EventStore.Candidate.CandidateAppliedEvent;
 
 @Component
 public class CandidateEventListener {

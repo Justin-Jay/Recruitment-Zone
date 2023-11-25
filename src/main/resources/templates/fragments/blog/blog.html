@@ -1,32 +1,36 @@
-<div class="container-fluid">
-    <hr>
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-        <tr>
-            <th>Blog ID</th>
-            <th>Blog Title</th>
-            <th>Blog Description</th>
-            <th>Body</th>
-            <th>EmployeeID</th>
-            <th>View Blog</th><!-- New column for the "View Job" link -->
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="blog : ${blogs}">
-            <td th:text="${blog.blogID}"></td>
-            <td th:text="${blog.blog_title}"></td>
-            <td th:text="${blog.blog_description}"></td>
-            <td th:text="${blog.body}"></td>
-            <td th:text="${blog.employeeID}"></td>
-            <td>
-                <form th:action="@{/update-blog}" th:method="post">
-                    <!-- Hidden input field to include the vacancyID in the POST request -->
-                    <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
-                    <!-- Submit button to trigger the form submission -->
-                    <button type="submit" class="btn btn-primary">Update Blog</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container">
+    <header>
+        <h1>Blog Name</h1>
+        <!-- You can add a navigation bar or other header content here -->
+    </header>
+    <main th:fragment="blogView(blog)">
+        <article>
+            <header>
+                <h2 th:text="${blog.blog_title}">Blog Article Title</h2>
+                <p class="metadata">Published on
+                    <time datetime="2023-11-21">November 21, 2023</time>
+                    by Author Name
+                </p>
+                <!-- You can customize the metadata as needed -->
+            </header>
+            <section th:text="${blog.blog_description}">
+
+            </section>
+
+            <section th:text="${blog.body}">
+                <!-- The main content of your blog post -->
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+                <!-- Add more content as needed, such as images, lists, etc. -->
+            </section>
+
+            <footer>
+                <!-- You can add a comment section, social media sharing buttons, etc. -->
+            </footer>
+            <div class="container-fluid">
+                <a class="nav-link" th:href="@{/blogs}">Back to blogs</a>
+            </div>
+        </article>
+
+    </main>
+
 </div>

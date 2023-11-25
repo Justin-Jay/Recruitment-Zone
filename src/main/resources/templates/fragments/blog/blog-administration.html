@@ -12,7 +12,6 @@
     <title>Recruitment Zone</title>
 </head>
 <body>
-
 <div class="container-fluid">
 
     <div class="container-fluid">
@@ -23,16 +22,16 @@
             </div>
         </div>
 
-    <!--    <div class="container-fluid">
-            ABOVE CARD GROUP
-        </div>-->
+        <!--    <div class="container-fluid">
+                ABOVE CARD GROUP
+            </div>-->
         <div class="container-fluid">
             <div class="container-fluid">
-                <h3>Vacancies</h3>
+                <h3>Blog Administration</h3>
                 <hr>
             </div>
-            <div th:replace="fragments/vacancy/vacancy">Vacancies</div>
-            <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-vacancy}">Add Vacancy</a>
+            <div th:replace="fragments/blog/view-blog-list">Blogs</div>
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-blog}">Add Blog</a>
         </div>
 
         <div class="container-fluid">

@@ -1,5 +1,5 @@
 /*
-package za.co.RecruitmentZone.listener;
+package za.co.RecruitmentZone.events.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.RecruitmentZone.entity.UserDTO;
-import za.co.RecruitmentZone.events.ApplicationUser.ApplicationUserCreateEvent;
+import za.co.RecruitmentZone.events.EventStore.ApplicationUser.ApplicationUserCreateEvent;
 import za.co.RecruitmentZone.repository.ApplicationUserRepository;
 
 
