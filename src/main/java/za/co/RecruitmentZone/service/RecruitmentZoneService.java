@@ -10,6 +10,8 @@ import za.co.RecruitmentZone.service.domainServices.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class RecruitmentZoneService {
@@ -135,8 +137,19 @@ private final EmailEventPublisher emailEventPublisher;
 
 
     public void websiteQueryReceived(ContactMessage message) {
-        //communicationService.sendSimpleEmail(message);
-        emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
+        // send message using virtual thread
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
+
+            executor.submit(() -> {
+                // Perform repo IO operation
+                communicationService.sendSimpleEmail(message);
+            });
+        } catch (Exception e) {
+            log.info("Failed to send Email Query");
+        }
+
+        // publish event
+        //emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
 
         log.info("Website Query received");
         log.info(message.toString());
