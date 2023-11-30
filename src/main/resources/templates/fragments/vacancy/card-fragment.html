@@ -1,11 +1,11 @@
-<div class="card-body " th:fragment="vacancyCard(vacancy)">
+<div class="card-body" th:fragment="vacancyCard(vacancy)">
     <h5 class="card-title" th:text="${vacancy.job_title}"></h5>
     <p class="card-text" th:text="${vacancy.job_description}"></p>
     <p class="card-text" th:text="${vacancy.seniority_level}"></p>
     <!-- Add more fields as needed -->
     <form th:action="@{/apply-now}" th:method="post">
         <!-- Hidden input field to include the vacancyID in the POST request -->
-        <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
+        <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/> 
         <!-- Submit button to trigger the form submission -->
         <button type="submit" class="btn btn-primary">Apply Now</button>
     </form>

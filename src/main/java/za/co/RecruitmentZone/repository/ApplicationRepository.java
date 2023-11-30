@@ -8,7 +8,7 @@ import za.co.RecruitmentZone.entity.domain.Application;
 import java.util.List;
 
 @Repository
-public interface ApplicationRepository extends JpaRepository<Application, Integer> {
+public interface ApplicationRepository extends JpaRepository<Application, Long> {
     // You can add custom query methods here if needed
 
     @Query("SELECT a FROM Application a")

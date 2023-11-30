@@ -6,8 +6,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -28,31 +29,36 @@
             <label for="job_title"  >Job Title: </label>
             <input type="text" th:field="*{job_title}" class="form-control mb-4 w-25" id="job_title" placeholder="Job Title"/>
 
-            <label for="job_description"  >Job Title: </label>
+            <label for="job_description"  >Job Description: </label>
             <input type="text" th:field="*{job_description}" class="form-control mb-4 w-25" id="job_description" placeholder=" "/>
 
-            <label for="seniority_level"  >Job Title: </label>
+            <label for="seniority_level"  >Seniority Level: </label>
             <input type="text" th:field="*{seniority_level}" class="form-control mb-4 w-25" id="seniority_level" placeholder="Job Title"/>
 
-            <label for="requirements"  >Job Title: </label>
+            <label for="requirements"  >Requirements: </label>
             <input type="text" th:field="*{requirements}" class="form-control mb-4 w-25" id="requirements" placeholder="Job Title"/>
 
-            <label for="location"  >Job Title: </label>
+            <label for="location"  >Location: </label>
             <input type="text" th:field="*{location}" class="form-control mb-4 w-25" id="location" placeholder="Job Title"/>
 
-            <label for="industry"  >Job Title: </label>
+            <label for="industry"  >Industry: </label>
             <input type="text" th:field="*{industry}" class="form-control mb-4 w-25" id="industry" placeholder="Job Title"/>
 
-            <label for="publish_date"  >Job Title: </label>
+            <label for="publish_date"  >Publish Date: </label>
             <input type="text" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date" placeholder="Job Title"/>
 
-            <label for="end_date"  >Job Title: </label>
+            <label for="end_date"  >End Date: </label>
             <input type="text" th:field="*{end_date}" class="form-control mb-4 w-25" id="end_date" placeholder="Job Title"/>
 
-            <label for="status"  >Job Title: </label>
-            <input type="text" th:field="*{status}" class="form-control mb-4 w-25" id="status" placeholder="Job Title"/>
+            <label for="status" >Select Status:
+                <select id="status" th:field="*{status}">
+                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.entity.Enums.VacancyStatus).values()}"
+                            th:value="${statusVal}" th:text="${statusVal}"></option>
+                </select>
+            </label>
+<!--            <input type="text" th:field="*{status}" class="form-control mb-4 w-25" id="status" placeholder="Job Title"/>-->
 
-            <label for="job_type"  >Job Title: </label>
+            <label for="job_type" >Job Type: </label>
             <input type="text" th:field="*{job_type}" class="form-control mb-4 w-25" id="job_type" placeholder="Job Title"/>
 
             <label for="emp_type"  >Job Title: </label>
@@ -69,8 +75,9 @@
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
-
-
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@ package za.co.RecruitmentZone.service.domainServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 import za.co.RecruitmentZone.entity.domain.Blog;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.repository.BlogRepository;
@@ -22,6 +23,10 @@ public class BlogService {
 
     public List<Blog> getBlogs() {
         return blogRepository.findAll();
+    }
+
+    public List<Blog> getActiveBlogs(BlogStatus status) {
+        return blogRepository.findBlogsByStatus(status);
     }
 
     public Blog save(Blog blog){

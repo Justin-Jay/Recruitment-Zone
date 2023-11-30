@@ -1,6 +1,7 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
 
 @Entity
 @Table(name = "application")
@@ -14,7 +15,8 @@ public class Application {
 
     private String submission_date;
 
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
 
     private Long  candidateID;
 
@@ -23,7 +25,7 @@ public class Application {
     public Application() {
     }
 
-    public Application(String date_received, String submission_date, Integer status, Long candidateID, Long vacancyID) {
+    public Application(String date_received, String submission_date, ApplicationStatus status, Long candidateID, Long vacancyID) {
         this.date_received = date_received;
         this.submission_date = submission_date;
         this.status = status;
@@ -55,11 +57,11 @@ public class Application {
         this.submission_date = submission_date;
     }
 
-    public Integer getStatus() {
+    public ApplicationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(ApplicationStatus status) {
         this.status = status;
     }
 

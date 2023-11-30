@@ -6,8 +6,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -30,8 +31,23 @@
             <input type="text" th:field="*{blog_description}" class="form-control mb-4 w-25" id="description" placeholder="Blog Title"/>
 
             <label for="body"  >Body: </label>
-            <input type="text" th:field="*{body}" class="form-control mb-4 w-25" id="body" placeholder="Blog Title"/>
+            <textarea class="form-control" th:field="*{body}"  id="body" placeholder="Blog Body"></textarea>
 
+
+            <label for="publish_date"  >Publish Date: </label>
+            <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date" placeholder="Publish Date"/>
+
+
+            <label for="expirationDate"  >Expiration Date: </label>
+            <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate" placeholder="Expiration Date:"/>
+
+
+            <!--     <label for="status" >Select Status:
+                     <select id="status" th:field="*{status}">
+                         <option th:each="statusVal : ${T(za.co.RecruitmentZone.entity.Enums.BlogStatus).values()}"
+                                 th:value="${statusVal}" th:text="${statusVal}"></option>
+                     </select>
+                 </label>-->
         </div>
         <button type="submit" class="btn btn-primary">Save Updated Blog</button>
     </form>
@@ -44,7 +60,9 @@
 
 </div>
 
-
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
 </body>
 </html>

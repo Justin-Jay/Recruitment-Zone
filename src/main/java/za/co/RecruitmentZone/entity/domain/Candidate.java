@@ -1,6 +1,9 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
+import za.co.RecruitmentZone.entity.Enums.BlogStatus;
+import za.co.RecruitmentZone.entity.Enums.EducationLevel;
 
 @Entity
 @Table(name = "candidate")
@@ -26,18 +29,24 @@ public class Candidate {
     private String current_employer;
 
     private String seniority_level;
-
-    private String education_level;
+    @Enumerated(EnumType.STRING)
+    private EducationLevel education_level;
 
     private Boolean relocation;
 
+
     private String cvFilePath;
+    @Transient // If using JPA, mark it as transient
+    private MultipartFile cvFile;
+    /*
+    *
+*/
 
     public Candidate() {
         // received
     }
 
-    public Candidate(String first_name, String last_name, String id_number, String email_address, String phone_number, String current_province, String current_role, String current_employer, String seniority_level, String education_level, Boolean relocation) {
+    public Candidate(String first_name, String last_name, String id_number, String email_address, String phone_number, String current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.id_number = id_number;
@@ -131,11 +140,11 @@ public class Candidate {
         this.seniority_level = seniority_level;
     }
 
-    public String getEducation_level() {
+    public EducationLevel getEducation_level() {
         return education_level;
     }
 
-    public void setEducation_level(String education_level) {
+    public void setEducation_level(EducationLevel education_level) {
         this.education_level = education_level;
     }
 
@@ -155,11 +164,18 @@ public class Candidate {
         this.cvFilePath = cvFilePath;
     }
 
+    public MultipartFile getCvFile() {
+        return cvFile;
+    }
+
+    public void setCvFile(MultipartFile cvFile) {
+        this.cvFile = cvFile;
+    }
+
     @Override
     public String toString() {
         return "Candidate{" +
-                "candidateID=" + candidateID +
-                ", first_name='" + first_name + '\'' +
+                "first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", id_number='" + id_number + '\'' +
                 ", email_address='" + email_address + '\'' +
@@ -168,9 +184,10 @@ public class Candidate {
                 ", current_role='" + current_role + '\'' +
                 ", current_employer='" + current_employer + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
-                ", education_level='" + education_level + '\'' +
+                ", education_level=" + education_level +
                 ", relocation=" + relocation +
                 ", cvFilePath='" + cvFilePath + '\'' +
+                ", cvFile=" + cvFile +
                 '}';
     }
 }

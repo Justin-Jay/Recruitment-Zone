@@ -1,18 +1,14 @@
 package za.co.RecruitmentZone.service.domainServices;
 
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import za.co.RecruitmentZone.entity.domain.ContactMessage;
 
-import java.io.IOException;
-import java.util.Properties;
+import java.util.Date;
 
 
 @Slf4j
@@ -33,9 +29,12 @@ public class CommunicationService {
         log.info("Sending simple Email");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(kiungaMailAddress);
+        message.setSubject("Website Query");
+        Date d = new Date();
+        message.setSentDate(d);
         message.setTo(websiteMessage.getToEmail());
         message.setText(websiteMessage.getMessageBody());
-        log.info("websiteMessage subject"+websiteMessage.getSubject());
+        log.info("websiteMessage subject "+websiteMessage.getSubject());
         message.setSubject(websiteMessage.getSubject());
         log.info("Sending message"+message);
         //javaMailSender.send(message);

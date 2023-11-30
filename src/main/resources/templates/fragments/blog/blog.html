@@ -6,31 +6,79 @@
     <main th:fragment="blogView(blog)">
         <article>
             <header>
-                <h2 th:text="${blog.blog_title}">Blog Article Title</h2>
-                <p class="metadata">Published on
-                    <time datetime="2023-11-21">November 21, 2023</time>
-                    by Author Name
-                </p>
+                Blog Title: <h2 th:text="${blog.blog_title}"></h2>
+                Published Date: <p class="metadata" th:text="${blog.publish_date}"></p>
+                Author: <p th:value="${employeeName}"></p>
+                <p th:text="${employeeName} ? ${employeeName} : ''">Employee Name</p>
+
+
                 <!-- You can customize the metadata as needed -->
             </header>
-            <section th:text="${blog.blog_description}">
+            Blog Summary: <section th:text="${blog.blog_description}">
 
             </section>
 
+            Blog:
             <section th:text="${blog.body}">
                 <!-- The main content of your blog post -->
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+
                 <!-- Add more content as needed, such as images, lists, etc. -->
             </section>
 
             <footer>
                 <!-- You can add a comment section, social media sharing buttons, etc. -->
             </footer>
-            <div class="container-fluid">
-                <a class="nav-link" th:href="@{/blogs}">Back to blogs</a>
-            </div>
-        </article>
 
+
+        </article>
+        <div class="container-fluid">
+            <a class="nav-link" th:href="@{/blogs}">Back to blogs</a>
+        </div>
     </main>
 
 </div>
+
+
+
+
+
+
+
+
+
+
+<!-- Header Section -->
+<header>
+    <h1>Your Blog Name</h1>
+    <!-- Add navigation or other header elements as needed -->
+</header>
+
+<!-- Main Content Section -->
+<main>
+    <!-- Blog Post 1 -->
+    <article>
+        <h2>Blog Post Title 1</h2>
+        <p class="post-meta">Published on Date | Author Name</p>
+        <div class="post-content">
+            <!-- Your blog post content goes here -->
+        </div>
+    </article>
+
+    <!-- Blog Post 2 -->
+    <article>
+        <h2>Blog Post Title 2</h2>
+        <p class="post-meta">Published on Date | Author Name</p>
+        <div class="post-content">
+            <!-- Your blog post content goes here -->
+        </div>
+    </article>
+
+    <!-- Add more blog posts as needed -->
+
+</main>
+
+<!-- Footer Section -->
+<footer>
+    <!-- Add footer content such as copyright information, links, etc. -->
+    <p>&copy; 2023 Your Blog Name. All rights reserved.</p>
+</footer>

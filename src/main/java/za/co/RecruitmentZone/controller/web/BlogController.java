@@ -7,7 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.RecruitmentZone.entity.Enums.BlogStatus;
+import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 import za.co.RecruitmentZone.entity.domain.Blog;
+import za.co.RecruitmentZone.entity.domain.Employee;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ public class BlogController {
     public String blogs(Model model) {
         List<Blog> allBlogs = new ArrayList<>();
         try {
-            allBlogs = recruitmentZoneService.getBlogs();
+            allBlogs = recruitmentZoneService.getActiveBlogs();
         } catch (Exception e) {
             log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
         }
@@ -40,6 +43,8 @@ public class BlogController {
     @GetMapping("/add-blog")
     public String showCreateBlogForm(Model model) {
         model.addAttribute("blog", new Blog());
+        List<Employee> employees = recruitmentZoneService.getEmployees();
+        model.addAttribute("employees", employees);
         return "fragments/blog/add-blog";
     }
 
@@ -48,14 +53,18 @@ public class BlogController {
         Blog optionalBlog = recruitmentZoneService.findBlogByID(blogID);
         log.info("Looking for {}", blogID);
         log.info(optionalBlog.toString());
+        String employeeName = recruitmentZoneService.getEmployeeByID(optionalBlog.getEmployeeID()).getUsername();
         model.addAttribute("blog", optionalBlog);
+        model.addAttribute("employeeName", employeeName);
         return "fragments/blog/view-blog";
     }
     @PostMapping("/save-blog")
-    public String saveBlog(@Valid @ModelAttribute("blog")Blog blog, BindingResult bindingResult) {
+    public String saveBlog(@Valid @ModelAttribute("blog")Blog blog, @RequestParam("employeeID")Long employeeID,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/blog/add-blog";
         }
+        blog.setStatus(BlogStatus.PENDING);
+        blog.setEmployeeID(employeeID);
         recruitmentZoneService.saveBlog(blog);
         return "redirect:/blog-administration";
     }
@@ -63,6 +72,7 @@ public class BlogController {
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
         Blog blog = recruitmentZoneService.findBlogByID(blogID);
         model.addAttribute("blog", blog);
+        model.addAttribute("status", BlogStatus.values());
         return "fragments/blog/update-blog";
     }
 

@@ -6,24 +6,31 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Clock;
 
 public class FileUploadEvent extends ApplicationEvent {
-    private String fileName;
+    private Long vacancyID;
+
+    private Long candidateID;
     MultipartFile multipartFile;
 
-    public FileUploadEvent(Object source, Clock clock) {
-        super(source, clock);
+    public FileUploadEvent(MultipartFile multipartFile,Long vacancyID,Long candidateID) {
+        super(multipartFile);
+        this.candidateID=candidateID;
+        this.vacancyID=vacancyID;
     }
 
-    public FileUploadEvent(Object source, String fileName) {
-        super(source);
-        this.fileName = fileName;
+    public Long getVacancyID() {
+        return vacancyID;
     }
 
-    public String getFileName() {
-        return fileName;
+    public void setVacancyID(Long vacancyID) {
+        this.vacancyID = vacancyID;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public Long getCandidateID() {
+        return candidateID;
+    }
+
+    public void setCandidateID(Long candidateID) {
+        this.candidateID = candidateID;
     }
 
     public MultipartFile getMultipartFile() {

@@ -1,6 +1,7 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 
 @Entity
 @Table(name = "vacancy")
@@ -16,14 +17,15 @@ public class Vacancy {
     private String industry;
     private String publish_date;
     private String end_date;
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private VacancyStatus status;
     private String job_type;
     private String emp_type;
 
     public Vacancy() {
     }
 
-    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, String industry, String publish_date, String end_date, int status, String job_type, String emp_type) {
+    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, String industry, String publish_date, String end_date, VacancyStatus status, String job_type, String emp_type) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
@@ -109,11 +111,11 @@ public class Vacancy {
         this.end_date = end_date;
     }
 
-    public int getStatus() {
+    public VacancyStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(VacancyStatus status) {
         this.status = status;
     }
 
@@ -136,7 +138,6 @@ public class Vacancy {
     @Override
     public String toString() {
         return "Vacancy{" +
-                "vacancyID=" + vacancyID +
                 ", job_title='" + job_title + '\'' +
                 ", job_description='" + job_description + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +

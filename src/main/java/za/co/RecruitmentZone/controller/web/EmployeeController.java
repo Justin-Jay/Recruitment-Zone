@@ -58,7 +58,7 @@ public class EmployeeController {
             return "fragments/employee/add-employee";
         }
         recruitmentZoneService.saveEmployee(employeeDTO);
-        return "redirect:/fragments/employee/employee-admin";
+        return "redirect:/employee-admin";
     }
 
     @PostMapping("/update-employee")
@@ -75,7 +75,7 @@ public class EmployeeController {
             return "fragments/employee/update-employee";
         }
         recruitmentZoneService.saveEmployee(employee);
-        return "redirect:/fragments/employee/employee-admin";
+        return "redirect:/employee-admin";
     }
 
 

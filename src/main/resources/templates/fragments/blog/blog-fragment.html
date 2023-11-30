@@ -1,21 +1,18 @@
-<!--
-<div class="card-body " th:fragment="blogCard(blog)">
-    <h5 class="card-title" th:text="${blog.blog_title}"></h5>
-    <p class="card-text" th:text="${blog.blog_description}"></p>
-    <p class="card-text" th:text="${blog.body}"></p>
-    <p class="card-text" th:text="${blog.employeeID}"></p>
-</div> -->
-<article class="blog-post" th:fragment="blogCard(blog)">
-    <h2 class="blog-post-title" th:text="${blog.blog_title}">Sample blog post</h2>
-    <p class="blog-post-meta" th:text="${blog.employeeID}"> Employee ID</p>
-    <p th:text="${blog.blog_description}">This blog post shows a few different types of content that’s supported and styled with Bootstrap. Basic typography, lists, tables, images, code, and more are all supported as expected.</p>
-    <hr>
-    <p th:text="${blog.body}">This is some additional paragraph placeholder content. It has been written to fill the available space and show how a longer snippet of text affects the surrounding content. We'll repeat it often to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-    <p th:text="${blog.employeeID}">This is some additional paragraph placeholder content. It's a slightly shorter version of the other highly repetitive body text used throughout. This is an example unordered list:</p>
-    <form th:action="@{/view-blog}" th:method="post">
-        <!-- Hidden input field to include the vacancyID in the POST request -->
-        <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
-        <!-- Submit button to trigger the form submission -->
-        <button type="submit" class="btn btn-primary">View Blog</button>
-    </form>
-</article>
+<div class="container-fluid border border-dark" th:fragment="blogCard(blog)" style="padding: 10px;">
+
+    <article class="blog-post">
+        <header>
+            <h1 th:text="${blog.blog_title}">Blog Title</h1>
+            <p th:text="${blog.employeeID}">by Author ID</p>
+            <p th:text="${blog.publish_date}">Published on January 1, 2023</p>
+        </header>
+        <p th:text="${blog.blog_description}">Blog Description.</p>
+        <hr>
+        <form th:action="@{/view-blog}" th:method="post">
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
+            <!-- Submit button to trigger the form submission -->
+            <button type="submit" class="btn btn-primary">View Blog</button>
+        </form>
+    </article>
+</div>
