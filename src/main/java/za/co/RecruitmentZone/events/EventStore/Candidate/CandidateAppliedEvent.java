@@ -23,7 +23,6 @@ public class CandidateAppliedEvent extends ApplicationEvent {
 
     // Getters for candidate and resumeFilePath
 
-
     public Integer getApplicationID() {
         return applicationID;
     }

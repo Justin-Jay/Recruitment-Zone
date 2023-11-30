@@ -3,6 +3,7 @@ package za.co.RecruitmentZone.service.domainServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.repository.VacancyRepository;
 
@@ -27,6 +28,10 @@ public class VacancyService {
         return vacancyRepository.findById(id);
     }
 
+    public List<Vacancy> findVacanciesByTitle(String title){
+        return vacancyRepository.findVacanciesByJobTitle(title);
+    }
+
     public Vacancy save(Vacancy vacancy){
         return vacancyRepository.save(vacancy);
     }
@@ -35,8 +40,8 @@ public class VacancyService {
         vacancyRepository.deleteById(id);
     }
 
-    public List<Vacancy> getActiveVacancies(){
-        return vacancyRepository.findAll();
+    public List<Vacancy> getActiveVacancies(VacancyStatus status){
+        return vacancyRepository.findVacanciesByStatus(status);
     }
 
 }

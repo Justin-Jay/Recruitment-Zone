@@ -24,20 +24,6 @@ public class RecruitmentZoneAPIController {
         this.vacancyService = vacancyService;
     }
 
-
-/*    @GetMapping("/addVacancy")
-    public ResponseEntity<Vacancy> createVacancy(@RequestBody VacancyFormData vacancy) {
-        Vacancy newVacancy = vacancyService.createVacancy(vacancy);
-        if (newVacancy != null) {
-            return new ResponseEntity<>(newVacancy, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }*/
-    // findAllVacancies @PathVariable Integer id,
-
-
-    // findAllVacancies @PathVariable Integer id,
     @GetMapping("/getAllVacancies")
     public ResponseEntity<List<Vacancy>> getAllVacancies() {
         List<Vacancy> vacancies = vacancyService.getAllVacancies();
@@ -57,62 +43,6 @@ public class RecruitmentZoneAPIController {
         }
     }
 
-/*    @PutMapping("/updateVacancyStatus/{id}/status")
-    public ResponseEntity<Vacancy> updateVacancyStatus(@PathVariable Long id, @RequestBody String newStatus) {
-        try {
-            vacancyService.updateStatus(id, newStatus);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }*/
-
-/*    @PutMapping("/updateVacancyDetails/{id}")
-    public ResponseEntity<Vacancy> updateVacancyDetails(@PathVariable Integer id, @RequestBody VacancyDTO vacancyDTO) {
-        try {
-            vacancyService.updateDetails(id, vacancyDTO);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }*/
-
-    // ADMIN
-    /*
-    * ADD USER
-    * VIEW USERS
-    * UPDATE USER
-    * */
-/*    @PostMapping("/createUser")
-    public ResponseEntity<String> createUser(@RequestBody Employee user) {
-        try {
-            applicationUserService.createNewRestUser(user);
-            return new ResponseEntity<>("User Created Successfully", HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error Creating User: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
-/*    @PutMapping("/updateUser/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable("id") Integer id, @RequestBody UserDTO userDto) {
-        try {
-            applicationUserService.updateUser(id, userDto);
-            return new ResponseEntity<>("User Updated Successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error Updating User: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
-
-
-    /*@PutMapping("/updateUserAuthorities/{id}")
-    public ResponseEntity<String> updateUserAuthorities(@PathVariable("id") Integer id, @RequestBody AuthoritiesDTO authoritiesDto) {
-        try {
-            applicationUserService.updateUserAuthorities(id, authoritiesDto.getRoles());
-            return new ResponseEntity<>("User Authorities Updated Successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error Updating User Authorities: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-*/
 
 
 }

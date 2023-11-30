@@ -25,7 +25,7 @@ public class EmployeeService {
 
     public Employee createEmployee(EmployeeDTO employeeDTO){
         Employee newEmp = new Employee();
-        newEmp.setFirst_name(employeeDTO.getFirst_name());
+        newEmp.setFirst_name(employeeDTO.getFirst_name().strip());
         newEmp.setLast_name(employeeDTO.getLast_name());
         newEmp.setContact_number(employeeDTO.getContact_number());
         String userName = createUserNameAndEmail(employeeDTO.getFirst_name(),employeeDTO.getLast_name());
