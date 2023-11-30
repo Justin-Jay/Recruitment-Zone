@@ -200,16 +200,18 @@ public class RecruitmentZoneService {
 
     public void websiteQueryReceived(ContactMessage message) {
         // send message using virtual thread
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+       /* try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             log.info("About to submit");
             executor.submit(() -> {
+                // Send website query received notification
                 // Perform repo IO operation
-                communicationService.sendSimpleEmail(message);
+              //  communicationService.sendSimpleEmail(message);
+                communicationService.sendWebsiteQuery(message);
             });
         } catch (Exception e) {
             log.info("Failed to send Email Query");
-        }
-
+        }*/
+        // Send Acknowledgment to candidate
         // publish event
         emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
 

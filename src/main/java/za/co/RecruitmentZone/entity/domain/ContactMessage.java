@@ -1,13 +1,14 @@
 package za.co.RecruitmentZone.entity.domain;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class ContactMessage {
+
+
     private String name;
-
     private String email;
-
     private String messageBody;
-
-    private final String toEmail = "justin.maboshego@gmail.com";
+    private String toEmail;
     String subject;
 
     public ContactMessage() {

@@ -26,25 +26,43 @@ public class EmailEventListener {
         this.communicationService = communicationService;
     }
 
+
     @EventListener
     public void onWebsiteQueryReceived(WebsiteQueryReceivedEvent event) {
         log.info("Executing onWebsiteQueryReceived");
         ContactMessage m = event.getMessage();
 
-        try {
-            ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+        sendAutoResponse(m);
 
-            executor.submit(() -> {
-                // Perform repo IO operation
-                communicationService.sendSimpleEmail(m);
-            });
-        } catch (Exception e) {
-            log.info("Failed to send Email Query");
-        }
+        sendWebsiteNotification(m);
+
         log.info("DONE Executing onWebsiteQueryReceived");
     }
 
-    // AMEND VACANCY
 
+    public void sendAutoResponse(ContactMessage m){
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
+            log.info("About to submit request");
+            executor.submit(() -> {
+                // Perform repo IO operation
+                // send acknowledgment to candidate
+                communicationService.sendAutoResponse( m.getEmail(), "Auto Response - Query Received", m.getName(), m.getEmail(), m.getMessageBody());
+            });
+            log.info("sendAutoResponse submitted");
+        } catch (Exception e) {
+            log.info("Failed to send Email Query");
+        }
+    }
 
+    public void sendWebsiteNotification(ContactMessage m){
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
+            log.info("About to submit request");
+            executor.submit(() -> {
+                communicationService.sendWebsiteQuery(m);
+            });
+            log.info("sendWebsiteNotification submitted");
+        } catch (Exception e) {
+            log.info("Failed to send Email Query");
+        }
+    }
 }
