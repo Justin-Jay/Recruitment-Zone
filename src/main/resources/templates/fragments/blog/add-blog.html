@@ -6,8 +6,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -22,6 +23,7 @@
     <div class="container-fluid">
         <form action="#" th:action="@{/save-blog}" th:object="${blog}" method="POST">
 
+            <!--<input type="hidden" name="vacancyID" th:value="${emplooyeeID}" />-->
             <label>
                 Blog Title: <input type="text" th:field="*{blog_title}" placeholder="Enter The Title" class="form-control">
             </label>
@@ -31,8 +33,18 @@
             </label>
 
             <label>
-                Body: <input type="text" th:field="*{body}" placeholder="Enter The Body" class="form-control">
+                Body: <textarea class="form-control" th:field="*{body}"  id="body" placeholder="Blog Body"></textarea>
             </label>
+
+            <label >Publish Date: <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date" placeholder="Publish Date"/> </label>
+
+            <label >Expiration Date: <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate" placeholder="Expiration Date:"/></label>
+
+
+            <label for="employee">Select Employee:</label>
+            <select id="employee" th:field="*{employeeID}">
+                <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.first_name + ' ' + employee.last_name}"></option>
+            </select>
 
             <button type="submit" class="btn btn-primary btn-sm mb-3">Save blog</button>
         </form>
@@ -43,6 +55,9 @@
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
 </body>
 </html>

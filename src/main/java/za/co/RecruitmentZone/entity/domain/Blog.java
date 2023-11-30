@@ -1,6 +1,7 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 
 @Entity
 @Table(name ="blog")
@@ -14,18 +15,39 @@ public class Blog {
 
     private String blog_description;
 
+    @Enumerated(EnumType.STRING)
+    private BlogStatus status;
     private String body;
-
+    private String publish_date;
+    private String end_date;
     private Long employeeID;
 
     public Blog() {
     }
 
-    public Blog(String blog_title, String blog_description, String body, Long employeeID) {
+    public Blog(String blog_title, String blog_description, String body, Long employeeID,String publish_date,String end_date) {
         this.blog_title = blog_title;
         this.blog_description = blog_description;
         this.body = body;
         this.employeeID = employeeID;
+        this.publish_date=publish_date;
+        this.end_date=end_date;
+    }
+
+    public String getPublish_date() {
+        return publish_date;
+    }
+
+    public void setPublish_date(String publish_date) {
+        this.publish_date = publish_date;
+    }
+
+    public BlogStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BlogStatus status) {
+        this.status = status;
     }
 
     public Long getBlogID() {
@@ -68,13 +90,23 @@ public class Blog {
         this.employeeID = employeeID;
     }
 
+    public String getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
+
     @Override
     public String toString() {
         return "Blog{" +
-                "blogID=" + blogID +
-                ", blog_title='" + blog_title + '\'' +
+                "blog_title='" + blog_title + '\'' +
                 ", blog_description='" + blog_description + '\'' +
+                ", status=" + status +
                 ", body='" + body + '\'' +
+                ", publish_date='" + publish_date + '\'' +
+                ", end_date='" + end_date + '\'' +
                 ", employeeID=" + employeeID +
                 '}';
     }

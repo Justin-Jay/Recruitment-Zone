@@ -6,8 +6,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -15,68 +16,82 @@
 
 <div class="container-fluid">
     <div class="container-fluid">
-
         <div th:insert="fragments/layout/header">Header</div>
     </div>
-    <hr/>
-    <div class="container-fluid">
+        <form action="#" th:action="@{/save-application}" th:object="${candidate}"
+              th:method="POST" enctype="multipart/form-data">
 
+            <input type="hidden" name="vacancyID" th:value="${vacancyID}" />
+            <!-- Debug statement in Thymeleaf template -->
+            <h2>Application:</h2>
+            <p th:text="${vacancyName} ? ${vacancyName} : ''"></p>
+            <label for="FirstName">
+                First Name:
+            </label>
+            <input type="text" th:field="*{first_name}" id="FirstName" placeholder="Enter First Name"
+                   class="form-control mb-4 w-25"/>
 
-    </div>
-    <hr/>
-    <div class="container-fluid">
-        <div class="container-fluid"><h2>Apply Now</h2></div>
-        <form action="#" th:action="@{/save-application}" th:object="${candidate}" method="POST">
-            <!-- Hidden input field to include the vacancyID in the POST request -->
-            <input type="hidden" name="vacancyID" th:value="${vacancyID}"/>
-            <label>
-                First Name: <input type="text" th:field="*{candidate.first_name}" placeholder="Enter First Name" class="form-control">
+            <label for="LastName">
+                Last Name:
+            </label>
+            <input type="text" th:field="*{last_name}" id="LastName" placeholder="Enter Last Name"
+                   class="form-control mb-4 w-25"/>
+            <label for="idNumber">
+                ID Number:
+            </label>
+            <input type="text" th:field="*{id_number}" id="idNumber" placeholder="ID Number"
+                   class="form-control mb-4 w-25"/>
+            <label for="email">
+                Email Address:
+            </label>
+            <input type="email" th:field="*{email_address}" id="email" placeholder="Enter Email Address"
+                   class="form-control mb-4 w-25"/>
+
+            <label for="phoneNumber">
+                Phone Number:
+            </label>
+            <input type="text" th:field="*{phone_number}" id="phoneNumber" placeholder="Enter Phone Number"
+                   class="form-control mb-4 w-25"/>
+
+            <label for="currentProvince">
+                Current Province:
+            </label>
+            <input type="text" th:field="*{current_province}" id="currentProvince" placeholder="Enter Current Province"
+                   class="form-control mb-4 w-25"/>
+            <label for="CurrentRole">
+                Current Role:
+            </label>
+            <input type="text" th:field="*{current_role}" id="CurrentRole" placeholder="Enter Current Role"
+                   class="form-control mb-4 w-25"/>
+            <label for="employer">
+                Current Employer:
+            </label>
+            <input type="text" th:field="*{current_employer}" id="employer" placeholder="Enter Current Employer"
+                   class="form-control mb-4 w-25"/>
+            <label for="seniorityLevel">
+                Seniority Level:
+            </label>
+            <input type="text" th:field="*{seniority_level}" id="seniorityLevel" placeholder="Enter Seniority Level"
+                   class="form-control mb-4 w-25">
+
+            <label for="EduLevel">Select Education Level:
+                <select id="EduLevel" th:field="*{education_level}">
+                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.entity.Enums.EducationLevel).values()}"
+                            th:value="${statusVal}" th:text="${statusVal}"></option>
+                </select>
             </label>
 
-            <label>
-                Last Name: <input type="text" th:field="*{candidate.last_name}" placeholder="Enter Last Name" class="form-control">
-            </label>
 
-            <label>
-                ID Number: <input type="text" th:field="*{candidate.id_number}" placeholder="ID Number" class="form-control">
+            <label for="relocation">
+                Relocation:
             </label>
-
-            <label>
-                Email Address: <input type="email" th:field="*{candidate.email_address}" placeholder="Enter Email Address" class="form-control">
+            <input type="text" th:field="*{relocation}" id="relocation" placeholder="Willing to relocate?"
+                   class="form-control mb-4 w-25">
+            <label for="cvAttachment">
+                Attach CV:
             </label>
-
-            <label>
-                Phone Number: <input type="text" th:field="*{candidate.phone_number}" placeholder="Enter Phone Number" class="form-control">
-            </label>
-
-            <label>
-                Current Province: <input type="text" th:field="*{candidate.current_province}" placeholder="Enter Current Province" class="form-control">
-            </label>
-
-            <label>
-                Current Role: <input type="text" th:field="*{candidate.current_role}" placeholder="Enter Current Role" class="form-control">
-            </label>
-
-            <label>
-                Current Employer: <input type="text" th:field="*{candidate.current_employer}" placeholder="Enter Current Employer" class="form-control">
-            </label>
-
-            <label>
-                Seniority Level: <input type="text" th:field="*{candidate.seniority_level}" placeholder="Enter Seniority Level" class="form-control">
-            </label>
-
-            <label>
-                Education Level: <input type="text" th:field="*{candidate.education_level}" placeholder="Enter Education Level" class="form-control">
-            </label>
-
-            <label>
-                Relocation: <input type="text" th:field="*{candidate.relocation}" placeholder="Willing to relocate?" class="form-control">
-            </label>
-
-            <label>
-                Attach CV: <input type="text" th:field="*{candidate.cvFilePath}" placeholder="AttachCV" class="form-control">
-            </label>
-
+            <input th:type="file" name="cvFile" th:field="*{cvFile}" id="cvAttachment"
+                   class="form-control mb-4 w-25"/>
 
             <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>
         </form>
@@ -90,6 +105,9 @@
     </div>
 
 </div>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
 </body>
 </html>

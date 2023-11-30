@@ -6,8 +6,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -21,39 +22,50 @@
 
     <div class="container-fluid">
         <form action="#" th:action="@{/save-vacancy}" th:object="${vacancy}" method="POST">
-            <label>
-                Job Title: <input type="text" th:field="*{job_title}" placeholder="Enter The Job Title" class="form-control">
+            <label for="jobTitle">
+                Job Title:
             </label>
-            <label>
-                Job Description: <input type="text" th:field="*{job_description}" placeholder="Enter The Job Description" class="form-control">
+            <input type="text" th:field="*{job_title}" id="jobTitle" placeholder="Enter The Job Title" class="form-control mb-4 w-25">
+            <label for="jobDescription">
+                Job Description:
             </label>
-            <label>
-                Seniority Level: <input type="text" th:field="*{seniority_level}" placeholder="Enter The Seniority Level" class="form-control">
+            <input type="text" th:field="*{job_description}" id="jobDescription" placeholder="Enter The Job Description" class="form-control mb-4 w-25">
+            <label for="seniorityLevel">
+                Seniority Level:
             </label>
-            <label>
-                Requirements: <input type="text" th:field="*{requirements}" placeholder="Enter Requirements:" class="form-control">
+            <input type="text" th:field="*{seniority_level}" id="seniorityLevel" placeholder="Enter The Seniority Level" class="form-control mb-4 w-25">
+            <label for="requirements">
+                Requirements:
             </label>
-            <label>
-                Job Location: <input type="text" th:field="*{location}" placeholder="Enter The Job Location" class="form-control">
+            <input type="text" th:field="*{requirements}" id="requirements" placeholder="Enter Requirements:" class="form-control mb-4 w-25"/>
+            <label for="jobLocation">
+                Job Location:
             </label>
-            <label>
-                Industry: <input type="text" th:field="*{industry}" placeholder="Enter The Job industry" class="form-control">
+            <input type="text" th:field="*{location}" id="jobLocation" placeholder="Enter The Job Location" class="form-control mb-4 w-25">
+            <label for="industry">
+                Industry:
             </label>
-            <label>
-                Date Published: <input type="date" th:field="*{publish_date}" placeholder="Enter The Date to be published" class="form-control">
+            <input type="text" th:field="*{industry}" id="industry" placeholder="Enter The Job industry" class="form-control mb-4 w-25">
+            <label for="datePublished">
+                Date Published:
             </label>
-            <label>
-                Expiry Date: <input type="date" th:field="*{end_date}" placeholder="Enter The Expiration Date" class="form-control">
+            <input type="date" th:field="*{publish_date}" id="datePublished" placeholder="Enter The Date to be published" class="form-control mb-4 w-25">
+            <label for="expirationDate">
+                Expiry Date:
             </label>
-            <label>
-                Enter Status: <input type="number" th:field="*{status}" placeholder="Enter The Status" class="form-control">
+            <input type="date" th:field="*{end_date}" id="expirationDate" placeholder="Enter The Expiration Date" class="form-control mb-4 w-25">
+            <label for="status">
+                Enter Status:
             </label>
-            <label>
-                Job Type: <input type="text" th:field="*{job_type}" placeholder="Contract / Permanent" class="form-control">
+            <input type="text" th:field="*{status}" id="status" placeholder="Enter The Status" class="form-control mb-4 w-25">
+            <label for="jobType">
+                Job Type:
             </label>
-            <label>
-                Employment Type: <input type="text" th:field="*{emp_type}" placeholder="Full-Time / Part Time" class="form-control">
+            <input type="text" th:field="*{job_type}" id="jobType" placeholder="Contract / Permanent" class="form-control mb-4 w-25">
+            <label for="empType">
+                Employment Type:
             </label>
+            <input type="text" th:field="*{emp_type}" id="empType" placeholder="Full-Time / Part Time" class="form-control mb-4 w-25">
 
 
             <button type="submit" class="btn btn-primary btn-sm mb-3">Save vacancy</button>
@@ -65,6 +77,9 @@
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package za.co.RecruitmentZone.controller.web;
 
+import ch.qos.logback.core.joran.spi.ElementSelector;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.domain.*;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
@@ -24,24 +26,35 @@ public class RecruitmentZoneWebController {
         this.recruitmentZoneService = recruitmentZoneService;
     }
 
+    @GetMapping("/")
+    public String redirectToGuestHome() {
+        return "redirect:/guest-home";
+    }
+
+
     // Home pages
-    @GetMapping(value = {"/", "/home"})
-    public String home(Model model,@RequestParam(name = "successMessage", required = false)String successMessage) {
-        // Handle the message parameter as needed
-        if (successMessage!=null){
-            if (successMessage.equalsIgnoreCase("success")){
-                model.addAttribute("application", false);
-            }
-            else {
-                model.addAttribute("application", false);
-            }
-        }
-        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
+    @GetMapping("/home")
+    public String home(Model model) {
+        List<Vacancy> vacancies = recruitmentZoneService.getAllVacancies();
         log.info("Total Vacancies: " + vacancies.size());
+        String title = "";
         model.addAttribute("totalNumberOfVacancies", vacancies.size());
         model.addAttribute("vacancies", vacancies);
+        model.addAttribute("title",title);
         return "home";
     }
+
+    @GetMapping("/guest-home")
+    public String GuestHome(Model model) {
+        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
+        log.info("Total Vacancies: " + vacancies.size());
+        String title = "";
+        model.addAttribute("totalNumberOfVacancies", vacancies.size());
+        model.addAttribute("vacancies", vacancies);
+        model.addAttribute("title",title);
+        return "guest-home";
+    }
+
 
     @GetMapping("/aboutus")
     public String aboutUs() {
@@ -49,10 +62,20 @@ public class RecruitmentZoneWebController {
     }
 
 
+    @PostMapping("/TestSavingFiles")
+    public String testingSavingFiles() {
 
-
-
-
+        log.info("TestSavingFiles CONTROLLER ");
+        try {
+            log.info("About to try and save File");
+            recruitmentZoneService.saveTempFile();
+            return "home";
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info("Failed to save file");
+        }
+        return "home";
+    }
 /*
     @GetMapping("/createblog")
     public String showCreateBlogForm(Model model) {

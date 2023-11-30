@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
@@ -62,6 +64,7 @@ public class VacancyController {
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
         model.addAttribute("vacancy", vacancy);
+        model.addAttribute("status", VacancyStatus.values());
         return "fragments/vacancy/update-vacancy";
     }
 
@@ -73,23 +76,25 @@ public class VacancyController {
         recruitmentZoneService.saveVacancy(vacancy);
         return "redirect:/vacancy-administration";
     }
-/*    @GetMapping("/vacancy-page")
-    public String vacancyPage(Model model,@RequestParam(name = "successMessage", required = false)String successMessage) {
-        // Handle the message parameter as needed
-        if (successMessage!=null){
-            if (successMessage.equalsIgnoreCase("success")){
-                model.addAttribute("application", false);
-            }
-            else {
-                model.addAttribute("application", false);
-            }
+
+
+    @GetMapping("/search")
+    public String searchVacancies(@RequestParam(name = "name", required = false) String title, Model model) {
+        List<Vacancy> vacancies = null;
+
+        if (title != null && !title.isEmpty()) {
+            // Perform the search based on the vacancy name
+            vacancies = recruitmentZoneService.searchVacancyByTitle(title);
+        } else {
+            // Fetch all vacancies if no name is provided
+         //   vacancies = recruitmentZoneService.getAllVacancies();
         }
-        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
-        log.info("Total Vacancies: " + vacancies.size());
-        model.addAttribute("totalNumberOfVacancies", vacancies.size());
-        model.addAttribute("vacancies", vacancies);
-        return "fragments/vacancy/vacancy-page";
-    }*/
+
+
+       model.addAttribute("vacancies", vacancies);
+
+        return "searchVacancies";
+    }
 
 
 }

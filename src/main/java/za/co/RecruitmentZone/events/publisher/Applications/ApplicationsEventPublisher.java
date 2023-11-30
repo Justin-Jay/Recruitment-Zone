@@ -1,19 +1,13 @@
-/*
 package za.co.RecruitmentZone.events.publisher.Applications;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import za.co.RecruitmentZone.entity.domain.Application;
+import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.entity.domain.Candidate;
-import za.co.RecruitmentZone.entity.domain.CandidateApplicationDTO;
-import za.co.RecruitmentZone.entity.domain.Vacancy;
-import za.co.RecruitmentZone.events.EventStore.ApplicationUser.ApplicationSubmittedEvent;
-import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyAmendedEvent;
-import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyActivatedEvent;
-import za.co.RecruitmentZone.events.EventStore.Vacancy.VacancyExpiredEvent;
-
+import za.co.RecruitmentZone.events.EventStore.Candidate.FileUploadEvent;
+import za.co.RecruitmentZone.events.EventStore.Candidate.SaveSubmissionEvent;
 import java.time.Clock;
 
 @Component
@@ -25,7 +19,34 @@ public class ApplicationsEventPublisher {
         this.eventPublisher = eventPublisher;
     }
 
-    public boolean publishApplicationSubmittedEvent(CandidateApplicationDTO candidateApplication) {
+    public boolean publishSaveSubmissionEvent(Candidate candidate,Long vacancyID) {
+        SaveSubmissionEvent saveSubmissionEvent = new SaveSubmissionEvent(candidate,vacancyID);
+        log.info("Executing publishWebsiteQueryReceivedEvent");
+        try {
+            eventPublisher.publishEvent(saveSubmissionEvent);
+            log.info("EVENT  publishWebsiteQueryReceivedEvent POSTED");
+            return true;
+        } catch (Exception e) {
+            log.info("Unable to post event");
+            return false;
+        }
+
+    }
+
+    public boolean publishFileUploadEvent(MultipartFile file,Long candidateID,Long vacancyID) {
+        FileUploadEvent fileUploadEvent = new FileUploadEvent(file,candidateID,vacancyID);
+        log.info("Executing publishFileUploadedEvent");
+        try {
+            eventPublisher.publishEvent(fileUploadEvent);
+            log.info("EVENT publishFileUploadedEvent POSTED");
+            return true;
+        } catch (Exception e) {
+            log.info("Unable to post event");
+            return false;
+        }
+
+    }
+   /* public boolean publishApplicationSubmittedEvent(CandidateApplicationDTO candidateApplication) {
         try {
             ApplicationSubmittedEvent event = new ApplicationSubmittedEvent(candidateApplication);
             eventPublisher.publishEvent(event);
@@ -34,9 +55,9 @@ public class ApplicationsEventPublisher {
             log.info("ApplicationSubmittedEvent Posted..");
             return false;
         }
-    }
+    }*/
 
-    public boolean publishVacancyAmendedEvent(Vacancy vacancy) {
+ /*   public boolean publishVacancyAmendedEvent(Vacancy vacancy) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
             VacancyAmendedEvent event = new VacancyAmendedEvent(vacancy,baseClock);
@@ -47,8 +68,8 @@ public class ApplicationsEventPublisher {
             return false;
         }
     }
-
-    public boolean publishVacancyActivatedEvent(Integer vacancyID) {
+*/
+/*    public boolean publishVacancyActivatedEvent(Integer vacancyID) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
             VacancyActivatedEvent event = new VacancyActivatedEvent(vacancyID,baseClock);
@@ -58,9 +79,9 @@ public class ApplicationsEventPublisher {
             log.info("Unable to post event");
             return false;
         }
-    }
+    }*/
 
-    public boolean publishVacancyExpiredEvent(Integer vacancyID) {
+/*    public boolean publishVacancyExpiredEvent(Integer vacancyID) {
         try {
             Clock baseClock = Clock.systemDefaultZone();
             VacancyExpiredEvent event = new VacancyExpiredEvent(vacancyID,baseClock);
@@ -70,12 +91,11 @@ public class ApplicationsEventPublisher {
             log.info("Unable to post event");
             return false;
         }
-    }
+    }*/
 
 //    publishVacancyActivatedEvent
           //  publishVacancyExpiredEvent
 
-*/
 /*
     public String suspendVacancy(Integer vacancyID) {
 
@@ -99,13 +119,13 @@ public class ApplicationsEventPublisher {
         }
 
     }
-
-*//*
-
-
-
-
 */
+
+
+
+
+
+
 /*    public String rejectCandidate(Integer candidateID){
         try {
 
@@ -121,10 +141,9 @@ public class ApplicationsEventPublisher {
             log.info(e.getMessage());
             return "failed reject Candidate";
         }
-    }*//*
+    }*/
 
 
- */
 /*   public String shortList(Integer userID,Integer vacancyID){
         try {
             Optional<ApplicationUser> candidate = userRepository.findById(userID);
@@ -143,9 +162,8 @@ public class ApplicationsEventPublisher {
             log.info(e.getMessage());
             return "failed reject Candidate";
         }
-    }*//*
+    }*/
 
-*/
 /*    public String removeFromShortList(Integer userID,Integer vacancyID){
         try {
             Optional<ApplicationUser> candidate = userRepository.findById(userID);
@@ -164,9 +182,8 @@ public class ApplicationsEventPublisher {
             log.info(e.getMessage());
             return "failed reject Candidate";
         }
-    }*//*
+    }*/
 
 
 
 }
-*/

@@ -1,0 +1,67 @@
+<table class="table table-bordered table-striped" th:fragment="ApplicationsTable(applications)">
+    <thead class="table-dark">
+    <tr>
+        <th>Application ID</th>
+        <th>Date Received</th>
+        <th>Submission Date</th>
+        <th>Status</th>
+        <th>CandidateID</th>
+        <th>VacancyID</th>
+        <th>View Application</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="vapp : ${applications}">
+        <td th:text="${vapp.applicationID}"></td>
+        <td th:text="${vapp.date_received}"></td>
+        <td th:text="${vapp.submission_date}"></td>
+        <td th:text="${vapp.status}"></td>
+        <td th:text="${vapp.candidateID}"></td>
+        <td th:text="${vapp.vacancyID}"></td>
+        <td>
+            <form th:action="@{/view-application}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="applicationID" th:value="*{vapp.applicationID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">View Application</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="container-fluid" th:fragment="applicationView(vacancyApplication)">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Application ID</th>
+            <th>Date Received</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+            <th>CandidateID</th>
+            <th>VacancyID</th>
+            <th>Update Application</th><!-- New column for the "View Job" link -->
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr >
+            <td th:text="*{vacancyApplication.applicationID}"></td>
+            <td th:text="${vacancyApplication.date_received}"></td>
+            <td th:text="${vacancyApplication.submission_date}"></td>
+            <td th:text="${vacancyApplication.status}"></td>
+            <td th:text="${vacancyApplication.candidateID}"></td>
+            <td th:text="${vacancyApplication.vacancyID}"></td>
+            <td>
+                <form th:action="@{/update-application}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="applicationID" th:value="*{vacancyApplication.applicationID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button type="submit" class="btn btn-primary">Update Application</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -26,7 +26,7 @@ public class EmailEventPublisher {
         log.info("Executing publishWebsiteQueryReceivedEvent");
         try {
             eventPublisher.publishEvent(wc);
-            log.info("EVENT  publishWebsiteQueryReceivedEvent POSTED");
+            log.info("EVENT publishWebsiteQueryReceivedEvent POSTED");
             return true;
         } catch (Exception e) {
             log.info("Unable to post event");
