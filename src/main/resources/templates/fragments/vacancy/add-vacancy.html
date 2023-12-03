@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -22,50 +22,80 @@
 
     <div class="container-fluid">
         <form action="#" th:action="@{/save-vacancy}" th:object="${vacancy}" method="POST">
+            <input type="hidden" name="name" th:value="${#authentication.principal.username}" />
+
+            <label for="clientId">Select Client:</label>
+            <select id="clientId" onchange="updateVacancyClientId(this)">
+                <option value="" disabled selected>Select a Client</option>
+                <option th:each="client : ${clients}" th:value="${client.clientID}" th:text="${client.name}"></option>
+            </select>
+
+
             <label for="jobTitle">
                 Job Title:
             </label>
-            <input type="text" th:field="*{job_title}" id="jobTitle" placeholder="Enter The Job Title" class="form-control mb-4 w-25">
+            <input type="text" th:field="*{job_title}" id="jobTitle" placeholder="Enter The Job Title"
+                   class="form-control mb-4 w-25">
             <label for="jobDescription">
                 Job Description:
             </label>
-            <input type="text" th:field="*{job_description}" id="jobDescription" placeholder="Enter The Job Description" class="form-control mb-4 w-25">
+            <input type="text" th:field="*{job_description}" id="jobDescription" placeholder="Enter The Job Description"
+                   class="form-control mb-4 w-25">
             <label for="seniorityLevel">
                 Seniority Level:
             </label>
-            <input type="text" th:field="*{seniority_level}" id="seniorityLevel" placeholder="Enter The Seniority Level" class="form-control mb-4 w-25">
+            <input type="text" th:field="*{seniority_level}" id="seniorityLevel" placeholder="Enter The Seniority Level"
+                   class="form-control mb-4 w-25">
             <label for="requirements">
                 Requirements:
             </label>
-            <input type="text" th:field="*{requirements}" id="requirements" placeholder="Enter Requirements:" class="form-control mb-4 w-25"/>
+
+            <input type="text" th:field="*{requirements}" id="requirements" placeholder="Enter Requirements:"
+                   class="form-control mb-4 w-25"/>
             <label for="jobLocation">
                 Job Location:
             </label>
-            <input type="text" th:field="*{location}" id="jobLocation" placeholder="Enter The Job Location" class="form-control mb-4 w-25">
-            <label for="industry">
-                Industry:
+
+
+            <input type="text" th:field="*{location}" id="jobLocation" placeholder="Enter The Job Location"
+                   class="form-control mb-4 w-25">
+
+            <label for="industry" >Select Industry:
+                <select id="industry" th:field="*{industry}">
+                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.Industry).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
             </label>
-            <input type="text" th:field="*{industry}" id="industry" placeholder="Enter The Job industry" class="form-control mb-4 w-25">
+
+
             <label for="datePublished">
                 Date Published:
             </label>
-            <input type="date" th:field="*{publish_date}" id="datePublished" placeholder="Enter The Date to be published" class="form-control mb-4 w-25">
+            <input type="date" th:field="*{publish_date}" id="datePublished"
+                   placeholder="Enter The Date to be published" class="form-control mb-4 w-25">
             <label for="expirationDate">
                 Expiry Date:
             </label>
-            <input type="date" th:field="*{end_date}" id="expirationDate" placeholder="Enter The Expiration Date" class="form-control mb-4 w-25">
-            <label for="status">
-                Enter Status:
+            <input type="date" th:field="*{end_date}" id="expirationDate" placeholder="Enter The Expiration Date"
+                   class="form-control mb-4 w-25">
+
+
+            <label for="jobType" >Select Job Type:
+                <select id="jobType" th:field="*{jobType}">
+                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.JobType).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
             </label>
-            <input type="text" th:field="*{status}" id="status" placeholder="Enter The Status" class="form-control mb-4 w-25">
-            <label for="jobType">
-                Job Type:
+
+
+
+            <label for="empType" >Select Employment Type:
+                <select id="empType" th:field="*{empType}">
+                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.EmpType).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
             </label>
-            <input type="text" th:field="*{job_type}" id="jobType" placeholder="Contract / Permanent" class="form-control mb-4 w-25">
-            <label for="empType">
-                Employment Type:
-            </label>
-            <input type="text" th:field="*{emp_type}" id="empType" placeholder="Full-Time / Part Time" class="form-control mb-4 w-25">
+
 
 
             <button type="submit" class="btn btn-primary btn-sm mb-3">Save vacancy</button>
@@ -77,6 +107,17 @@
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
+<script th:inline="javascript">
+    /* JavaScript function to update the hidden input with the selected client ID */
+    function updateVacancyClientId(select) {
+        var selectedClientId = select.value;
+        document.getElementById('vacancyClientId').value = selectedClientId;
+    }
+
+</script>
+
+
+
 <script type="text/javascript"
         th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
 <script type="text/javascript"

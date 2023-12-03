@@ -59,7 +59,7 @@ public class EmployeeService {
     public String createUserNameAndEmail(String firstName,String LastName){
         return firstName+"."+LastName+"@"+domainDotZa;
     }
-    public Optional<Employee> findByUsername(String username) {
+    public Optional<Employee> findEmployeeByUserName(String username) {
         return  employeeRepository.findByUsername(username);
     }
 

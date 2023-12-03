@@ -35,20 +35,7 @@ public class ClientService {
         contactPersonRepository.save(contactPerson);
     }
     public void saveUpdatedClient(Client client){
-        Optional<Client> oc = clientRepository.findById(client.getClientID());
-        if(oc.isPresent()){
-            Client updatedClient = oc.get();
-
-            if(!client.getName().equalsIgnoreCase(updatedClient.getName())){
-                client.setName(updatedClient.getName());
-            }
-
-            if(!client.getIndustry().equalsIgnoreCase(updatedClient.getIndustry())){
-                client.setIndustry(updatedClient.getIndustry());
-            }
-            clientRepository.save(client);
-        }
-
+        clientRepository.save(client);
     }
 
     public List<Client> findAllClients(){

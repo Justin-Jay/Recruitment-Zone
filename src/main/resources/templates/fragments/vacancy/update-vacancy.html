@@ -26,7 +26,7 @@
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="vacancyID" th:field="*{vacancyID}" />
         <div class="md-10">
-            <label for="job_title"  >Job Title: </label>
+            <label for="job_title" >Job Title: </label>
             <input type="text" th:field="*{job_title}" class="form-control mb-4 w-25" id="job_title" placeholder="Job Title"/>
 
             <label for="job_description"  >Job Description: </label>
@@ -41,8 +41,13 @@
             <label for="location"  >Location: </label>
             <input type="text" th:field="*{location}" class="form-control mb-4 w-25" id="location" placeholder="Job Title"/>
 
-            <label for="industry"  >Industry: </label>
-            <input type="text" th:field="*{industry}" class="form-control mb-4 w-25" id="industry" placeholder="Job Title"/>
+
+            <label for="industry" >Select Industry:
+                <select id="industry" th:field="*{industry}">
+                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.Industry).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
+            </label>
 
             <label for="publish_date"  >Publish Date: </label>
             <input type="text" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date" placeholder="Job Title"/>
@@ -56,13 +61,22 @@
                             th:value="${statusVal}" th:text="${statusVal}"></option>
                 </select>
             </label>
-<!--            <input type="text" th:field="*{status}" class="form-control mb-4 w-25" id="status" placeholder="Job Title"/>-->
 
-            <label for="job_type" >Job Type: </label>
-            <input type="text" th:field="*{job_type}" class="form-control mb-4 w-25" id="job_type" placeholder="Job Title"/>
+            <label for="jobType" >Select Job Type:
+                <select id="jobType" th:field="*{jobType}">
+                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.JobType).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
+            </label>
 
-            <label for="emp_type"  >Job Title: </label>
-            <input type="text" th:field="*{emp_type}" class="form-control mb-4 w-25" id="emp_type" placeholder="Job Title"/>
+
+
+            <label for="empType" >Select Employment Type:
+                <select id="empType" th:field="*{empType}">
+                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.EmpType).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
+            </label>
 
         </div>
         <button type="submit" class="btn btn-primary">Save Updated Vacancy</button>
@@ -75,6 +89,9 @@
     <div th:insert="fragments/layout/footer">Footer</div>
 
 </div>
+
+
+
 <script type="text/javascript"
         th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
 <script type="text/javascript"

@@ -12,7 +12,7 @@
             <th>publish_date</th>
             <th>end_date</th>
             <th>status</th>
-            <th>job_type</th>
+            <th>jobType</th>
             <th>emp_type</th>
             <th>View Vacancy</th><!-- New column for the "View Job" link -->
         </tr>
@@ -29,8 +29,8 @@
             <td th:text="${vacancy.publish_date}"></td>
             <td th:text="${vacancy.end_date}"></td>
             <td th:text="${vacancy.status}"></td>
-            <td th:text="${vacancy.job_type}"></td>
-            <td th:text="${vacancy.emp_type}"></td>
+            <td th:text="*{vacancy.jobType}"></td>
+            <td th:text="*{vacancy.empType}"></td>
             <td>
                 <form th:action="@{/update-vacancy}" th:method="post">
                     <!-- Hidden input field to include the vacancyID in the POST request -->

@@ -1,10 +1,13 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import za.co.RecruitmentZone.entity.Enums.EmpType;
+import za.co.RecruitmentZone.entity.Enums.Industry;
+import za.co.RecruitmentZone.entity.Enums.JobType;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
+
 
 @Entity
 @Table(name = "vacancy")
@@ -17,22 +20,25 @@ public class Vacancy {
     private String seniority_level;
     private String requirements;
     private String location;
-    private String industry;
+    @Enumerated(EnumType.STRING)
+    private Industry industry;
     private String publish_date;
     private String end_date;
     @Enumerated(EnumType.STRING)
     private VacancyStatus status;
-    private String job_type;
-    private String emp_type;
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
+    @Enumerated(EnumType.STRING)
+    private EmpType empType;
 
-  /*  @ManyToOne(
-            cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })*/
+    /*  @ManyToOne(
+              cascade = {
+              CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+      })*/
     private Long clientID;
-/*    @ManyToOne(cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })*/
+    /*    @ManyToOne(cascade = {
+                CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+        })*/
     private Long employeeID;
   /*  @OneToMany(mappedBy = "vacancy",
             cascade = {
@@ -49,7 +55,7 @@ public class Vacancy {
     public Vacancy() {
     }
 
-    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, String industry, String publish_date, String end_date, VacancyStatus status, String job_type, String emp_type) {
+    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, String publish_date, String end_date, VacancyStatus status, JobType jobType, EmpType empType) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
@@ -59,8 +65,8 @@ public class Vacancy {
         this.publish_date = publish_date;
         this.end_date = end_date;
         this.status = status;
-        this.job_type = job_type;
-        this.emp_type = emp_type;
+        this.jobType = jobType;
+        this.empType = empType;
     }
 
 
@@ -112,11 +118,11 @@ public class Vacancy {
         this.location = location;
     }
 
-    public String getIndustry() {
+    public Industry getIndustry() {
         return industry;
     }
 
-    public void setIndustry(String industry) {
+    public void setIndustry(Industry industry) {
         this.industry = industry;
     }
 
@@ -144,20 +150,12 @@ public class Vacancy {
         this.status = status;
     }
 
-    public String getJob_type() {
-        return job_type;
+    public EmpType getEmpType() {
+        return empType;
     }
 
-    public void setJob_type(String job_type) {
-        this.job_type = job_type;
-    }
-
-    public String getEmp_type() {
-        return emp_type;
-    }
-
-    public void setEmp_type(String emp_type) {
-        this.emp_type = emp_type;
+    public void setEmpType(EmpType empType) {
+        this.empType = empType;
     }
 
     public Long getClientID() {
@@ -176,11 +174,18 @@ public class Vacancy {
         this.employeeID = employeeID;
     }
 
+    public JobType getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
+    }
+
     @Override
     public String toString() {
         return "Vacancy{" +
-                "vacancyID=" + vacancyID +
-                ", job_title='" + job_title + '\'' +
+                "job_title='" + job_title + '\'' +
                 ", job_description='" + job_description + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
                 ", requirements='" + requirements + '\'' +
@@ -189,17 +194,23 @@ public class Vacancy {
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
                 ", status=" + status +
-                ", job_type='" + job_type + '\'' +
-                ", emp_type='" + emp_type + '\'' +
+                ", jobType=" + jobType +
+                ", empType='" + empType + '\'' +
                 ", clientID=" + clientID +
                 ", employeeID=" + employeeID +
                 '}';
     }
-/*    public void addApplication(Application application){
+    /*    public void addApplication(Application application){
         if (applications ==null){
             applications = new ArrayList<>();
         }
         applications.add(application);
         application.setVacancy(this);
     }*/
+
+
+
+
+
+
 }

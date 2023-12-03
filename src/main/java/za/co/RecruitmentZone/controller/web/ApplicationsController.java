@@ -55,6 +55,7 @@ public class ApplicationsController {
 
         if (!cvFile.isEmpty()) {
             // Process the CV file
+            // Additional validations like checking for already submitted application, etc.
 
             try {
              //   filePath = recruitmentZoneService.saveFile(vacancyID,cvFile);
@@ -99,8 +100,6 @@ public class ApplicationsController {
         return "fragments/applications/apply-now";
     }
 
-
-
     @GetMapping("/applications-administration")
     public String applications(Model model) {
         List<Application> allApplications = recruitmentZoneService.getApplications();
@@ -143,8 +142,6 @@ public class ApplicationsController {
 
         return "redirect:/applications-administration";
     }
-
-
 
 
 }

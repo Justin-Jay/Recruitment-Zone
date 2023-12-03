@@ -26,9 +26,16 @@
                Client Name:<input type="text" th:field="*{name}" placeholder="First Name" class="form-control">
             </label>
 
-            <label>
-              Industry: <input type="text" th:field="*{industry}" placeholder="Last Name" class="form-control">
+            <label for="industry" >Select Industry:
+                <select id="industry" th:field="*{industry}">
+                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.Industry).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
             </label>
+
+           <!-- <label>
+              Industry: <input type="text" th:field="*{industry}" placeholder="Last Name" class="form-control">
+            </label>-->
 
             <h1>Client Contact Person Information</h1>
 

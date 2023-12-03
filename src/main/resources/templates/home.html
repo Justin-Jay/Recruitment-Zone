@@ -27,7 +27,7 @@
                 <div class="float-end">
                     <h1>Search Vacancies</h1>
 
-                    <form th:action="@{/search}" th:method="GET">
+                    <form th:action="@{/home}" th:method="GET">
                         <label for="vacancyTitle">Title:</label>
                         <input type="text" id="vacancyTitle" name="name" th:value="${title}" />
                         <button type="submit">Search</button>

@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
+import za.co.RecruitmentZone.entity.domain.Client;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
@@ -24,8 +25,6 @@ public class VacancyController {
     public VacancyController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
     }
-
-    // Vacancies
     @GetMapping("/vacancy-administration")
     public String vacancies(Model model) {
         List<Vacancy> allVacancies = new ArrayList<>();
@@ -37,13 +36,13 @@ public class VacancyController {
         model.addAttribute("vacancies", allVacancies);
         return "fragments/vacancy/vacancy-administration";
     }
-
     @GetMapping("/add-vacancy")
     public String showCreateVacancyForm(Model model) {
         model.addAttribute("vacancy", new Vacancy());
+        List<Client> clients = recruitmentZoneService.getClients();
+        model.addAttribute("clients", clients);
         return "fragments/vacancy/add-vacancy";
     }
-
     @PostMapping("/view-vacancy")
     public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
@@ -53,11 +52,11 @@ public class VacancyController {
         return "fragments/vacancy/view-vacancy";
     }
     @PostMapping("/save-vacancy")
-    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, @RequestParam("employeeID")Long employeeID,BindingResult bindingResult) {
+    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, @RequestParam("name")String employeeUserName,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/vacancy/add-vacancy";
         }
-        recruitmentZoneService.saveNewVacancy(employeeID,vacancy);
+        recruitmentZoneService.saveNewVacancy(employeeUserName,vacancy);
         return "redirect:/vacancy-administration";
     }
     @PostMapping("/update-vacancy")
@@ -67,7 +66,6 @@ public class VacancyController {
         model.addAttribute("status", VacancyStatus.values());
         return "fragments/vacancy/update-vacancy";
     }
-
     @PostMapping("/save-updated-vacancy")
     public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -76,25 +74,5 @@ public class VacancyController {
         recruitmentZoneService.saveVacancy(vacancy);
         return "redirect:/vacancy-administration";
     }
-
-
-    @GetMapping("/search")
-    public String searchVacancies(@RequestParam(name = "name", required = false) String title, Model model) {
-        List<Vacancy> vacancies = null;
-
-        if (title != null && !title.isEmpty()) {
-            // Perform the search based on the vacancy name
-            vacancies = recruitmentZoneService.searchVacancyByTitle(title);
-        } else {
-            // Fetch all vacancies if no name is provided
-         //   vacancies = recruitmentZoneService.getAllVacancies();
-        }
-
-
-       model.addAttribute("vacancies", vacancies);
-
-        return "searchVacancies";
-    }
-
 
 }
