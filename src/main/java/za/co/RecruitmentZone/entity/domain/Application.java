@@ -3,6 +3,8 @@ package za.co.RecruitmentZone.entity.domain;
 import jakarta.persistence.*;
 import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
 
+import java.util.List;
+
 @Entity
 @Table(name = "application")
 public class Application {
@@ -10,27 +12,23 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "applicationID")
     private Long applicationID;
-
     private String date_received;
 
     private String submission_date;
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
+ /*   @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "")*/
+    private Long candidateID;
 
-    private Long  candidateID;
 
+  /*  @ManyToOne(cascade = {
+            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+    })*/
     private Long vacancyID;
 
     public Application() {
-    }
-
-    public Application(String date_received, String submission_date, ApplicationStatus status, Long candidateID, Long vacancyID) {
-        this.date_received = date_received;
-        this.submission_date = submission_date;
-        this.status = status;
-        this.candidateID = candidateID;
-        this.vacancyID = vacancyID;
     }
 
     public Long getApplicationID() {
@@ -79,6 +77,18 @@ public class Application {
 
     public void setVacancyID(Long vacancyID) {
         this.vacancyID = vacancyID;
+    }
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "applicationID=" + applicationID +
+                ", date_received='" + date_received + '\'' +
+                ", submission_date='" + submission_date + '\'' +
+                ", status=" + status +
+                ", candidateID=" + candidateID +
+                ", vacancyID=" + vacancyID +
+                '}';
     }
 }
 

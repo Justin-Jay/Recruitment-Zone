@@ -17,27 +17,23 @@
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
 
-    <div class="container-fluid"><h2>View Blog</h2></div>
+    <div class="container-fluid"><h2>View Client</h2></div>
     <hr/>
 <div class="container-fluid">
-    <form action="#" th:action="@{/save-updated-employee}" th:object="${employee}" th:method="POST">
+    <form action="#" th:action="@{/save-updated-client}" th:object="${client}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
-        <input type="hidden" th:field="*{employeeID}" />
+        <input type="hidden" th:field="*{clientID}" />
         <div class="md-10">
-            <label for="first_name" >Employee First Name: </label>
-            <input type="text" th:field="*{first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="First Name"/>
+            <label for="name" >Client Name: </label>
+            <input type="text" th:field="*{name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
         </div>
 
         <div class="md-10">
-            <label for="last_name" >Employee Last Name: </label>
-            <input type="text" th:field="*{last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Last Name"/>
+            <label for="industry" >Industry: </label>
+            <input type="text" th:field="*{industry}" class="form-control mb-4 w-25" id="industry" placeholder="Industry"/>
         </div>
 
-        <div class="md-10">
-            <label for="contact_number" >Employee Contact Number: </label>
-            <input type="text" th:field="*{contact_number}" class="form-control mb-4 w-25" id="contact_number" placeholder="Contact Number"/>
-        </div>
-        <button type="submit" class="btn btn-primary">Save Updated Employee</button>
+        <button type="submit" class="btn btn-primary">Save Updated Client</button>
     </form>
 
 </div>

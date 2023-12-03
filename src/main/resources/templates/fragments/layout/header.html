@@ -1,4 +1,8 @@
-<div class="row-cols-auto">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<div class="row-cols-auto" xmlns:sec="http://www.w3.org/1999/xhtml">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" th:href="@{/}">Recruitment Zone</a>
         <!-- Toggle button for smaller devices -->
@@ -9,15 +13,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
+                <a class="nav-link" th:href="@{/}">Home</a>
                 <a class="nav-link" th:href="@{/blogs}">Blogs</a>
                 <a class="nav-link" th:href="@{/aboutus}">About Us</a>
                 <a class="nav-link" th:href="@{/contact-us}">Contact Us</a>
-                <a class="nav-link" th:href="@{/employee-admin}">Employee Administration</a>
-                <a class="nav-link" th:href="@{/blog-administration}">Blog Administration</a>
-                <a class="nav-link" th:href="@{/vacancy-administration}">Vacancy Administration</a>
-                <a class="nav-link" th:href="@{/applications-administration}">Applications Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/client-administration}">Client Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/employee-admin}">Employee Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/blog-administration}">Blog Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')"  th:href="@{/vacancy-administration}">Vacancy Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/applications-administration}">Applications Administration</a>
+                <form th:if="${#authorization.expression('isAuthenticated()')}" action="#" th:action="@{/logout}" method="POST">
+                    <input type="submit" th:value="Logout">
+                </form>
+                <a class="btn btn-light" th:if="${not #authorization.expression('isAuthenticated')}" th:href="@{/log-in}" role="button">Login</a>
             </div>
-            <a class="btn btn-light" th:href="@{/log-in}" role="button">Login</a>
         </div>
+
     </nav>
 </div>
+</html>

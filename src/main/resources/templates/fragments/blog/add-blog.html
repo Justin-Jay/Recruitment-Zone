@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http:www.thymeleaf.org/extras/spring-security"
       lang="en">
 <head>
     <!-- Required meta tags -->
@@ -8,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -23,34 +24,37 @@
     <div class="container-fluid">
         <form action="#" th:action="@{/save-blog}" th:object="${blog}" method="POST">
 
-            <!--<input type="hidden" name="vacancyID" th:value="${emplooyeeID}" />-->
-            <label>
-                Blog Title: <input type="text" th:field="*{blog_title}" placeholder="Enter The Title" class="form-control">
-            </label>
+            <!--            <input type="hidden" name="vacancyID" th:value="${emplooyeeID}" />-->
+            <div class="md-10">
+                <span th:sec:authentication="name">username</span>
+                <label>
+                    Blog Title: <input type="text" th:field="*{blog_title}" placeholder="Enter The Title"
+                                       class="form-control">
+                </label>
 
-            <label>
-                Blog Description: <input type="text" th:field="*{blog_description}" placeholder="Enter The Description" class="form-control">
-            </label>
+                <label>
+                    Blog Description: <input type="text" th:field="*{blog_description}"
+                                             placeholder="Enter The Description" class="form-control">
+                </label>
 
-            <label>
-                Body: <textarea class="form-control" th:field="*{body}"  id="body" placeholder="Blog Body"></textarea>
-            </label>
+                <label>
+                    Body: <textarea class="form-control" th:field="*{body}" id="body"
+                                    placeholder="Blog Body"></textarea>
+                </label>
 
-            <label >Publish Date: <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date" placeholder="Publish Date"/> </label>
+                <label>Publish Date: <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25"
+                                            id="publish_date" placeholder="Publish Date"/> </label>
 
-            <label >Expiration Date: <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate" placeholder="Expiration Date:"/></label>
+                <label>Expiration Date: <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25"
+                                               id="expirationDate" placeholder="Expiration Date:"/></label>
 
 
-            <label for="employee">Select Employee:</label>
-            <select id="employee" th:field="*{employeeID}">
-                <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.first_name + ' ' + employee.last_name}"></option>
-            </select>
+            </div>
 
             <button type="submit" class="btn btn-primary btn-sm mb-3">Save blog</button>
         </form>
-    </div>
 
-
+</div>
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>
 

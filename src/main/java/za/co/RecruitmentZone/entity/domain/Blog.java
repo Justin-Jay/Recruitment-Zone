@@ -8,28 +8,28 @@ import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
+    @Column(name="blogID")
     private Long blogID;
-
     private String blog_title;
-
     private String blog_description;
-
     @Enumerated(EnumType.STRING)
     private BlogStatus status;
     private String body;
     private String publish_date;
     private String end_date;
+
+ /*   @ManyToOne(cascade = {
+            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+    })*/
     private Long employeeID;
 
     public Blog() {
     }
 
-    public Blog(String blog_title, String blog_description, String body, Long employeeID,String publish_date,String end_date) {
+    public Blog(String blog_title, String blog_description, String body,String publish_date,String end_date) {
         this.blog_title = blog_title;
         this.blog_description = blog_description;
         this.body = body;
-        this.employeeID = employeeID;
         this.publish_date=publish_date;
         this.end_date=end_date;
     }
@@ -102,13 +102,11 @@ public class Blog {
     public String toString() {
         return "Blog{" +
                 "blog_title='" + blog_title + '\'' +
-                ", blog_description='" + blog_description + '\'' +
                 ", status=" + status +
-                ", body='" + body + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
-                ", employeeID=" + employeeID +
                 '}';
     }
+
 }
 
