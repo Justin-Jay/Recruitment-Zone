@@ -1,10 +1,16 @@
-<div class="row-cols-auto">
+<div class="row-cols-auto" xmlns:sec="http://www.w3.org/1999/xhtml">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="navbar-nav mr-auto">
             <a class="nav-link" th:href="@{/}">Home</a>
             <a class="nav-link" th:href="@{/blogs}">Blogs</a>
             <a class="nav-link" th:href="@{/aboutus}">About Us</a>
             <a class="nav-link" th:href="@{/contact-us}">Contact Us</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/client-admin}">Client Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/employee-admin}">Employee Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/blog-administration}">Blog Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')"  th:href="@{/vacancy-administration}">Vacancy Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/applications-administration}">Applications Administration</a>
+
         </div>
         <!--        <footer class="footer">
                     <span class="text-muted">Black Light Code &copy</span>

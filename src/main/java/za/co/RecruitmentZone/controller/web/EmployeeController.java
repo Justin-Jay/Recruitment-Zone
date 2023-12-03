@@ -44,9 +44,9 @@ public class EmployeeController {
     }
 
     @PostMapping("/view-employee")
-    public String showEmployee(@RequestParam("id") Long id, Model model) {
-        Employee optionalEmployee = recruitmentZoneService.findEmployeeByID(id);
-        log.info("Looking for {}", id);
+    public String showEmployee(@RequestParam("employeeID") Long employeeID, Model model) {
+        Employee optionalEmployee = recruitmentZoneService.findEmployeeByID(employeeID);
+        log.info("Looking for {}", employeeID);
         log.info(optionalEmployee.toString());
         model.addAttribute("employee", optionalEmployee);
         return "fragments/employee/view-employee";
@@ -57,13 +57,14 @@ public class EmployeeController {
         if (bindingResult.hasErrors()) {
             return "fragments/employee/add-employee";
         }
-        recruitmentZoneService.saveEmployee(employeeDTO);
+        recruitmentZoneService.saveNewEmployee(employeeDTO);
         return "redirect:/employee-admin";
     }
 
     @PostMapping("/update-employee")
-    public String updateEmployee(@RequestParam("id") Long id, Model model) {
-        Employee employee = recruitmentZoneService.findEmployeeByID(id);
+    public String updateEmployee(@RequestParam("employeeID") Long employeeID, Model model) {
+        Employee employee = recruitmentZoneService.findEmployeeByID(employeeID);
+        log.info("Employee has been loaded");
         model.addAttribute("employee", employee);
         return "fragments/employee/update-employee";
     }
@@ -74,7 +75,7 @@ public class EmployeeController {
         if (bindingResult.hasErrors()) {
             return "fragments/employee/update-employee";
         }
-        recruitmentZoneService.saveEmployee(employee);
+        recruitmentZoneService.saveUpdatedEmployee(employee);
         return "redirect:/employee-admin";
     }
 

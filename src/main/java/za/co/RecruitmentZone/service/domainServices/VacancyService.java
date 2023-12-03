@@ -24,8 +24,12 @@ public class VacancyService {
         return vacancyRepository.findAll();
     }
 
-    public Optional<Vacancy> findById(Long id){
-        return vacancyRepository.findById(id);
+    public Vacancy findById(Long id){
+        Optional<Vacancy> op = vacancyRepository.findById(id);
+     if( op.isPresent()){
+         return op.get();
+     }
+     return null;
     }
 
     public List<Vacancy> findVacanciesByTitle(String title){

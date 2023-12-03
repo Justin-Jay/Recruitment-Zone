@@ -1,33 +1,22 @@
 package za.co.RecruitmentZone.controller.web;
 
 import jakarta.validation.Valid;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
-import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 import za.co.RecruitmentZone.entity.domain.Application;
-import za.co.RecruitmentZone.entity.domain.Blog;
 import za.co.RecruitmentZone.entity.domain.Candidate;
-import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
-
-import static za.co.RecruitmentZone.entity.Enums.ApplicationStatus.PENDING;
 
 
 @Controller
@@ -81,14 +70,18 @@ public class ApplicationsController {
                 // Copy the file to the target location
                 Path targetLocation = uploadPath.resolve(cvFile.getOriginalFilename());
                 Files.copy(cvFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
                // store on google cloud
                 // String storageLocation = recruitmentZoneService.saveFile(vacancyID,cvFile);
                 // candidate.setCvFilePath(storageLocation);
+
+
                 candidate.setCvFilePath(targetLocation.toString());
+
                 model.addAttribute("message",
                         "File '" + cvFile.getOriginalFilename() + "' uploaded successfully!");
 
-                Long candidateID = recruitmentZoneService.saveSubmission(vacancyID,candidate);
+                Long candidateID = recruitmentZoneService.createCandidateApplication(vacancyID,candidate);
                 // publish file upload event and give the file
 
                 recruitmentZoneService.publishFileUploadedEvent(cvFile,candidateID,vacancyID);

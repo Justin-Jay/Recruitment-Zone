@@ -3,18 +3,16 @@ package za.co.RecruitmentZone.events.EventStore.Candidate;
 import org.springframework.context.ApplicationEvent;
 import za.co.RecruitmentZone.entity.domain.Application;
 import za.co.RecruitmentZone.entity.domain.Candidate;
-import za.co.RecruitmentZone.entity.domain.CandidateApplication;
-
-import java.time.Clock;
+import za.co.RecruitmentZone.entity.domain.Vacancy;
 
 // Define a custom event for candidate application
 public class SaveSubmissionEvent extends ApplicationEvent {
 
+    Vacancy vacancy;
     private Candidate candidate;
 
     private Application application;
 
-    private CandidateApplication candidateApplication;
 
     Long vacancyID;
 
@@ -50,13 +48,7 @@ public class SaveSubmissionEvent extends ApplicationEvent {
         this.application = application;
     }
 
-    public CandidateApplication getCandidateApplication() {
-        return candidateApplication;
-    }
 
-    public void setCandidateApplication(CandidateApplication candidateApplication) {
-        this.candidateApplication = candidateApplication;
-    }
 }
 
 

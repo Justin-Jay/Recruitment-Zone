@@ -2,6 +2,8 @@ package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -9,8 +11,8 @@ import java.util.Set;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "employeeID")
+    private Long employeeID;
     @Column(name = "username", unique = true)
     private String username;
     @Column(name = "first_name")
@@ -21,6 +23,28 @@ public class Employee {
     private String email_address;
     @Column(name = "contact_number")
     private String contact_number;
+
+ /*   @OneToMany(mappedBy = "employee",
+            cascade = {
+                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+            })
+    @JoinTable(
+            name = "employee_blog",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "blog_id")
+    )
+    private List<Blog> blogs;*/
+
+ /*   @OneToMany(mappedBy = "employee",
+                cascade = {
+            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                })
+    @JoinTable(
+            name = "employee_vacancy",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "vacancyID")
+    )
+    private List<Vacancy> vacancies;*/
 
     public Employee() {
     }
@@ -33,12 +57,14 @@ public class Employee {
         this.contact_number = contact_number;
     }
 
-    public Long getId() {
-        return id;
+
+
+    public Long getEmployeeID() {
+        return employeeID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEmployeeID(Long employeeID) {
+        this.employeeID = employeeID;
     }
 
     public String getUsername() {
@@ -84,12 +110,25 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                ", email_address='" + email_address + '\'' +
-                ", contact_number='" + contact_number + '\'' +
+                "username='" + username + '\'' +
                 '}';
     }
+
+/*    public void addBlog(Blog blog){
+        if (blogs ==null){
+            blogs = new ArrayList<>();
+        }
+        blogs.add(blog);
+        blog.setEmployee(this);
+    }*/
+
+/*    public void addVacancy(Vacancy vacancy){
+        if (vacancies ==null){
+            vacancies = new ArrayList<>();
+        }
+        vacancies.add(vacancy);
+        vacancy.setEmployee(this);
+    }*/
+
+
 }

@@ -132,6 +132,52 @@ public class StatusUpdater {
         }
         log.info("<-----Blog Status Updater----DONE--->");
     }
+
+   /*  @Scheduled(fixedRate = 3000)
+    @Transactional
+    public void loadEmployeeVacancies() {
+        log.info("<-----Blog Status Updater---->");
+        LocalDate currentDate = LocalDate.now();
+
+        List<Blog> blogs = (List<Blog>) blogRepository.findAll();
+
+        for (Blog blog : blogs) {
+            log.info("<-----Found {} Vacancies---->", blogs.size());
+            LocalDate blogPublishDate = LocalDate.parse(blog.getPublish_date());
+            LocalDate blogExpirationDate = LocalDate.parse(blog.getEnd_date());
+
+
+            if (blogPublishDate.isBefore(currentDate) && blog.getStatus() != BlogStatus.EXPIRED) {
+                if (blog.getStatus() != BlogStatus.ACTIVE) {
+                    blog.setStatus(BlogStatus.ACTIVE);
+                    // save
+                    blogRepository.save(blog);
+                }
+            }
+
+            if (blogExpirationDate.isBefore(currentDate) && blog.getStatus() != BlogStatus.PENDING) {
+                if (blog.getStatus() != BlogStatus.EXPIRED) {
+                    blog.setStatus(BlogStatus.EXPIRED);
+                    // save
+                    blogRepository.save(blog);
+                }
+            }
+
+            if (blog.getStatus() == BlogStatus.PENDING && blogExpirationDate.isBefore(currentDate))  {
+                blog.setStatus(BlogStatus.ACTIVE);
+                // save
+                blogRepository.save(blog);
+            }
+
+            if (blog.getStatus() == BlogStatus.EXPIRED && blogPublishDate.isBefore(currentDate) && !blogExpirationDate.isBefore(currentDate))  {
+                blog.setStatus(BlogStatus.ACTIVE);
+                // save
+                blogRepository.save(blog);
+            }
+
+        }
+        log.info("<-----Blog Status Updater----DONE--->");
+    }*/
 }
 
 

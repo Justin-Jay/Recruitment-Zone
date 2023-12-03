@@ -53,11 +53,11 @@ public class VacancyController {
         return "fragments/vacancy/view-vacancy";
     }
     @PostMapping("/save-vacancy")
-    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
+    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, @RequestParam("employeeID")Long employeeID,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/vacancy/add-vacancy";
         }
-        recruitmentZoneService.saveVacancy(vacancy);
+        recruitmentZoneService.saveNewVacancy(employeeID,vacancy);
         return "redirect:/vacancy-administration";
     }
     @PostMapping("/update-vacancy")

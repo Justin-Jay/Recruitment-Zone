@@ -3,6 +3,9 @@ package za.co.RecruitmentZone.entity.domain;
 import jakarta.persistence.*;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "vacancy")
 public class Vacancy {
@@ -22,6 +25,27 @@ public class Vacancy {
     private String job_type;
     private String emp_type;
 
+  /*  @ManyToOne(
+            cascade = {
+            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+    })*/
+    private Long clientID;
+/*    @ManyToOne(cascade = {
+            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+    })*/
+    private Long employeeID;
+  /*  @OneToMany(mappedBy = "vacancy",
+            cascade = {
+                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+            })
+    @JoinTable(
+            name = "vacancy_application",
+            joinColumns = @JoinColumn(name = "vacancyID"),
+            inverseJoinColumns = @JoinColumn(name = "applicationID")
+    )
+    private List<Application> applications;*/
+
+
     public Vacancy() {
     }
 
@@ -38,6 +62,7 @@ public class Vacancy {
         this.job_type = job_type;
         this.emp_type = emp_type;
     }
+
 
     public Long getVacancyID() {
         return vacancyID;
@@ -135,9 +160,26 @@ public class Vacancy {
         this.emp_type = emp_type;
     }
 
+    public Long getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(Long clientID) {
+        this.clientID = clientID;
+    }
+
+    public Long getEmployeeID() {
+        return employeeID;
+    }
+
+    public void setEmployeeID(Long employeeID) {
+        this.employeeID = employeeID;
+    }
+
     @Override
     public String toString() {
         return "Vacancy{" +
+                "vacancyID=" + vacancyID +
                 ", job_title='" + job_title + '\'' +
                 ", job_description='" + job_description + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
@@ -149,6 +191,15 @@ public class Vacancy {
                 ", status=" + status +
                 ", job_type='" + job_type + '\'' +
                 ", emp_type='" + emp_type + '\'' +
+                ", clientID=" + clientID +
+                ", employeeID=" + employeeID +
                 '}';
     }
+/*    public void addApplication(Application application){
+        if (applications ==null){
+            applications = new ArrayList<>();
+        }
+        applications.add(application);
+        application.setVacancy(this);
+    }*/
 }

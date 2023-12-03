@@ -5,6 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 import za.co.RecruitmentZone.entity.Enums.EducationLevel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "candidate")
 public class Candidate {
@@ -34,13 +37,19 @@ public class Candidate {
 
     private Boolean relocation;
 
-
     private String cvFilePath;
-    @Transient // If using JPA, mark it as transient
+    @Transient
     private MultipartFile cvFile;
-    /*
-    *
+
+  /*  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "candidate_application",
+            joinColumns = @JoinColumn(name = "candidateID"),
+            inverseJoinColumns = @JoinColumn(name = "applicationID")
+    )
+    private List<Application> applications = new ArrayList<>();
 */
+
 
     public Candidate() {
         // received
@@ -59,6 +68,7 @@ public class Candidate {
         this.education_level = education_level;
         this.relocation = relocation;
     }
+
 
     public Long getCandidateID() {
         return candidateID;
@@ -177,17 +187,14 @@ public class Candidate {
         return "Candidate{" +
                 "first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
-                ", id_number='" + id_number + '\'' +
-                ", email_address='" + email_address + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                ", current_province='" + current_province + '\'' +
-                ", current_role='" + current_role + '\'' +
-                ", current_employer='" + current_employer + '\'' +
-                ", seniority_level='" + seniority_level + '\'' +
-                ", education_level=" + education_level +
-                ", relocation=" + relocation +
-                ", cvFilePath='" + cvFilePath + '\'' +
-                ", cvFile=" + cvFile +
                 '}';
     }
+
+   /* public void AddApplication(Application application){
+        if (applications ==null){
+            applications = new ArrayList<>();
+        }
+        applications.add(application);
+        application.setCandidate(this);
+    }*/
 }

@@ -27,15 +27,15 @@ public class RecruitmentZoneWebController {
     }
 
     @GetMapping("/")
-    public String redirectToGuestHome() {
-        return "redirect:/guest-home";
+    public String redirectToHome() {
+        return "redirect:/home";
     }
 
 
     // Home pages
     @GetMapping("/home")
     public String home(Model model) {
-        List<Vacancy> vacancies = recruitmentZoneService.getAllVacancies();
+        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
         log.info("Total Vacancies: " + vacancies.size());
         String title = "";
         model.addAttribute("totalNumberOfVacancies", vacancies.size());
@@ -43,18 +43,6 @@ public class RecruitmentZoneWebController {
         model.addAttribute("title",title);
         return "home";
     }
-
-    @GetMapping("/guest-home")
-    public String GuestHome(Model model) {
-        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
-        log.info("Total Vacancies: " + vacancies.size());
-        String title = "";
-        model.addAttribute("totalNumberOfVacancies", vacancies.size());
-        model.addAttribute("vacancies", vacancies);
-        model.addAttribute("title",title);
-        return "guest-home";
-    }
-
 
     @GetMapping("/aboutus")
     public String aboutUs() {

@@ -1,0 +1,34 @@
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+    <tr>
+        <th>Client ID</th>
+        <th>Name</th>
+        <th>Industry</th>
+        <th>Update Client</th>
+        <th>View Client Contacts</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="client : ${clients}">
+        <td th:text="${client.clientID}"></td>
+        <td th:text="${client.name}"></td>
+        <td th:text="${client.industry}"></td>
+        <td>
+            <form th:action="@{/update-client}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">Update Client</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/view-client-contacts}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">View Client</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>

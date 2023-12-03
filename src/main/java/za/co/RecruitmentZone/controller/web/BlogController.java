@@ -32,7 +32,7 @@ public class BlogController {
     public String blogs(Model model) {
         List<Blog> allBlogs = new ArrayList<>();
         try {
-            allBlogs = recruitmentZoneService.getActiveBlogs();
+            allBlogs = recruitmentZoneService.getBlogs();
         } catch (Exception e) {
             log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
         }
@@ -53,19 +53,16 @@ public class BlogController {
         Blog optionalBlog = recruitmentZoneService.findBlogByID(blogID);
         log.info("Looking for {}", blogID);
         log.info(optionalBlog.toString());
-        String employeeName = recruitmentZoneService.getEmployeeByID(optionalBlog.getEmployeeID()).getUsername();
         model.addAttribute("blog", optionalBlog);
-        model.addAttribute("employeeName", employeeName);
         return "fragments/blog/view-blog";
     }
     @PostMapping("/save-blog")
-    public String saveBlog(@Valid @ModelAttribute("blog")Blog blog, @RequestParam("employeeID")Long employeeID,BindingResult bindingResult) {
+    public String saveBlog(@Valid @ModelAttribute("blog")Blog blog, @RequestParam("name")String name,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/blog/add-blog";
         }
         blog.setStatus(BlogStatus.PENDING);
-        blog.setEmployeeID(employeeID);
-        recruitmentZoneService.saveBlog(blog);
+        recruitmentZoneService.saveNewBlog(name,blog);
         return "redirect:/blog-administration";
     }
     @PostMapping("/update-blog")

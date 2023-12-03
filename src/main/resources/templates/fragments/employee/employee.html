@@ -12,7 +12,7 @@
     </thead>
     <tbody>
     <tr th:each="employee : ${employees}">
-        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.employeeID}"></td>
         <td th:text="${employee.username}"></td>
         <td th:text="${employee.first_name}"></td>
         <td th:text="${employee.last_name}"></td>
@@ -21,7 +21,7 @@
         <td>
             <form th:action="@{/update-employee}" th:method="post">
                 <!-- Hidden input field to include the id in the POST request -->
-                <input type="hidden" name="id" th:value="*{employee.id}"/>
+                <input type="hidden" name="employeeID" th:value="*{employee.employeeID}"/>
                 <!-- Submit button to trigger the form submission -->
                 <button type="submit" class="btn btn-primary">Update Employee</button>
             </form>
