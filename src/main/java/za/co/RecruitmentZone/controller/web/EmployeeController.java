@@ -40,6 +40,18 @@ public class EmployeeController {
         model.addAttribute("employees", allEmployees);
         return "fragments/employee/employee-admin";
     }
+
+    @GetMapping("/htmx/employee")
+    public String htmxEmployee(Model model) {
+        List<Employee> allEmployees = new ArrayList<>();
+        try {
+            allEmployees = getEmployees();
+        } catch (Exception e) {
+            log.info("Exception trying to retrieve employees, retrieving all employees ");
+        }
+        model.addAttribute("employees", allEmployees);
+        return "fragments/employee/employee";
+    }
     @GetMapping("/add-employee")
     public String showCreateEmployeeForm(Model model) {
         model.addAttribute("employeeDTO", new EmployeeDTO());
