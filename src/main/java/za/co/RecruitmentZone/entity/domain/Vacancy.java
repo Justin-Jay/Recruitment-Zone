@@ -6,7 +6,9 @@ import za.co.RecruitmentZone.entity.Enums.Industry;
 import za.co.RecruitmentZone.entity.Enums.JobType;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -31,26 +33,29 @@ public class Vacancy {
     @Enumerated(EnumType.STRING)
     private EmpType empType;
 
-    /*  @ManyToOne(
-              cascade = {
-              CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-      })*/
-    private Long clientID;
-    /*    @ManyToOne(cascade = {
-                CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-        })*/
-    private Long employeeID;
-  /*  @OneToMany(mappedBy = "vacancy",
+    @ManyToOne(
+            cascade = {
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
+            })
+    @JoinColumn(name = "clientID")
+    private Client client;
+
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "employeeID")
+    private Employee employee;
+
+    @OneToMany(mappedBy = "vacancy",
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    @JoinTable(
+ /*   @JoinTable(
             name = "vacancy_application",
             joinColumns = @JoinColumn(name = "vacancyID"),
             inverseJoinColumns = @JoinColumn(name = "applicationID")
-    )
-    private List<Application> applications;*/
-
+    )*/
+    private Set<Application> applications;
 
     public Vacancy() {
     }
@@ -158,21 +163,7 @@ public class Vacancy {
         this.empType = empType;
     }
 
-    public Long getClientID() {
-        return clientID;
-    }
 
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
-    }
-
-    public Long getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
-    }
 
     public JobType getJobType() {
         return jobType;
@@ -182,35 +173,58 @@ public class Vacancy {
         this.jobType = jobType;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Set<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(Set<Application> applications) {
+        this.applications = applications;
+    }
+
     @Override
     public String toString() {
         return "Vacancy{" +
-                "job_title='" + job_title + '\'' +
+                "vacancyID=" + vacancyID +
+                ", job_title='" + job_title + '\'' +
                 ", job_description='" + job_description + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
                 ", requirements='" + requirements + '\'' +
                 ", location='" + location + '\'' +
-                ", industry='" + industry + '\'' +
+                ", industry=" + industry +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
                 ", status=" + status +
                 ", jobType=" + jobType +
-                ", empType='" + empType + '\'' +
-                ", clientID=" + clientID +
-                ", employeeID=" + employeeID +
+                ", empType=" + empType +
+                ", client=" + client +
+                ", employee=" + employee +
+                ", applications=" + applications +
                 '}';
     }
-    /*    public void addApplication(Application application){
+
+        public void addApplication(Application application){
         if (applications ==null){
-            applications = new ArrayList<>();
+            applications = new HashSet<>();
         }
         applications.add(application);
         application.setVacancy(this);
-    }*/
-
-
-
-
+    }
 
 
 }

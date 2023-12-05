@@ -41,7 +41,7 @@ public class ApplicationsListener {
         application.setDate_received(date.toString());
         application.setSubmission_date(date.toString());
         application.setStatus(PENDING);
-        application.setCandidateID(newCandidate.getCandidateID());
+        application.setCandidate(newCandidate);
         log.info("application = {}",application);
         applicationService.save(application);
 

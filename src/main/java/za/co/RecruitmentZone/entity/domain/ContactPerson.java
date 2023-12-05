@@ -14,11 +14,11 @@ public class ContactPerson {
     private String email_address;
     private String land_line;
     private String cell_phone;
-
-  /*  @ManyToOne(cascade = {
+    @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })*/
-    private Long clientID;
+    })
+    @JoinColumn(name = "clientID")
+    private Client client;
 
     public ContactPerson() {
     }
@@ -79,18 +79,24 @@ public class ContactPerson {
         this.cell_phone = cell_phone;
     }
 
-    public Long getClientID() {
-        return clientID;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     @Override
     public String toString() {
         return "ContactPerson{" +
-                "first_name='" + first_name + '\'' +
+                "contactPersonID=" + contactPersonID +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email_address='" + email_address + '\'' +
+                ", land_line='" + land_line + '\'' +
+                ", cell_phone='" + cell_phone + '\'' +
+                ", client=" + client +
                 '}';
     }
 }

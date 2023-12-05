@@ -26,8 +26,8 @@ public class RecruitmentZoneService {
     private final VacancyService vacancyService;
     private final ApplicationsEventPublisher applicationsEventPublisher;
     private final StorageService storageService;
-
     private final ClientService clientService;
+
 
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, BlogService blogService, CandidateService candidateService,
@@ -48,6 +48,10 @@ public class RecruitmentZoneService {
         return candidateService.getCandidates();
     }
 
+    public Candidate getCandidateById(Long id) {
+        return candidateService.getcandidateByID(id);
+    }
+
 
     // EMPLOYEE
 
@@ -62,7 +66,7 @@ public class RecruitmentZoneService {
         // create vacancy
         vacancy.setStatus(VacancyStatus.PENDING);
         Optional<Employee> op = employeeService.findEmployeeByUserName(employeeUserName);
-        op.ifPresent(employee -> vacancy.setEmployeeID(employee.getEmployeeID()));
+        op.ifPresent(vacancy::setEmployee);
         vacancyService.save(vacancy);
     }
 
@@ -171,11 +175,11 @@ public class RecruitmentZoneService {
         LocalDate date = LocalDate.now();
         application.setDate_received(date.toString());
         application.setSubmission_date(date.toString());
-        application.setCandidateID(candidate.getCandidateID());
+        application.setCandidate(candidate);
         application.setStatus(ApplicationStatus.PENDING);
 
         // link application with vacancy
-        application.setVacancyID(vacancyID);
+        application.setVacancy(vacancyService.findById(vacancyID));
 
         applicationService.save(application);
 
@@ -192,6 +196,12 @@ public class RecruitmentZoneService {
 
 
     }
+
+
+
+
+
+//  getVacancyApplications
 
     public boolean saveUpdatedApplicationStatus(Long applicationID, ApplicationStatus applicationStatus) {
         return applicationService.saveUpdatedStatus(applicationID, applicationStatus);
@@ -217,7 +227,6 @@ public class RecruitmentZoneService {
     public boolean publishFileUploadedEvent(MultipartFile file, Long candidateID, Long vacancyID) {
         return applicationsEventPublisher.publishFileUploadEvent(file, candidateID, vacancyID);
     }
-
 
     // CLIENTS
 

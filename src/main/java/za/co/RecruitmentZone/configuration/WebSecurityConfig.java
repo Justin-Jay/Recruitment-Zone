@@ -23,6 +23,7 @@ public class WebSecurityConfig {
 
         httpSecurity.authorizeHttpRequests(configurer ->
                         configurer
+                                .requestMatchers("/view-candidate-notes**").hasAnyAuthority("ROLE_ADMIN","ROLE_USER","ROLE_MANAGER")
                                 .requestMatchers("/").permitAll() // Allow /guest-home for anyone
                                 .anyRequest().authenticated() // Require authentication for other requests
                 )

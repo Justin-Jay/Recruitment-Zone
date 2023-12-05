@@ -97,7 +97,7 @@ public class BlogController {
 
     public void saveNewBlog(String name, Blog bg) {
         Optional<Employee> op = employeeService.findEmployeeByUserName(name);
-        op.ifPresent(employee -> bg.setEmployeeID(employee.getEmployeeID()));
+        op.ifPresent(bg::setEmployee);
         blogService.save(bg);
         // publish event
     }

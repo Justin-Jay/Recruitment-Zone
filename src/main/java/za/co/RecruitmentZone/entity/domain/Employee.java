@@ -3,6 +3,7 @@ package za.co.RecruitmentZone.entity.domain;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,27 +25,27 @@ public class Employee {
     @Column(name = "contact_number")
     private String contact_number;
 
- /*   @OneToMany(mappedBy = "employee",
+    @OneToMany(mappedBy = "employee",
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    @JoinTable(
+  /*  @JoinTable(
             name = "employee_blog",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "blog_id")
-    )
-    private List<Blog> blogs;*/
+            joinColumns = @JoinColumn(name = "employeeID"),
+            inverseJoinColumns = @JoinColumn(name = "blogID")
+    )*/
+    private Set<Blog> blogs;
 
- /*   @OneToMany(mappedBy = "employee",
+    @OneToMany(mappedBy = "employee",
                 cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
                 })
-    @JoinTable(
+ /*   @JoinTable(
             name = "employee_vacancy",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "vacancyID")
-    )
-    private List<Vacancy> vacancies;*/
+    )*/
+    private Set<Vacancy> vacancies;
 
     public Employee() {
     }
@@ -114,21 +115,21 @@ public class Employee {
                 '}';
     }
 
-/*    public void addBlog(Blog blog){
+    public void addBlog(Blog blog){
         if (blogs ==null){
-            blogs = new ArrayList<>();
+            blogs = new HashSet<>();
         }
         blogs.add(blog);
         blog.setEmployee(this);
-    }*/
+    }
 
-/*    public void addVacancy(Vacancy vacancy){
+    public void addVacancy(Vacancy vacancy){
         if (vacancies ==null){
-            vacancies = new ArrayList<>();
+            vacancies = new HashSet<>();
         }
         vacancies.add(vacancy);
         vacancy.setEmployee(this);
-    }*/
+    }
 
 
 }

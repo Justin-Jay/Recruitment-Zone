@@ -1,0 +1,31 @@
+<div class="container-fluid" th:object="${candidateNotes}" id="notes">
+  <table  class="table table-bored table striped" >
+    <thead class="table-dark">
+    <tr>
+      <th>Date</th>
+      <th>Comment</th>
+      <!-- Add more columns as needed -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Use th:fragment to define the vacancy card template -->
+    <tr th:each="note : ${candidateNotes}">
+      <td th:text="${note.dateCaptured}"></td>
+      <td th:text="${note.comment}"></td>
+      <td>
+        <!-- <form  >
+           &lt;!&ndash; Hidden input field to include the brandVal in the POST request &ndash;&gt;
+           <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
+           &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
+           <button  th:action="@{/view-candidate-notes}" class='btn' hx-post="/view-candidate-notes"
+                    hx-target='#candidate-notes'
+                    hx-swap='innerHTML'
+                    hx-include="[candidateID='candidateID']" >
+             View Notes
+           </button>
+         </form>-->
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

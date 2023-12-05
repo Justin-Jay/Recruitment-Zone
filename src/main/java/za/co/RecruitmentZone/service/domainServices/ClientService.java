@@ -11,6 +11,7 @@ import za.co.RecruitmentZone.entity.domain.JoinTables.ClientContactPerson;
 import za.co.RecruitmentZone.repository.ClientRepository;
 import za.co.RecruitmentZone.repository.ContactPersonRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class ClientService {
 
     public void saveClient(Client client, ContactPerson contactPerson){
         clientRepository.save(client);
-        contactPerson.setClientID(client.getClientID());
+        contactPerson.setClient(client);
         contactPersonRepository.save(contactPerson);
     }
     public void saveUpdatedClient(Client client){
@@ -52,11 +53,17 @@ public class ClientService {
     }
 
     public List<ContactPerson> findContactsByClientID(Long clientID){
-        return contactPersonRepository.findContactPeopleByClientID(clientID);
+        //return contactPersonRepository.findContactPeopleByClientID(clientID);
+        return contactPersonRepository.findContactPersonByClient_ClientID(clientID);
     }
 
     public void addContactToClient(Long clientID,ContactPerson contactPerson){
-        contactPerson.setClientID(clientID);
+        Optional<Client> oc = clientRepository.findById(clientID);
+       if(oc.isPresent()){
+           contactPerson.setClient(oc.get());
+       }
         contactPersonRepository.save(contactPerson);
     }
+
+
 }

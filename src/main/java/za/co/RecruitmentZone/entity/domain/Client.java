@@ -2,8 +2,8 @@ package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "client")
@@ -13,26 +13,33 @@ public class Client {
     private Long clientID;
     private String name;
     private String industry;
-/*    @OneToMany(mappedBy = "client",
+    @OneToMany(mappedBy = "client",
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    @JoinTable(
+    /*@JoinTable(
             name = "client_contact_person",
             joinColumns = @JoinColumn(name = "clientID"),
             inverseJoinColumns = @JoinColumn(name = "contactPersonID")
-    )
-    private List<ContactPerson> contactPeople;*/
-/*    @OneToMany(mappedBy = "client",
+    )*/
+    private Set<ContactPerson> contactPeople;
+    @OneToMany(mappedBy = "client",
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    @JoinTable(
+    /*@JoinTable(
             name = "client_vacancy",
             joinColumns = @JoinColumn(name = "clientID"),
             inverseJoinColumns = @JoinColumn(name = "vacancyID")
-    )
-    private List<Vacancy> vacancies;*/
+    )*/
+    private Set<Vacancy> vacancies;
+
+    @OneToMany(mappedBy = "client",
+            cascade = {
+                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+            })
+    private Set<ClientNote> notes;
+
     public Client() {
     }
     public Client(String name, String industry) {
@@ -71,19 +78,27 @@ public class Client {
                 '}';
     }
 
-/*    public void addContactPerson(ContactPerson contactPerson){
+    public void addContactPerson(ContactPerson contactPerson){
         if (contactPeople ==null){
-            contactPeople = new ArrayList<>();
+            contactPeople = new HashSet<>();
         }
         contactPeople.add(contactPerson);
         contactPerson.setClient(this);
-    }*/
+    }
 
-/*    public void addVacancy(Vacancy vacancy){
+    public void addVacancy(Vacancy vacancy){
         if (vacancies ==null){
-            vacancies = new ArrayList<>();
+            vacancies = new HashSet<>();
         }
         vacancies.add(vacancy);
         vacancy.setClient(this);
-    }*/
+    }
+
+    public void addNote(ClientNote note){
+        if (notes ==null){
+            notes = new HashSet<>();
+        }
+        notes.add(note);
+        note.setClient(this);
+    }
 }

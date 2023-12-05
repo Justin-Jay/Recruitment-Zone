@@ -8,16 +8,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
-import za.co.RecruitmentZone.entity.domain.Client;
-import za.co.RecruitmentZone.entity.domain.Vacancy;
+import za.co.RecruitmentZone.entity.domain.*;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
-@CrossOrigin("*")
+@CrossOrigin()
 public class VacancyController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(VacancyController.class);
@@ -74,5 +75,23 @@ public class VacancyController {
         recruitmentZoneService.saveVacancy(vacancy);
         return "redirect:/vacancy-administration";
     }
+
+    @PostMapping("/view-candidate-notes")
+    public String viewCandidateNotes(@RequestParam("candidateID")Long candidateID, Model model) {
+        // Logic to fetch candidate notes based on candidateID
+        // Add candidateNotes to the model
+        Candidate candidate = recruitmentZoneService.getCandidateById(candidateID);
+        Set<CandidateNote> candidateNotes = candidate.getNotes();
+        model.addAttribute("candidateNotes", candidateNotes);
+        return "fragments/vacancy/candidate-notes-fragment";
+    }
+    @PostMapping("/view-vacancy-submission")
+    public String viewVacancySubmissions(@RequestParam("vacancyID") Long vacancyID, Model model) {
+        Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
+        model.addAttribute("vacancy", vacancy);
+        model.addAttribute("applicationStatus", ApplicationStatus.values());
+        return "fragments/vacancy/view-vacancy-submission";
+    }
+
 
 }
