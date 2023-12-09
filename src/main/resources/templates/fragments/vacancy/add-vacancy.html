@@ -26,91 +26,123 @@
         <form action="#" th:action="@{/save-vacancy}" th:object="${vacancy}" method="POST">
             <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
             <label for="clientID">Select Client
-                <select id="clientID" name="clientID">
-                    <option th:each="client : ${clients}" th:value="${client.clientID}"
-                            th:text="${client.name}"></option>
+                <select name="clientID">
+                    <option th:each="client : ${clients}" th:text="${client.name}" th:value="${client.clientID}" th:selected="${client.clientID == vacancy.clientID}"></option>
                 </select>
+                <input type="hidden" id="clientID" name="clientID" th:value="${vacancy.clientID}"/>
             </label>
-            <br>
-            <label for="jobTitle">
+
+            <br>  <br>
+
+            <label for="employeeID">Select Employee
+                <select name="employeeID">
+                    <option th:each="employee : ${employees}" th:text="${employee.username}" th:value="${employee.employeeID}" th:selected="${employee.employeeID == employee.employeeID}"></option>
+                </select>
+                <input type="hidden" id="employeeID" name="employeeID" th:value="${vacancy.employeeID}"/>
+            </label>
+
+
+       <!--     <label for="employeeID">Select Employee
+                <select id="employeeID" name="employeeID">
+                    <option th:each="employee : ${employees}" th:value="${vacancy.employeeID}"
+                            th:text="${employee.username}"></option>
+                </select>
+            </label>-->
+            <br>  <br>
+            <label for="job_title">
                 Job Title:
+                <p th:class="error" th:if="${#fields.hasErrors('job_title')}"
+                   th:errors="${vacancy.job_title}"
+                ></p>
             </label>
-            <input type="text" th:field="*{job_title}" id="jobTitle" placeholder="Enter The Job Title"
+            <input type="text"  th:field="*{job_title}" id="job_title" placeholder="Enter The Job Title"
                    class="form-control mb-4 w-25">
             <br>
-            <label for="jobDescription">
+            <label for="job_description">
                 Job Description:
+                <p th:class="error" th:if="${#fields.hasErrors('job_description')}"
+                   th:errors="${vacancy.job_description}"
+                ></p>
             </label>
-            <input type="text" th:field="*{job_description}" id="jobDescription" placeholder="Enter The Job Description"
+            <input type="text"  th:field="*{job_description}"  id="job_description" placeholder="Enter The Job Description"
                    class="form-control mb-4 w-25">
             <br>
             <label for="seniorityLevel">
                 Seniority Level:
+                <p th:class="error" th:if="${#fields.hasErrors('seniority_level')}"
+                   th:errors="${vacancy.seniority_level}"
+                ></p>
             </label>
-            <input type="text" th:field="*{seniority_level}" id="seniorityLevel" placeholder="Enter The Seniority Level"
+            <input type="text" th:field="*{seniority_level}"   id="seniorityLevel" placeholder="Enter The Seniority Level"
+                   class="form-control mb-4 w-25">
+            <br>
+            <label for="category">
+                Category:
+                <p th:class="error" th:if="${#fields.hasErrors('category')}"
+                   th:errors="${vacancy.category}"
+                ></p>
+            </label>
+            <input type="text" th:field="*{category}" id="category" placeholder="Enter The Job Title"
                    class="form-control mb-4 w-25">
             <br>
             <label for="requirements">
                 Requirements:
+                <p th:class="error" th:if="${#fields.hasErrors('requirements')}"
+                   th:errors="${vacancy.requirements}"
+                ></p>
             </label>
             <input type="text" th:field="*{requirements}" id="requirements" placeholder="Enter Requirements:"
                    class="form-control mb-4 w-25"/>
             <br>
-            <label for="jobLocation">
+            <label for="location">
                 Job Location:
+                <p th:class="error" th:if="${#fields.hasErrors('location')}"
+                   th:errors="${vacancy.location}"
+                ></p>
             </label>
-            <input type="text" th:field="*{location}" id="jobLocation" placeholder="Enter The Job Location"
+            <input type="text" th:field="*{location}"  id="location" placeholder="Enter The Job Location"
                    class="form-control mb-4 w-25">
             <br>
             <label for="industry">Select Industry:
+                <p th:class="error" th:if="${#fields.hasErrors('industry')}"
+                   th:errors="${vacancy.industry}"
+                ></p>
                 <select id="industry" th:field="*{industry}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.Industry).values()}"
+                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.Industry).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
-
-
-          <!--  <br>
-            <label for="datePublished">
-                Date Published:
-            </label>
-            <input type="date" th:field="*{publish_date}" id="datePublished"
-                   placeholder="Enter The Date to be published" class="form-control mb-4 w-25">
-            <span th:if="${#fields.hasErrors('publish_date')}" th:errors="*{publish_date}" class="error"></span>
-            <br>
-            <label for="expirationDate">
-                Expiry Date:
-            </label>
-            <input type="date" th:field="*{end_date}" id="expirationDate" placeholder="Enter The Expiration Date">
-            <span th:if="${#fields.hasErrors('end_date')}" th:errors="*{end_date}" class="error"></span>
-            -->
-            <label for="publish_date"></label><input type="date" th:field="*{publish_date}" id="publish_date"
+            <br>  <br>
+            <label for="publish_date">
+                Publish Date:
+                <p th:class="error" th:if="${#fields.hasErrors('publish_date')}"
+                   th:errors="${vacancy.publish_date}"
+                ></p>
+            </label><input type="date" th:field="*{publish_date}" id="publish_date"
                                                       placeholder="Enter The Date to be published" class="form-control mb-4 w-25">
-            <span th:if="${#fields.hasErrors('publish_date')}" th:errors="*{publish_date}" class="error"></span>
-
-            <label for="end_date"></label><input type="date" th:field="*{end_date}" id="end_date" placeholder="Enter The Expiration Date"
+            <br>
+            <label for="end_date">
+                End Date:
+                <p th:class="error" th:if="${#fields.hasErrors('end_date')}"
+                   th:errors="${vacancy.end_date}"
+                ></p>
+            </label><input type="date" th:field="*{end_date}" id="end_date" placeholder="Enter The Expiration Date"
                                                        class="form-control mb-4 w-25">
-            <span th:if="${#fields.hasErrors('end_date')}" th:errors="*{end_date}" class="error"></span>
-
-
-
             <br>
             <label for="jobType">Select Job Type:
                 <select id="jobType" th:field="*{jobType}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.JobType).values()}"
+                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.JobType).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
-            <br>
-
+            <br>  <br>
             <label for="empType">Select Employment Type:
                 <select id="empType" th:field="*{empType}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.EmpType).values()}"
+                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.EmpType).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
             <br>
-
             <button type="submit" class="btn btn-primary btn-sm mb-3">Save vacancy</button>
         </form>
     </div>
