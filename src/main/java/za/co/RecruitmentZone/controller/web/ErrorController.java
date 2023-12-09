@@ -11,9 +11,7 @@ import static jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE;
 
 @Controller
 public class ErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
-
     private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
-
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request) {
         Object status = request.getAttribute(ERROR_STATUS_CODE);
@@ -23,7 +21,6 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
         }
         return "error";
     }
-
     public String getErrorPath() {
         return "/error";
     }

@@ -6,4 +6,5 @@ import za.co.RecruitmentZone.entity.domain.Candidate;
 
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
+
 }

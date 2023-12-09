@@ -1,40 +1,41 @@
 <div class="container">
-    <header>
-        <h1>Blog Name</h1>
-        <!-- You can add a navigation bar or other header content here -->
-    </header>
-    <main th:fragment="blogView(blog)">
-        <article>
-            <header>
-                Blog Title: <h2 th:text="${blog.blog_title}"></h2>
-                Published Date: <p class="metadata" th:text="${blog.publish_date}"></p>
-         <!--       Author: <p th:value="${employeeName}"></p>
-                <p th:text="${employeeName} ? ${employeeName} : ''">Employee Name</p>-->
 
-
-                <!-- You can customize the metadata as needed -->
+      <main th:fragment="blogView(blog)">
+        <article class="blog-post">
+            <!-- Blog Title -->
+            <header class="blog-title" th:text="${blog.blog_title}">
+                <!-- Customize metadata as needed -->
             </header>
-            Blog Summary: <section th:text="${blog.blog_description}">
 
+            <!-- Blog Description -->
+            <section class="blog-description" th:text="${blog.blog_description}">
             </section>
 
-            Blog:
-            <section th:text="${blog.body}">
-                <!-- The main content of your blog post -->
-
-                <!-- Add more content as needed, such as images, lists, etc. -->
+            <!-- Blog Body/Content -->
+            <section class="blog-content" th:text="${blog.body}">
+                <!-- Main content of your blog post -->
+                <!-- Add more content as needed, e.g., images, lists, etc. -->
             </section>
 
-            <footer>
-                <!-- You can add a comment section, social media sharing buttons, etc. -->
+            <!-- Footer Section -->
+            <footer class="blog-footer">
+                <!-- Additional elements like comment section, social media buttons, etc. can be added here -->
+
+                <!-- Publish Date -->
+                <p class="metadata publish-date" th:text="${blog.publish_date}">Publish Date: </p>
+
+                <!-- Author -->
+                <p class="metadata author" th:text="${author}">Author: </p>
             </footer>
-
-
         </article>
-        <div class="container-fluid">
+
+        <!-- Back to Blogs Link -->
+        <div class="container-fluid back-to-blogs">
             <a class="nav-link" th:href="@{/blogs}">Back to blogs</a>
         </div>
     </main>
+
+
 
 </div>
 

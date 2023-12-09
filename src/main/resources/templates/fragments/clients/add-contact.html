@@ -17,11 +17,14 @@
 <div class="container-fluid">
     <div th:insert="fragments/layout/header">Header</div>
 
-    <div class="container-fluid"><h2>Add Contact Person</h2></div>
+
+    <div class="container-fluid"  >
+        <h2>Add Contact Person</h2>
+    </div>
     <hr/>
 
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-new-contact}" th:object="${contactPerson}" method="POST">
+        <form action="#" th:action="@{/save-new-contact}" th:object="${contactPerson}" th:method="POST">
             <input type="hidden" name="clientID" th:value="${clientID}" />
             <label>
                 First Name<input type="text" th:field="${contactPerson.first_name}"

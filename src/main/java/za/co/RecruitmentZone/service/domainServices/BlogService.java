@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 import za.co.RecruitmentZone.entity.domain.Blog;
+import za.co.RecruitmentZone.entity.domain.Employee;
 import za.co.RecruitmentZone.entity.domain.Vacancy;
 import za.co.RecruitmentZone.repository.BlogRepository;
 
@@ -30,6 +31,8 @@ public class BlogService {
     }
 
     public Blog save(Blog blog){
+/*        Optional<Employee> op = employeeService.findByUsername(name);
+        op.ifPresent(employee -> bg.setEmployeeID(employee.getEmployeeID()));*/
         return blogRepository.save(blog);
     }
 

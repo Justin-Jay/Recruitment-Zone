@@ -5,17 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
-import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 import za.co.RecruitmentZone.entity.domain.*;
 import za.co.RecruitmentZone.events.publisher.Applications.ApplicationsEventPublisher;
-import za.co.RecruitmentZone.events.publisher.Email.EmailEventPublisher;
 import za.co.RecruitmentZone.service.domainServices.*;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -27,133 +25,41 @@ public class RecruitmentZoneService {
     private final CandidateService candidateService;
     private final EmployeeService employeeService;
     private final VacancyService vacancyService;
-    private final CommunicationService communicationService;
     private final ApplicationsEventPublisher applicationsEventPublisher;
     private final StorageService storageService;
-    private final EmailEventPublisher emailEventPublisher;
     private final ClientService clientService;
 
-
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, BlogService blogService, CandidateService candidateService,
-                                  EmployeeService employeeService, CommunicationService communicationService, EmailEventPublisher emailEventPublisher, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService) {
+                                  EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService) {
         this.applicationService = applicationService;
         this.vacancyService = vacancyService;
         this.blogService = blogService;
         this.candidateService = candidateService;
         this.employeeService = employeeService;
-        this.communicationService = communicationService;
-        this.emailEventPublisher = emailEventPublisher;
         this.applicationsEventPublisher = applicationsEventPublisher;
         this.storageService = storageService;
         this.clientService = clientService;
     }
 
-    // BLOGS
 
-
-    public void saveNewBlog(String name, Blog bg) {
-        Optional<Employee> op = employeeService.findByUsername(name);
-        op.ifPresent(employee -> bg.setEmployeeID(employee.getEmployeeID()));
-        blogService.save(bg);
-    }
-
-    public void saveBlog(Blog blog) {
-        Optional<Blog> optionalBlog = blogService.findById(blog.getBlogID());
-        // title
-        if (optionalBlog.isPresent()) {
-            Blog b = optionalBlog.get();
-            if (!b.getBlog_title().equalsIgnoreCase(blog.getBlog_title())) {
-                b.setBlog_title(blog.getBlog_title());
-            }
-            // description
-            if (!b.getBlog_description().equalsIgnoreCase(blog.getBlog_description())) {
-                b.setBlog_description(blog.getBlog_description());
-            }
-            // body
-            if (!b.getBody().equalsIgnoreCase(blog.getBody())) {
-                b.setBody(blog.getBlog_description());
-            }
-            // publish date
-
-            if (!Objects.equals(b.getPublish_date(), blog.getPublish_date())) {
-                b.setPublish_date(blog.getPublish_date());
-            }
-            // expiration date
-            if (!Objects.equals(b.getEnd_date(), blog.getEnd_date())) {
-                b.setEnd_date(blog.getEnd_date());
-            }
-            if (!Objects.equals(b.getStatus(), blog.getStatus())) {
-                b.setStatus(blog.getStatus());
-            }
-        }
-
-        blogService.save(blog);
-    }
-
-    public Blog findBlogByID(Long blogID) {
-        Blog blog = null;
-        Optional<Blog> optionalBlog = blogService.findById(blogID);
-        if (optionalBlog.isPresent()) {
-            blog = optionalBlog.get();
-        }
-        return blog;
-    }
-
-    public List<Blog> getActiveBlogs() {
-        return blogService.getActiveBlogs(BlogStatus.ACTIVE);
-    }
-
-    public List<Blog> getBlogs() {
-        return blogService.getBlogs();
-    }
-
-
-    // CANDIDATE
 
     public List<Candidate> getCandidates() {
         return candidateService.getCandidates();
     }
 
+    public Candidate getCandidateById(Long id) {
+        return candidateService.getcandidateByID(id);
+    }
+
 
     // EMPLOYEE
 
-
-    public void saveNewEmployee(EmployeeDTO employeeDTO) {
-        employeeService.createEmployee(employeeDTO);
-    }
-
-    public void saveUpdatedEmployee(Employee updated) {
-        Employee employee = null;
-        Optional<Employee> optionalEmployee = employeeService.findEmployeeByID(updated.getEmployeeID());
-        if (optionalEmployee.isPresent()) {
-            employee = optionalEmployee.get();
-            if (!updated.getFirst_name().equalsIgnoreCase(employee.getFirst_name())) {
-                employee.setFirst_name(updated.getFirst_name());
-            }
-
-            if (!updated.getContact_number().equalsIgnoreCase(employee.getContact_number())) {
-                employee.setContact_number(updated.getContact_number());
-            }
-
-            if (!updated.getLast_name().equalsIgnoreCase(employee.getLast_name())) {
-                employee.setLast_name(updated.getLast_name());
-            }
-
+    public Employee findEmployeeByUserName(String name){
+        Optional<Employee> oe = employeeService.findEmployeeByUserName(name);
+        if (oe.isPresent()){
+            return oe.get();
         }
-        employeeService.save(employee);
-    }
-
-    public List<Employee> getEmployees() {
-        return employeeService.getEmployees();
-    }
-
-    public Employee findEmployeeByID(Long employeeID) {
-        Employee employee = null;
-        Optional<Employee> optionalEmployee = employeeService.findEmployeeByID(employeeID);
-        if (optionalEmployee.isPresent()) {
-            employee = optionalEmployee.get();
-        }
-        return employee;
+      return null;
     }
 
 
@@ -162,11 +68,11 @@ public class RecruitmentZoneService {
          employeeService.updateExistingEmployee(employeeID, employeeDTO);
      }*/
     // VACANCY
-    public void saveNewVacancy(Long employeeID, Vacancy vacancy) {
+    public void saveNewVacancy(String employeeUserName, Vacancy vacancy) {
         // create vacancy
         vacancy.setStatus(VacancyStatus.PENDING);
-        Optional<Employee> op = employeeService.findEmployeeByID(employeeID);
-        op.ifPresent(employee -> vacancy.setEmployeeID(employee.getEmployeeID()));
+    /*    Optional<Employee> op = employeeService.findEmployeeByUserName(employeeUserName);
+        op.ifPresent(vacancy::setEmployee);*/
         vacancyService.save(vacancy);
     }
 
@@ -175,8 +81,58 @@ public class RecruitmentZoneService {
     }
 
     public void saveVacancy(Vacancy vacancy) {
-        vacancyService.save(vacancy);
+        // Retrieve the existing Vacancy from the database
+        Vacancy existingVacancy = vacancyService.findById(vacancy.getVacancyID());
+
+        // Check if the existingVacancy is not null (it exists in the database)
+        if (existingVacancy != null) {
+            // Compare and update fields
+
+
+            if(existingVacancy.getJob_title() !=null && !existingVacancy.getJob_title().equals(vacancy.getJob_title())){
+                existingVacancy.setJob_title(vacancy.getJob_title());
+            }
+            if(existingVacancy.getJob_description() !=null && !existingVacancy.getJob_description().equals(vacancy.getJob_description())){
+                existingVacancy.setJob_description(vacancy.getJob_description());
+            }
+            if(existingVacancy.getSeniority_level() !=null &&!existingVacancy.getSeniority_level().equals(vacancy.getSeniority_level())){
+                existingVacancy.setSeniority_level(vacancy.getSeniority_level());
+            }
+            if(existingVacancy.getRequirements() !=null && !existingVacancy.getRequirements()
+                    .equals(vacancy.getRequirements())){
+                existingVacancy.setRequirements(vacancy.getRequirements());
+            }
+            if(existingVacancy.getLocation() !=null && !existingVacancy.getLocation().equals(vacancy.getLocation())){
+                existingVacancy.setLocation(vacancy.getLocation());
+            }
+            if(existingVacancy.getIndustry() !=null &&!existingVacancy.getIndustry().equals(vacancy.getIndustry())){
+                existingVacancy.setIndustry(vacancy.getIndustry());
+            }
+            if(existingVacancy.getPublish_date() !=null &&!existingVacancy.getPublish_date().equals(vacancy.getPublish_date())){
+                existingVacancy.setPublish_date(vacancy.getPublish_date());
+            }
+            if(existingVacancy.getEnd_date() !=null &&!existingVacancy.getEnd_date().equals(vacancy.getEnd_date())){
+                existingVacancy.setEnd_date(vacancy.getEnd_date());
+            }
+            if(existingVacancy.getStatus() !=null &&!existingVacancy.getStatus().equals(vacancy.getStatus())){
+                existingVacancy.setStatus(vacancy.getStatus());
+            }
+            if(existingVacancy.getJobType() !=null &&!existingVacancy.getJobType().equals(vacancy.getJobType())){
+                existingVacancy.setJobType(vacancy.getJobType());
+            }
+            if(existingVacancy.getEmpType() !=null &&!existingVacancy.getEmpType().equals(vacancy.getEmpType())){
+                existingVacancy.setEmpType(vacancy.getEmpType());
+            }
+            // Repeat this process for other fields...
+
+            // Save the updated Vacancy
+            vacancyService.save(existingVacancy);
+        } else {
+            // Handle the case where the Vacancy does not exist in the database
+            // You might want to throw an exception, log a message, or handle it based on your requirements
+        }
     }
+
 
     public List<Vacancy> getActiveVacancies() {
         return vacancyService.getActiveVacancies(VacancyStatus.ACTIVE);
@@ -225,11 +181,11 @@ public class RecruitmentZoneService {
         LocalDate date = LocalDate.now();
         application.setDate_received(date.toString());
         application.setSubmission_date(date.toString());
-        application.setCandidateID(candidate.getCandidateID());
+        application.setCandidate(candidate);
         application.setStatus(ApplicationStatus.PENDING);
 
         // link application with vacancy
-        application.setVacancyID(vacancyID);
+        application.setVacancy(vacancyService.findById(vacancyID));
 
         applicationService.save(application);
 
@@ -247,6 +203,12 @@ public class RecruitmentZoneService {
 
     }
 
+
+
+
+
+//  getVacancyApplications
+
     public boolean saveUpdatedApplicationStatus(Long applicationID, ApplicationStatus applicationStatus) {
         return applicationService.saveUpdatedStatus(applicationID, applicationStatus);
     }
@@ -255,28 +217,7 @@ public class RecruitmentZoneService {
         return applicationsEventPublisher.publishSaveSubmissionEvent(candidate, vacancyID);
     }
 
-    // COMMUNICATION
 
-    public void websiteQueryReceived(ContactMessage message) {
-        // send message using virtual thread
-       /* try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            log.info("About to submit");
-            executor.submit(() -> {
-                // Send website query received notification
-                // Perform repo IO operation
-              //  communicationService.sendSimpleEmail(message);
-                communicationService.sendWebsiteQuery(message);
-            });
-        } catch (Exception e) {
-            log.info("Failed to send Email Query");
-        }*/
-        // Send Acknowledgment to candidate
-        // publish event
-        emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
-
-        log.info("Website Query received");
-        log.info(message.toString());
-    }
 
     // STORAGE
 
@@ -292,7 +233,6 @@ public class RecruitmentZoneService {
     public boolean publishFileUploadedEvent(MultipartFile file, Long candidateID, Long vacancyID) {
         return applicationsEventPublisher.publishFileUploadEvent(file, candidateID, vacancyID);
     }
-    // update the vacancy status to expired using repository
 
     // CLIENTS
 
@@ -313,55 +253,20 @@ public class RecruitmentZoneService {
     }
 
     public void addContactToClient(Long clientID, ContactPerson contactPerson) {
-       // contactPerson.setClientID(clientID);
         clientService.addContactToClient(clientID,contactPerson);
     }
-    public void saveUpdatedClient(Client client){
-        clientService.saveUpdatedClient(client);
+    public void saveUpdatedClient(Long clientID,Client updatedClient){
+        Client oc = clientService.findClientByID(clientID);
+        if(!oc.getName().equalsIgnoreCase(updatedClient.getName())){
+            oc.setName(updatedClient.getName());
+        }
+
+        if(!oc.getIndustry().equalsIgnoreCase(updatedClient.getIndustry())){
+            oc.setIndustry(updatedClient.getIndustry());
+        }
+        clientService.saveUpdatedClient(oc);
     }
 
-/*    public boolean createVacancy(Vacancy vacancy) {
-        // Create a new Vacancy entity and populate it from the DTO
-        Vacancy newVacancy = new Vacancy();
-        newVacancy.setJobID(vacancy.getJobID());
-        newVacancy.setExpired(vacancy.isExpired());
-        newVacancy.setActive(vacancy.isActive());
-        newVacancy.setPending(vacancy.isPending());
 
-        try {
-            return vacancyService.save(newVacancy);
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
-        }
-        // Save the new Vacancy entity to the database
 
-    }*/
-
-    /*    public boolean publishVacancyCreateEvent(String json) {
-        boolean result = false;
-        try {
-            Gson gson = new Gson();
-            Vacancy newVacancy = gson.fromJson(json, Vacancy.class);
-            log.info("User Saved");
-            result = vacancyEventPublisher.publishVacancyCreateEvent(newVacancy);
-
-        } catch (Exception e) {
-            log.info("Unable to save" + e.getMessage());
-        }
-        return result;
-    }*/
-   /*  public boolean publishAmendedVacancyEvent(String json) {
-        boolean result = false;
-        try {
-            Gson gson = new Gson();
-            Vacancy newVacancy = gson.fromJson(json, Vacancy.class);
-            log.info("User Saved");
-            result = vacancyEventPublisher.publishVacancyAmendedEvent(newVacancy);
-
-        } catch (Exception e) {
-            log.info("Unable to save" + e.getMessage());
-        }
-        return result;
-    }*/
 }

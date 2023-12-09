@@ -1,6 +1,7 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 
 @Entity
@@ -10,18 +11,22 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="blogID")
     private Long blogID;
+
     private String blog_title;
+
     private String blog_description;
+
     @Enumerated(EnumType.STRING)
     private BlogStatus status;
     private String body;
     private String publish_date;
     private String end_date;
 
- /*   @ManyToOne(cascade = {
+    @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })*/
-    private Long employeeID;
+    })
+    @JoinColumn(name = "employeeID")
+    private Employee employee;
 
     public Blog() {
     }
@@ -32,6 +37,9 @@ public class Blog {
         this.body = body;
         this.publish_date=publish_date;
         this.end_date=end_date;
+    }
+
+    public Blog(BlogDTO blogDTO) {
     }
 
     public String getPublish_date() {
@@ -82,14 +90,6 @@ public class Blog {
         this.body = body;
     }
 
-    public Long getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
-    }
-
     public String getEnd_date() {
         return end_date;
     }
@@ -98,15 +98,26 @@ public class Blog {
         this.end_date = end_date;
     }
 
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
     @Override
     public String toString() {
         return "Blog{" +
-                "blog_title='" + blog_title + '\'' +
+                "blogID=" + blogID +
+                ", blog_title='" + blog_title + '\'' +
+                ", blog_description='" + blog_description + '\'' +
                 ", status=" + status +
+                ", body='" + body + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
+                ", employee=" + employee +
                 '}';
     }
-
 }
 

@@ -23,16 +23,15 @@ public class CandidateEventListener {
     @EventListener
     public void onFileUploadEvent(FileUploadEvent event) {
         // Upon file upload
-        //FileMetadata fileMetadata = extractMetadata(file);
-       // String fileId = generateUniqueId();
+   /*     FileMetadata fileMetadata = extractMetadata(file);
+        String fileId = generateUniqueId();
 
-// Indexing with Lucene
-       // luceneIndex.addDocument(fileId, fileMetadata);
-
-// Storing Metadata in Redis
-      //  redisClient.set(fileId, fileMetadata);
+        luceneIndex.addDocument(fileId, fileMetadata);
 
 
+        redisClient.set(fileId, fileMetadata);
+
+*/
     }
 
      /* @EventListener
@@ -48,10 +47,10 @@ public class CandidateEventListener {
 
 
     // Searching with Lucene
-   // List<SearchResult> searchResults = luceneIndex.search("search_query");
+    // List<SearchResult> searchResults = luceneIndex.search("search_query");
 
     // Retrieve file IDs from Lucene search results
-   // List<String> fileIds = searchResults.stream().map(SearchResult::getFileId).collect(Collectors.toList());
+    // List<String> fileIds = searchResults.stream().map(SearchResult::getFileId).collect(Collectors.toList());
 
     /*// Fetching Files from Google Cloud
 for (String fileId : fileIds) {

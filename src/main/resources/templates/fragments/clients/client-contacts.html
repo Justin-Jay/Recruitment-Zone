@@ -12,7 +12,6 @@
     <!-- Your logic to display contacts when the list is not empty -->
     <!-- For example, you can iterate through the contacts -->
 
-
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
@@ -21,29 +20,24 @@
             <th>Last Name</th>
             <th>Land Line</th>
             <th>Cell Number</th>
-            <th>Add Client Contact</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="contact : ${contacts}">
-            <td th:text="${contact.clientID}"></td>
+            <td th:text="${clientID}"></td>
             <td th:text="${contact.first_name}"></td>
             <td th:text="${contact.last_name}"></td>
             <td th:text="${contact.land_line}"></td>
             <td th:text="${contact.cell_phone}"></td>
-
-            <td>
-                <form th:action="@{/add-contact}" th:method="GET">
-                    <!-- Hidden input field to include the id in the POST request -->
-                    <input type="hidden" name="clientID" th:value="*{contact.clientID}"/>
-                    <!-- Submit button to trigger the form submission -->
-                    <button type="submit" class="btn btn-primary">Add Contact Person</button>
-                </form>
-            </td>
         </tr>
         </tbody>
     </table>
-
+    <form th:action="@{/add-contact}" th:method="GET">
+        <!-- Hidden input field to include the id in the POST request -->
+        <input type="hidden" name="clientID" th:value="${clientID}"/>
+        <!-- Submit button to trigger the form submission -->
+        <button type="submit" class="btn btn-primary">Add Contact Person</button>
+    </form>
 <!--
     <ul>
         <li th:each="contact : ${contacts}">
