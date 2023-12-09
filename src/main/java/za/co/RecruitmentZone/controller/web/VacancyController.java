@@ -8,15 +8,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
-import za.co.RecruitmentZone.entity.domain.Vacancy;
+import za.co.RecruitmentZone.entity.domain.*;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
-@CrossOrigin("*")
+@CrossOrigin()
 public class VacancyController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(VacancyController.class);
@@ -24,8 +27,6 @@ public class VacancyController {
     public VacancyController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
     }
-
-    // Vacancies
     @GetMapping("/vacancy-administration")
     public String vacancies(Model model) {
         List<Vacancy> allVacancies = new ArrayList<>();
@@ -37,13 +38,18 @@ public class VacancyController {
         model.addAttribute("vacancies", allVacancies);
         return "fragments/vacancy/vacancy-administration";
     }
-
     @GetMapping("/add-vacancy")
     public String showCreateVacancyForm(Model model) {
         model.addAttribute("vacancy", new Vacancy());
+        //List<Client> clients = recruitmentZoneService.getClients();
+        model.addAttribute("clients", loadClients());
         return "fragments/vacancy/add-vacancy";
     }
 
+    public List<Client> loadClients(){
+        //List<Client> tempClients = recruitmentZoneService.getClients();
+        return recruitmentZoneService.getClients();
+    }
     @PostMapping("/view-vacancy")
     public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         Vacancy optionalVacancy = recruitmentZoneService.findVacancyById(vacancyID);
@@ -52,14 +58,26 @@ public class VacancyController {
         model.addAttribute("vacancy", optionalVacancy);
         return "fragments/vacancy/view-vacancy";
     }
+
     @PostMapping("/save-vacancy")
-    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, @RequestParam("employeeID")Long employeeID,BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "fragments/vacancy/add-vacancy";
+    public String saveVacancy(@Valid @ModelAttribute("vacancy") Vacancy vacancy,
+                              @RequestParam("clientID") Long clientID,
+                              @RequestParam("name") String employeeUserName,
+                              BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return "redirect:/add-vacancy";
         }
-        recruitmentZoneService.saveNewVacancy(employeeID,vacancy);
+        // Set the selected client ID to the Vacancy object
+        Client client = recruitmentZoneService.findClientByID(clientID);
+        Employee employee = recruitmentZoneService.findEmployeeByUserName("Justin.Maboshego@kiunga.co.za");
+        vacancy.setEmployee(employee);
+        vacancy.setClient(client);
+
+        log.info("clientID {}", clientID);
+        recruitmentZoneService.saveNewVacancy(employeeUserName, vacancy);
         return "redirect:/vacancy-administration";
     }
+
     @PostMapping("/update-vacancy")
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
@@ -67,7 +85,6 @@ public class VacancyController {
         model.addAttribute("status", VacancyStatus.values());
         return "fragments/vacancy/update-vacancy";
     }
-
     @PostMapping("/save-updated-vacancy")
     public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -77,23 +94,22 @@ public class VacancyController {
         return "redirect:/vacancy-administration";
     }
 
+    @PostMapping("/view-candidate-notes")
+    public String viewCandidateNotes(@RequestParam("candidateID")Long candidateID, Model model) {
+        // Logic to fetch candidate notes based on candidateID
+        // Add candidateNotes to the model
+        Candidate candidate = recruitmentZoneService.getCandidateById(candidateID);
+        Set<CandidateNote> candidateNotes = candidate.getNotes();
+        model.addAttribute("candidateNotes", candidateNotes);
+        return "fragments/vacancy/candidate-notes-fragment";
+    }
 
-    @GetMapping("/search")
-    public String searchVacancies(@RequestParam(name = "name", required = false) String title, Model model) {
-        List<Vacancy> vacancies = null;
-
-        if (title != null && !title.isEmpty()) {
-            // Perform the search based on the vacancy name
-            vacancies = recruitmentZoneService.searchVacancyByTitle(title);
-        } else {
-            // Fetch all vacancies if no name is provided
-         //   vacancies = recruitmentZoneService.getAllVacancies();
-        }
-
-
-       model.addAttribute("vacancies", vacancies);
-
-        return "searchVacancies";
+    @PostMapping("/view-vacancy-submission")
+    public String viewVacancySubmissions(@RequestParam("vacancyID") Long vacancyID, Model model) {
+        Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
+        model.addAttribute("vacancy", vacancy);
+        model.addAttribute("applicationStatus", ApplicationStatus.values());
+        return "fragments/vacancy/view-vacancy-submission";
     }
 
 

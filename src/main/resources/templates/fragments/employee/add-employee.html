@@ -23,17 +23,29 @@
     <div class="container-fluid">
         <form action="#" th:action="@{/save-employee}" th:object="${employeeDTO}" method="POST">
             <label>
-                Employee Name:<input type="text" th:field="*{first_name}" placeholder="First Name" class="form-control">
+                Employee Name:
+                <p th:class="error" th:if="${#fields.hasErrors('first_name')}"
+                   th:errors="${employeeDTO.first_name}"
+                ></p>
+                <input type="text" th:field="*{first_name}" placeholder="First Name" class="form-control">
             </label>
 
             <label>
-                Last Name:<input type="text" th:field="*{last_name}" placeholder="Last Name" class="form-control">
+                Last Name:
+                <p th:class="error" th:if="${#fields.hasErrors('last_name')}"
+                   th:errors="${employeeDTO.last_name}"
+                ></p>
+                <input type="text" th:field="*{last_name}" placeholder="Last Name" class="form-control">
             </label>
 
             <label>
-                Contact Number: <input type="text" th:field="*{contact_number}" placeholder="Contact Number" class="form-control">
-            </label>
+                Contact Number:
+                <p th:class="error" th:if="${#fields.hasErrors('contact_number')}"
+                   th:errors="${employeeDTO.contact_number}"
+                ></p>
 
+                <input type="text" th:field="*{contact_number}" placeholder="Contact Number" class="form-control">
+            </label>
             <button type="submit" class="btn btn-primary btn-sm mb-3">Add Employee</button>
         </form>
     </div>

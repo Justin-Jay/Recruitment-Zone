@@ -11,6 +11,11 @@
           th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
+    <style>
+        body {
+            text-align: justify;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -23,16 +28,109 @@
             </div>
         </div>
 
-        <!--    <div class="container-fluid">
-                ABOVE CARD GROUP
-            </div>-->
-        <div class="container-fluid">
-            <h2>About Us</h2>
-            <table class="table table-bordered table-striped">
-                <tbody>
 
-                </tbody>
-            </table>
+        <div class="container-fluid">
+
+            <main th:fragment="blogView(blog)">
+                <article>
+                    <section>
+                        <h1>About Kiunga</h1>
+                        <p>
+                            Kiunga is an agile and impactful recruitment company addressing the need in the market for a more personal approach to candidates and clients. Kiunga means “Link” as we position ourselves as the link between client and candidate.
+                            We find importance not only in identifying the right skills for our clients but also take into great consideration the culture and environment that best suits both parties.
+                        </p>
+                        <p>
+                            Our company is especially focused on:
+                        </p>
+                        <ul>
+                            <li>Growing candidate careers</li>
+                            <li>Growing with our clients as they diversify and seek skilled resources and grow their business</li>
+                            <li>Growing staff</li>
+                        </ul>
+                        <p>
+                            Our experience covers various industries within the local and global space, giving us a more in-depth understanding and advantage on industry trends which we bring to every client we work with.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2>Obligation / Why Kiunga</h2>
+                        <p>
+                            As a company, we understand the pivotal role recruitment plays in connecting the right fit for both the client and the candidate. With our experience within the recruitment space, we have come to appreciate taking the time to engage with our clients in a manner that allows us to understand the culture of the organization and allows us to forge long-lasting relationships.
+                            We pride ourselves on maintaining good relationships with our candidates across the board; we believe this allows us to better match both candidate and client.
+                        </p>
+                        <p>
+                            Our individualistic approach to candidates allows us to meet and match the timelines along with culture fit and skills match that our clients require.
+                            Having a meaningful understanding of our client’s culture and our approach to our candidates allows us to cut the cost of our service to you by bringing you only the best fit candidates in the market.
+                            We compare the background and experience of the candidate to the job profile by meeting all our candidates face to face for a more personal approach.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2>Our Process</h2>
+                        <ul>
+                            <li>Providing the Client with suitable bio-data of potential candidates as per required</li>
+                            <li>Ensuring that the potential candidates are given fair and accurate information about the Client and the Client's requirements.</li>
+                            <li>Providing Clients with any information about a potential candidate and the full disclosure of information which may be considered to be relevant to the recruitment process and in the interest of the Client.</li>
+                            <li>Communicating and coordination between the Client and the potential candidate in fixing the venue, time, or such other matters relating to meetings between both parties, and; assisting the Client with the coordination of acceptance of job offers between the potential candidate and the Client.</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Our Services</h2>
+                        <p>Our recruitment team works with clients across a range of industries. Our service includes the following stages:</p>
+                        <ul>
+                            <li>Permanent and Contracting Staffing Solutions</li>
+                            <li>Temporary Staffing Solutions</li>
+                            <li>Project Placements</li>
+                            <li>Response Handling</li>
+                            <li>Search & Source</li>
+                            <li>Headhunting</li>
+                            <li>Candidate Screening</li>
+                            <li>Interview Scheduling</li>
+                            <li>Background Checks</li>
+                            <li>Placement & Debrief</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Response Handling</h2>
+                        <p>
+                            Kiunga will also place advertisements on your behalf, screen, interview, short-list, perform reference, criminal and qualification checks on the top candidates as per client’s individual needs.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2>Recruitment Areas</h2>
+                        <p>We consult in all levels of recruitment, namely:</p>
+                        <ul>
+                            <li>Top Management</li>
+                            <li>Middle Management</li>
+                            <li>Line Management and</li>
+                            <li>The Functionaries</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Our Turnaround time</h2>
+                        <p>
+                            Our average turnaround time – from receiving client requests to submitting candidates has been five working days (with the quickest being two days – excluding reference checks).
+                            Standard Roles – We require, from the engagement with the client and understanding the requirement, a 16-40 working-hour period to advertise as well as shortlist candidates for the client.
+                            Specialized roles – We require, from the engagement with the client and understanding the requirement, a 24-40 working-hour period to advertise as well as shortlist candidates for the client.
+                        </p>
+                    </section>
+
+
+                    <footer>
+                        <!-- You can add a comment section, social media sharing buttons, etc. -->
+                    </footer>
+
+
+                </article>
+                <div class="container-fluid">
+                    <a class="nav-link" th:href="@{/}">Back to Home Page</a>
+                </div>
+            </main>
+
         </div>
 
         <div class="container-fluid">

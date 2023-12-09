@@ -3,6 +3,7 @@ package za.co.RecruitmentZone.entity.domain;
 import jakarta.persistence.*;
 import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
 
+import javax.lang.model.element.Name;
 import java.util.List;
 
 @Entity
@@ -18,18 +19,19 @@ public class Application {
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
- /*   @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "")*/
-    private Long candidateID;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "candidateID")
+    private Candidate candidate;
 
-
-  /*  @ManyToOne(cascade = {
+    @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })*/
-    private Long vacancyID;
+    })
+    @JoinColumn(name="vacancyID")
+    private Vacancy vacancy;
 
     public Application() {
     }
+
 
     public Long getApplicationID() {
         return applicationID;
@@ -63,20 +65,20 @@ public class Application {
         this.status = status;
     }
 
-    public Long getCandidateID() {
-        return candidateID;
+    public Candidate getCandidate() {
+        return candidate;
     }
 
-    public void setCandidateID(Long candidateID) {
-        this.candidateID = candidateID;
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
     }
 
-    public Long getVacancyID() {
-        return vacancyID;
+    public Vacancy getVacancy() {
+        return vacancy;
     }
 
-    public void setVacancyID(Long vacancyID) {
-        this.vacancyID = vacancyID;
+    public void setVacancy(Vacancy vacancy) {
+        this.vacancy = vacancy;
     }
 
     @Override
@@ -86,8 +88,8 @@ public class Application {
                 ", date_received='" + date_received + '\'' +
                 ", submission_date='" + submission_date + '\'' +
                 ", status=" + status +
-                ", candidateID=" + candidateID +
-                ", vacancyID=" + vacancyID +
+                ", candidate=" + candidate +
+                ", vacancy=" + vacancy +
                 '}';
     }
 }

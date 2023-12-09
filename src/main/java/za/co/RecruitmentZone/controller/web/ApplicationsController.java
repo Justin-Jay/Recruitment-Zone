@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.entity.domain.Application;
 import za.co.RecruitmentZone.entity.domain.Candidate;
@@ -43,7 +44,7 @@ public class ApplicationsController {
     public String saveSubmission(@Valid @ModelAttribute("candidate") Candidate candidate,
                                  @RequestParam("vacancyID")Long vacancyID,
                                  @RequestParam("cvFile") MultipartFile cvFile,
-                                 BindingResult bindingResult,Model model) {
+                                 BindingResult bindingResult, Model model,RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "fragments/applications/apply-now";
         }
@@ -55,6 +56,7 @@ public class ApplicationsController {
 
         if (!cvFile.isEmpty()) {
             // Process the CV file
+            // Additional validations like checking for already submitted application, etc.
 
             try {
              //   filePath = recruitmentZoneService.saveFile(vacancyID,cvFile);
@@ -78,14 +80,16 @@ public class ApplicationsController {
 
                 candidate.setCvFilePath(targetLocation.toString());
 
-                model.addAttribute("message",
-                        "File '" + cvFile.getOriginalFilename() + "' uploaded successfully!");
+                /*model.addAttribute("message",
+                        "File '" + cvFile.getOriginalFilename() + "' uploaded successfully!");*/
+                redirectAttributes.addFlashAttribute("message",
+                        "Application Submitted Successfully!");
 
                 Long candidateID = recruitmentZoneService.createCandidateApplication(vacancyID,candidate);
                 // publish file upload event and give the file
 
                 recruitmentZoneService.publishFileUploadedEvent(cvFile,candidateID,vacancyID);
-                return "fragments/applications/file-uploaded";
+                return "redirect:/home";
             } catch (Exception e) {
                 log.info("Failed to save file");
                 candidate.setCvFilePath("Failed to save file");
@@ -98,8 +102,6 @@ public class ApplicationsController {
 
         return "fragments/applications/apply-now";
     }
-
-
 
     @GetMapping("/applications-administration")
     public String applications(Model model) {
@@ -143,8 +145,6 @@ public class ApplicationsController {
 
         return "redirect:/applications-administration";
     }
-
-
 
 
 }

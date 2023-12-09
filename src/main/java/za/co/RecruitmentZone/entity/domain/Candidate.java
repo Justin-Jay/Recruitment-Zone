@@ -1,12 +1,18 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 import za.co.RecruitmentZone.entity.Enums.EducationLevel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "candidate")
@@ -21,15 +27,20 @@ public class Candidate {
 
     private String id_number;
 
+    @Email(message = "Email should be valid")
     private String email_address;
+
 
     private String phone_number;
 
     private String current_province;
 
+
     private String current_role;
 
+
     private String current_employer;
+
 
     private String seniority_level;
     @Enumerated(EnumType.STRING)
@@ -41,15 +52,14 @@ public class Candidate {
     @Transient
     private MultipartFile cvFile;
 
-  /*  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name = "candidate_application",
-            joinColumns = @JoinColumn(name = "candidateID"),
-            inverseJoinColumns = @JoinColumn(name = "applicationID")
-    )
-    private List<Application> applications = new ArrayList<>();
-*/
-
+    @OneToMany(mappedBy = "candidate",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private Set<Application> applications;
+    @OneToMany(mappedBy = "candidate",
+            cascade = {
+                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+            })
+    private Set<CandidateNote> notes;
 
     public Candidate() {
         // received
@@ -68,6 +78,7 @@ public class Candidate {
         this.education_level = education_level;
         this.relocation = relocation;
     }
+
 
 
     public Long getCandidateID() {
@@ -182,6 +193,22 @@ public class Candidate {
         this.cvFile = cvFile;
     }
 
+    public Set<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(Set<Application> applications) {
+        this.applications = applications;
+    }
+
+    public Set<CandidateNote> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Set<CandidateNote> notes) {
+        this.notes = notes;
+    }
+
     @Override
     public String toString() {
         return "Candidate{" +
@@ -190,11 +217,20 @@ public class Candidate {
                 '}';
     }
 
-   /* public void AddApplication(Application application){
+    public void AddApplication(Application application){
         if (applications ==null){
-            applications = new ArrayList<>();
+            applications = new HashSet<>() {
+            };
         }
         applications.add(application);
         application.setCandidate(this);
-    }*/
+    }
+
+    public void addNote(CandidateNote note){
+        if (notes ==null){
+            notes = new HashSet<>();
+        }
+        notes.add(note);
+        note.setCandidate(this);
+    }
 }

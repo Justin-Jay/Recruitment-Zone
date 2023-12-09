@@ -1,10 +1,15 @@
 package za.co.RecruitmentZone.entity.domain;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 public class EmployeeDTO {
+    @NotEmpty(message = "First Name Cannot be empty")
     public String first_name;
+    @NotEmpty(message = "Last Name Cannot be empty")
 
     public String last_name;
-
+    @Size(min=10, max=10)
     public String contact_number;
 
     public EmployeeDTO() {

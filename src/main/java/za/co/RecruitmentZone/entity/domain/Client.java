@@ -1,43 +1,77 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import org.checkerframework.checker.units.qual.C;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "client")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "clientid")
     private Long clientID;
     private String name;
     private String industry;
-/*    @OneToMany(mappedBy = "client",
+    @OneToMany(mappedBy = "client",
             cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    @JoinTable(
+    /*@JoinTable(
             name = "client_contact_person",
             joinColumns = @JoinColumn(name = "clientID"),
             inverseJoinColumns = @JoinColumn(name = "contactPersonID")
-    )
-    private List<ContactPerson> contactPeople;*/
-/*    @OneToMany(mappedBy = "client",
+    )*/
+    private Set<ContactPerson> contactPeople;
+    @OneToMany(mappedBy = "client",
             cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    @JoinTable(
+    /*@JoinTable(
             name = "client_vacancy",
             joinColumns = @JoinColumn(name = "clientID"),
             inverseJoinColumns = @JoinColumn(name = "vacancyID")
-    )
-    private List<Vacancy> vacancies;*/
+    )*/
+    private Set<Vacancy> vacancies;
+
+    @OneToMany(mappedBy = "client",
+            cascade = {
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
+            })
+    private Set<ClientNote> notes;
+
     public Client() {
     }
+
     public Client(String name, String industry) {
         this.name = name;
         this.industry = industry;
+    }
+
+    public Set<ContactPerson> getContactPeople() {
+        return contactPeople;
+    }
+
+    public void setContactPeople(Set<ContactPerson> contactPeople) {
+        this.contactPeople = contactPeople;
+    }
+
+    public Set<Vacancy> getVacancies() {
+        return vacancies;
+    }
+
+    public void setVacancies(Set<Vacancy> vacancies) {
+        this.vacancies = vacancies;
+    }
+
+    public Set<ClientNote> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Set<ClientNote> notes) {
+        this.notes = notes;
     }
 
     public Long getClientID() {
@@ -71,19 +105,27 @@ public class Client {
                 '}';
     }
 
-/*    public void addContactPerson(ContactPerson contactPerson){
-        if (contactPeople ==null){
-            contactPeople = new ArrayList<>();
+    public void addContactPerson(ContactPerson contactPerson) {
+        if (contactPeople == null) {
+            contactPeople = new HashSet<>();
         }
         contactPeople.add(contactPerson);
         contactPerson.setClient(this);
-    }*/
+    }
 
-/*    public void addVacancy(Vacancy vacancy){
-        if (vacancies ==null){
-            vacancies = new ArrayList<>();
+    public void addVacancy(Vacancy vacancy) {
+        if (vacancies == null) {
+            vacancies = new HashSet<>();
         }
         vacancies.add(vacancy);
         vacancy.setClient(this);
-    }*/
+    }
+
+    public void addNote(ClientNote note) {
+        if (notes == null) {
+            notes = new HashSet<>();
+        }
+        notes.add(note);
+        note.setClient(this);
+    }
 }

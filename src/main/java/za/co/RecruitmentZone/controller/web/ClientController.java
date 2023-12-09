@@ -46,22 +46,23 @@ public class ClientController {
         model.addAttribute("contactPerson", new ContactPerson());
         return "fragments/clients/add-client";
     }
+
     @GetMapping("/add-contact")
-    public String showAddContactForm(@RequestParam("clientID") Long clientID,Model model) {
-        model.addAttribute("clientID",clientID);
-        model.addAttribute("contactPerson",new ContactPerson());
+    public String showAddContactForm(@RequestParam("clientID") Long clientID,
+                                    Model model) {
+        model.addAttribute("clientID", clientID);
+        model.addAttribute("contactPerson", new ContactPerson());
         return "fragments/clients/add-contact";
     }
 
-
     @PostMapping("/save-client")
-    public String saveClient(@Valid @ModelAttribute("client")Client client,
-                           @Valid @ModelAttribute("contactPerson")ContactPerson contactPerson,
-                           BindingResult bindingResult) {
+    public String saveClient(@Valid @ModelAttribute("client") Client client,
+                             @Valid @ModelAttribute("contactPerson") ContactPerson contactPerson,
+                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/add-client";
         }
-        recruitmentZoneService.saveNewClient(client,contactPerson);
+        recruitmentZoneService.saveNewClient(client, contactPerson);
         return "redirect:/client-administration";
     }
 
@@ -76,7 +77,8 @@ public class ClientController {
         model.addAttribute("clients", allClients);
         return "/fragments/clients/client-administration";
     }
-    @PostMapping("/view-client")
+
+    @GetMapping("/view-client")
     public String showClient(@RequestParam("clientID") Long clientID, Model model) {
         Client client = recruitmentZoneService.findClientByID(clientID);
         List<ContactPerson> contacts = recruitmentZoneService.findContactsByClientID(clientID);
@@ -87,16 +89,16 @@ public class ClientController {
         return "fragments/clients/view-client";
     }
 
-
     @PostMapping("/view-client-contacts")
     public String showClientContacts(@RequestParam("clientID") Long clientID, Model model) {
         List<ContactPerson> contacts = recruitmentZoneService.findContactsByClientID(clientID);
         log.info("Looking for {}", clientID);
-        log.info("Found {} number of contacts, {}",contacts.size());
+        log.info("Found {} number of contacts, {}", contacts.size());
         model.addAttribute("clientID", clientID);
         model.addAttribute("contacts", contacts);
         return "fragments/clients/view-client-contacts";
     }
+
     @PostMapping("/update-client")
     public String updateClient(@RequestParam("clientID") Long clientID, Model model) {
         Client client = recruitmentZoneService.findClientByID(clientID);
@@ -105,26 +107,23 @@ public class ClientController {
     }
 
     @PostMapping("/save-new-contact")
-    public String addContactToClient(@Valid @ModelAttribute("contactPerson")ContactPerson contactPerson, @RequestParam("clientID") Long clientID, BindingResult bindingResult) {
+    public String addContactToClient(@Valid @ModelAttribute("contactPerson") ContactPerson contactPerson, @RequestParam("clientID") Long clientID, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/update-client";
         }
-        recruitmentZoneService.addContactToClient(clientID,contactPerson);
-       // redirectAttributes.addFlashAttribute("clientID",clientID);
-        return "redirect:/view-client";
+        recruitmentZoneService.addContactToClient(clientID, contactPerson);
+        return "redirect:/client-administration";
     }
 
     @PostMapping("/save-updated-client")
-    public String saveUpdatedClient(@Valid @ModelAttribute("client")Client client,
+    public String saveUpdatedClient(@Valid @ModelAttribute("client") Client client,
+                                    @RequestParam("clientID") Long clientID,
                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/update-client";
         }
-        recruitmentZoneService.saveUpdatedClient(client);
+        recruitmentZoneService.saveUpdatedClient(clientID, client);
         return "redirect:/client-administration";
     }
-
-
-
 
 }

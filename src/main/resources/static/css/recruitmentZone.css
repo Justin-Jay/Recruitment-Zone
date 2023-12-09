@@ -78,3 +78,38 @@ right: 100px;
 .vacancy-card {
   margin-bottom: 20px; /* Adjust this value to set the desired space between cards */
 }
+
+/* Example CSS Styles */
+.blog-post {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin: 10px;
+  background-color: #f9f9f9;
+}
+
+.blog-title {
+  font-size: 24px;
+  color: #333;
+}
+
+.blog-description {
+  font-style: italic;
+  color: #555;
+}
+
+.blog-content {
+  line-height: 1.6;
+}
+
+.blog-footer {
+  margin-top: 10px;
+  color: #777;
+}
+
+.metadata {
+  font-size: 12px;
+}
+
+.back-to-blogs {
+  margin-top: 20px;
+}

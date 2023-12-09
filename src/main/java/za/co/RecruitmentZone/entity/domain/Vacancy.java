@@ -1,10 +1,18 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+import za.co.RecruitmentZone.entity.Enums.EmpType;
+import za.co.RecruitmentZone.entity.Enums.Industry;
+import za.co.RecruitmentZone.entity.Enums.JobType;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "vacancy")
@@ -17,39 +25,42 @@ public class Vacancy {
     private String seniority_level;
     private String requirements;
     private String location;
-    private String industry;
-    private String publish_date;
-    private String end_date;
+    @Enumerated(EnumType.STRING)
+    private Industry industry;
+   // @NotNull(message = "is required")
+    private LocalDate publish_date;
+    private LocalDate end_date;
     @Enumerated(EnumType.STRING)
     private VacancyStatus status;
-    private String job_type;
-    private String emp_type;
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
+    @Enumerated(EnumType.STRING)
+    private EmpType empType;
 
-  /*  @ManyToOne(
+    @ManyToOne(
             cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })*/
-    private Long clientID;
-/*    @ManyToOne(cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })*/
-    private Long employeeID;
-  /*  @OneToMany(mappedBy = "vacancy",
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
+            })
+    @JoinColumn(name = "clientid")
+    private Client client;
+
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "employeeID")
+    private Employee employee;
+
+    @OneToMany(mappedBy = "vacancy",
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    @JoinTable(
-            name = "vacancy_application",
-            joinColumns = @JoinColumn(name = "vacancyID"),
-            inverseJoinColumns = @JoinColumn(name = "applicationID")
-    )
-    private List<Application> applications;*/
-
+    private Set<Application> applications;
 
     public Vacancy() {
     }
 
-    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, String industry, String publish_date, String end_date, VacancyStatus status, String job_type, String emp_type) {
+
+    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Client client, Employee employee) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
@@ -59,10 +70,27 @@ public class Vacancy {
         this.publish_date = publish_date;
         this.end_date = end_date;
         this.status = status;
-        this.job_type = job_type;
-        this.emp_type = emp_type;
+        this.jobType = jobType;
+        this.empType = empType;
+        this.client = client;
+        this.employee = employee;
     }
 
+    public LocalDate getPublish_date() {
+        return publish_date;
+    }
+
+    public void setPublish_date(LocalDate publish_date) {
+        this.publish_date = publish_date;
+    }
+
+    public LocalDate getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(LocalDate end_date) {
+        this.end_date = end_date;
+    }
 
     public Long getVacancyID() {
         return vacancyID;
@@ -112,29 +140,14 @@ public class Vacancy {
         this.location = location;
     }
 
-    public String getIndustry() {
+    public Industry getIndustry() {
         return industry;
     }
 
-    public void setIndustry(String industry) {
+    public void setIndustry(Industry industry) {
         this.industry = industry;
     }
 
-    public String getPublish_date() {
-        return publish_date;
-    }
-
-    public void setPublish_date(String publish_date) {
-        this.publish_date = publish_date;
-    }
-
-    public String getEnd_date() {
-        return end_date;
-    }
-
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
-    }
 
     public VacancyStatus getStatus() {
         return status;
@@ -144,36 +157,46 @@ public class Vacancy {
         this.status = status;
     }
 
-    public String getJob_type() {
-        return job_type;
+    public EmpType getEmpType() {
+        return empType;
     }
 
-    public void setJob_type(String job_type) {
-        this.job_type = job_type;
+    public void setEmpType(EmpType empType) {
+        this.empType = empType;
     }
 
-    public String getEmp_type() {
-        return emp_type;
+
+
+    public JobType getJobType() {
+        return jobType;
     }
 
-    public void setEmp_type(String emp_type) {
-        this.emp_type = emp_type;
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
     }
 
-    public Long getClientID() {
-        return clientID;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
-    public Long getEmployeeID() {
-        return employeeID;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Set<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(Set<Application> applications) {
+        this.applications = applications;
     }
 
     @Override
@@ -185,21 +208,25 @@ public class Vacancy {
                 ", seniority_level='" + seniority_level + '\'' +
                 ", requirements='" + requirements + '\'' +
                 ", location='" + location + '\'' +
-                ", industry='" + industry + '\'' +
+                ", industry=" + industry +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
                 ", status=" + status +
-                ", job_type='" + job_type + '\'' +
-                ", emp_type='" + emp_type + '\'' +
-                ", clientID=" + clientID +
-                ", employeeID=" + employeeID +
+                ", jobType=" + jobType +
+                ", empType=" + empType +
+                ", client=" + client +
+                ", employee=" + employee +
+                ", applications=" + applications +
                 '}';
     }
-/*    public void addApplication(Application application){
+
+        public void addApplication(Application application){
         if (applications ==null){
-            applications = new ArrayList<>();
+            applications = new HashSet<>();
         }
         applications.add(application);
         application.setVacancy(this);
-    }*/
+    }
+
+
 }

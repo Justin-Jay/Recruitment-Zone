@@ -1,0 +1,59 @@
+<div class="container-fluid" th:fragment="submission(vacancy)">
+    <table th:each="Vapplication : ${vacancy.applications}" >
+        <thead>
+        <tr>
+            <th>Vacancy Title</th>
+            <th>Candidate Name</th>
+            <th>Candidate Last Name</th>
+            <th>ID Number</th>
+            <th>Phone Number</th>
+            <th>Current Province</th>
+            <th>Current Role</th>
+            <th>Employer</th>
+            <th>Seniority</th>
+            <th>Education Level</th>
+            <th>Relocation</th>
+            <th>CV File Path Location</th>
+            <th>View Candidate Documents</th>
+            <!-- Add more columns as needed -->
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Use th:fragment to define the vacancy card template -->
+        <tr th:each="candidate : ${Vapplication.candidate}">
+            <td th:text="*{vacancy.job_title}"></td>
+            <td th:text="${candidate.last_name}"></td>
+            <td th:text="${candidate.id_number}"></td>
+            <td th:text="${candidate.email_address}"></td>
+            <td th:text="${candidate.phone_number}"></td>
+            <td th:text="${candidate.current_province}"></td>
+            <td th:text="${candidate.current_role}"></td>
+            <td th:text="${candidate.current_employer}"></td>
+            <td th:text="${candidate.seniority_level}"></td>
+            <td th:text="${candidate.education_level}"></td>
+            <td th:text="${candidate.relocation}"></td>
+            <td th:text="${candidate.cvFilePath}"></td>
+            <td>
+                <form  >
+                    <!-- Hidden input field to include the brandVal in the POST request -->
+                    <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
+
+                    <!-- Submit button to trigger the form submission -->
+                    <button  th:action="@{/view-candidate-notes}" th:method="POST" class='btn' hx-post="/view-candidate-notes"
+                             hx-target='#candidate-notes'
+                             hx-swap='innerHTML '
+                             hx-include="[candidateID='candidateID']" >
+                        View Notes
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="candidate-notes" >
+<!--    <table  th:replace="fragments/vacancy/candidate-notes-fragment :: candidateNotes(${candidateNotes})">
+    </table>-->
+
+</div>
