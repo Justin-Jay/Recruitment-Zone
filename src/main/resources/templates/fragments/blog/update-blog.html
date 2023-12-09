@@ -44,7 +44,7 @@
 
             <!--     <label for="status" >Select Status:
                      <select id="status" th:field="*{status}">
-                         <option th:each="statusVal : ${T(za.co.RecruitmentZone.entity.Enums.BlogStatus).values()}"
+                         <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.BlogStatus).values()}"
                                  th:value="${statusVal}" th:text="${statusVal}"></option>
                      </select>
                  </label>-->

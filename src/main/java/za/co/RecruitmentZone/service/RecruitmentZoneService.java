@@ -4,17 +4,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.RecruitmentZone.entity.Enums.ApplicationStatus;
-import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
-import za.co.RecruitmentZone.entity.domain.*;
-import za.co.RecruitmentZone.events.publisher.Applications.ApplicationsEventPublisher;
-import za.co.RecruitmentZone.service.domainServices.*;
+import za.co.RecruitmentZone.application.entity.Application;
+import za.co.RecruitmentZone.application.service.ApplicationService;
+import za.co.RecruitmentZone.blog.service.BlogService;
+import za.co.RecruitmentZone.candidate.entity.Candidate;
+import za.co.RecruitmentZone.candidate.service.CandidateService;
+import za.co.RecruitmentZone.client.entity.Client;
+import za.co.RecruitmentZone.client.entity.ContactPerson;
+import za.co.RecruitmentZone.client.service.ClientService;
+import za.co.RecruitmentZone.employee.entity.Employee;
+import za.co.RecruitmentZone.employee.service.EmployeeService;
+import za.co.RecruitmentZone.storage.StorageService;
+import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
+import za.co.RecruitmentZone.util.Enums.VacancyStatus;
+import za.co.RecruitmentZone.application.Events.ApplicationsEventPublisher;
+import za.co.RecruitmentZone.vacancy.dto.VacancyDTO;
+import za.co.RecruitmentZone.vacancy.entity.Vacancy;
+import za.co.RecruitmentZone.vacancy.service.VacancyService;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import static za.co.RecruitmentZone.util.Enums.VacancyStatus.*;
 
 
 @Service
@@ -62,18 +75,56 @@ public class RecruitmentZoneService {
       return null;
     }
 
+    public Employee findEmployeeByID(Long id){
+        Optional<Employee> oe = employeeService.findEmployeeByID(id);
+        if (oe.isPresent()){
+            return oe.get();
+        }
+        return null;
+    }
+
+    public List<Employee> getEmployees(){
+        return employeeService.getEmployees();
+    }
+
 
     /* public void updateExistingEmployee(Long employeeID, EmployeeDTO employeeDTO) {
          log.info("--Attempting updateExistingEmployee ---");
          employeeService.updateExistingEmployee(employeeID, employeeDTO);
      }*/
     // VACANCY
-    public void saveNewVacancy(String employeeUserName, Vacancy vacancy) {
+    public void saveNewVacancy(VacancyDTO vacancy) {
         // create vacancy
-        vacancy.setStatus(VacancyStatus.PENDING);
-    /*    Optional<Employee> op = employeeService.findEmployeeByUserName(employeeUserName);
-        op.ifPresent(vacancy::setEmployee);*/
-        vacancyService.save(vacancy);
+        Vacancy newVacancy = new Vacancy();
+        newVacancy.setJob_title(vacancy.getJob_title());
+        newVacancy.setJob_description(vacancy.getJob_description());
+        newVacancy.setSeniority_level(vacancy.getSeniority_level());
+        newVacancy.setRequirements(vacancy.getRequirements());
+        newVacancy.setLocation(vacancy.getLocation());
+        newVacancy.setIndustry(vacancy.getIndustry());
+        newVacancy.setPublish_date(vacancy.getPublish_date());
+        newVacancy.setEnd_date(vacancy.getEnd_date());
+        newVacancy.setJobType(vacancy.getJobType());
+        newVacancy.setEmpType(vacancy.getEmpType());
+        newVacancy.setCategory(vacancy.getCategory());
+        LocalDate today = LocalDate.now();
+
+        if(vacancy.getPublish_date().isAfter(today))
+        {
+            newVacancy.setStatus(PENDING);
+        }
+        else {
+            newVacancy.setStatus(ACTIVE);
+        }
+
+
+        //Client client = clientService.findClientByID(vacancy.getClientid());
+        //newVacancy.setClient(client);
+
+       // Optional<Employee> op = employeeService.findEmployeeByID(vacancy.getEmployeeID());
+        //op.ifPresent(newVacancy::setEmployee);
+
+        vacancyService.save(newVacancy);
     }
 
     public List<Vacancy> getAllVacancies() {

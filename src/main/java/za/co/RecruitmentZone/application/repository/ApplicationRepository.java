@@ -1,0 +1,17 @@
+package za.co.RecruitmentZone.application.repository;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import za.co.RecruitmentZone.application.entity.Application;
+
+import java.util.List;
+
+@Repository
+public interface ApplicationRepository extends JpaRepository<Application, Long> {
+    // You can add custom query methods here if needed
+
+    @Query("SELECT a FROM Application a")
+    List<Application> findApplicationByAppliedForVacancy();
+
+}

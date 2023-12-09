@@ -76,7 +76,7 @@
 
             <label for="EduLevel">Select Education Level:
                 <select id="EduLevel" th:field="*{education_level}">
-                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.entity.Enums.EducationLevel).values()}"
+                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.EducationLevel).values()}"
                             th:value="${statusVal}" th:text="${statusVal}"></option>
                 </select>
             </label>
