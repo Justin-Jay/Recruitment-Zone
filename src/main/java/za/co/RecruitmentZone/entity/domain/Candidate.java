@@ -1,6 +1,10 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 import za.co.RecruitmentZone.entity.Enums.EducationLevel;
@@ -23,15 +27,20 @@ public class Candidate {
 
     private String id_number;
 
+    @Email(message = "Email should be valid")
     private String email_address;
+
 
     private String phone_number;
 
     private String current_province;
 
+
     private String current_role;
 
+
     private String current_employer;
+
 
     private String seniority_level;
     @Enumerated(EnumType.STRING)
@@ -69,6 +78,7 @@ public class Candidate {
         this.education_level = education_level;
         this.relocation = relocation;
     }
+
 
 
     public Long getCandidateID() {

@@ -33,13 +33,12 @@
                         <button type="submit">Search</button>
                     </form>
                 </div>
-
-
             </div>
             <hr/>
         </div>
 
         <div class="container-fluid">
+            <p th:if="${message}" th:text="${message}"></p>
             <div class="card-group" id="vacancies-list">
                 <div class="row">
                     <!-- Use th:fragment to define the vacancy card template -->

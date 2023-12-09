@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 import za.co.RecruitmentZone.entity.domain.Blog;
+import za.co.RecruitmentZone.entity.domain.BlogDTO;
 import za.co.RecruitmentZone.entity.domain.Employee;
 import za.co.RecruitmentZone.service.domainServices.BlogService;
 import za.co.RecruitmentZone.service.domainServices.EmployeeService;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static za.co.RecruitmentZone.entity.Enums.BlogStatus.PENDING;
 
 @Controller
 @CrossOrigin("*")
@@ -43,30 +46,44 @@ public class BlogController {
         model.addAttribute("blogs", allBlogs);
         return "/fragments/blog/blog-page";
     }
+
     @GetMapping("/add-blog")
     public String showCreateBlogForm(Model model) {
-        model.addAttribute("blog", new Blog());
+        model.addAttribute("blog", new BlogDTO());
         //List<Employee> employees = recruitmentZoneService.getEmployees();
         //model.addAttribute("employeID", employeID);
         return "fragments/blog/add-blog";
     }
+
     @PostMapping("/view-blog")
     public String showBlog(@RequestParam("blogID") Long blogID, Model model) {
         Blog optionalBlog = findBlogByID(blogID);
         log.info("Looking for {}", blogID);
         log.info(optionalBlog.toString());
         model.addAttribute("blog", optionalBlog);
+        // model.addAttribute("author", optionalBlog.getEmployee().getFirst_name());
         return "fragments/blog/view-blog";
     }
+
     @PostMapping("/save-blog")
-    public String saveBlog(@Valid @ModelAttribute("blog")Blog blog, @RequestParam("name")String name,BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public String saveBlog(@Valid @ModelAttribute("blog")BlogDTO blog, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            log.info("HAS ERRORS");
             return "fragments/blog/add-blog";
         }
-        blog.setStatus(BlogStatus.PENDING);
-        saveNewBlog(name,blog);
+        saveNewBlog(blog);
         return "redirect:/blog-administration";
     }
+
+    @PostMapping("/save-updated-blog")
+    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") Blog blog, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "fragments/blog/update-blog";
+        }
+        saveBlog(blog);
+        return "redirect:/blog-administration";
+    }
+
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
         Blog blog = findBlogByID(blogID);
@@ -74,14 +91,7 @@ public class BlogController {
         model.addAttribute("status", BlogStatus.values());
         return "fragments/blog/update-blog";
     }
-    @PostMapping("/save-updated-blog")
-    public String saveUpdatedBlog(@Valid @ModelAttribute("blog")Blog blog, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "fragments/blog/update-blog";
-        }
-        saveBlog(blog);
-        return "redirect:/blog-administration";
-    }
+
     @GetMapping("/blog-administration")
     public String blogAdministration(Model model) {
         List<Blog> allBlogs = new ArrayList<>();
@@ -95,10 +105,18 @@ public class BlogController {
     }
 
 
-    public void saveNewBlog(String name, Blog bg) {
-        Optional<Employee> op = employeeService.findEmployeeByUserName(name);
-        op.ifPresent(bg::setEmployee);
-        blogService.save(bg);
+    public void saveNewBlog(BlogDTO blogDTO) {
+        //Optional<Employee> op = employeeService.findEmployeeByUserName(blogDTO.getEmployee());
+        Optional<Employee> op = employeeService.findEmployeeByUserName("Justin.Maboshego@kiunga.co.za");
+        Blog newBlog = new Blog();
+        newBlog.setBlog_title(blogDTO.getBlog_title());
+        newBlog.setBlog_description(blogDTO.getBlog_description());
+        newBlog.setBody(blogDTO.getBody());
+        newBlog.setEnd_date(blogDTO.getEnd_date().toString());
+        newBlog.setPublish_date(blogDTO.getPublish_date().toString());
+        newBlog.setStatus(PENDING);
+        op.ifPresent(newBlog::setEmployee);
+        blogService.save(newBlog);
         // publish event
     }
 
@@ -107,6 +125,7 @@ public class BlogController {
         // title
         if (optionalBlog.isPresent()) {
             Blog b = optionalBlog.get();
+
             if (!b.getBlog_title().equalsIgnoreCase(blog.getBlog_title())) {
                 b.setBlog_title(blog.getBlog_title());
             }
@@ -116,7 +135,7 @@ public class BlogController {
             }
             // body
             if (!b.getBody().equalsIgnoreCase(blog.getBody())) {
-                b.setBody(blog.getBlog_description());
+                b.setBody(blog.getBody());
             }
             // publish date
 
@@ -127,12 +146,14 @@ public class BlogController {
             if (!Objects.equals(b.getEnd_date(), blog.getEnd_date())) {
                 b.setEnd_date(blog.getEnd_date());
             }
-            if (!Objects.equals(b.getStatus(), blog.getStatus())) {
+            if (blog.getStatus() != null) {
+                // Only set the status if it is provided and different from the current status
                 b.setStatus(blog.getStatus());
             }
+            blogService.save(b);
         }
 
-        blogService.save(blog);
+
     }
 
     public Blog findBlogByID(Long blogID) {

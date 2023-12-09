@@ -27,8 +27,8 @@
           <!--  <td th:text="${vacancy.requirements}"></td>-->
             <td th:text="${vacancy.location}"></td>
             <td th:text="${vacancy.industry}"></td>
-            <td th:text="${vacancy.publish_date}"></td>
-            <td th:text="${vacancy.end_date}"></td>
+            <p th:text="${#dates.format(vacancy.publish_date, 'dd/MM/yyyy')}"></p>
+            <p th:text="${#dates.format(vacancy.end_date, 'dd/MM/yyyy')}"></p>
             <td th:text="${vacancy.status}"></td>
    <!--         <td th:text="*{vacancy.jobType}"></td>
             <td th:text="*{vacancy.empType}"></td>-->

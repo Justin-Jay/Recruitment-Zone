@@ -1,6 +1,7 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ public class Employee {
     private Long employeeID;
     @Column(name = "username", unique = true)
     private String username;
+
     @Column(name = "first_name")
     private String first_name;
     @Column(name = "last_name")
@@ -58,7 +60,21 @@ public class Employee {
         this.contact_number = contact_number;
     }
 
+    public Set<Blog> getBlogs() {
+        return blogs;
+    }
 
+    public void setBlogs(Set<Blog> blogs) {
+        this.blogs = blogs;
+    }
+
+    public Set<Vacancy> getVacancies() {
+        return vacancies;
+    }
+
+    public void setVacancies(Set<Vacancy> vacancies) {
+        this.vacancies = vacancies;
+    }
 
     public Long getEmployeeID() {
         return employeeID;

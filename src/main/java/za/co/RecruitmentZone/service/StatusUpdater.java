@@ -35,7 +35,7 @@ public class StatusUpdater {
         this.eventPublisher = eventPublisher;
     }
 
-     //@Scheduled(fixedRate = 120000) // once every two minutes
+    // @Scheduled(fixedRate = 120000) // once every two minutes
        // once at midnight
    // @Scheduled(fixedRate = 3000)
     // @Scheduled(cron = "0 0 0 * * *")
@@ -48,8 +48,8 @@ public class StatusUpdater {
 
         for (Vacancy vacancy : vacancies) {
             log.info("<-----Found {} Vacancies---->", vacancies.size());
-            LocalDate vacancyPublishDate = LocalDate.parse(vacancy.getPublish_date());
-            LocalDate vacancyExpirationDate = LocalDate.parse(vacancy.getEnd_date());
+            LocalDate vacancyPublishDate = vacancy.getPublish_date();
+            LocalDate vacancyExpirationDate = vacancy.getEnd_date();
 
 
             if (vacancyPublishDate.isBefore(currentDate) && vacancy.getStatus() != VacancyStatus.EXPIRED) {
@@ -84,7 +84,7 @@ public class StatusUpdater {
         log.info("<-----Vacancy Status Updater----DONE--->");
     }
 
- //   @Scheduled(fixedRate = 120000) // once every two minutes
+  //  @Scheduled(fixedRate = 120000) // once every two minutes
     // once at midnight
     // @Scheduled(fixedRate = 3000)
     // @Scheduled(cron = "0 0 0 * * *")

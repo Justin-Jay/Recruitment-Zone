@@ -16,6 +16,7 @@ import za.co.RecruitmentZone.service.RecruitmentZoneService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @CrossOrigin()
@@ -40,9 +41,14 @@ public class VacancyController {
     @GetMapping("/add-vacancy")
     public String showCreateVacancyForm(Model model) {
         model.addAttribute("vacancy", new Vacancy());
-        List<Client> clients = recruitmentZoneService.getClients();
-        model.addAttribute("clients", clients);
+        //List<Client> clients = recruitmentZoneService.getClients();
+        model.addAttribute("clients", loadClients());
         return "fragments/vacancy/add-vacancy";
+    }
+
+    public List<Client> loadClients(){
+        //List<Client> tempClients = recruitmentZoneService.getClients();
+        return recruitmentZoneService.getClients();
     }
     @PostMapping("/view-vacancy")
     public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
@@ -52,14 +58,26 @@ public class VacancyController {
         model.addAttribute("vacancy", optionalVacancy);
         return "fragments/vacancy/view-vacancy";
     }
+
     @PostMapping("/save-vacancy")
-    public String saveVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, @RequestParam("name")String employeeUserName,BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "fragments/vacancy/add-vacancy";
+    public String saveVacancy(@Valid @ModelAttribute("vacancy") Vacancy vacancy,
+                              @RequestParam("clientID") Long clientID,
+                              @RequestParam("name") String employeeUserName,
+                              BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return "redirect:/add-vacancy";
         }
-        recruitmentZoneService.saveNewVacancy(employeeUserName,vacancy);
+        // Set the selected client ID to the Vacancy object
+        Client client = recruitmentZoneService.findClientByID(clientID);
+        Employee employee = recruitmentZoneService.findEmployeeByUserName("Justin.Maboshego@kiunga.co.za");
+        vacancy.setEmployee(employee);
+        vacancy.setClient(client);
+
+        log.info("clientID {}", clientID);
+        recruitmentZoneService.saveNewVacancy(employeeUserName, vacancy);
         return "redirect:/vacancy-administration";
     }
+
     @PostMapping("/update-vacancy")
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);
@@ -85,6 +103,7 @@ public class VacancyController {
         model.addAttribute("candidateNotes", candidateNotes);
         return "fragments/vacancy/candidate-notes-fragment";
     }
+
     @PostMapping("/view-vacancy-submission")
     public String viewVacancySubmissions(@RequestParam("vacancyID") Long vacancyID, Model model) {
         Vacancy vacancy = recruitmentZoneService.findVacancyById(vacancyID);

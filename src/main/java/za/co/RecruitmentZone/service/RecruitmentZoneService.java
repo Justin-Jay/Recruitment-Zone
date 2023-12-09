@@ -10,6 +10,7 @@ import za.co.RecruitmentZone.entity.domain.*;
 import za.co.RecruitmentZone.events.publisher.Applications.ApplicationsEventPublisher;
 import za.co.RecruitmentZone.service.domainServices.*;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -27,8 +28,6 @@ public class RecruitmentZoneService {
     private final ApplicationsEventPublisher applicationsEventPublisher;
     private final StorageService storageService;
     private final ClientService clientService;
-
-
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, BlogService blogService, CandidateService candidateService,
                                   EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService) {
@@ -55,6 +54,13 @@ public class RecruitmentZoneService {
 
     // EMPLOYEE
 
+    public Employee findEmployeeByUserName(String name){
+        Optional<Employee> oe = employeeService.findEmployeeByUserName(name);
+        if (oe.isPresent()){
+            return oe.get();
+        }
+      return null;
+    }
 
 
     /* public void updateExistingEmployee(Long employeeID, EmployeeDTO employeeDTO) {
@@ -65,8 +71,8 @@ public class RecruitmentZoneService {
     public void saveNewVacancy(String employeeUserName, Vacancy vacancy) {
         // create vacancy
         vacancy.setStatus(VacancyStatus.PENDING);
-        Optional<Employee> op = employeeService.findEmployeeByUserName(employeeUserName);
-        op.ifPresent(vacancy::setEmployee);
+    /*    Optional<Employee> op = employeeService.findEmployeeByUserName(employeeUserName);
+        op.ifPresent(vacancy::setEmployee);*/
         vacancyService.save(vacancy);
     }
 

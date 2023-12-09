@@ -1,13 +1,16 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import za.co.RecruitmentZone.entity.Enums.EmpType;
 import za.co.RecruitmentZone.entity.Enums.Industry;
 import za.co.RecruitmentZone.entity.Enums.JobType;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 
+import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -24,8 +27,9 @@ public class Vacancy {
     private String location;
     @Enumerated(EnumType.STRING)
     private Industry industry;
-    private String publish_date;
-    private String end_date;
+   // @NotNull(message = "is required")
+    private LocalDate publish_date;
+    private LocalDate end_date;
     @Enumerated(EnumType.STRING)
     private VacancyStatus status;
     @Enumerated(EnumType.STRING)
@@ -37,7 +41,7 @@ public class Vacancy {
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    @JoinColumn(name = "clientID")
+    @JoinColumn(name = "clientid")
     private Client client;
 
     @ManyToOne(cascade = {
@@ -50,17 +54,13 @@ public class Vacancy {
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
- /*   @JoinTable(
-            name = "vacancy_application",
-            joinColumns = @JoinColumn(name = "vacancyID"),
-            inverseJoinColumns = @JoinColumn(name = "applicationID")
-    )*/
     private Set<Application> applications;
 
     public Vacancy() {
     }
 
-    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, String publish_date, String end_date, VacancyStatus status, JobType jobType, EmpType empType) {
+
+    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Client client, Employee employee) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
@@ -72,8 +72,25 @@ public class Vacancy {
         this.status = status;
         this.jobType = jobType;
         this.empType = empType;
+        this.client = client;
+        this.employee = employee;
     }
 
+    public LocalDate getPublish_date() {
+        return publish_date;
+    }
+
+    public void setPublish_date(LocalDate publish_date) {
+        this.publish_date = publish_date;
+    }
+
+    public LocalDate getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(LocalDate end_date) {
+        this.end_date = end_date;
+    }
 
     public Long getVacancyID() {
         return vacancyID;
@@ -131,21 +148,6 @@ public class Vacancy {
         this.industry = industry;
     }
 
-    public String getPublish_date() {
-        return publish_date;
-    }
-
-    public void setPublish_date(String publish_date) {
-        this.publish_date = publish_date;
-    }
-
-    public String getEnd_date() {
-        return end_date;
-    }
-
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
-    }
 
     public VacancyStatus getStatus() {
         return status;

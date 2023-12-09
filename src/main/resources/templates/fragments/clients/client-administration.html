@@ -26,12 +26,15 @@
 
         <div class="container-fluid">
             <div class="container-fluid">
-
                 <div class="float-end">
                     <a class="btn btn-primary btn-sm mb-3" th:href="@{/add-client}">Add Client</a>
                 </div>
             </div>
             <div class="align-content-center">
+
+              <!--  <div class="container-fluid" th:if="${success}">
+                    <p th:text="${success}"></p>
+                </div>-->
                 <div id="employee-admin-table" th:replace="fragments/clients/client">Client Administration</div>
             </div>
 

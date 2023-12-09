@@ -1,6 +1,7 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import za.co.RecruitmentZone.entity.Enums.BlogStatus;
 
 @Entity
@@ -10,8 +11,11 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="blogID")
     private Long blogID;
+
     private String blog_title;
+
     private String blog_description;
+
     @Enumerated(EnumType.STRING)
     private BlogStatus status;
     private String body;
@@ -33,6 +37,9 @@ public class Blog {
         this.body = body;
         this.publish_date=publish_date;
         this.end_date=end_date;
+    }
+
+    public Blog(BlogDTO blogDTO) {
     }
 
     public String getPublish_date() {

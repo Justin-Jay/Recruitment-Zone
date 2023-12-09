@@ -1,6 +1,7 @@
 package za.co.RecruitmentZone.entity.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import za.co.RecruitmentZone.entity.Enums.VacancyStatus;
 
 @Entity
@@ -11,13 +12,14 @@ public class ContactPerson {
     private Long contactPersonID;
     private String first_name;
     private String last_name;
+    @Email(message = "Email should be valid")
     private String email_address;
     private String land_line;
     private String cell_phone;
     @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
     })
-    @JoinColumn(name = "clientID")
+    @JoinColumn(name = "clientid")
     private Client client;
 
     public ContactPerson() {

@@ -27,6 +27,7 @@ public class CandidateNote implements Note  {
     public CandidateNote() {
     }
 
+
     public CandidateNote(Candidate candidate, String comment) {
         this.candidate = candidate;
         this.comment = comment;
