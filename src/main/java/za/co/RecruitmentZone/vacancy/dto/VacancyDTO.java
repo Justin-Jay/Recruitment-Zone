@@ -43,13 +43,13 @@ public class VacancyDTO {
     private JobType jobType;
     @Enumerated(EnumType.STRING)
     private EmpType empType;
-    private Long clientid;
+    private Long clientID;
     private Long employeeID;
 
     public VacancyDTO() {
     }
 
-    public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, String category, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientid, Long employeeID) {
+    public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, String category, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
@@ -62,7 +62,7 @@ public class VacancyDTO {
         this.status = status;
         this.jobType = jobType;
         this.empType = empType;
-        this.clientid = clientid;
+        this.clientID = clientID;
         this.employeeID = employeeID;
     }
 
@@ -162,12 +162,12 @@ public class VacancyDTO {
         this.empType = empType;
     }
 
-    public Long getClientid() {
-        return clientid;
+    public Long getClientID() {
+        return clientID;
     }
 
-    public void setClientid(Long clientid) {
-        this.clientid = clientid;
+    public void setClientID(Long clientID) {
+        this.clientID = clientID;
     }
 
     public Long getEmployeeID() {

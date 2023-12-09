@@ -26,19 +26,28 @@
         <form action="#" th:action="@{/save-vacancy}" th:object="${vacancy}" method="POST">
             <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
             <label for="clientID">Select Client
-
-                <select id="clientID" name="clientID">
-                    <option th:each="client : ${clients}" th:value="${vacancy.clientid}"
-                            th:text="${client.name}"></option>
+                <select name="clientID">
+                    <option th:each="client : ${clients}" th:text="${client.name}" th:value="${client.clientID}" th:selected="${client.clientID == vacancy.clientID}"></option>
                 </select>
+                <input type="hidden" id="clientID" name="clientID" th:value="${vacancy.clientID}"/>
             </label>
+
             <br>  <br>
+
             <label for="employeeID">Select Employee
+                <select name="employeeID">
+                    <option th:each="employee : ${employees}" th:text="${employee.username}" th:value="${employee.employeeID}" th:selected="${employee.employeeID == employee.employeeID}"></option>
+                </select>
+                <input type="hidden" id="employeeID" name="employeeID" th:value="${vacancy.employeeID}"/>
+            </label>
+
+
+       <!--     <label for="employeeID">Select Employee
                 <select id="employeeID" name="employeeID">
                     <option th:each="employee : ${employees}" th:value="${vacancy.employeeID}"
                             th:text="${employee.username}"></option>
                 </select>
-            </label>
+            </label>-->
             <br>  <br>
             <label for="job_title">
                 Job Title:

@@ -118,11 +118,11 @@ public class RecruitmentZoneService {
         }
 
 
-        //Client client = clientService.findClientByID(vacancy.getClientid());
-        //newVacancy.setClient(client);
+        Client client = clientService.findClientByID(vacancy.getClientID());
+        newVacancy.setClient(client);
 
-       // Optional<Employee> op = employeeService.findEmployeeByID(vacancy.getEmployeeID());
-        //op.ifPresent(newVacancy::setEmployee);
+       Optional<Employee> op = employeeService.findEmployeeByID(vacancy.getEmployeeID());
+        op.ifPresent(newVacancy::setEmployee);
 
         vacancyService.save(newVacancy);
     }
