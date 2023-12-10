@@ -30,7 +30,7 @@
 
         <label for="industry" >Select Industry:
             <select id="industry" th:field="*{industry}">
-                <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.Industry).values()}"
+                <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.Industry).values()}"
                         th:value="${type}" th:text="${type}"></option>
             </select>
         </label>

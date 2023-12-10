@@ -12,7 +12,7 @@ public class ContactPerson {
     private Long contactPersonID;
     private String first_name;
     private String last_name;
-    @Email(message = "Email should be valid")
+
     private String email_address;
     private String land_line;
     private String cell_phone;

@@ -1,21 +1,29 @@
 package za.co.RecruitmentZone.service;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.application.service.ApplicationService;
 import za.co.RecruitmentZone.blog.service.BlogService;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
+import za.co.RecruitmentZone.candidate.entity.CandidateNote;
 import za.co.RecruitmentZone.candidate.service.CandidateService;
+import za.co.RecruitmentZone.client.dto.ClientDTO;
+import za.co.RecruitmentZone.client.dto.ContactPersonDTO;
 import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.client.service.ClientService;
+import za.co.RecruitmentZone.document.entity.Document;
 import za.co.RecruitmentZone.employee.entity.Employee;
 import za.co.RecruitmentZone.employee.service.EmployeeService;
 import za.co.RecruitmentZone.storage.StorageService;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
+import za.co.RecruitmentZone.util.Enums.EducationLevel;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 import za.co.RecruitmentZone.application.Events.ApplicationsEventPublisher;
 import za.co.RecruitmentZone.vacancy.dto.VacancyDTO;
@@ -26,6 +34,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static za.co.RecruitmentZone.util.Enums.VacancyStatus.*;
 
@@ -60,7 +69,7 @@ public class RecruitmentZoneService {
         return candidateService.getCandidates();
     }
 
-    public Candidate getCandidateById(Long id) {
+    public Candidate findCandidateByID(Long id) {
         return candidateService.getcandidateByID(id);
     }
 
@@ -131,7 +140,7 @@ public class RecruitmentZoneService {
         return vacancyService.getAllVacancies();
     }
 
-    public void saveVacancy(Vacancy vacancy) {
+    public void saveVacancy(VacancyDTO vacancy) {
         // Retrieve the existing Vacancy from the database
         Vacancy existingVacancy = vacancyService.findById(vacancy.getVacancyID());
 
@@ -152,6 +161,13 @@ public class RecruitmentZoneService {
             if(existingVacancy.getRequirements() !=null && !existingVacancy.getRequirements()
                     .equals(vacancy.getRequirements())){
                 existingVacancy.setRequirements(vacancy.getRequirements());
+            }
+            if(existingVacancy.getCategory() !=null &&!existingVacancy.getCategory().equals(vacancy.getCategory())){
+                existingVacancy.setCategory(vacancy.getCategory());
+            }
+            else if (existingVacancy.getCategory() == null)
+            {
+                existingVacancy.setCategory(vacancy.getCategory());
             }
             if(existingVacancy.getLocation() !=null && !existingVacancy.getLocation().equals(vacancy.getLocation())){
                 existingVacancy.setLocation(vacancy.getLocation());
@@ -183,7 +199,6 @@ public class RecruitmentZoneService {
             // You might want to throw an exception, log a message, or handle it based on your requirements
         }
     }
-
 
     public List<Vacancy> getActiveVacancies() {
         return vacancyService.getActiveVacancies(VacancyStatus.ACTIVE);
@@ -222,9 +237,24 @@ public class RecruitmentZoneService {
 
     // APPLICATIONS
 
-    public Long createCandidateApplication(Long vacancyID, Candidate candidate) {
+    public Long createCandidateApplication(NewApplicationDTO newApplicationDTO, String fileLocation) {
+        Candidate candidate = new Candidate();
+        candidate.setFirst_name(newApplicationDTO.getFirst_name());
+        candidate.setLast_name(newApplicationDTO.getLast_name());
+        candidate.setId_number(newApplicationDTO.getId_number());
+        candidate.setEmail_address(newApplicationDTO.getEmail_address());
+        candidate.setPhone_number(newApplicationDTO.getPhone_number());
+        candidate.setCurrent_province(newApplicationDTO.getCurrent_province());
+        candidate.setCurrent_role(newApplicationDTO.getCurrent_role());
+        candidate.setCurrent_employer(newApplicationDTO.getCurrent_employer());
+        candidate.setSeniority_level(newApplicationDTO.getSeniority_level());
+        candidate.setEducation_level(newApplicationDTO.getEducation_level());
+        candidate.setRelocation(newApplicationDTO.getRelocation());
+        candidate.setCvFile(newApplicationDTO.getCvFile());
+        candidate.setCvFilePath(fileLocation);
         // create candidate and save
         candidate = candidateService.save(candidate);
+
         // create application  and link candidate
 
 
@@ -232,12 +262,13 @@ public class RecruitmentZoneService {
         LocalDate date = LocalDate.now();
         application.setDate_received(date.toString());
         application.setSubmission_date(date.toString());
-        application.setCandidate(candidate);
         application.setStatus(ApplicationStatus.PENDING);
 
         // link application with vacancy
-        application.setVacancy(vacancyService.findById(vacancyID));
+        application.setVacancy(vacancyService.findById(newApplicationDTO.getVacancyID()));
 
+        // link candidate with application
+        candidate.AddApplication(application);
         applicationService.save(application);
 
         return candidate.getCandidateID();
@@ -247,14 +278,12 @@ public class RecruitmentZoneService {
         return applicationService.findApplications();
     }
 
-    public Application getApplicationByID(Long applicationID) {
+    public Application findApplicationByID(Long applicationID) {
         Optional<Application> optionalApplication = applicationService.findApplicationByID(applicationID);
         return optionalApplication.orElse(null);
 
 
     }
-
-
 
 
 
@@ -281,14 +310,14 @@ public class RecruitmentZoneService {
         return storageService.testMethod();
     }
 
-    public boolean publishFileUploadedEvent(MultipartFile file, Long candidateID, Long vacancyID) {
-        return applicationsEventPublisher.publishFileUploadEvent(file, candidateID, vacancyID);
+    public boolean publishFileUploadedEvent(Long candidateID, NewApplicationDTO newApplicationDTO) {
+        return applicationsEventPublisher.publishFileUploadEvent(candidateID,newApplicationDTO);
     }
 
     // CLIENTS
 
-    public void saveNewClient(Client client, ContactPerson contactPerson) {
-        clientService.saveClient(client,contactPerson);
+    public void saveNewClient(ClientDTO clientDTO) {
+        clientService.saveClient(clientDTO);
     }
 
     public List<Client> getClients() {
@@ -303,8 +332,8 @@ public class RecruitmentZoneService {
         return clientService.findContactsByClientID(clientID);
     }
 
-    public void addContactToClient(Long clientID, ContactPerson contactPerson) {
-        clientService.addContactToClient(clientID,contactPerson);
+    public void addContactToClient(ContactPersonDTO contactPersonDTO) {
+        clientService.addContactToClient(contactPersonDTO);
     }
     public void saveUpdatedClient(Long clientID,Client updatedClient){
         Client oc = clientService.findClientByID(clientID);

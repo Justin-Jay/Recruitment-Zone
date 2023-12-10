@@ -18,91 +18,97 @@
     <div class="container-fluid">
         <div th:insert="fragments/layout/header">Header</div>
     </div>
-        <form action="#" th:action="@{/save-application}" th:object="${candidate}"
-              th:method="POST" enctype="multipart/form-data">
+    <p th:if="${message}" th:text="${message}"></p>
+    <form action="#" th:action="@{/save-application}" th:object="${newApplicationDTO}"
+          th:method="POST" enctype="multipart/form-data">
+        <!-- Debug statement in Thymeleaf template -->
+        <h2>Application:</h2>
+        <p th:text="${vacancyName} ? ${vacancyName} : ''"></p>
 
-            <input type="hidden" name="vacancyID" th:value="${vacancyID}" />
-            <!-- Debug statement in Thymeleaf template -->
-            <h2>Application:</h2>
-            <p th:text="${vacancyName} ? ${vacancyName} : ''"></p>
-            <label for="FirstName">
-                First Name:
-            </label>
-            <input type="text" th:field="*{first_name}" id="FirstName" placeholder="Enter First Name"
-                   class="form-control mb-4 w-25"/>
+   <!--     <input type="hidden" id="clientID" name="clientID" th:field="*{vacancyID}" th:value="${newApplicationDTO.vacancyID == vacancyID}"/>-->
+        <input type="hidden" name="vacancyID" th:value="${vacancyID}" />
+        <input type="hidden" name="vacancyName" th:value="${vacancyName}" />
 
-            <label for="LastName">
-                Last Name:
-            </label>
-            <input type="text" th:field="*{last_name}" id="LastName" placeholder="Enter Last Name"
-                   class="form-control mb-4 w-25"/>
-            <label for="idNumber">
-                ID Number:
-            </label>
-            <input type="text" th:field="*{id_number}" id="idNumber" placeholder="ID Number"
-                   class="form-control mb-4 w-25"/>
-            <label for="email">
-                Email Address:
-            </label>
-            <input type="email" th:field="*{email_address}" id="email" placeholder="Enter Email Address"
-                   class="form-control mb-4 w-25"/>
+        <p th:text="${vacancyID} ? ${vacancyID} : ''"></p>
 
-            <label for="phoneNumber">
-                Phone Number:
-            </label>
-            <input type="text" th:field="*{phone_number}" id="phoneNumber" placeholder="Enter Phone Number"
-                   class="form-control mb-4 w-25"/>
+        <label for="FirstName">
+            First Name:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.first_name}" id="FirstName" placeholder="Enter First Name"
+               class="form-control mb-4 w-25"/>
 
-            <label for="currentProvince">
-                Current Province:
-            </label>
-            <input type="text" th:field="*{current_province}" id="currentProvince" placeholder="Enter Current Province"
-                   class="form-control mb-4 w-25"/>
-            <label for="CurrentRole">
-                Current Role:
-            </label>
-            <input type="text" th:field="*{current_role}" id="CurrentRole" placeholder="Enter Current Role"
-                   class="form-control mb-4 w-25"/>
-            <label for="employer">
-                Current Employer:
-            </label>
-            <input type="text" th:field="*{current_employer}" id="employer" placeholder="Enter Current Employer"
-                   class="form-control mb-4 w-25"/>
-            <label for="seniorityLevel">
-                Seniority Level:
-            </label>
-            <input type="text" th:field="*{seniority_level}" id="seniorityLevel" placeholder="Enter Seniority Level"
-                   class="form-control mb-4 w-25">
+        <label for="LastName">
+            Last Name:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.last_name}" id="LastName" placeholder="Enter Last Name"
+               class="form-control mb-4 w-25"/>
+        <label for="idNumber">
+            ID Number:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.id_number}" id="idNumber" placeholder="ID Number"
+               class="form-control mb-4 w-25"/>
+        <label for="email">
+            Email Address:
+        </label>
+        <input type="email" th:field="${newApplicationDTO.email_address}" id="email" placeholder="Enter Email Address"
+               class="form-control mb-4 w-25"/>
 
-            <label for="EduLevel">Select Education Level:
-                <select id="EduLevel" th:field="*{education_level}">
-                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.EducationLevel).values()}"
-                            th:value="${statusVal}" th:text="${statusVal}"></option>
-                </select>
-            </label>
+        <label for="phoneNumber">
+            Phone Number:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.phone_number}" id="phoneNumber" placeholder="Enter Phone Number"
+               class="form-control mb-4 w-25"/>
 
+        <label for="currentProvince">
+            Current Province:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.current_province}" id="currentProvince" placeholder="Enter Current Province"
+               class="form-control mb-4 w-25"/>
+        <label for="CurrentRole">
+            Current Role:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.current_role}" id="CurrentRole" placeholder="Enter Current Role"
+               class="form-control mb-4 w-25"/>
+        <label for="employer">
+            Current Employer:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.current_employer}" id="employer" placeholder="Enter Current Employer"
+               class="form-control mb-4 w-25"/>
+        <label for="seniorityLevel">
+            Seniority Level:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.seniority_level}" id="seniorityLevel" placeholder="Enter Seniority Level"
+               class="form-control mb-4 w-25">
 
-            <label for="relocation">
-                Relocation:
-            </label>
-            <input type="text" th:field="*{relocation}" id="relocation" placeholder="Willing to relocate?"
-                   class="form-control mb-4 w-25">
-            <label for="cvAttachment">
-                Attach CV:
-            </label>
-            <input th:type="file" name="cvFile" th:field="*{cvFile}" id="cvAttachment"
-                   class="form-control mb-4 w-25"/>
-
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>
-        </form>
-    </div>
+        <label for="EduLevel">Select Education Level:
+            <select id="EduLevel" th:field="${newApplicationDTO.education_level}">
+                <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.EducationLevel).values()}"
+                        th:value="${statusVal}" th:text="${statusVal}"></option>
+            </select>
+        </label>
 
 
-    <div class="container-fluid">
-        <!--BOTTOM Navbar-->
-        <div th:insert="fragments/layout/footer">Footer</div>
+        <label for="relocation">
+            Relocation:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.relocation}" id="relocation" placeholder="Willing to relocate?"
+               class="form-control mb-4 w-25">
+        <label for="cvAttachment">
+            Attach CV:
+        </label>
+        <input th:type="file" name="cvFile" th:value="${newApplicationDTO.cvFile}" id="cvAttachment"
+               class="form-control mb-4 w-25"/>
 
-    </div>
+        <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>
+    </form>
+</div>
+
+
+<div class="container-fluid">
+    <!--BOTTOM Navbar-->
+    <div th:insert="fragments/layout/footer">Footer</div>
+
+</div>
 
 </div>
 <script type="text/javascript"

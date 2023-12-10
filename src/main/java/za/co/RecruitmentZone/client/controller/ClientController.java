@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.RecruitmentZone.client.dto.ClientDTO;
+import za.co.RecruitmentZone.client.dto.ContactPersonDTO;
 import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
@@ -23,23 +25,12 @@ public class ClientController {
     public ClientController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
     }
-
-    @GetMapping("/client-admin")
-    public String clients(Model model) {
-        List<Client> allClients = new ArrayList<>();
-        try {
-            allClients = recruitmentZoneService.getClients();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve employees, retrieving all employees ");
-        }
-        model.addAttribute("clients", allClients);
-        return "fragments/clients/client-admin";
-    }
-
+    
     @GetMapping("/add-client")
     public String showCreateClientForm(Model model) {
-        model.addAttribute("client", new Client());
-        model.addAttribute("contactPerson", new ContactPerson());
+        //model.addAttribute("clients", new Client());
+        //model.addAttribute("contactPerson", new ContactPerson());
+        model.addAttribute("ClientDTO",new ClientDTO());
         return "fragments/clients/add-client";
     }
 
@@ -47,18 +38,18 @@ public class ClientController {
     public String showAddContactForm(@RequestParam("clientID") Long clientID,
                                     Model model) {
         model.addAttribute("clientID", clientID);
-        model.addAttribute("contactPerson", new ContactPerson());
+       // model.addAttribute("contactPerson", new ContactPerson());
+        model.addAttribute("contactPersonDTO", new ContactPersonDTO());
         return "fragments/clients/add-contact";
     }
 
     @PostMapping("/save-client")
-    public String saveClient(@Valid @ModelAttribute("client") Client client,
-                             @Valid @ModelAttribute("contactPerson") ContactPerson contactPerson,
+    public String saveClient(@Valid @ModelAttribute("ClientDTO") ClientDTO clientDTO,
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/add-client";
         }
-        recruitmentZoneService.saveNewClient(client, contactPerson);
+        recruitmentZoneService.saveNewClient(clientDTO);
         return "redirect:/client-administration";
     }
 
@@ -89,7 +80,7 @@ public class ClientController {
     public String showClientContacts(@RequestParam("clientID") Long clientID, Model model) {
         List<ContactPerson> contacts = recruitmentZoneService.findContactsByClientID(clientID);
         log.info("Looking for {}", clientID);
-        log.info("Found {} number of contacts, {}", contacts.size());
+        log.info("Found {} number of contacts", contacts.size());
         model.addAttribute("clientID", clientID);
         model.addAttribute("contacts", contacts);
         return "fragments/clients/view-client-contacts";
@@ -103,11 +94,11 @@ public class ClientController {
     }
 
     @PostMapping("/save-new-contact")
-    public String addContactToClient(@Valid @ModelAttribute("contactPerson") ContactPerson contactPerson, @RequestParam("clientID") Long clientID, BindingResult bindingResult) {
+    public String addContactToClient(@Valid @ModelAttribute("ContactPersonDTO") ContactPersonDTO contactPersonDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/update-client";
         }
-        recruitmentZoneService.addContactToClient(clientID, contactPerson);
+        recruitmentZoneService.addContactToClient(contactPersonDTO);
         return "redirect:/client-administration";
     }
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
 @Service
 public class StorageService {
 
@@ -28,14 +29,10 @@ public class StorageService {
                 return "File size exceeds the limit (25MB)";
             }
 
-
-            Tika tika = new Tika();
-            String contentType = tika.detect(multi.getInputStream());
-
-
-            if (!isValidContentType(contentType)) {
+            if (!isValidContentType(multi)) {
                 return "Invalid file format. Only PDF and Word documents are allowed.";
             }
+
 
             // Perform the actual file upload to storage
             String destinationFileName = "CurriculumVitae" + "/" +"Submissions"+vacancyID+"/"+ multi.getName();
@@ -51,10 +48,15 @@ public class StorageService {
     }
 
 
-    private boolean isValidContentType(String contentType) {
-        return "application/pdf".equals(contentType) || "application/msword".equals(contentType);
+    private boolean isValidContentType(MultipartFile file) {
+        try {
+            String detectedContentType = new Tika().detect(file.getInputStream());
+            return detectedContentType.equals("application/pdf") || detectedContentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        } catch (IOException e) {
+            //log.info(e.getMessage());
+            return false;
+        }
     }
-
     public String testMethod() throws IOException {
 
         System.out.println("Test method");
@@ -69,4 +71,12 @@ public class StorageService {
         System.out.println("saved result "+saved.getName());
         return "File Uploaded Successfully"+saved.getName();
     }
+
+
+
+
+
+
+
+
 }

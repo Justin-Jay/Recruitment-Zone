@@ -41,7 +41,7 @@ public class CommunicationController {
         }
         log.info("Website message received");
         websiteQueryReceived(message);
-        model.addAttribute("messageSent",Boolean.TRUE);
+        model.addAttribute("success",Boolean.TRUE);
         return "redirect:/contact-us";
     }
 
