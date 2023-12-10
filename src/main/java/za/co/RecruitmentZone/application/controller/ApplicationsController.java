@@ -17,11 +17,13 @@ import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
+import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -147,6 +149,21 @@ public class ApplicationsController {
         return "fragments/applications/application-administration";
     }
 
+
+    /*
+      @GetMapping("/vacancy-administration")
+    public String vacancies(Model model) {
+        List<Vacancy> allVacancies = new ArrayList<>();
+        try {
+            allVacancies = recruitmentZoneService.getAllVacancies();
+        } catch (Exception e) {
+            log.info("Exception trying to retrieve vacancies, retrieving all vacancies ");
+        }
+        model.addAttribute("vacancies", allVacancies);
+        return "fragments/vacancy/vacancy-administration";
+    }
+
+    */
     @PostMapping("/view-application")
     public String viewApplication(Model model, @RequestParam("applicationID") Long applicationID) {
         Application application = recruitmentZoneService.findApplicationByID(applicationID);

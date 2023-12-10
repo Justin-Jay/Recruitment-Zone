@@ -7,7 +7,8 @@
         <th>Status</th>
         <th>CandidateID</th>
         <th>VacancyID</th>
-        <th>View Application</th>
+        <th>Update Application</th>
+        <th>View Candidate</th>
     </tr>
     </thead>
     <tbody>
@@ -16,14 +17,22 @@
         <td th:text="${vapp.date_received}"></td>
         <td th:text="${vapp.submission_date}"></td>
         <td th:text="${vapp.status}"></td>
-        <td th:text="${vapp.candidateID}"></td>
-        <td th:text="${vapp.vacancyID}"></td>
+        <td th:text="${vapp.candidate.candidateID}"></td>
+        <td th:text="${vapp.vacancy.vacancyID}"></td>
         <td>
-            <form th:action="@{/view-application}" th:method="post">
+            <form th:action="@{/update-application}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
                 <input type="hidden" name="applicationID" th:value="*{vapp.applicationID}"/>
                 <!-- Submit button to trigger the form submission -->
-                <button type="submit" class="btn btn-primary">View Application</button>
+                <button type="submit" class="btn btn-primary">Update Application</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/view-candidate}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="candidateID" th:value="*{vapp.candidate.candidateID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">View Candidate</button>
             </form>
         </td>
     </tr>
