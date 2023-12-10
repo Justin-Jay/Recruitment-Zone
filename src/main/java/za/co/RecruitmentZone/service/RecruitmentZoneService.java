@@ -65,6 +65,10 @@ public class RecruitmentZoneService {
 
 
 
+    public boolean saveCandidate(Candidate candidate){
+        candidateService.save(candidate);
+        return true;
+    }
     public List<Candidate> getCandidates() {
         return candidateService.getCandidates();
     }
@@ -347,6 +351,9 @@ public class RecruitmentZoneService {
         clientService.saveUpdatedClient(oc);
     }
 
-
+    public boolean saveClient(Client client){
+        clientService.saveUpdatedClient(client);
+        return true;
+    }
 
 }

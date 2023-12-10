@@ -7,14 +7,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
+import za.co.RecruitmentZone.candidate.entity.Candidate;
+import za.co.RecruitmentZone.candidate.entity.CandidateNote;
 import za.co.RecruitmentZone.client.dto.ClientDTO;
+import za.co.RecruitmentZone.client.dto.ClientNoteDTO;
 import za.co.RecruitmentZone.client.dto.ContactPersonDTO;
 import za.co.RecruitmentZone.client.entity.Client;
+import za.co.RecruitmentZone.client.entity.ClientNote;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @CrossOrigin("*")
@@ -111,6 +117,45 @@ public class ClientController {
         }
         recruitmentZoneService.saveUpdatedClient(clientID, client);
         return "redirect:/client-administration";
+    }
+    @PostMapping("/view-client-notes")
+    public String showClientNotes(@RequestParam("clientID") Long clientID, Model model) {
+        Client client = recruitmentZoneService.findClientByID(clientID);
+        Set<ClientNote> notes = client.getNotes();
+        model.addAttribute("existingNotes", notes);
+
+        ClientNoteDTO dto = new ClientNoteDTO();
+        dto.setClientID(clientID);
+        log.info("clientID: {}",clientID);
+        model.addAttribute("clientNote",dto);
+        return "fragments/clients/view-client-notes";
+    }
+
+    @PostMapping("/save-client-note")
+    public String saveNote(@Valid @ModelAttribute("clientNote")ClientNoteDTO clientNote,
+                           BindingResult bindingResult, Model model) {
+        if (bindingResult.hasFieldErrors()) {
+            log.info("HAS ERRORS");
+            model.addAttribute("noteSaved", Boolean.FALSE);
+            return "fragments/clients/view-client-notes";
+        }
+
+
+        Long clientID = clientNote.getClientID();
+        Client client = recruitmentZoneService.findClientByID(clientID);
+        client.addNote(clientNote);
+
+        boolean noteSaved = recruitmentZoneService.saveClient(client);
+        model.addAttribute("noteSaved", noteSaved);
+
+        Set<ClientNote> notes = client.getNotes();
+        // sort the set according to date
+        model.addAttribute("existingNotes",notes );
+        ClientNoteDTO dto = new ClientNoteDTO();
+        dto.setClientID(clientID);
+        log.info("clientID: {}",clientID);
+        model.addAttribute("clientNote",dto);
+        return "fragments/clients/view-client-notes";
     }
 
 }

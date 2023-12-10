@@ -27,13 +27,16 @@ public class CandidateNote implements Note {
     public CandidateNote() {
     }
 
-
-    public CandidateNote(Candidate candidate, String comment) {
-        this.candidate = candidate;
+    public CandidateNote(String comment) {
         this.comment = comment;
     }
 
-
+    public CandidateNote(Long noteID, Candidate candidate, LocalDateTime dateCaptured, String comment) {
+        this.noteID = noteID;
+        this.candidate = candidate;
+        this.dateCaptured = dateCaptured;
+        this.comment = comment;
+    }
 
     @Override
     public LocalDateTime getDateCaptured() {

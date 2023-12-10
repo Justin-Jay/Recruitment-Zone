@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.application.entity.Application;
+import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
 import za.co.RecruitmentZone.document.entity.Document;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -243,5 +246,18 @@ public class Candidate {
         }
         notes.add(note);
         note.setCandidate(this);
+    }
+
+    public void addNote(CandidateNoteDTO noteDTO){
+        if (notes ==null){
+            notes = new HashSet<>();
+        }
+        CandidateNote newNote = new CandidateNote(noteDTO.getComment());
+        newNote.setCandidate(this);
+        LocalDateTime dt = LocalDateTime.now();
+        newNote.setDateCaptured(dt);
+        newNote.setCandidate(this);
+        notes.add(newNote);
+
     }
 }

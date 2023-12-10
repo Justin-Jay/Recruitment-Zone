@@ -1,8 +1,12 @@
 package za.co.RecruitmentZone.client.entity;
 
 import jakarta.persistence.*;
+import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
+import za.co.RecruitmentZone.candidate.entity.CandidateNote;
+import za.co.RecruitmentZone.client.dto.ClientNoteDTO;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -127,5 +131,18 @@ public class Client {
         }
         notes.add(note);
         note.setClient(this);
+    }
+
+    public void addNote(ClientNoteDTO noteDTO){
+        if (notes ==null){
+            notes = new HashSet<>();
+        }
+        ClientNote newNote = new ClientNote(noteDTO.getComment());
+        newNote.setClient(this);
+        LocalDateTime dt = LocalDateTime.now();
+        newNote.setDateCaptured(dt);
+        newNote.setClient(this);
+        notes.add(newNote);
+
     }
 }
