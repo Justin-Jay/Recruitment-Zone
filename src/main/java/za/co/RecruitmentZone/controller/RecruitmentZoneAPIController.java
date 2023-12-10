@@ -32,7 +32,7 @@ public class RecruitmentZoneAPIController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/deleteVacancy/{id}")
+/*    @DeleteMapping("/deleteVacancy/{id}")
     public ResponseEntity<String> deleteVacancy(@PathVariable Long id) {
         boolean vacancyDeleted = vacancyService.deleteVacancy(id);
         if (vacancyDeleted) {
@@ -40,7 +40,7 @@ public class RecruitmentZoneAPIController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
 
 

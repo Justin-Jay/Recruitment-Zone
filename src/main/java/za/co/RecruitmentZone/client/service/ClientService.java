@@ -3,6 +3,8 @@ package za.co.RecruitmentZone.client.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import za.co.RecruitmentZone.client.dto.ClientDTO;
+import za.co.RecruitmentZone.client.dto.ContactPersonDTO;
 import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.client.repository.ClientRepository;
@@ -26,8 +28,11 @@ public class ClientService {
         this.contactPersonRepository = contactPersonRepository;
     }
 
-    public void saveClient(Client client, ContactPerson contactPerson){
+    public void saveClient(ClientDTO clientDTO){
+        Client client = new Client(clientDTO.getName(),clientDTO.getIndustry());
         clientRepository.save(client);
+        ContactPerson contactPerson = new ContactPerson(clientDTO.getContactPerson_FirstName(),
+                clientDTO.getContactPerson_last_name(),clientDTO.getContactPerson_email_address(),clientDTO.getContactPerson_land_line(),clientDTO.getContactPerson_cell_phone());
         contactPerson.setClient(client);
         contactPersonRepository.save(contactPerson);
     }
@@ -53,8 +58,11 @@ public class ClientService {
         return contactPersonRepository.findContactPersonByClient_ClientID(clientID);
     }
 
-    public void addContactToClient(Long clientID,ContactPerson contactPerson){
-        Optional<Client> oc = clientRepository.findById(clientID);
+    public void addContactToClient(ContactPersonDTO contactPersonDTO){
+        Optional<Client> oc = clientRepository.findById(contactPersonDTO.getClientID());
+        ContactPerson contactPerson = new ContactPerson(contactPersonDTO.getFirst_name(),
+                contactPersonDTO.getLast_name(),contactPersonDTO.getEmail_address(),
+                contactPersonDTO.getLand_line(),contactPersonDTO.getCell_phone());
        if(oc.isPresent()){
            contactPerson.setClient(oc.get());
        }

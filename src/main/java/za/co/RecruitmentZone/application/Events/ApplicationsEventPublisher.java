@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.candidate.Events.FileUploadEvent;
 import za.co.RecruitmentZone.candidate.Events.SaveSubmissionEvent;
@@ -32,8 +33,8 @@ public class ApplicationsEventPublisher {
 
     }
 
-    public boolean publishFileUploadEvent(MultipartFile file,Long candidateID,Long vacancyID) {
-        FileUploadEvent fileUploadEvent = new FileUploadEvent(file,candidateID,vacancyID);
+    public boolean publishFileUploadEvent(Long candidateID, NewApplicationDTO newApplicationDTO) {
+        FileUploadEvent fileUploadEvent = new FileUploadEvent(newApplicationDTO.getCvFile(),candidateID,newApplicationDTO.getVacancyID());
         log.info("Executing publishFileUploadedEvent");
         try {
             eventPublisher.publishEvent(fileUploadEvent);

@@ -45,11 +45,12 @@ public class VacancyDTO {
     private EmpType empType;
     private Long clientID;
     private Long employeeID;
+    private Long vacancyID;
 
     public VacancyDTO() {
     }
 
-    public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, String category, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID) {
+    public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, String category, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID, Long vacancyID) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
@@ -64,6 +65,7 @@ public class VacancyDTO {
         this.empType = empType;
         this.clientID = clientID;
         this.employeeID = employeeID;
+        this.vacancyID = vacancyID;
     }
 
     public String getJob_title() {
@@ -176,5 +178,13 @@ public class VacancyDTO {
 
     public void setEmployeeID(Long employeeID) {
         this.employeeID = employeeID;
+    }
+
+    public Long getVacancyID() {
+        return vacancyID;
+    }
+
+    public void setVacancyID(Long vacancyID) {
+        this.vacancyID = vacancyID;
     }
 }

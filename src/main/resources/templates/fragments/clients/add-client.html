@@ -21,14 +21,14 @@
     <hr/>
 
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-client}" th:object="${client}" method="POST">
+        <form action="#" th:action="@{/save-client}" th:object="${ClientDTO}" method="POST">
             <label>
                Client Name:<input type="text" th:field="*{name}" placeholder="First Name" class="form-control">
             </label>
 
             <label for="industry" >Select Industry:
                 <select id="industry" th:field="*{industry}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.Industry).values()}"
+                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.Industry).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
@@ -40,25 +40,25 @@
             <h1>Client Contact Person Information</h1>
 
             <label>
-                First Name<input type="text" th:field="${contactPerson.first_name}"
+                First Name<input type="text" th:field="*{contactPerson_FirstName}"
                                                  placeholder="Contact Person First Name" class="form-control">
             </label>
 
             <label>
-                Last Name<input type="text" th:field="${contactPerson.last_name}"
+                Last Name<input type="text" th:field="*{contactPerson_last_name}"
                                                  placeholder="Last Name" class="form-control">
             </label>
             <label>
-                Email Address<input type="text" th:field="${contactPerson.email_address}"
+                Email Address<input type="text" th:field="*{contactPerson_email_address}"
                                 placeholder="Email Address" class="form-control">
             </label>
             <label>
-                Land Line<input type="text" th:field="${contactPerson.land_line}"
+                Land Line<input type="text" th:field="*{contactPerson_land_line}"
                                 placeholder="Land Line" class="form-control">
             </label>
 
             <label>
-                Cell Phone<input type="text" th:field="${contactPerson.cell_phone}"
+                Cell Phone<input type="text" th:field="*{contactPerson_cell_phone}"
                                 placeholder="Cell Phone Number" class="form-control">
             </label>
 

@@ -77,7 +77,6 @@ public class VacancyController {
             model.addAttribute("employees", loadEmployees());
             return "fragments/vacancy/add-vacancy";
         }
-
         recruitmentZoneService.saveNewVacancy(vacancy);
         return "redirect:/vacancy-administration";
     }
@@ -90,7 +89,7 @@ public class VacancyController {
         return "fragments/vacancy/update-vacancy";
     }
     @PostMapping("/save-updated-vacancy")
-    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy")Vacancy vacancy, BindingResult bindingResult) {
+    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy")VacancyDTO vacancy, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "fragments/vacancy/update-vacancy";
         }
@@ -102,7 +101,7 @@ public class VacancyController {
     public String viewCandidateNotes(@RequestParam("candidateID")Long candidateID, Model model) {
         // Logic to fetch candidate notes based on candidateID
         // Add candidateNotes to the model
-        Candidate candidate = recruitmentZoneService.getCandidateById(candidateID);
+        Candidate candidate = recruitmentZoneService.findCandidateByID(candidateID);
         Set<CandidateNote> candidateNotes = candidate.getNotes();
         model.addAttribute("candidateNotes", candidateNotes);
         return "fragments/vacancy/candidate-notes-fragment";

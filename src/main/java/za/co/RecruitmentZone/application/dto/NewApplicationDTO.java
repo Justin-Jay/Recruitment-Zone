@@ -1,73 +1,39 @@
-package za.co.RecruitmentZone.candidate.entity;
+package za.co.RecruitmentZone.application.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.RecruitmentZone.application.entity.Application;
-import za.co.RecruitmentZone.document.entity.Document;
+import za.co.RecruitmentZone.candidate.entity.Candidate;
+import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
+import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
-@Table(name = "candidate")
-public class Candidate {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long candidateID;
+public class NewApplicationDTO {
+    private Long vacancyID;
 
+    private String vacancyName;
     private String first_name;
-
     private String last_name;
-
     private String id_number;
-
-    @Email(message = "Email should be valid")
     private String email_address;
-
-
     private String phone_number;
-
     private String current_province;
-
-
     private String current_role;
-
-
     private String current_employer;
-
-
     private String seniority_level;
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
-
     private Boolean relocation;
-
-    private String cvFilePath;
     @Transient
     private MultipartFile cvFile;
 
-    @OneToMany(mappedBy = "candidate",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private Set<Application> applications;
-    @OneToMany(mappedBy = "candidate",
-            cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-            })
-    private Set<CandidateNote> notes;
-
-    @OneToMany(mappedBy = "candidate",
-            cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-            })
-    private Set<Document> documents;
-
-    public Candidate() {
-        // received
+    public NewApplicationDTO() {
     }
 
-    public Candidate(String first_name, String last_name, String id_number, String email_address, String phone_number, String current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation) {
+    public NewApplicationDTO(Long vacancyID, String vacancyName, String first_name, String last_name, String id_number, String email_address, String phone_number, String current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, MultipartFile cvFile) {
+        this.vacancyID = vacancyID;
+        this.vacancyName = vacancyName;
         this.first_name = first_name;
         this.last_name = last_name;
         this.id_number = id_number;
@@ -79,16 +45,23 @@ public class Candidate {
         this.seniority_level = seniority_level;
         this.education_level = education_level;
         this.relocation = relocation;
+        this.cvFile = cvFile;
     }
 
-
-
-    public Long getCandidateID() {
-        return candidateID;
+    public String getVacancyName() {
+        return vacancyName;
     }
 
-    public void setCandidateID(Long candidateID) {
-        this.candidateID = candidateID;
+    public void setVacancyName(String vacancyName) {
+        this.vacancyName = vacancyName;
+    }
+
+    public Long getVacancyID() {
+        return vacancyID;
+    }
+
+    public void setVacancyID(Long vacancyID) {
+        this.vacancyID = vacancyID;
     }
 
     public String getFirst_name() {
@@ -179,14 +152,6 @@ public class Candidate {
         this.relocation = relocation;
     }
 
-    public String getCvFilePath() {
-        return cvFilePath;
-    }
-
-    public void setCvFilePath(String cvFilePath) {
-        this.cvFilePath = cvFilePath;
-    }
-
     public MultipartFile getCvFile() {
         return cvFile;
     }
@@ -194,54 +159,6 @@ public class Candidate {
     public void setCvFile(MultipartFile cvFile) {
         this.cvFile = cvFile;
     }
-
-    public Set<Application> getApplications() {
-        return applications;
-    }
-
-    public void setApplications(Set<Application> applications) {
-        this.applications = applications;
-    }
-
-    public Set<CandidateNote> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(Set<CandidateNote> notes) {
-        this.notes = notes;
-    }
-
-    @Override
-    public String toString() {
-        return "Candidate{" +
-                "first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                '}';
-    }
-
-    public void AddApplication(Application application){
-        if (applications ==null){
-            applications = new HashSet<>() {
-            };
-        }
-        applications.add(application);
-        application.setCandidate(this);
-    }
-
-    public void AddDocument(Document document){
-        if (documents ==null){
-            documents = new HashSet<>() {
-            };
-        }
-        documents.add(document);
-        document.setCandidate(this);
-    }
-
-    public void addNote(CandidateNote note){
-        if (notes ==null){
-            notes = new HashSet<>();
-        }
-        notes.add(note);
-        note.setCandidate(this);
-    }
 }
+
+

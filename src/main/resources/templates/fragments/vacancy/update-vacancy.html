@@ -34,7 +34,11 @@
 
             <label for="seniority_level"  >Seniority Level: </label>
             <input type="text" th:field="*{seniority_level}" class="form-control mb-4 w-25" id="seniority_level" placeholder="Job Title"/>
-
+            <label for="category">
+                Category:
+            </label>
+            <input type="text" th:field="*{category}" id="category" placeholder="Enter The Category"
+                   class="form-control mb-4 w-25">
             <label for="requirements"  >Requirements: </label>
             <input type="text" th:field="*{requirements}" class="form-control mb-4 w-25" id="requirements" placeholder="Job Title"/>
 
@@ -44,7 +48,7 @@
 
             <label for="industry" >Select Industry:
                 <select id="industry" th:field="*{industry}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.Industry).values()}"
+                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.Industry).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
@@ -57,14 +61,14 @@
 
             <label for="status" >Select Status:
                 <select id="status" th:field="*{status}">
-                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.entity.Enums.VacancyStatus).values()}"
+                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.VacancyStatus).values()}"
                             th:value="${statusVal}" th:text="${statusVal}"></option>
                 </select>
             </label>
 
             <label for="jobType" >Select Job Type:
                 <select id="jobType" th:field="*{jobType}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.JobType).values()}"
+                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.JobType).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
@@ -73,7 +77,7 @@
 
             <label for="empType" >Select Employment Type:
                 <select id="empType" th:field="*{empType}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.entity.Enums.EmpType).values()}"
+                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.EmpType).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
