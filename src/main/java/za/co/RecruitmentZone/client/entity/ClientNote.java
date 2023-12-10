@@ -27,6 +27,10 @@ public class ClientNote implements Note {
     public ClientNote() {
     }
 
+    public ClientNote(String comment) {
+        this.comment = comment;
+    }
+
     public ClientNote(Client client, String comment) {
         this.client = client;
         this.comment = comment;

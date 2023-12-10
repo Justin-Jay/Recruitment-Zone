@@ -6,6 +6,7 @@
         <th>Industry</th>
         <th>Update Client</th>
         <th>View Client Contacts</th>
+        <th>View Client Notes</th>
     </tr>
     </thead>
     <tbody>
@@ -27,6 +28,14 @@
                 <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
                 <!-- Submit button to trigger the form submission -->
                 <button type="submit" class="btn btn-primary">View Client Contacts</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/view-client-notes}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">View Client Notes</button>
             </form>
         </td>
     </tr>

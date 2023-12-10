@@ -1,11 +1,10 @@
-package za.co.RecruitmentZone.util;
+package za.co.RecruitmentZone.configuration.BatchConfig;
 
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import za.co.RecruitmentZone.util.Enums.BlogStatus;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;

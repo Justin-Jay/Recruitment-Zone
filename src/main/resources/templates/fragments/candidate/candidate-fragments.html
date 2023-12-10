@@ -1,0 +1,181 @@
+<!--
+<div class="container-fluid" th:fragment="candidateView(candidate)">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>Candidate ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>ID Number</th>
+                <th>Email Address</th>
+                <th>Phone Number</th>
+                <th>Province</th>
+                <th>Role</th>
+                <th>Employer</th>
+                <th>Seniority Level</th>
+                <th>Education Level</th>
+                <th>Relocate</th>
+                <th>Email Address</th>
+                <th>File Path</th>
+                <th>Total Applications</th>
+                <th>View Documents</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td th:text="${candidate.candidateID}"></td>
+                <td th:text="${candidate.first_name}"></td>
+                <td th:text="${candidate.last_name}"></td>
+                <td th:text="${candidate.id_number}"></td>
+                <td th:text="${candidate.email_address}"></td>
+                <td th:text="${candidate.phone_number}"></td>
+                <td th:text="${candidate.current_province}"></td>
+                <td th:text="${candidate.current_role}"></td>
+                <td th:text="${candidate.current_employer}"></td>
+                <td th:text="${candidate.seniority_level}"></td>
+                <td th:text="${candidate.education_level}"></td>
+                <td th:text="${candidate.relocation}"></td>
+                <td th:text="${candidate.education_level}"></td>
+                <td th:text="${candidate.cvFilePath}"></td>
+                <td th:text="${candidate.cvFilePath}"></td> &lt;!&ndash;TOTAL APPLICATIONS COUNT&ndash;&gt;
+                <td th:text="${candidate.cvFilePath}"></td> &lt;!&ndash;TOTAL DOCUMENTS COUNT&ndash;&gt;
+                <td>
+                    <form th:action="@{/view-candidate-documents}" th:method="post">
+                        &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+                        <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
+                        &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
+                        <button type="submit" class="btn btn-primary">View Docs</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+-->
+
+
+<!-- TRY THIS -->
+
+
+<div class="container-fluid" th:fragment="candidateView(candidate)">
+    <div>
+        <label>Candidate ID:</label>
+        <span th:text="${candidate.candidateID}"></span>
+    </div>
+
+    <div>
+        <label>First Name:</label>
+        <span th:text="${candidate.first_name}"></span>
+    </div>
+
+    <div>
+        <label>Last Name:</label>
+        <span th:text="${candidate.last_name}"></span>
+    </div>
+
+
+    <div>
+        <label>ID Number:</label>
+        <span th:text="${candidate.id_number}"></span>
+    </div>
+
+
+    <div>
+        <label>Email Address:</label>
+        <span th:text="${candidate.email_address}"></span>
+    </div>
+
+
+    <div>
+        <label>Phone Number:</label>
+        <span th:text="${candidate.phone_number}"></span>
+    </div>
+
+
+    <div>
+        <label>Province:</label>
+        <span th:text="${candidate.current_province}"></span>
+    </div>
+
+    <div>
+        <label>Current Role:</label>
+        <span th:text="${candidate.current_role}"></span>
+    </div>
+
+
+    <div>
+        <label>Current Employer:</label>
+        <span th:text="${candidate.current_employer}"></span>
+    </div>
+
+
+    <div>
+        <label>Seniority Level:</label>
+        <span th:text="${candidate.seniority_level}"></span>
+    </div>
+
+    <div>
+        <label>Willing to relocate:</label>
+        <span th:text="${candidate.relocation}"></span>
+    </div>
+
+
+    <div>
+        <label>Education Level:</label>
+        <span th:text="${candidate.education_level}"></span>
+    </div>
+
+    <div>
+        <label>File Path:</label>
+        <span th:text="${candidate.cvFilePath}"></span>
+    </div>
+
+
+    <div>
+        <label>Total Applications:</label>
+        <span th:text="${candidate.cvFilePath}"></span>
+    </div>
+
+
+
+  <!-- Repeat this structure for other candidate information -->
+
+    <div>
+        <label>View Documents:</label>
+        <form th:action="@{/view-candidate-documents}" th:method="post">
+            <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
+            <button type="submit" class="btn btn-primary">View Docs</button>
+        </form>
+    </div>
+</div>
+
+
+<!-- | TRY THIS | -->
+
+
+<div class="container-fluid" th:fragment="existingNotes(existingNotes)">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Date Captured</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="note : ${existingNotes}">
+            <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
+
+
+            <!--      <td th:text="${#temporals.format(note.dateCaptured, 'yyyy-MM-dd')}" ></td>-->
+            <td th:text="*{note.comment}"></td>
+            <!-- <td th:text="*{note.dateCaptured}"></td>
+             <td th:text="*{note.comment}"></td>-->
+        </tr>
+        </tbody>
+    </table>
+
+</div>
