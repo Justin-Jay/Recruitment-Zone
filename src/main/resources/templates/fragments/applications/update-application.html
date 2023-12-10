@@ -20,13 +20,13 @@
     <div class="container-fluid"><h2>Update Application Status</h2></div>
     <hr/>
 <div class="container-fluid">
-    <form action="#" th:action="@{/save-updated-application}" th:method="POST">
+    <form action="#" th:action="@{/save-updated-application}"  th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" th:field="${vacancyApplication.applicationID}" />
         <div class="md-10">
             <label for="status" >Select Status:
                 <select id="status" th:field="${vacancyApplication.status}">
-                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.entity.Enums.ApplicationStatus).values()}"
+                    <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.ApplicationStatus).values()}"
                             th:value="${statusVal}" th:text="${statusVal}"></option>
                 </select>
             </label>

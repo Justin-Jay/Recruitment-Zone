@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import za.co.RecruitmentZone.util.Enums.BlogStatus;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
@@ -34,10 +35,10 @@ public class StatusUpdater {
         this.eventPublisher = eventPublisher;
     }
 
-    // @Scheduled(fixedRate = 120000) // once every two minutes
+    //@Scheduled(fixedRate = 120000) // once every two minutes
        // once at midnight
    // @Scheduled(fixedRate = 3000)
-    // @Scheduled(cron = "0 0 0 * * *")
+   //  @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void updateVacancyStatus() {
         log.info("<-----Vacancy Status Updater---->");
@@ -86,7 +87,7 @@ public class StatusUpdater {
   //  @Scheduled(fixedRate = 120000) // once every two minutes
     // once at midnight
     // @Scheduled(fixedRate = 3000)
-    // @Scheduled(cron = "0 0 0 * * *")
+ //    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void updateBlogStatus() {
         log.info("<-----Blog Status Updater---->");
