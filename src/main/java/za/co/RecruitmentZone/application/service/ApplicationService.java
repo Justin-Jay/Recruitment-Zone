@@ -4,10 +4,13 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import za.co.RecruitmentZone.documents.CandidateFile;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.application.repository.ApplicationRepository;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,8 @@ public class ApplicationService {
     public Application save(Application application) {
         return applicationRepository.save(application);
     }
+
+
 
     public List<Application> findApplications() {
         return applicationRepository.findAll();
@@ -50,5 +55,6 @@ public class ApplicationService {
         log.info("FAILED TO SAVE");
         return false;
     }
+
 
 }

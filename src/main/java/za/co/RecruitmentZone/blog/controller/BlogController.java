@@ -24,8 +24,6 @@ import static za.co.RecruitmentZone.util.Enums.BlogStatus.ACTIVE;
 import static za.co.RecruitmentZone.util.Enums.BlogStatus.PENDING;
 
 @Controller
-@CrossOrigin("*")
-@RequestMapping("/")
 public class BlogController {
     private final BlogService blogService;
     private final EmployeeService employeeService;

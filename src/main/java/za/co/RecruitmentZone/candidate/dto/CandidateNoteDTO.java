@@ -9,7 +9,6 @@ public class CandidateNoteDTO {
 
     public CandidateNoteDTO() {
     }
-
     public CandidateNoteDTO(Long candidateID, LocalDateTime dateCaptured, String comment) {
         this.candidateID = candidateID;
         this.dateCaptured = dateCaptured;

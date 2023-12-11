@@ -1,14 +1,11 @@
 package za.co.RecruitmentZone.candidate.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
-import za.co.RecruitmentZone.document.entity.Document;
+import za.co.RecruitmentZone.documents.CandidateFile;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,37 +16,18 @@ public class Candidate {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long candidateID;
-
     private String first_name;
-
     private String last_name;
-
     private String id_number;
-
-    @Email(message = "Email should be valid")
     private String email_address;
-
-
     private String phone_number;
-
     private String current_province;
-
-
     private String current_role;
-
-
     private String current_employer;
-
-
     private String seniority_level;
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
-
     private Boolean relocation;
-
-    private String cvFilePath;
-    @Transient
-    private MultipartFile cvFile;
 
     @OneToMany(mappedBy = "candidate",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
@@ -64,7 +42,7 @@ public class Candidate {
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    private Set<Document> documents;
+    private Set<CandidateFile> documents;
 
     public Candidate() {
         // received
@@ -84,7 +62,13 @@ public class Candidate {
         this.relocation = relocation;
     }
 
+    public Set<CandidateFile> getDocuments() {
+        return documents;
+    }
 
+    public void setDocuments(Set<CandidateFile> documents) {
+        this.documents = documents;
+    }
 
     public Long getCandidateID() {
         return candidateID;
@@ -182,22 +166,6 @@ public class Candidate {
         this.relocation = relocation;
     }
 
-    public String getCvFilePath() {
-        return cvFilePath;
-    }
-
-    public void setCvFilePath(String cvFilePath) {
-        this.cvFilePath = cvFilePath;
-    }
-
-    public MultipartFile getCvFile() {
-        return cvFile;
-    }
-
-    public void setCvFile(MultipartFile cvFile) {
-        this.cvFile = cvFile;
-    }
-
     public Set<Application> getApplications() {
         return applications;
     }
@@ -231,7 +199,7 @@ public class Candidate {
         application.setCandidate(this);
     }
 
-    public void AddDocument(Document document){
+    public void AddDocument(CandidateFile document){
         if (documents ==null){
             documents = new HashSet<>() {
             };

@@ -34,12 +34,13 @@
             <td th:text="${candidate.relocation}"></td>
             <td th:text="${candidate.cvFilePath}"></td>
             <td>
-                <form  >
+                <form>
                     <!-- Hidden input field to include the brandVal in the POST request -->
                     <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
 
                     <!-- Submit button to trigger the form submission -->
-                    <button  th:action="@{/view-candidate-notes}" th:method="POST" class='btn' hx-post="/view-candidate-notes"
+                    <button  th:action="@{/view-candidate-notes}" th:method="post"
+                             hx-post="/view-candidate-notes"
                              hx-target='#candidate-notes'
                              hx-swap='innerHTML '
                              hx-include="[candidateID='candidateID']" >
@@ -53,7 +54,7 @@
 </div>
 
 <div id="candidate-notes" >
-<!--    <table  th:replace="fragments/vacancy/candidate-notes-fragment :: candidateNotes(${candidateNotes})">
-    </table>-->
-
+    <div>
+        <div th:replace="fragments/candidate/candidate-fragments :: candidateNotes(${existingNotes})"></div>
+    </div>
 </div>

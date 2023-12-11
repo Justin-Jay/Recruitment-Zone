@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@CrossOrigin("*")
-@RequestMapping("/")
 public class EmployeeController {
     private final RecruitmentZoneService recruitmentZoneService;
 
