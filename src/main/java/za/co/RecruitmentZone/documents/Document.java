@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.document.entity;
+package za.co.RecruitmentZone.documents;
 
 import jakarta.persistence.*;
 import za.co.RecruitmentZone.candidate.entity.Candidate;

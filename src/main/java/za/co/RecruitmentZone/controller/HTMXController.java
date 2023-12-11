@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@CrossOrigin("*")
 public class HTMXController {
     private final EmployeeService employeeService;
     private final Logger log = LoggerFactory.getLogger(HTMXController.class);

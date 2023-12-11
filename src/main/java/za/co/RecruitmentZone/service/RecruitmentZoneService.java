@@ -1,7 +1,5 @@
 package za.co.RecruitmentZone.service;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,19 +9,16 @@ import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.application.service.ApplicationService;
 import za.co.RecruitmentZone.blog.service.BlogService;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
-import za.co.RecruitmentZone.candidate.entity.CandidateNote;
 import za.co.RecruitmentZone.candidate.service.CandidateService;
 import za.co.RecruitmentZone.client.dto.ClientDTO;
 import za.co.RecruitmentZone.client.dto.ContactPersonDTO;
 import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.client.service.ClientService;
-import za.co.RecruitmentZone.document.entity.Document;
 import za.co.RecruitmentZone.employee.entity.Employee;
 import za.co.RecruitmentZone.employee.service.EmployeeService;
 import za.co.RecruitmentZone.storage.StorageService;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
-import za.co.RecruitmentZone.util.Enums.EducationLevel;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 import za.co.RecruitmentZone.application.Events.ApplicationsEventPublisher;
 import za.co.RecruitmentZone.vacancy.dto.VacancyDTO;
@@ -34,7 +29,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static za.co.RecruitmentZone.util.Enums.VacancyStatus.*;
 

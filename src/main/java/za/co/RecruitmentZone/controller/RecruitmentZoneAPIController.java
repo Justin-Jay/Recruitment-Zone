@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/RecruitmentZone/api")
-@CrossOrigin("*")
 public class RecruitmentZoneAPIController {
 
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneAPIController.class);

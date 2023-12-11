@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
-@CrossOrigin()
 public class VacancyController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(VacancyController.class);
@@ -97,15 +96,6 @@ public class VacancyController {
         return "redirect:/vacancy-administration";
     }
 
-    @PostMapping("/view-candidate-notes")
-    public String viewCandidateNotes(@RequestParam("candidateID")Long candidateID, Model model) {
-        // Logic to fetch candidate notes based on candidateID
-        // Add candidateNotes to the model
-        Candidate candidate = recruitmentZoneService.findCandidateByID(candidateID);
-        Set<CandidateNote> candidateNotes = candidate.getNotes();
-        model.addAttribute("candidateNotes", candidateNotes);
-        return "fragments/vacancy/candidate-notes-fragment";
-    }
 
     @PostMapping("/view-vacancy-submission")
     public String viewVacancySubmissions(@RequestParam("vacancyID") Long vacancyID, Model model) {

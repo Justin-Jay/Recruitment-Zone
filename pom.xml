@@ -180,12 +180,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
- <!--       <dependency>
+        <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
             <version>9.9.0</version>
         </dependency>
--->
     </dependencies>
 
     <build>

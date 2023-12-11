@@ -12,8 +12,6 @@ import za.co.RecruitmentZone.communication.Events.Email.EmailEventPublisher;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 @Controller
-@CrossOrigin("*")
-@RequestMapping("/")
 public class CommunicationController {
     private final Logger log = LoggerFactory.getLogger(CommunicationController.class);
     private final RecruitmentZoneService recruitmentZoneService;

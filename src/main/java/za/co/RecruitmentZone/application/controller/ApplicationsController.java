@@ -28,7 +28,6 @@ import java.util.List;
 
 
 @Controller
-@CrossOrigin("*")
 public class ApplicationsController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(ApplicationsController.class);

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
-@CrossOrigin("*")
 public class ClientController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(ClientController.class);

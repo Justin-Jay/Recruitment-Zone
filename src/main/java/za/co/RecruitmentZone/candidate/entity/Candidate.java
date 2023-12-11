@@ -5,10 +5,9 @@ import jakarta.validation.constraints.Email;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
-import za.co.RecruitmentZone.document.entity.Document;
+import za.co.RecruitmentZone.documents.Document;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;

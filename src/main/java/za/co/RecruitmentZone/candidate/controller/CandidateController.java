@@ -1,9 +1,11 @@
 package za.co.RecruitmentZone.candidate.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,7 +31,6 @@ import java.util.Set;
 
 
 @Controller
-@CrossOrigin("*")
 public class CandidateController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(CandidateController.class);
@@ -79,17 +80,17 @@ public class CandidateController {
     }
 
 
-
-//
-/*    @PostMapping("/view-candidate-notes")
-    public String candidateNotes(@RequestParam("candidateID") Long candidateID,Model model) {
-        // Add any model attributes if needed
-        Candidate candidate = recruitmentZoneService.getCandidateById(candidateID);
-        Set<CandidateNote> candidateNotes = candidate.getNotes();
-       // model.addAttribute("candidate", candidate);
-        model.addAttribute("candidateNotes", candidateNotes);
-        //model.addAttribute("applicationStatus", ApplicationStatus.values());
-        return "fragments/vacancy/candidate-notes-fragment";
-    }*/
+    @PostMapping("/view-candidate-notes")
+    public String candidateNotes(@RequestParam("candidateID") Long candidateID,Model model,
+                                 HttpServletRequest request) {
+        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (csrf != null) {
+            log.debug("CSRF Token Value: {}", csrf.getToken());
+        }
+        Candidate candidate = recruitmentZoneService.findCandidateByID(candidateID);
+        Set<CandidateNote> existingNotes = candidate.getNotes();
+        model.addAttribute("existingNotes", existingNotes);
+        return "fragments/candidate/candidate-note-fragment";
+    }
 
 }

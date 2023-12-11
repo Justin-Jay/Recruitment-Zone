@@ -11,7 +11,6 @@ import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 import java.util.List;
 
 @Controller
-@CrossOrigin("*")
 public class RecruitmentZoneWebController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneWebController.class);
