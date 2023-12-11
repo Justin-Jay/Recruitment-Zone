@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.util;
+package za.co.RecruitmentZone.util.Enums;
 
 public enum DocumentType {
     CURRICULUM_VITAE,

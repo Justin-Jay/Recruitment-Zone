@@ -1,8 +1,14 @@
 package za.co.RecruitmentZone.client.controller;
 
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Storage;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +24,10 @@ import za.co.RecruitmentZone.client.entity.ClientNote;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -25,10 +35,13 @@ import java.util.Set;
 @Controller
 public class ClientController {
     private final RecruitmentZoneService recruitmentZoneService;
+    private final Storage storage; // Injected or initialized as needed
+
     private final Logger log = LoggerFactory.getLogger(ClientController.class);
 
-    public ClientController(RecruitmentZoneService recruitmentZoneService) {
+    public ClientController(RecruitmentZoneService recruitmentZoneService, Storage storage) {
         this.recruitmentZoneService = recruitmentZoneService;
+        this.storage = storage;
     }
     
     @GetMapping("/add-client")
@@ -156,5 +169,53 @@ public class ClientController {
         model.addAttribute("clientNote",dto);
         return "fragments/clients/view-client-notes";
     }
+
+    @GetMapping("/download-document/{id}")
+    public ResponseEntity<InputStreamResource> downloadDocument(@PathVariable String id) throws IOException {
+        // Specify the path to the file on your local machine
+        id = "_1.pdf";
+        String filePath = "C:\\uploads\\Spring_details"+ id; // Update with the actual path
+
+        // Read the file from the local machine
+        InputStream inputStream = new FileInputStream(filePath);
+
+        // Prepare the response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", id); // Use the file name as attachment name
+
+        // Create an InputStreamResource from the file's content
+        InputStreamResource resource = new InputStreamResource(inputStream);
+
+        // Return the ResponseEntity with the InputStreamResource and headers
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
+
+    // upload to GCP
+/*    @GetMapping("/download-document/{id}")
+    public ResponseEntity<InputStreamResource> downloadDocument(@PathVariable String id) throws IOException {
+        // Replace "your-bucket-name" with the actual name of your Google Cloud Storage bucket
+        String bucketName = "your-bucket-name";
+        String objectName = id; // Assuming the object name is the same as the document ID
+
+        // Retrieve the file from Google Cloud Storage
+        Blob blob = storage.get(bucketName, objectName);
+
+        // Prepare the response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", blob.getName());
+
+        // Create an InputStreamResource from the Blob's content
+        InputStream inputStream = new ByteArrayInputStream(blob.getContent());
+        InputStreamResource resource = new InputStreamResource(inputStream);
+
+        // Return the ResponseEntity with the InputStreamResource and headers
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }*/
 
 }

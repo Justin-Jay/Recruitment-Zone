@@ -4,8 +4,6 @@ import jakarta.validation.Valid;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,15 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.application.entity.Application;
-import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
-import za.co.RecruitmentZone.vacancy.entity.Vacancy;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -66,7 +57,6 @@ public class ApplicationsController {
             model.addAttribute("message", "Please select a file to upload.");
             return "fragments/applications/apply-now";
         }
-
         // Security check: Ensure the file name is not a path that could be exploited
         else if (newApplicationDTO.getCvFile().getOriginalFilename().contains("..")) {
             model.addAttribute("vacancyName",newApplicationDTO.getVacancyName());
@@ -74,14 +64,12 @@ public class ApplicationsController {
             model.addAttribute("message", "Invalid file name.");
             return "fragments/applications/apply-now";
         }
-
         else if (newApplicationDTO.getCvFile().getSize() > 1024 * 1024 * 25) { // 25MB
             model.addAttribute("vacancyName",newApplicationDTO.getVacancyName());
             model.addAttribute("vacancyID",newApplicationDTO.getVacancyID());
             model.addAttribute("message", "File size exceeds the maximum limit (25MB).");
             return "fragments/applications/apply-now";
         }
-
         // Security check: Ensure the file content is safe (detect content type)
         else if (!isValidContentType(newApplicationDTO.getCvFile())) {
             model.addAttribute("vacancyName",newApplicationDTO.getVacancyName());
@@ -89,33 +77,10 @@ public class ApplicationsController {
             model.addAttribute("message", "Invalid file type. Only Word (docx) and PDF files are allowed.");
             return "fragments/applications/apply-now";
         }
-
         try {
-
-            String fileDestination = "C:/uploads";
-
-            // Create the directory if it doesn't exist
-            Path uploadPath = Path.of(fileDestination);
-            if (Files.notExists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            // Copy the file to the target location
-            Path targetLocation = uploadPath.resolve(newApplicationDTO.getCvFile().getOriginalFilename());
-            Files.copy(newApplicationDTO.getCvFile().getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-            // store on google cloud
-            // String storageLocation = recruitmentZoneService.saveFile(vacancyID,cvFile);
-            // candidate.setCvFilePath(storageLocation);
-
-            String storageLocation = targetLocation.toString();
-
-
-            Long candidateID = recruitmentZoneService.createCandidateApplication(newApplicationDTO,storageLocation);
+            recruitmentZoneService.createCandidateApplication(newApplicationDTO);
             // publish file upload event and give the file
-
-            recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
-
+            //recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
             redirectAttributes.addFlashAttribute("message",
                     "Application Submitted Successfully!");
             return "redirect:/home";
@@ -125,8 +90,11 @@ public class ApplicationsController {
             model.addAttribute("message", "File upload failed. Please try again.");
             return "fragments/applications/apply-now";
         }
-
     }
+
+
+
+
     private boolean isValidContentType(MultipartFile file) {
         try {
             String detectedContentType = new Tika().detect(file.getInputStream());
@@ -149,20 +117,6 @@ public class ApplicationsController {
     }
 
 
-    /*
-      @GetMapping("/vacancy-administration")
-    public String vacancies(Model model) {
-        List<Vacancy> allVacancies = new ArrayList<>();
-        try {
-            allVacancies = recruitmentZoneService.getAllVacancies();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve vacancies, retrieving all vacancies ");
-        }
-        model.addAttribute("vacancies", allVacancies);
-        return "fragments/vacancy/vacancy-administration";
-    }
-
-    */
     @PostMapping("/view-application")
     public String viewApplication(Model model, @RequestParam("applicationID") Long applicationID) {
         Application application = recruitmentZoneService.findApplicationByID(applicationID);
@@ -193,6 +147,16 @@ public class ApplicationsController {
 
         return "redirect:/applications-administration";
     }
+
+
+
+
+
+
+
+
+
+
 
 
 

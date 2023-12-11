@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div>
+        <div th:insert="fragments/layout/header">Header</div>
+    </div>
+    <hr/>
+
+    <div>
+        <div th:replace="fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})"></div>
+    </div>
+
+    <div>
+        <!--    <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
+    -->
+        <!--th:fragment="add-note-fragment(candidateNote)"-->
+        <div class="container-fluid">
+            <form action="@{/upload-candidate-document}" th:action="@{/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <!-- Hidden input field to include the candidateID in the POST request -->
+                    <input type="hidden" name="candidateID" th:field="${candidateFileDTO.candidateID}" th:value="${candidateID}" />
+                    <p th:text="${noteSaved} ? 'Note Saved' : ''"></p>
+                    <p th:text="${message} ? 'Message' : ''"></p>
+                    <p th:if="${candidateID}" th:text="'Candidate ID: ' + ${candidateID}"></p>
+
+                    <label for="cvAttachment">Attach CV:</label>
+                    <input type="file" name="cvFile" id="cvAttachment" class="form-control mb-4 w-25"/>
+
+                    <label for="documentType">Document Type:</label>
+                    <select id="documentType" name="documentType"  >
+                        <option th:each="docType : ${T(za.co.RecruitmentZone.util.Enums.DocumentType).values()}"
+                                th:value="${documentType}" th:text="${docType.name()}"></option>
+                    </select>
+
+                </div>
+
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">Upload Document</button>
+            </form>
+        </div>
+
+    </div>
+    <div>
+        <!--BOTTOM Navbar-->
+        <div th:insert="fragments/layout/footer">Footer</div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
+</body>
+</html>

@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.application.service.ApplicationService;
-import za.co.RecruitmentZone.blog.service.BlogService;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.candidate.service.CandidateService;
 import za.co.RecruitmentZone.client.dto.ClientDTO;
@@ -15,9 +15,12 @@ import za.co.RecruitmentZone.client.dto.ContactPersonDTO;
 import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.client.service.ClientService;
+import za.co.RecruitmentZone.documents.CandidateFile;
+import za.co.RecruitmentZone.documents.FileService;
 import za.co.RecruitmentZone.employee.entity.Employee;
 import za.co.RecruitmentZone.employee.service.EmployeeService;
 import za.co.RecruitmentZone.storage.StorageService;
+import za.co.RecruitmentZone.util.Enums.DocumentType;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 import za.co.RecruitmentZone.application.Events.ApplicationsEventPublisher;
@@ -26,6 +29,9 @@ import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 import za.co.RecruitmentZone.vacancy.service.VacancyService;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -37,32 +43,32 @@ import static za.co.RecruitmentZone.util.Enums.VacancyStatus.*;
 public class RecruitmentZoneService {
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneService.class);
     private final ApplicationService applicationService;
-    private final BlogService blogService;
     private final CandidateService candidateService;
     private final EmployeeService employeeService;
     private final VacancyService vacancyService;
     private final ApplicationsEventPublisher applicationsEventPublisher;
     private final StorageService storageService;
     private final ClientService clientService;
+    private final FileService fileService;
 
-    public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, BlogService blogService, CandidateService candidateService,
-                                  EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService) {
+    public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
+                                  EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService, FileService fileService) {
         this.applicationService = applicationService;
         this.vacancyService = vacancyService;
-        this.blogService = blogService;
         this.candidateService = candidateService;
         this.employeeService = employeeService;
         this.applicationsEventPublisher = applicationsEventPublisher;
         this.storageService = storageService;
         this.clientService = clientService;
+        this.fileService = fileService;
     }
 
 
-
-    public boolean saveCandidate(Candidate candidate){
+    public boolean saveCandidate(Candidate candidate) {
         candidateService.save(candidate);
         return true;
     }
+
     public List<Candidate> getCandidates() {
         return candidateService.getCandidates();
     }
@@ -74,23 +80,23 @@ public class RecruitmentZoneService {
 
     // EMPLOYEE
 
-    public Employee findEmployeeByUserName(String name){
+    public Employee findEmployeeByUserName(String name) {
         Optional<Employee> oe = employeeService.findEmployeeByUserName(name);
-        if (oe.isPresent()){
-            return oe.get();
-        }
-      return null;
-    }
-
-    public Employee findEmployeeByID(Long id){
-        Optional<Employee> oe = employeeService.findEmployeeByID(id);
-        if (oe.isPresent()){
+        if (oe.isPresent()) {
             return oe.get();
         }
         return null;
     }
 
-    public List<Employee> getEmployees(){
+    public Employee findEmployeeByID(Long id) {
+        Optional<Employee> oe = employeeService.findEmployeeByID(id);
+        if (oe.isPresent()) {
+            return oe.get();
+        }
+        return null;
+    }
+
+    public List<Employee> getEmployees() {
         return employeeService.getEmployees();
     }
 
@@ -116,11 +122,9 @@ public class RecruitmentZoneService {
         newVacancy.setCategory(vacancy.getCategory());
         LocalDate today = LocalDate.now();
 
-        if(vacancy.getPublish_date().isAfter(today))
-        {
+        if (vacancy.getPublish_date().isAfter(today)) {
             newVacancy.setStatus(PENDING);
-        }
-        else {
+        } else {
             newVacancy.setStatus(ACTIVE);
         }
 
@@ -128,7 +132,7 @@ public class RecruitmentZoneService {
         Client client = clientService.findClientByID(vacancy.getClientID());
         newVacancy.setClient(client);
 
-       Optional<Employee> op = employeeService.findEmployeeByID(vacancy.getEmployeeID());
+        Optional<Employee> op = employeeService.findEmployeeByID(vacancy.getEmployeeID());
         op.ifPresent(newVacancy::setEmployee);
 
         vacancyService.save(newVacancy);
@@ -147,45 +151,43 @@ public class RecruitmentZoneService {
             // Compare and update fields
 
 
-            if(existingVacancy.getJob_title() !=null && !existingVacancy.getJob_title().equals(vacancy.getJob_title())){
+            if (existingVacancy.getJob_title() != null && !existingVacancy.getJob_title().equals(vacancy.getJob_title())) {
                 existingVacancy.setJob_title(vacancy.getJob_title());
             }
-            if(existingVacancy.getJob_description() !=null && !existingVacancy.getJob_description().equals(vacancy.getJob_description())){
+            if (existingVacancy.getJob_description() != null && !existingVacancy.getJob_description().equals(vacancy.getJob_description())) {
                 existingVacancy.setJob_description(vacancy.getJob_description());
             }
-            if(existingVacancy.getSeniority_level() !=null &&!existingVacancy.getSeniority_level().equals(vacancy.getSeniority_level())){
+            if (existingVacancy.getSeniority_level() != null && !existingVacancy.getSeniority_level().equals(vacancy.getSeniority_level())) {
                 existingVacancy.setSeniority_level(vacancy.getSeniority_level());
             }
-            if(existingVacancy.getRequirements() !=null && !existingVacancy.getRequirements()
-                    .equals(vacancy.getRequirements())){
+            if (existingVacancy.getRequirements() != null && !existingVacancy.getRequirements()
+                    .equals(vacancy.getRequirements())) {
                 existingVacancy.setRequirements(vacancy.getRequirements());
             }
-            if(existingVacancy.getCategory() !=null &&!existingVacancy.getCategory().equals(vacancy.getCategory())){
+            if (existingVacancy.getCategory() != null && !existingVacancy.getCategory().equals(vacancy.getCategory())) {
+                existingVacancy.setCategory(vacancy.getCategory());
+            } else if (existingVacancy.getCategory() == null) {
                 existingVacancy.setCategory(vacancy.getCategory());
             }
-            else if (existingVacancy.getCategory() == null)
-            {
-                existingVacancy.setCategory(vacancy.getCategory());
-            }
-            if(existingVacancy.getLocation() !=null && !existingVacancy.getLocation().equals(vacancy.getLocation())){
+            if (existingVacancy.getLocation() != null && !existingVacancy.getLocation().equals(vacancy.getLocation())) {
                 existingVacancy.setLocation(vacancy.getLocation());
             }
-            if(existingVacancy.getIndustry() !=null &&!existingVacancy.getIndustry().equals(vacancy.getIndustry())){
+            if (existingVacancy.getIndustry() != null && !existingVacancy.getIndustry().equals(vacancy.getIndustry())) {
                 existingVacancy.setIndustry(vacancy.getIndustry());
             }
-            if(existingVacancy.getPublish_date() !=null &&!existingVacancy.getPublish_date().equals(vacancy.getPublish_date())){
+            if (existingVacancy.getPublish_date() != null && !existingVacancy.getPublish_date().equals(vacancy.getPublish_date())) {
                 existingVacancy.setPublish_date(vacancy.getPublish_date());
             }
-            if(existingVacancy.getEnd_date() !=null &&!existingVacancy.getEnd_date().equals(vacancy.getEnd_date())){
+            if (existingVacancy.getEnd_date() != null && !existingVacancy.getEnd_date().equals(vacancy.getEnd_date())) {
                 existingVacancy.setEnd_date(vacancy.getEnd_date());
             }
-            if(existingVacancy.getStatus() !=null &&!existingVacancy.getStatus().equals(vacancy.getStatus())){
+            if (existingVacancy.getStatus() != null && !existingVacancy.getStatus().equals(vacancy.getStatus())) {
                 existingVacancy.setStatus(vacancy.getStatus());
             }
-            if(existingVacancy.getJobType() !=null &&!existingVacancy.getJobType().equals(vacancy.getJobType())){
+            if (existingVacancy.getJobType() != null && !existingVacancy.getJobType().equals(vacancy.getJobType())) {
                 existingVacancy.setJobType(vacancy.getJobType());
             }
-            if(existingVacancy.getEmpType() !=null &&!existingVacancy.getEmpType().equals(vacancy.getEmpType())){
+            if (existingVacancy.getEmpType() != null && !existingVacancy.getEmpType().equals(vacancy.getEmpType())) {
                 existingVacancy.setEmpType(vacancy.getEmpType());
             }
             // Repeat this process for other fields...
@@ -235,7 +237,7 @@ public class RecruitmentZoneService {
 
     // APPLICATIONS
 
-    public Long createCandidateApplication(NewApplicationDTO newApplicationDTO, String fileLocation) {
+    public void createCandidateApplication(NewApplicationDTO newApplicationDTO) {
         Candidate candidate = new Candidate();
         candidate.setFirst_name(newApplicationDTO.getFirst_name());
         candidate.setLast_name(newApplicationDTO.getLast_name());
@@ -248,9 +250,43 @@ public class RecruitmentZoneService {
         candidate.setSeniority_level(newApplicationDTO.getSeniority_level());
         candidate.setEducation_level(newApplicationDTO.getEducation_level());
         candidate.setRelocation(newApplicationDTO.getRelocation());
-        candidate.setCvFile(newApplicationDTO.getCvFile());
-        candidate.setCvFilePath(fileLocation);
-        // create candidate and save
+
+        // Local file storage
+
+        String directory = "C:/uploads";
+
+        Path storageLocation = null;
+        try {
+            Path uploadPath = Path.of(directory);
+            if (Files.notExists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            storageLocation = uploadPath.resolve(newApplicationDTO.getCvFile().getOriginalFilename());
+            Files.copy(newApplicationDTO.getCvFile().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
+
+        } catch (Exception e) {
+            log.info("Failed to create directory {}", e.getMessage());
+        }
+
+
+        // Google storage
+        //String storageLocation = saveFile(newApplicationDTO.getVacancyID(),newApplicationDTO.getCvFile());
+
+
+        // File object Creation
+        CandidateFile newCandidatFile = new CandidateFile();
+        newCandidatFile.setContenttype(newApplicationDTO.getCvFile().getContentType());
+        newCandidatFile.setFilesize(String.valueOf(newApplicationDTO.getCvFile().getSize()));
+        newCandidatFile.setFilename(newApplicationDTO.getCvFile().getOriginalFilename());
+        newCandidatFile.setDocumentType(DocumentType.CURRICULUM_VITAE);
+        newCandidatFile.setDocumentLocation(String.valueOf(storageLocation));
+
+        log.info("StorageLocation: {}", storageLocation);
+
+
+        candidate.AddDocument(newCandidatFile);
+
+        // create candidate and save and link with document
         candidate = candidateService.save(candidate);
 
         // create application  and link candidate
@@ -269,7 +305,7 @@ public class RecruitmentZoneService {
         candidate.AddApplication(application);
         applicationService.save(application);
 
-        return candidate.getCandidateID();
+
     }
 
     public List<Application> getApplications() {
@@ -284,6 +320,40 @@ public class RecruitmentZoneService {
     }
 
 
+    public boolean createFile(CandidateFileDTO fileDTO) throws IOException {
+        CandidateFile file = new CandidateFile();
+        file.setContenttype(fileDTO.getCvFile().getContentType());
+        file.setFiledata(fileDTO.getCvFile().getBytes());
+        file.setFilename(fileDTO.getCvFile().getOriginalFilename());
+        file.setFilesize(Long.toString(fileDTO.getCvFile().getSize()));
+        file.setCandidate(candidateService.getcandidateByID(fileDTO.getCandidateID()));
+
+        // Local file storage
+
+        String directory = "C:/uploads";
+
+        Path storageLocation = null;
+        try {
+            Path uploadPath = Path.of(directory);
+            if (Files.notExists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            storageLocation = uploadPath.resolve(fileDTO.getCvFile().getOriginalFilename());
+            Files.copy(fileDTO.getCvFile().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
+
+        } catch (Exception e) {
+            log.info("Failed to create directory {}", e.getMessage());
+        }
+
+        // Google storage
+        //  String storageLocation = addDocumentToCandidate(candidateID,uploadedFile);
+
+
+        file.setDocumentLocation(storageLocation.toString());
+        fileService.save(file);
+        return true;
+    }
+
 
 //  getVacancyApplications
 
@@ -294,7 +364,6 @@ public class RecruitmentZoneService {
     public boolean saveSubmissionEvent(Candidate candidate, Long vacancyID) {
         return applicationsEventPublisher.publishSaveSubmissionEvent(candidate, vacancyID);
     }
-
 
 
     // STORAGE
@@ -309,7 +378,7 @@ public class RecruitmentZoneService {
     }
 
     public boolean publishFileUploadedEvent(Long candidateID, NewApplicationDTO newApplicationDTO) {
-        return applicationsEventPublisher.publishFileUploadEvent(candidateID,newApplicationDTO);
+        return applicationsEventPublisher.publishFileUploadEvent(candidateID, newApplicationDTO);
     }
 
     // CLIENTS
@@ -333,19 +402,20 @@ public class RecruitmentZoneService {
     public void addContactToClient(ContactPersonDTO contactPersonDTO) {
         clientService.addContactToClient(contactPersonDTO);
     }
-    public void saveUpdatedClient(Long clientID,Client updatedClient){
+
+    public void saveUpdatedClient(Long clientID, Client updatedClient) {
         Client oc = clientService.findClientByID(clientID);
-        if(!oc.getName().equalsIgnoreCase(updatedClient.getName())){
+        if (!oc.getName().equalsIgnoreCase(updatedClient.getName())) {
             oc.setName(updatedClient.getName());
         }
 
-        if(!oc.getIndustry().equalsIgnoreCase(updatedClient.getIndustry())){
+        if (!oc.getIndustry().equalsIgnoreCase(updatedClient.getIndustry())) {
             oc.setIndustry(updatedClient.getIndustry());
         }
         clientService.saveUpdatedClient(oc);
     }
 
-    public boolean saveClient(Client client){
+    public boolean saveClient(Client client) {
         clientService.saveUpdatedClient(client);
         return true;
     }

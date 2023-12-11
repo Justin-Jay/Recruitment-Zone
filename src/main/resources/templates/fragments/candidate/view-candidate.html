@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -28,27 +28,7 @@
     </div>
 
     <div>
-    <!--    <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
--->
-        <!--th:fragment="add-note-fragment(candidateNote)"-->
-        <div class="container-fluid" >
-            <form action="#" th:action="@{/save-candidate-note}" th:object="${candidateNote}"
-                  th:method="post">
-                <div class="form-group">
-                    <!-- Hidden input field to include the candidateID in the POST request -->
-                    <input type="hidden" name="candidateID" th:field="${candidateNote.candidateID}" th:value="${candidateID}" />
-                    <p th:text="${noteSaved} ? 'Note Saved' : ''"></p>
-
-                    <hr/>
-                    <label for="comment">
-                        Comment:
-                    </label>
-                    <textarea class="form-control mb-4 text-black-50" th:field="${candidateNote.comment}" id="comment"></textarea>
-                </div>
-                <!-- Submit button to trigger the form submission -->
-                <button type="submit" class="btn btn-primary">Add Note</button>
-            </form>
-        </div>
+        <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
     </div>
     <div>
         <!--BOTTOM Navbar-->
