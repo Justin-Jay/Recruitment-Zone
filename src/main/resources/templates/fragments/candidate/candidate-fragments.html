@@ -84,9 +84,7 @@
     </div>
 </div>
 
-
 <!-- | TRY THIS | -->
-
 
 <div class="container-fluid" th:fragment="existingNotes(existingNotes)">
     <table class="table table-bordered table-striped">
@@ -148,6 +146,29 @@
     </ul>
 </div>
 
+<table class="table table-bordered table-striped" th:fragment="candidateTable(candidates)">
+    <thead class="table-dark">
+    <tr>
+        <th>Candidate ID</th>
+        <th>Candidate Name</th>
+        <th>View Candidate</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="candidate : ${candidates}">
+        <td th:text="${candidate.candidateID}"></td>
+        <td th:text="${candidate.first_name}"></td>
+        <td>
+            <form th:action="@{/view-candidate}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">View Candidate</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 
 

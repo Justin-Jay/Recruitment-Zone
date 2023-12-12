@@ -17,6 +17,7 @@
                 <a class="nav-link" th:href="@{/blogs}">Blogs</a>
                 <a class="nav-link" th:href="@{/aboutus}">About Us</a>
                 <a class="nav-link" th:href="@{/contact-us}">Contact Us</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/candidate-administration}">Candidate Administration</a>
                 <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/client-administration}">Client Administration</a>
                 <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/employee-admin}">Employee Administration</a>
                 <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/blog-administration}">Blog Administration</a>

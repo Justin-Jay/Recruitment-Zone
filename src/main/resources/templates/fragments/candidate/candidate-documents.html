@@ -29,22 +29,22 @@
     -->
         <!--th:fragment="add-note-fragment(candidateNote)"-->
         <div class="container-fluid">
-            <form action="@{/upload-candidate-document}" th:action="@{/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post" enctype="multipart/form-data">
+            <form action="#" th:action="@{/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <!-- Hidden input field to include the candidateID in the POST request -->
                     <input type="hidden" name="candidateID" th:field="${candidateFileDTO.candidateID}" th:value="${candidateID}" />
-                    <p th:text="${noteSaved} ? 'Note Saved' : ''"></p>
-                    <p th:text="${message} ? 'Message' : ''"></p>
-                    <p th:if="${candidateID}" th:text="'Candidate ID: ' + ${candidateID}"></p>
+                    <p th:if="${message}" th:text="${message}"></p>
 
                     <label for="cvAttachment">Attach CV:</label>
                     <input type="file" name="cvFile" id="cvAttachment" class="form-control mb-4 w-25"/>
 
-                    <label for="documentType">Document Type:</label>
-                    <select id="documentType" name="documentType"  >
-                        <option th:each="docType : ${T(za.co.RecruitmentZone.util.Enums.DocumentType).values()}"
-                                th:value="${documentType}" th:text="${docType.name()}"></option>
-                    </select>
+                    <label for="documentType">Document Type:
+                        <select id="documentType" th:field="${candidateFileDTO.documentType}">
+                            <option th:each="docType : ${T(za.co.RecruitmentZone.util.Enums.DocumentType).values()}"
+                                    th:value="${docType}" th:text="${docType}"></option>
+                        </select></label>
+
+
 
                 </div>
 

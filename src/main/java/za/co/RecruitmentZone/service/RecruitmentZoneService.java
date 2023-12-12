@@ -308,26 +308,14 @@ public class RecruitmentZoneService {
 
     }
 
-    public List<Application> getApplications() {
-        return applicationService.findApplications();
-    }
-
-    public Application findApplicationByID(Long applicationID) {
-        Optional<Application> optionalApplication = applicationService.findApplicationByID(applicationID);
-        return optionalApplication.orElse(null);
-
-
-    }
-
-
     public boolean createFile(CandidateFileDTO fileDTO) throws IOException {
         CandidateFile file = new CandidateFile();
         file.setContenttype(fileDTO.getCvFile().getContentType());
-        file.setFiledata(fileDTO.getCvFile().getBytes());
+       // file.setFiledata(fileDTO.getCvFile().getBytes());
         file.setFilename(fileDTO.getCvFile().getOriginalFilename());
         file.setFilesize(Long.toString(fileDTO.getCvFile().getSize()));
         file.setCandidate(candidateService.getcandidateByID(fileDTO.getCandidateID()));
-
+        file.setDocumentType(fileDTO.getDocumentType());
         // Local file storage
 
         String directory = "C:/uploads";
@@ -353,6 +341,20 @@ public class RecruitmentZoneService {
         fileService.save(file);
         return true;
     }
+
+    public List<Application> getApplications() {
+        return applicationService.findApplications();
+    }
+
+    public Application findApplicationByID(Long applicationID) {
+        Optional<Application> optionalApplication = applicationService.findApplicationByID(applicationID);
+        return optionalApplication.orElse(null);
+
+
+    }
+
+
+
 
 
 //  getVacancyApplications
