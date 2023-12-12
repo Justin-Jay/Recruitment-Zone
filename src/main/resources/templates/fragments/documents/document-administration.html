@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row">
+                <!--TOP Navbar-->
+                <div th:replace="fragments/layout/header">Header</div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <hr/>
+            <div class="row ">
+                <div class="search-bar">
+                    <h3>Search File Names</h3>
+
+                    <!-- Display validation error messages -->
+
+                    <form th:action="@{/searchDocuments}" th:object="${searchDocumentsDTO}" th:method="POST">
+                        <input type="text" id="term" name="term" th:value="${searchDocumentsDTO.term}" placeholder="Search File Name" />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            <hr/>
+            <div class="row ">
+                <div class="search-bar">
+                    <h3>Search File Contents</h3>
+                    <!-- Display validation error messages -->
+
+                    <form th:action="@{/searchFileContents}" th:object="${searchDocumentsDTO}" th:method="POST">
+                        <input type="text" id="content-term" name="content-term" th:value="${searchDocumentsDTO.term}" placeholder="Search String" />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            <hr/>
+        </div>
+
+
+        <div class="container-fluid">
+            <hr/>
+            <div class="row ">
+                <div class="search-bar">
+                    <h3>Search Results</h3>
+
+                    <div th:if="${resultCount > 0}" class="card-body" th:replace="fragments/documents/document-fragments :: documentSearchResults(${results},${term})">
+                    </div>
+                    <div th:if="${resultCount == 0}">
+                        <p>No results found.</p>
+                    </div>
+
+                </div>
+
+            </div>
+            <hr/>
+        </div>
+
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <!--BOTTOM Navbar-->
+                <div th:replace="fragments/layout/footer">Footer</div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

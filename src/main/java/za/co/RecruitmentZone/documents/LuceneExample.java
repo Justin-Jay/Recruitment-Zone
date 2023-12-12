@@ -1,5 +1,5 @@
-package za.co.RecruitmentZone.documents;/*
-package za.co.RecruitmentZone.Lucene;
+/*
+package za.co.RecruitmentZone.documents;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -18,7 +18,6 @@ import org.apache.lucene.util.IOUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class LuceneExample {
 
@@ -46,11 +45,10 @@ public class LuceneExample {
         assertEquals(1, hits.length);
         // Iterate through the results:
         StoredFields storedFields = isearcher.storedFields();
-      */
-/*  for (int i = 0; i < hits.length; i++) {
+        for (int i = 0; i < hits.length; i++) {
             Document hitDoc = storedFields.document(hits[i].doc);
             assertEquals("This is the text to be indexed.", hitDoc.get("fieldname"));
-        }*//*
+        }
 
         ireader.close();
         directory.close();
