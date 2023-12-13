@@ -25,6 +25,7 @@
         <input type="hidden" th:field="*{clientID}" />
         <div class="md-10">
             <label for="name" >Client Name: </label>
+            <br>
             <input type="text" th:field="*{name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
         </div>
 
@@ -35,11 +36,7 @@
             </select>
         </label>
 
-     <!--   <div class="md-10">
-            <label for="industry" >Industry: </label>
-            <input type="text" th:field="*{industry}" class="form-control mb-4 w-25" id="industry" placeholder="Industry"/>
-        </div>-->
-
+        <br><br>
         <button type="submit" class="btn btn-primary">Save Updated Client</button>
     </form>
 

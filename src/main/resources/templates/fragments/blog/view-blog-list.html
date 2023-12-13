@@ -1,7 +1,7 @@
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
     <tr>
-        <th>Blog ID</th>
+ <!--       <th>Blog ID</th>-->
         <th>Blog Title</th>
         <th>Blog Description</th>
         <th>Body</th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody>
     <tr th:each="blog : ${blogs}">
-        <td th:text="${blog.blogID}"></td>
+        <!--<td th:text="${blog.blogID}"></td>-->
         <td th:text="${blog.blog_title}"></td>
         <td th:text="${blog.blog_description}"></td>
         <td th:text="${blog.body}"></td>

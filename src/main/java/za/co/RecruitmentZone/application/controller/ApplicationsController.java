@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
+import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.application.entity.Application;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
+import za.co.RecruitmentZone.vacancy.entity.Vacancy;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -39,7 +42,6 @@ public class ApplicationsController {
         log.info("VacancyID {}",vacancyID);
         return "fragments/applications/apply-now";
     }
-
 
 
     @PostMapping("/save-application")

@@ -19,15 +19,20 @@
         <div th:insert="fragments/layout/header">Header</div>
     </div>
     <p th:if="${message}" th:text="${message}"></p>
-    <form action="#" th:action="@{/save-application}" th:object="${newApplicationDTO}"
+    <form action="#" th:action="@{/create-application}" th:object="${newApplicationDTO}"
           th:method="POST" enctype="multipart/form-data">
         <!-- Debug statement in Thymeleaf template -->
-        <h2></h2>
-        <p th:text="${vacancyName} ? ${'Application for ' + vacancyName + ' role'} : 'Application for'"></p>
 
-        <!--     <input type="hidden" id="clientID" name="clientID" th:field="*{vacancyID}" th:value="${newApplicationDTO.vacancyID == vacancyID}"/>-->
-        <input type="hidden" name="vacancyID" th:value="${vacancyID}" />
-        <input type="hidden" name="vacancyName" th:value="${vacancyName}" />
+        <label for="vacancyID">Select a Vacancy:</label>
+        <select name="vacancyID" id="vacancyID">
+            <option th:each="v : ${vacancies}" th:value="${v.vacancyID}" th:text="${v.job_title}"></option>
+        </select>
+
+
+        <!-- Existing form content after the contact dropdown -->
+
+
+
 
         <label for="FirstName">
             First Name:

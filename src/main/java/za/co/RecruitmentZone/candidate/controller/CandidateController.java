@@ -12,12 +12,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
+import za.co.RecruitmentZone.application.dto.NewAssistedApplicationDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.candidate.entity.CandidateNote;
+import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.documents.CandidateFile;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
+import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
 import java.io.IOException;
 import java.util.List;
@@ -212,5 +216,62 @@ public class CandidateController {
         model.addAttribute("candidates", candidates);
         return "fragments/candidate/candidate-administration";
     }
+    @GetMapping("/add-candidate")
+    public String showAddCandidateForm(Model model) {
+        model.addAttribute("newApplicationDTO",new NewAssistedApplicationDTO());
+        model.addAttribute("vacancies", loadVacancies());
+        return "fragments/candidate/add-candidate";
+    }
+
+
+    private List<Vacancy> loadVacancies(){
+        return recruitmentZoneService.getAllVacancies();
+    }
+
+
+    @PostMapping("/create-application")
+    public String saveSubmission(@Valid @ModelAttribute("newApplicationDTO") NewAssistedApplicationDTO newApplicationDTO,
+                                 BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("vacancies", loadVacancies());
+            return "fragments/candidate/add-candidate";
+        }
+        else if (newApplicationDTO.getCvFile().isEmpty()) {
+            model.addAttribute("vacancies", loadVacancies());
+            model.addAttribute("message", "Please select a file to upload.");
+            return "fragments/candidate/add-candidate";
+        }
+        // Security check: Ensure the file name is not a path that could be exploited
+        else if (newApplicationDTO.getCvFile().getOriginalFilename().contains("..")) {
+            model.addAttribute("vacancies", loadVacancies());
+            model.addAttribute("message", "Invalid file name.");
+            return "fragments/candidate/add-candidate";
+        }
+        else if (newApplicationDTO.getCvFile().getSize() > 1024 * 1024 * 25) { // 25MB
+            model.addAttribute("vacancies", loadVacancies());
+            model.addAttribute("message", "File size exceeds the maximum limit (25MB).");
+            return "fragments/candidate/add-candidate";
+        }
+        // Security check: Ensure the file content is safe (detect content type)
+        else if (!isValidContentType(newApplicationDTO.getCvFile())) {
+            model.addAttribute("vacancies", loadVacancies());
+            model.addAttribute("message", "Invalid file type. Only Word (docx) and PDF files are allowed.");
+            return "fragments/candidate/add-candidate";
+        }
+        try {
+            recruitmentZoneService.createCandidateApplication(newApplicationDTO);
+            // publish file upload event and give the file
+            //recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
+            model.addAttribute("message",
+                    "Application Submitted Successfully!");
+            return "fragments/candidate/add-candidate";
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info("Failed to save file");
+            model.addAttribute("message", "File upload failed. Please try again.");
+            return "fragments/candidate/add-candidate";
+        }
+    }
+
 
 }

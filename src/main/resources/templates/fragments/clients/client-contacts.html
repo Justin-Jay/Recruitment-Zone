@@ -9,24 +9,19 @@
     </form>
 </div>
 <div th:unless="${#lists.isEmpty(contacts)}">
-    <!-- Your logic to display contacts when the list is not empty -->
-    <!-- For example, you can iterate through the contacts -->
 
     <table class="table table-bordered table-striped">
+
         <thead class="table-dark">
         <tr>
-            <th>Client ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Contact Person</th>
             <th>Land Line</th>
             <th>Cell Number</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="contact : ${contacts}">
-            <td th:text="${clientID}"></td>
-            <td th:text="${contact.first_name}"></td>
-            <td th:text="${contact.last_name}"></td>
+            <td th:text="${contact.first_name +' ' +contact.last_name }"></td>
             <td th:text="${contact.land_line}"></td>
             <td th:text="${contact.cell_phone}"></td>
         </tr>
@@ -38,11 +33,11 @@
         <!-- Submit button to trigger the form submission -->
         <button type="submit" class="btn btn-primary">Add Contact Person</button>
     </form>
-<!--
-    <ul>
-        <li th:each="contact : ${contacts}">
-            &lt;!&ndash; Display contact details &ndash;&gt;
-            <p th:text="${contact.name}"></p>
-        </li>
-    </ul>-->
+    <!--
+        <ul>
+            <li th:each="contact : ${contacts}">
+                &lt;!&ndash; Display contact details &ndash;&gt;
+                <p th:text="${contact.name}"></p>
+            </li>
+        </ul>-->
 </div>

@@ -1,4 +1,5 @@
 <div class="container-fluid" th:fragment="candidateView(candidate)">
+    <h2>Candidate Profile</h2>
     <div>
         <label>Candidate ID:</label>
         <span th:text="${candidate.candidateID}"></span>
@@ -82,11 +83,13 @@
             <button type="submit" class="btn btn-primary">View Docs</button>
         </form>
     </div>
+    <br>
 </div>
 
 <!-- | TRY THIS | -->
 
 <div class="container-fluid" th:fragment="existingNotes(existingNotes)">
+   <h2>Candidate Comments</h2>
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
