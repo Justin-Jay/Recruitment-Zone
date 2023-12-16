@@ -7,7 +7,6 @@ public class EmployeeDTO {
     @NotEmpty(message = "First Name Cannot be empty")
     public String first_name;
     @NotEmpty(message = "Last Name Cannot be empty")
-
     public String last_name;
     @Size(min=10, max=10)
     public String contact_number;

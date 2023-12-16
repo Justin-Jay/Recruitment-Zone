@@ -1,4 +1,4 @@
-package za.co.RecruitmentZone.util;
+package za.co.RecruitmentZone.util.Enums;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -6,6 +6,7 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
 import za.co.RecruitmentZone.util.Enums.Province;
@@ -24,22 +25,18 @@ public class NewAssistedApplicationDTO {
     @NotEmpty(message = "ID Number is mandatory")
     private String id_number;
     private String email_address;
-
-    @Min(value = 10, message = "Must Be 10 Digits")
-    @Max(value = 10, message = "Must Be 10 Digits")
+    @Size(min=10, max=10)
     private String phone_number;
-
     @Enumerated(EnumType.STRING)
     private Province current_province;
-    @NotEmpty(message = " ")
+    @NotEmpty(message = "Must not be empty")
     private String current_role;
-    @NotEmpty(message = " ")
+    @NotEmpty(message = "Must not be empty")
     private String current_employer;
     @NotEmpty(message = " ")
     private String seniority_level;
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
-
     private Boolean relocation;
     @Transient
     private MultipartFile cvFile;

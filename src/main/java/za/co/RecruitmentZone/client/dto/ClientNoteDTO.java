@@ -10,7 +10,6 @@ public class ClientNoteDTO {
     public ClientNoteDTO() {
     }
 
-
     public ClientNoteDTO(Long clientID, LocalDateTime dateCaptured, String comment) {
         this.clientID = clientID;
         this.dateCaptured = dateCaptured;

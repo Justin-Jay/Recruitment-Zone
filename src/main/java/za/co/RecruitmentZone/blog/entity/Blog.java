@@ -14,9 +14,7 @@ public class Blog {
     private Long blogID;
 
     private String blog_title;
-
     private String blog_description;
-
     @Enumerated(EnumType.STRING)
     private BlogStatus status;
     private String body;

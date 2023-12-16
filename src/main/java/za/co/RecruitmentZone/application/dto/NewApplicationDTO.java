@@ -1,8 +1,7 @@
 package za.co.RecruitmentZone.application.dto;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
@@ -24,7 +23,7 @@ public class NewApplicationDTO {
     private String id_number;
     @NotEmpty(message = " ")
     private String email_address;
-    @NotEmpty(message = " ")
+    @Size(min=10, max=10)
     private String phone_number;
     @Enumerated(EnumType.STRING)
     private Province current_province;

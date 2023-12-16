@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
 import za.co.RecruitmentZone.candidate.entity.CandidateNote;
 import za.co.RecruitmentZone.client.dto.ClientNoteDTO;
+import za.co.RecruitmentZone.util.Enums.Industry;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,8 @@ public class Client {
     @Column(name = "clientid")
     private Long clientID;
     private String name;
-    private String industry;
+    @Enumerated(EnumType.STRING)
+    private Industry industry;
     @OneToMany(mappedBy = "client",
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
@@ -49,7 +51,7 @@ public class Client {
     public Client() {
     }
 
-    public Client(String name, String industry) {
+    public Client(String name, Industry industry) {
         this.name = name;
         this.industry = industry;
     }
@@ -94,11 +96,11 @@ public class Client {
         this.name = name;
     }
 
-    public String getIndustry() {
+    public Industry getIndustry() {
         return industry;
     }
 
-    public void setIndustry(String industry) {
+    public void setIndustry(Industry industry) {
         this.industry = industry;
     }
 

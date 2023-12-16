@@ -1,11 +1,15 @@
 package za.co.RecruitmentZone.client.dto;
 
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
+import za.co.RecruitmentZone.util.Enums.Industry;
 
 public class ClientDTO {
     private String name;
-    private String industry;
+    @Enumerated(EnumType.STRING)
+    private Industry industry;
     private String contactPerson_FirstName;
     private String contactPerson_last_name;
     @Email(message = "Email should be valid")
@@ -16,7 +20,9 @@ public class ClientDTO {
     public ClientDTO() {
     }
 
-    public ClientDTO(String name, String industry, String contactPerson_FirstName, String contactPerson_last_name, String contactPerson_email_address, String contactPerson_land_line, String contactPerson_cell_phone) {
+    public ClientDTO(String name,Industry industry, String contactPerson_FirstName,
+                     String contactPerson_last_name, String contactPerson_email_address,
+                     String contactPerson_land_line, String contactPerson_cell_phone) {
         this.name = name;
         this.industry = industry;
         this.contactPerson_FirstName = contactPerson_FirstName;
@@ -34,11 +40,11 @@ public class ClientDTO {
         this.name = name;
     }
 
-    public String getIndustry() {
+    public Industry getIndustry() {
         return industry;
     }
 
-    public void setIndustry(String industry) {
+    public void setIndustry(Industry industry) {
         this.industry = industry;
     }
 

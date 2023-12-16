@@ -1,14 +1,19 @@
 package za.co.RecruitmentZone.client.dto;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import za.co.RecruitmentZone.client.entity.Client;
 
 
 public class ContactPersonDTO {
     private String first_name;
+    @NotEmpty(message = "Last name must not be empty")
     private String last_name;
     private String email_address;
+    @Size(min=10, max=10)
     private String land_line;
+    @Size(min=10, max=10)
     private String cell_phone;
     private Long clientID;
 

@@ -480,7 +480,7 @@ public class RecruitmentZoneService {
             oc.setName(updatedClient.getName());
         }
 
-        if (!oc.getIndustry().equalsIgnoreCase(updatedClient.getIndustry())) {
+        if (oc.getIndustry()!=updatedClient.getIndustry()) {
             oc.setIndustry(updatedClient.getIndustry());
         }
         clientService.saveUpdatedClient(oc);
