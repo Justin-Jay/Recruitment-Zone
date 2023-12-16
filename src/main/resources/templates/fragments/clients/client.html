@@ -16,7 +16,7 @@
 
         <td th:text="${client.industry}"></td>
         <td>
-            <form th:action="@{/update-client}" th:method="post">
+            <form th:action="@{/Client/update-client}" th:method="post">
                 <!-- Hidden input field to include the id in the POST request -->
                 <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
                 <!-- Submit button to trigger the form submission -->
@@ -24,7 +24,7 @@
             </form>
         </td>
         <td>
-            <form th:action="@{/view-client-contacts}" th:method="post">
+            <form th:action="@{/Client/view-client-contacts}" th:method="post">
                 <!-- Hidden input field to include the id in the POST request -->
                 <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
                 <!-- Submit button to trigger the form submission -->
@@ -32,7 +32,7 @@
             </form>
         </td>
         <td>
-            <form th:action="@{/view-client-notes}" th:method="post">
+            <form th:action="@{/Client/view-client-notes}" th:method="post">
                 <!-- Hidden input field to include the id in the POST request -->
                 <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
                 <!-- Submit button to trigger the form submission -->

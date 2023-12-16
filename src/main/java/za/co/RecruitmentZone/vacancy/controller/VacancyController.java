@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
+@RequestMapping("/Vacancy")
 public class VacancyController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(VacancyController.class);
@@ -77,7 +78,7 @@ public class VacancyController {
             return "fragments/vacancy/add-vacancy";
         }
         recruitmentZoneService.saveNewVacancy(vacancy);
-        return "redirect:/vacancy-administration";
+        return "redirect:/Vacancy/vacancy-administration";
     }
 
     @PostMapping("/update-vacancy")
@@ -93,7 +94,7 @@ public class VacancyController {
             return "fragments/vacancy/update-vacancy";
         }
         recruitmentZoneService.saveVacancy(vacancy);
-        return "redirect:/vacancy-administration";
+        return "redirect:/Vacancy/vacancy-administration";
     }
 
 

@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+
 public class VacancyDTO {
     @NotEmpty(message = "Please enter job title")
     private String job_title;

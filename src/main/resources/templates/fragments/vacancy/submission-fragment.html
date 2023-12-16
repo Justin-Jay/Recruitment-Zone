@@ -39,8 +39,8 @@
                     <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
 
                     <!-- Submit button to trigger the form submission -->
-                    <button  th:action="@{/view-candidate-notes}" th:method="post"
-                             hx-post="/view-candidate-notes"
+                    <button  th:action="@{/Candidate/view-candidate-notes}" th:method="post"
+                             hx-post="/Candidate/view-candidate-notes"
                              hx-target='#candidate-notes'
                              hx-swap='innerHTML '
                              hx-include="[candidateID='candidateID']" >

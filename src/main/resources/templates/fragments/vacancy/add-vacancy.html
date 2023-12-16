@@ -23,7 +23,7 @@
 
     <div class="container-fluid">
 
-        <form action="#" th:action="@{/save-vacancy}" th:object="${vacancy}" method="POST">
+        <form action="#" th:action="@{/Vacancy/save-vacancy}" th:object="${vacancy}" method="POST">
             <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
             <label for="clientID">Select Client
                 <select name="clientID">

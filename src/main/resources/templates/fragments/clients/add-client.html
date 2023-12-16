@@ -21,7 +21,7 @@
     <hr/>
 
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-client}" th:object="${ClientDTO}" method="POST">
+        <form action="#" th:action="@{/Client/save-client}" th:object="${ClientDTO}" method="POST">
             <label>
                Client Name:<input type="text" th:field="*{name}" placeholder="First Name" class="form-control">
             </label>

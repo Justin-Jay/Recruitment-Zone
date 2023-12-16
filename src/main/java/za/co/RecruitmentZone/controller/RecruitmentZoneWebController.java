@@ -17,13 +17,12 @@ public class RecruitmentZoneWebController {
     public RecruitmentZoneWebController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
     }
-    @GetMapping("/")
+  /*  @GetMapping("/")
     public String redirectToHome() {
         return "redirect:/home";
-    }
-
+    }*/
     // Home pages
-    @GetMapping("/home")
+    @GetMapping({"/","/home"})
     public String home(@RequestParam(name = "name", required = false) String title,Model model) {
         List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
         log.info("Total Vacancies: " + vacancies.size());

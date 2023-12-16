@@ -22,7 +22,7 @@
     <!--    <div th:insert="fragments/vacancy/vacancy">Vacancy</div>-->
     <!--FORM TO UPDATE JOB -->
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-updated-vacancy}" th:object="${vacancy}" th:method="POST">
+        <form action="#" th:action="@{/Vacancy/save-updated-vacancy}" th:object="${vacancy}" th:method="POST">
             <!-- Hidden input field to include the vacancyID in the POST request -->
             <input type="hidden" name="vacancyID" th:field="*{vacancyID}"/>
             <div class="md-10">

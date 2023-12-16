@@ -29,7 +29,7 @@
     -->
         <!--th:fragment="add-note-fragment(candidateNote)"-->
         <div class="container-fluid" style="border: 1px solid #ddd; padding: 15px;" >
-            <form action="#" th:action="@{/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post"
+            <form action="#" th:action="@{/Candidate/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post"
                   enctype="multipart/form-data">
                 <div class="form-group">
                     <!-- Hidden input field to include the candidateID in the POST request -->

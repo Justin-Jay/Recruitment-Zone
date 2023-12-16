@@ -20,7 +20,7 @@
     <div class="container-fluid"><h2>View Client</h2></div>
     <hr/>
 <div class="container-fluid">
-    <form action="#" th:action="@{/save-updated-client}" th:object="${client}" th:method="POST">
+    <form action="#" th:action="@{/Client/save-updated-client}" th:object="${client}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" th:field="*{clientID}" />
         <div class="md-10">

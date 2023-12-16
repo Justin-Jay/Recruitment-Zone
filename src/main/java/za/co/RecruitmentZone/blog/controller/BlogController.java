@@ -24,6 +24,7 @@ import static za.co.RecruitmentZone.util.Enums.BlogStatus.ACTIVE;
 import static za.co.RecruitmentZone.util.Enums.BlogStatus.PENDING;
 
 @Controller
+@RequestMapping("/Blog")
 public class BlogController {
     private final BlogService blogService;
     private final EmployeeService employeeService;
@@ -70,7 +71,7 @@ public class BlogController {
             return "fragments/blog/add-blog";
         }
         saveNewBlog(blog);
-        return "redirect:/blog-administration";
+        return "redirect:/Blog/blog-administration";
     }
 
     @PostMapping("/save-updated-blog")
@@ -79,7 +80,7 @@ public class BlogController {
             return "fragments/blog/update-blog";
         }
         saveBlog(blog);
-        return "redirect:/blog-administration";
+        return "redirect:/Blog/blog-administration";
     }
 
     @PostMapping("/update-blog")
@@ -92,13 +93,7 @@ public class BlogController {
 
     @GetMapping("/blog-administration")
     public String blogAdministration(Model model) {
-        List<Blog> allBlogs = new ArrayList<>();
-        try {
-            allBlogs = getBlogs();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
-        }
-        model.addAttribute("blogs", allBlogs);
+        model.addAttribute("blogs", getBlogs());
         return "/fragments/blog/blog-administration";
     }
 
@@ -177,6 +172,5 @@ public class BlogController {
     public List<Blog> getBlogs() {
         return blogService.getBlogs();
     }
-
 
 }

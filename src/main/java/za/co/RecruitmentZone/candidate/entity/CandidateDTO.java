@@ -3,6 +3,7 @@ package za.co.RecruitmentZone.candidate.entity;
 import jakarta.persistence.*;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
+import za.co.RecruitmentZone.util.Enums.Province;
 
 public class CandidateDTO {
     private String first_name;
@@ -10,7 +11,8 @@ public class CandidateDTO {
     private String id_number;
     private String email_address;
     private String phone_number;
-    private String current_province;
+    @Enumerated(EnumType.STRING)
+    private Province current_province;
     private String current_role;
     private String current_employer;
     private String seniority_level;
@@ -24,7 +26,8 @@ public class CandidateDTO {
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String first_name, String last_name, String id_number, String email_address, String phone_number, String current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, String fileLocation, MultipartFile file) {
+    public CandidateDTO(String first_name, String last_name, String id_number, String email_address,
+                        String phone_number, Province current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, String fileLocation, MultipartFile file) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.id_number = id_number;
@@ -80,11 +83,11 @@ public class CandidateDTO {
         this.phone_number = phone_number;
     }
 
-    public String getCurrent_province() {
+    public Province getCurrent_province() {
         return current_province;
     }
 
-    public void setCurrent_province(String current_province) {
+    public void setCurrent_province(Province current_province) {
         this.current_province = current_province;
     }
 

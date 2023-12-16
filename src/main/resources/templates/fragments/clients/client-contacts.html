@@ -1,7 +1,7 @@
 <div th:if="${#lists.isEmpty(contacts)}">
     <p>No contacts found for client.</p>
-    <a class="nav-link" th:href="@{/client-admin}">Client Admin Page</a>
-    <form th:action="@{/add-contact}" th:method="GET">
+    <a class="nav-link" th:href="@{/Client/client-admin}">Client Admin Page</a>
+    <form th:action="@{/Client/add-contact}" th:method="GET">
         <!-- Hidden input field to include the id in the POST request -->
         <input type="hidden" name="clientID" th:value="${clientID}"/>
         <!-- Submit button to trigger the form submission -->
@@ -27,7 +27,7 @@
         </tr>
         </tbody>
     </table>
-    <form th:action="@{/add-contact}" th:method="GET">
+    <form th:action="@{/Client/add-contact}" th:method="GET">
         <!-- Hidden input field to include the id in the POST request -->
         <input type="hidden" name="clientID" th:value="${clientID}"/>
         <!-- Submit button to trigger the form submission -->

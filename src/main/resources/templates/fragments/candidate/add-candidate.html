@@ -19,21 +19,16 @@
         <div th:insert="fragments/layout/header">Header</div>
     </div>
     <p th:if="${message}" th:text="${message}"></p>
-    <form action="#" th:action="@{/create-application}" th:object="${newApplicationDTO}"
+    <form action="#" th:action="@{/Candidate/create-application}" th:object="${newApplicationDTO}"
           th:method="POST" enctype="multipart/form-data">
         <!-- Debug statement in Thymeleaf template -->
 
         <label for="vacancyID">Select a Vacancy:</label>
+
         <select name="vacancyID" id="vacancyID">
             <option th:each="v : ${vacancies}" th:value="${v.vacancyID}" th:text="${v.job_title}"></option>
         </select>
-
-
-        <!-- Existing form content after the contact dropdown -->
-
-
-
-
+        <br>
         <label for="FirstName">
             First Name:
         </label>
@@ -62,11 +57,12 @@
         <input type="text" th:field="${newApplicationDTO.phone_number}" id="phoneNumber" placeholder="Enter Phone Number"
                class="form-control mb-4 w-25"/>
 
-        <label for="currentProvince">
-            Current Province:
+        <label for="currentProvince">Current Location:
+            <select id="currentProvince" th:field="${newApplicationDTO.current_province}">
+                <option th:each="province : ${T(za.co.RecruitmentZone.util.Enums.Province).values()}"
+                        th:value="${province}" th:text="${province}"></option>
+            </select>
         </label>
-        <input type="text" th:field="${newApplicationDTO.current_province}" id="currentProvince" placeholder="Enter Current Province"
-               class="form-control mb-4 w-25"/>
         <label for="CurrentRole">
             Current Role:
         </label>
@@ -90,12 +86,6 @@
                         th:value="${statusVal}" th:text="${statusVal}"></option>
             </select>
         </label>
-        <br/>
-      <!--  <label for="relocation">
-            Relocation:
-        </label>
-        <input type="text" th:field="${newApplicationDTO.relocation}" id="relocation" placeholder="Willing to relocate?"
-               class="form-control mb-4 w-25">-->
         <br/>
         <label>Willing to relocate?</label>
 

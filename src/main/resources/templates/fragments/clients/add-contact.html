@@ -24,7 +24,7 @@
     <hr/>
 
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-new-contact}" th:object="${contactPersonDTO}" th:method="POST">
+        <form action="#" th:action="@{/Client/save-new-contact}" th:object="${contactPersonDTO}" th:method="POST">
             <input type="hidden" name="clientID" th:value="${clientID}" />
             <label>
                 First Name<input type="text" th:field="${contactPersonDTO.first_name}"

@@ -30,7 +30,7 @@
 
                     <!-- Display validation error messages -->
 
-                    <form th:action="@{/searchDocuments}" th:object="${searchDocumentsDTO}" th:method="POST">
+                    <form th:action="@{/Document/searchDocuments}" th:object="${searchDocumentsDTO}" th:method="POST">
                         <input type="text" id="term" name="term" th:value="${searchDocumentsDTO.term}" placeholder="Search File Name" />
                         <button type="submit">Search</button>
                     </form>
@@ -42,7 +42,7 @@
                     <h3>Search File Contents</h3>
                     <!-- Display validation error messages -->
 
-                    <form th:action="@{/searchFileContents}" th:object="${searchDocumentsDTO}" th:method="POST">
+                    <form th:action="@{/Document/searchFileContents}" th:object="${searchDocumentsDTO}" th:method="POST">
                         <input type="text" id="content-term" name="content-term" th:value="${searchDocumentsDTO.term}" placeholder="Search String" />
                         <button type="submit">Search</button>
                     </form>

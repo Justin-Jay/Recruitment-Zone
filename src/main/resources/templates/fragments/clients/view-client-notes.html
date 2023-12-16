@@ -42,7 +42,7 @@
     </div>
 
     <div class="container-fluid" >
-        <form action="#" th:action="@{/save-client-note}" th:object="${clientNote}"
+        <form action="#" th:action="@{/Client/save-client-note}" th:object="${clientNote}"
               th:method="post">
             <div class="form-group">
                 <!-- Hidden input field to include the candidateID in the POST request -->
@@ -62,7 +62,7 @@
     </div>
     <hr/>
     <div class="container-fluid">
-        <a class="nav-link" th:href="@{/client-administration}">Back</a>
+        <a class="nav-link" th:href="@{/Client/client-administration}">Back</a>
     </div>
     <!--BOTTOM Navbar-->
     <div th:insert="fragments/layout/footer">Footer</div>

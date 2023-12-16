@@ -459,11 +459,9 @@ public class RecruitmentZoneService {
     public void saveNewClient(ClientDTO clientDTO) {
         clientService.saveClient(clientDTO);
     }
-
     public List<Client> getClients() {
         return clientService.findAllClients();
     }
-
     public Client findClientByID(Long clientID) {
         return clientService.findClientByID(clientID);
     }

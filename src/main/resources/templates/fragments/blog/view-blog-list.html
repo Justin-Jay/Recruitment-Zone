@@ -17,7 +17,7 @@
         <td th:text="${blog.body}"></td>
         <td th:text="${blog.status}"></td>
         <td>
-            <form th:action="@{/update-blog}" th:method="post">
+            <form th:action="@{/Blog/update-blog}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
                 <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
                 <!-- Submit button to trigger the form submission -->

@@ -78,7 +78,7 @@
 
     <div>
         <label>View Documents:</label>
-        <form th:action="@{/view-candidate-documents}" th:method="post">
+        <form th:action="@{/Candidate/view-candidate-documents}" th:method="post">
             <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
             <button type="submit" class="btn btn-primary">View Docs</button>
         </form>
@@ -112,7 +112,7 @@
 
 
 <div class="container-fluid" th:fragment="add-note-fragment(candidateNote)">
-    <form action="#" th:action="@{/save-candidate-note}" th:object="${candidateNote}"
+    <form action="#" th:action="@{/Candidate/save-candidate-note}" th:object="${candidateNote}"
           th:method="post">
         <div class="form-group">
             <!-- Hidden input field to include the candidateID in the POST request -->
@@ -144,7 +144,7 @@
         </li>
 
         <li class="key-value-item">
-            <a th:href="@{/download-document/{fileID}(fileID=${document.fileID})}" class="download-button">Download</a>
+            <a th:href="@{/Document/download-document/{fileID}(fileID=${document.fileID})}" class="download-button">Download</a>
         </li>
     </ul>
 </div>
@@ -162,7 +162,7 @@
         <td th:text="${candidate.candidateID}"></td>
         <td th:text="${candidate.first_name}"></td>
         <td>
-            <form th:action="@{/view-candidate}" th:method="post">
+            <form th:action="@{/Candidate/view-candidate}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
                 <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
                 <!-- Submit button to trigger the form submission -->

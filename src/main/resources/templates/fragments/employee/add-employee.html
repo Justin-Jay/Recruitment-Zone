@@ -21,7 +21,7 @@
     <hr/>
 
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-employee}" th:object="${employeeDTO}" method="POST">
+        <form action="#" th:action="@{/Employee/save-employee}" th:object="${employeeDTO}" method="POST">
             <label>
                 Employee Name:
                 <p th:class="error" th:if="${#fields.hasErrors('first_name')}"

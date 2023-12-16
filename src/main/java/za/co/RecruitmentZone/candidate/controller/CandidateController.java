@@ -11,14 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.application.dto.NewAssistedApplicationDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.candidate.entity.CandidateNote;
-import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.documents.CandidateFile;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
@@ -29,6 +27,7 @@ import java.util.Set;
 
 
 @Controller
+@RequestMapping("/Candidate")
 public class CandidateController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Logger log = LoggerFactory.getLogger(CandidateController.class);
@@ -58,7 +57,6 @@ public class CandidateController {
             return "fragments/candidate/view-candidate";
         }
 
-
         Long candidateID = candidateNote.getCandidateID();
         Candidate candidate = recruitmentZoneService.findCandidateByID(candidateID);
         candidate.addNote(candidateNote);
@@ -79,12 +77,7 @@ public class CandidateController {
 
 
     @PostMapping("/view-candidate-notes")
-    public String candidateNotes(@RequestParam("candidateID") Long candidateID,Model model,
-                                 HttpServletRequest request) {
-        CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrf != null) {
-            log.debug("CSRF Token Value: {}", csrf.getToken());
-        }
+    public String candidateNotes(@RequestParam("candidateID") Long candidateID,Model model) {
         Candidate candidate = recruitmentZoneService.findCandidateByID(candidateID);
         Set<CandidateNote> existingNotes = candidate.getNotes();
         model.addAttribute("existingNotes", existingNotes);
@@ -93,14 +86,7 @@ public class CandidateController {
 
     @PostMapping("/view-candidate-documents")
     public String candidateDocs(@RequestParam("candidateID") Long candidateID,Model model) {
-
-        Candidate candidate = recruitmentZoneService.findCandidateByID(candidateID);
-        Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-        model.addAttribute("candidateDocuments", candidateDocuments);
-        CandidateFileDTO fileDTO = new CandidateFileDTO();
-        fileDTO.setCandidateID(candidateID);
-        model.addAttribute("candidateFileDTO", fileDTO);
-        model.addAttribute("existingDocuments", candidateDocuments);
+        documentAttributes(model,candidateID);
         return "fragments/candidate/candidate-documents";
 
     }
@@ -109,60 +95,26 @@ public class CandidateController {
     public String saveDocument(@Valid @ModelAttribute("candidateFileDTO") CandidateFileDTO candidateFileDTO,
                                BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
-            Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-            CandidateNoteDTO fileDTO = new CandidateNoteDTO();
-            fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
-            model.addAttribute("candidateFileDTO", fileDTO);
-            model.addAttribute("existingDocuments", candidateDocuments);
-            model.addAttribute("candidateID",candidateFileDTO.getCandidateID());
-            model.addAttribute("message", "Binding Failed");
+            documentAttributes(model,candidateFileDTO,"Binding Failed");
             return "fragments/applications/apply-now";
         }
         else if (candidateFileDTO.getCvFile().isEmpty()) {
-            Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
-            Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-            CandidateNoteDTO fileDTO = new CandidateNoteDTO();
-            fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
-            model.addAttribute("candidateFileDTO", fileDTO);
-            model.addAttribute("existingDocuments", candidateDocuments);
-            model.addAttribute("candidateID",candidateFileDTO.getCandidateID());
-            model.addAttribute("message", "Please select a file to upload.");
+            documentAttributes(model,candidateFileDTO,"Please select a file to upload.");
             return "fragments/applications/apply-now";
         }
         // Security check: Ensure the file name is not a path that could be exploited
         else if (candidateFileDTO.getCvFile().getOriginalFilename().contains("..")) {
-            Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
-            Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-            CandidateNoteDTO fileDTO = new CandidateNoteDTO();
-            fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
-            model.addAttribute("candidateFileDTO", fileDTO);
-            model.addAttribute("existingDocuments", candidateDocuments);
-            model.addAttribute("candidateID",candidateFileDTO.getCandidateID());
-            model.addAttribute("message", "Invalid file name.");
+            documentAttributes(model,candidateFileDTO,"Invalid file name.");
+
             return "fragments/applications/apply-now";
         }
         else if (candidateFileDTO.getCvFile().getSize() > 1024 * 1024 * 25) { // 25MB
-            Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
-            Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-            CandidateFileDTO fileDTO = new CandidateFileDTO();
-            fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
-            model.addAttribute("candidateFileDTO", fileDTO);
-            model.addAttribute("existingDocuments", candidateDocuments);
-            model.addAttribute("candidateID",candidateFileDTO.getCandidateID());
-            model.addAttribute("message", "File size exceeds the maximum limit (25MB).");
+            documentAttributes(model,candidateFileDTO,"File size exceeds the maximum limit (25MB).");
             return "fragments/applications/apply-now";
         }
         // Security check: Ensure the file content is safe (detect content type)
         else if (!isValidContentType(candidateFileDTO.getCvFile())) {
-            Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
-            Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-            CandidateFileDTO fileDTO = new CandidateFileDTO();
-            fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
-            model.addAttribute("candidateFileDTO", fileDTO);
-            model.addAttribute("existingDocuments", candidateDocuments);
-            model.addAttribute("candidateID",candidateFileDTO.getCandidateID());
-            model.addAttribute("message", "Invalid file type. Only Word (docx) and PDF files are allowed.");
+            documentAttributes(model,candidateFileDTO,"Invalid file type. Only Word (docx) and PDF files are allowed.");
             return "fragments/applications/apply-now";
         }
         try {
@@ -172,43 +124,17 @@ public class CandidateController {
             // publish file upload event and give the file
             //recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
 
-
-
-
-            Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
-            Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-            model.addAttribute("candidateDocuments", candidateDocuments);
-            CandidateFileDTO fileDTO = new CandidateFileDTO();
-            fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
-            model.addAttribute("candidateFileDTO", fileDTO);
-            model.addAttribute("existingDocuments", candidateDocuments);
-            model.addAttribute("candidateID",candidateFileDTO.getCandidateID());
-            model.addAttribute("message",
-                    "File Upload Successfully!");
+            documentAttributes(model,candidateFileDTO,"File Upload Successfully!");
             return "fragments/candidate/candidate-documents";
         } catch (Exception e) {
             log.info(e.getMessage());
             log.info("Failed to save file");
-            model.addAttribute("message", "File upload failed. Please try again.");
-            Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
-            Set<CandidateFile> candidateDocuments = candidate.getDocuments();
-            model.addAttribute("candidateDocuments", candidateDocuments);
-            CandidateFileDTO fileDTO = new CandidateFileDTO();
-            fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
-            model.addAttribute("candidateFileDTO", fileDTO);
-            model.addAttribute("existingDocuments", candidateDocuments);
+            documentAttributes(model,candidateFileDTO,"File upload failed. Please try again.");
             return "fragments/candidate/candidate-documents";
         }
     }
-    private boolean isValidContentType(MultipartFile file) {
-        try {
-            String detectedContentType = new Tika().detect(file.getInputStream());
-            return detectedContentType.equals("application/pdf") || detectedContentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        } catch (IOException e) {
-            //log.info(e.getMessage());
-            return false;
-        }
-    }
+
+
 
     @GetMapping("/candidate-administration")
     public String viewAllCandidates(Model model) {
@@ -218,14 +144,8 @@ public class CandidateController {
     }
     @GetMapping("/add-candidate")
     public String showAddCandidateForm(Model model) {
-        model.addAttribute("newApplicationDTO",new NewAssistedApplicationDTO());
-        model.addAttribute("vacancies", loadVacancies());
+        applicationAttributes(model,"",true);
         return "fragments/candidate/add-candidate";
-    }
-
-
-    private List<Vacancy> loadVacancies(){
-        return recruitmentZoneService.getAllVacancies();
     }
 
 
@@ -233,29 +153,25 @@ public class CandidateController {
     public String saveSubmission(@Valid @ModelAttribute("newApplicationDTO") NewAssistedApplicationDTO newApplicationDTO,
                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("vacancies", loadVacancies());
+            applicationAttributes(model,"",false);
             return "fragments/candidate/add-candidate";
         }
         else if (newApplicationDTO.getCvFile().isEmpty()) {
-            model.addAttribute("vacancies", loadVacancies());
-            model.addAttribute("message", "Please select a file to upload.");
+            applicationAttributes(model,"Please select a file to upload.",false);
             return "fragments/candidate/add-candidate";
         }
         // Security check: Ensure the file name is not a path that could be exploited
         else if (newApplicationDTO.getCvFile().getOriginalFilename().contains("..")) {
-            model.addAttribute("vacancies", loadVacancies());
-            model.addAttribute("message", "Invalid file name.");
+            applicationAttributes(model,"Invalid file name.",false);
             return "fragments/candidate/add-candidate";
         }
         else if (newApplicationDTO.getCvFile().getSize() > 1024 * 1024 * 25) { // 25MB
-            model.addAttribute("vacancies", loadVacancies());
-            model.addAttribute("message", "File size exceeds the maximum limit (25MB).");
+            applicationAttributes(model,"File size exceeds the maximum limit (25MB).",false);
             return "fragments/candidate/add-candidate";
         }
         // Security check: Ensure the file content is safe (detect content type)
         else if (!isValidContentType(newApplicationDTO.getCvFile())) {
-            model.addAttribute("vacancies", loadVacancies());
-            model.addAttribute("message", "Invalid file type. Only Word (docx) and PDF files are allowed.");
+            applicationAttributes(model,"Invalid file type. Only Word (docx) and PDF files are allowed.",false);
             return "fragments/candidate/add-candidate";
         }
         try {
@@ -268,10 +184,52 @@ public class CandidateController {
         } catch (Exception e) {
             log.info(e.getMessage());
             log.info("Failed to save file");
-            model.addAttribute("message", "File upload failed. Please try again.");
+            applicationAttributes(model,"File upload failed. Please try again.",false);
             return "fragments/candidate/add-candidate";
         }
     }
 
+    private void applicationAttributes(Model model,String message,boolean newApplication) {
+        model.addAttribute("vacancies", loadVacancies());
+        model.addAttribute("message", message);
+        if(newApplication)
+        {
+            model.addAttribute("newApplicationDTO", new NewAssistedApplicationDTO());
+        }
+    }
+
+    private boolean isValidContentType(MultipartFile file) {
+        try {
+            String detectedContentType = new Tika().detect(file.getInputStream());
+            return detectedContentType.equals("application/pdf") || detectedContentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        } catch (IOException e) {
+            //log.info(e.getMessage());
+            return false;
+        }
+    }
+    private void documentAttributes(Model model,CandidateFileDTO candidateFileDTO,String message) {
+        Candidate candidate = recruitmentZoneService.findCandidateByID(candidateFileDTO.getCandidateID());
+        Set<CandidateFile> candidateDocuments = candidate.getDocuments();
+        CandidateFileDTO fileDTO = new CandidateFileDTO();
+        fileDTO.setCandidateID(candidateFileDTO.getCandidateID());
+        model.addAttribute("candidateFileDTO", fileDTO);
+        model.addAttribute("existingDocuments", candidateDocuments);
+        model.addAttribute("candidateID",candidateFileDTO.getCandidateID());
+        model.addAttribute("message", message);
+    }
+
+    private void documentAttributes(Model model,Long candidateID) {
+        Candidate candidate = recruitmentZoneService.findCandidateByID(candidateID);
+        Set<CandidateFile> candidateDocuments = candidate.getDocuments();
+        CandidateFileDTO fileDTO = new CandidateFileDTO();
+        fileDTO.setCandidateID(candidateID);
+        model.addAttribute("candidateFileDTO", fileDTO);
+        model.addAttribute("existingDocuments", candidateDocuments);
+        model.addAttribute("candidateID",candidateID);
+    }
+
+    private List<Vacancy> loadVacancies(){
+        return recruitmentZoneService.getAllVacancies();
+    }
 
 }
