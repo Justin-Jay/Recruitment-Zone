@@ -35,7 +35,7 @@
    <!--         <td th:text="*{vacancy.jobType}"></td>
             <td th:text="*{vacancy.empType}"></td>-->
             <td>
-                <form th:action="@{/update-vacancy}" th:method="post">
+                <form th:action="@{/Vacancy/update-vacancy}" th:method="post">
                     <!-- Hidden input field to include the vacancyID in the POST request -->
                     <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
                     <!-- Submit button to trigger the form submission -->
@@ -43,7 +43,7 @@
                 </form>
             </td>
             <td>
-                <form th:action="@{/view-vacancy-submission}" th:method="post">
+                <form th:action="@{/Vacancy/view-vacancy-submission}" th:method="post">
                     <!-- Hidden input field to include the vacancyID in the POST request -->
                     <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
                     <!-- Submit button to trigger the form submission -->

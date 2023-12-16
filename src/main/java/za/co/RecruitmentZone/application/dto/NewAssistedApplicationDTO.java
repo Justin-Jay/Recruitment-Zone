@@ -1,33 +1,55 @@
-package za.co.RecruitmentZone.candidate.entity;
+package za.co.RecruitmentZone.application.dto;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
 import za.co.RecruitmentZone.util.Enums.Province;
 
-public class CandidateDTO {
+//    @NotEmpty(message = "Please enter job title")
+//   @FutureOrPresent(message = "Date cannot be in the past")
+//  @Future(message = "Date must be in the future")
+
+public class NewAssistedApplicationDTO {
+    private Long vacancyID;
+    private Long clientID;
+    @NotEmpty(message = "First Name Is Mandatory")
     private String first_name;
+    @NotEmpty(message = "Last Name Is Mandatory")
     private String last_name;
+    @NotEmpty(message = "ID Number is mandatory")
     private String id_number;
     private String email_address;
+
+    @Min(value = 10, message = "Must Be 10 Digits")
+    @Max(value = 10, message = "Must Be 10 Digits")
     private String phone_number;
+
     @Enumerated(EnumType.STRING)
     private Province current_province;
+    @NotEmpty(message = " ")
     private String current_role;
+    @NotEmpty(message = " ")
     private String current_employer;
+    @NotEmpty(message = " ")
     private String seniority_level;
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
-    private Boolean relocation;
-    private String fileLocation;
-    @Transient
-    private MultipartFile file;
 
-    public CandidateDTO() {
+    private Boolean relocation;
+    @Transient
+    private MultipartFile cvFile;
+
+    public NewAssistedApplicationDTO() {
     }
 
-    public CandidateDTO(String first_name, String last_name, String id_number, String email_address,
-                        String phone_number, Province current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, String fileLocation, MultipartFile file) {
+    public NewAssistedApplicationDTO(Long vacancyID, Long clientID, String first_name, String last_name, String id_number, String email_address, String phone_number, Province current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, MultipartFile cvFile) {
+        this.vacancyID = vacancyID;
+        this.clientID = clientID;
         this.first_name = first_name;
         this.last_name = last_name;
         this.id_number = id_number;
@@ -39,8 +61,23 @@ public class CandidateDTO {
         this.seniority_level = seniority_level;
         this.education_level = education_level;
         this.relocation = relocation;
-        this.fileLocation = fileLocation;
-        this.file = file;
+        this.cvFile = cvFile;
+    }
+
+    public Long getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(Long clientID) {
+        this.clientID = clientID;
+    }
+
+    public Long getVacancyID() {
+        return vacancyID;
+    }
+
+    public void setVacancyID(Long vacancyID) {
+        this.vacancyID = vacancyID;
     }
 
     public String getFirst_name() {
@@ -131,19 +168,13 @@ public class CandidateDTO {
         this.relocation = relocation;
     }
 
-    public String getFileLocation() {
-        return fileLocation;
+    public MultipartFile getCvFile() {
+        return cvFile;
     }
 
-    public void setFileLocation(String fileLocation) {
-        this.fileLocation = fileLocation;
-    }
-
-    public MultipartFile getFile() {
-        return file;
-    }
-
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public void setCvFile(MultipartFile cvFile) {
+        this.cvFile = cvFile;
     }
 }
+
+

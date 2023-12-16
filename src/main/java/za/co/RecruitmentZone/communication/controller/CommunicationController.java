@@ -12,6 +12,7 @@ import za.co.RecruitmentZone.communication.Events.Email.EmailEventPublisher;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
 
 @Controller
+@RequestMapping("/Communication")
 public class CommunicationController {
     private final Logger log = LoggerFactory.getLogger(CommunicationController.class);
     private final RecruitmentZoneService recruitmentZoneService;
@@ -40,7 +41,7 @@ public class CommunicationController {
         log.info("Website message received");
         websiteQueryReceived(message);
         model.addAttribute("success",Boolean.TRUE);
-        return "redirect:/contact-us";
+        return "redirect:/Communication/contact-us";
     }
 
     // COMMUNICATION

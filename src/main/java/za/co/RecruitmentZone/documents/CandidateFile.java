@@ -27,12 +27,11 @@ public class CandidateFile {
     public CandidateFile() {
     }
 
-    public CandidateFile(Long fileID, String filename, String contenttype, String filesize, byte[] filedata, String documentLocation, Candidate candidate, DocumentType documentType) {
+    public CandidateFile(Long fileID, String filename, String contenttype, String filesize,  String documentLocation, Candidate candidate, DocumentType documentType) {
         this.fileID = fileID;
         this.filename = filename;
         this.contenttype = contenttype;
         this.filesize = filesize;
-        this.filedata = filedata;
         this.documentLocation = documentLocation;
         this.candidate = candidate;
         this.documentType = documentType;

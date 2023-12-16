@@ -32,7 +32,7 @@
             <td th:text="${vacancy.job_type}"></td>
             <td th:text="${vacancy.emp_type}"></td>
             <td>
-                <form th:action="@{/apply-now}" th:method="post">
+                <form th:action="@{/Application/apply-now}" th:method="post">
                     <!-- Hidden input field to include the vacancyID in the POST request -->
                     <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
                     <!-- Submit button to trigger the form submission -->

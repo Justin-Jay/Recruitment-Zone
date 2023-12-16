@@ -22,7 +22,7 @@
     <hr/>
 
     <div class="container-fluid">
-        <form action="#" th:action="@{/save-blog}" th:object="${blog}" method="POST" class="form">
+        <form action="#" th:action="@{/Blog/save-blog}" th:object="${blog}" method="POST" class="form">
 
             <!--  <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>-->
             <input type="hidden" name="name" th:field="*{employee}" th:value="${#authentication.principal.username}"/>

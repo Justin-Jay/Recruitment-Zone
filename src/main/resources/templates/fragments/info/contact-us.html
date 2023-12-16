@@ -39,7 +39,7 @@
         </div>
 
         <div class="justify-content-center">
-            <form class="row g-3" action="#" th:action="@{/send-message}" th:object="${contactMessage}" method="POST">
+            <form class="row g-3" action="#" th:action="@{/Communication/send-message}" th:object="${contactMessage}" method="POST">
                 <div class="col-md-6">
                     <label for="name" class="form-label">Name:</label>
                     <input type="text" th:field="${contactMessage.name}" class="form-control"  id="name">

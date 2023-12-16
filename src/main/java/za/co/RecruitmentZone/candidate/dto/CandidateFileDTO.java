@@ -45,6 +45,7 @@ public class CandidateFileDTO {
     public void setCvFile(MultipartFile cvFile) {
         this.cvFile = cvFile;
     }
+
 }
 
 

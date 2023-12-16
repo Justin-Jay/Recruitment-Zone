@@ -3,7 +3,7 @@
     <p class="card-text" th:text="${vacancy.job_description}"></p>
     <p class="card-text" th:text="${vacancy.seniority_level}"></p>
     <!-- Add more fields as needed -->
-    <form th:action="@{/apply-now}" th:method="post">
+    <form th:action="@{/Application/apply-now}" th:method="post">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/> 
         <!-- Submit button to trigger the form submission -->

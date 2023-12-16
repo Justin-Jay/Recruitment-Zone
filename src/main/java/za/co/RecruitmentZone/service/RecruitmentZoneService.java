@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import za.co.RecruitmentZone.application.dto.NewAssistedApplicationDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.application.entity.Application;
@@ -308,26 +309,84 @@ public class RecruitmentZoneService {
 
     }
 
-    public List<Application> getApplications() {
-        return applicationService.findApplications();
+    public void createCandidateApplication(NewAssistedApplicationDTO newApplicationDTO) {
+        Candidate candidate = new Candidate();
+        candidate.setFirst_name(newApplicationDTO.getFirst_name());
+        candidate.setLast_name(newApplicationDTO.getLast_name());
+        candidate.setId_number(newApplicationDTO.getId_number());
+        candidate.setEmail_address(newApplicationDTO.getEmail_address());
+        candidate.setPhone_number(newApplicationDTO.getPhone_number());
+        candidate.setCurrent_province(newApplicationDTO.getCurrent_province());
+        candidate.setCurrent_role(newApplicationDTO.getCurrent_role());
+        candidate.setCurrent_employer(newApplicationDTO.getCurrent_employer());
+        candidate.setSeniority_level(newApplicationDTO.getSeniority_level());
+        candidate.setEducation_level(newApplicationDTO.getEducation_level());
+        candidate.setRelocation(newApplicationDTO.getRelocation());
+
+        // Local file storage
+
+        String directory = "C:/uploads";
+
+        Path storageLocation = null;
+        try {
+            Path uploadPath = Path.of(directory);
+            if (Files.notExists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            storageLocation = uploadPath.resolve(newApplicationDTO.getCvFile().getOriginalFilename());
+            Files.copy(newApplicationDTO.getCvFile().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
+
+        } catch (Exception e) {
+            log.info("Failed to create directory {}", e.getMessage());
+        }
+
+
+        // Google storage
+        //String storageLocation = saveFile(newApplicationDTO.getVacancyID(),newApplicationDTO.getCvFile());
+
+
+        // File object Creation
+        CandidateFile newCandidatFile = new CandidateFile();
+        newCandidatFile.setContenttype(newApplicationDTO.getCvFile().getContentType());
+        newCandidatFile.setFilesize(String.valueOf(newApplicationDTO.getCvFile().getSize()));
+        newCandidatFile.setFilename(newApplicationDTO.getCvFile().getOriginalFilename());
+        newCandidatFile.setDocumentType(DocumentType.CURRICULUM_VITAE);
+        newCandidatFile.setDocumentLocation(String.valueOf(storageLocation));
+
+        log.info("StorageLocation: {}", storageLocation);
+
+
+        candidate.AddDocument(newCandidatFile);
+
+        // create candidate and save and link with document
+        candidate = candidateService.save(candidate);
+
+        // create application  and link candidate
+
+
+        Application application = new Application();
+        LocalDate date = LocalDate.now();
+        application.setDate_received(date.toString());
+        application.setSubmission_date(date.toString());
+        application.setStatus(ApplicationStatus.PENDING);
+
+        // link application with vacancy
+        application.setVacancy(vacancyService.findById(newApplicationDTO.getVacancyID()));
+
+        // link candidate with application
+        candidate.AddApplication(application);
+        applicationService.save(application);
+
+
     }
-
-    public Application findApplicationByID(Long applicationID) {
-        Optional<Application> optionalApplication = applicationService.findApplicationByID(applicationID);
-        return optionalApplication.orElse(null);
-
-
-    }
-
-
     public boolean createFile(CandidateFileDTO fileDTO) throws IOException {
         CandidateFile file = new CandidateFile();
         file.setContenttype(fileDTO.getCvFile().getContentType());
-        file.setFiledata(fileDTO.getCvFile().getBytes());
+       // file.setFiledata(fileDTO.getCvFile().getBytes());
         file.setFilename(fileDTO.getCvFile().getOriginalFilename());
         file.setFilesize(Long.toString(fileDTO.getCvFile().getSize()));
         file.setCandidate(candidateService.getcandidateByID(fileDTO.getCandidateID()));
-
+        file.setDocumentType(fileDTO.getDocumentType());
         // Local file storage
 
         String directory = "C:/uploads";
@@ -353,6 +412,20 @@ public class RecruitmentZoneService {
         fileService.save(file);
         return true;
     }
+
+    public List<Application> getApplications() {
+        return applicationService.findApplications();
+    }
+
+    public Application findApplicationByID(Long applicationID) {
+        Optional<Application> optionalApplication = applicationService.findApplicationByID(applicationID);
+        return optionalApplication.orElse(null);
+
+
+    }
+
+
+
 
 
 //  getVacancyApplications
@@ -386,11 +459,9 @@ public class RecruitmentZoneService {
     public void saveNewClient(ClientDTO clientDTO) {
         clientService.saveClient(clientDTO);
     }
-
     public List<Client> getClients() {
         return clientService.findAllClients();
     }
-
     public Client findClientByID(Long clientID) {
         return clientService.findClientByID(clientID);
     }

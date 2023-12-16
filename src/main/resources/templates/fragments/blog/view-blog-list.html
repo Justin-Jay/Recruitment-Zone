@@ -1,7 +1,7 @@
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
     <tr>
-        <th>Blog ID</th>
+ <!--       <th>Blog ID</th>-->
         <th>Blog Title</th>
         <th>Blog Description</th>
         <th>Body</th>
@@ -11,13 +11,13 @@
     </thead>
     <tbody>
     <tr th:each="blog : ${blogs}">
-        <td th:text="${blog.blogID}"></td>
+        <!--<td th:text="${blog.blogID}"></td>-->
         <td th:text="${blog.blog_title}"></td>
         <td th:text="${blog.blog_description}"></td>
         <td th:text="${blog.body}"></td>
         <td th:text="${blog.status}"></td>
         <td>
-            <form th:action="@{/update-blog}" th:method="post">
+            <form th:action="@{/Blog/update-blog}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
                 <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
                 <!-- Submit button to trigger the form submission -->

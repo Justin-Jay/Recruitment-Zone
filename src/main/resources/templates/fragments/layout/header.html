@@ -13,15 +13,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" th:href="@{/}">Home</a>
-                <a class="nav-link" th:href="@{/blogs}">Blogs</a>
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/Blog/blogs}">Blogs</a>
                 <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-                <a class="nav-link" th:href="@{/contact-us}">Contact Us</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/client-administration}">Client Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/employee-admin}">Employee Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/blog-administration}">Blog Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')"  th:href="@{/vacancy-administration}">Vacancy Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/applications-administration}">Applications Administration</a>
+                <a class="nav-link" th:href="@{/Communication/contact-us}">Contact Us</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/Candidate/candidate-administration}">Candidate Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/Document/document-administration}">Document Search</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/Client/client-administration}">Client Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/Employee/employee-admin}">Employee Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/Blog/blog-administration}">Blog Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')"  th:href="@{/Vacancy/vacancy-administration}">Vacancy Administration</a>
+                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/Application/applications-administration}">Applications Administration</a>
                 <form th:if="${#authorization.expression('isAuthenticated()')}" action="#" th:action="@{/logout}" method="POST">
                     <input type="submit" th:value="Logout">
                 </form>

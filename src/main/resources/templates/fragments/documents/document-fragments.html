@@ -1,0 +1,29 @@
+<table class="table table-bordered table-striped" th:fragment="documentSearchResults(results,term)">
+    <thead class="table-dark">
+    <tr>
+        <th>File Name</th>
+        <th>Location</th>
+        <th>Document Type</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    Displaying Search Results For<p th:text="${term}"></p>
+    <tr th:each="result : ${results}">
+        <td th:text="${result}"></td>
+        <td>
+<!--            <a th:href="@{/download-document/{fileID}(fileID=${result.fileID})}" class="download-button">Download</a>-->
+        </td>
+
+
+
+
+    </tr>
+    </tbody>
+</table>
+
+
+
+
+
+

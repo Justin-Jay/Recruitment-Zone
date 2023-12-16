@@ -19,16 +19,16 @@
         <div th:insert="fragments/layout/header">Header</div>
     </div>
     <p th:if="${message}" th:text="${message}"></p>
-    <form action="#" th:action="@{/Application/save-application}" th:object="${newApplicationDTO}"
+    <form action="#" th:action="@{/Candidate/create-application}" th:object="${newApplicationDTO}"
           th:method="POST" enctype="multipart/form-data">
         <!-- Debug statement in Thymeleaf template -->
-        <h2></h2>
-        <p th:text="${vacancyName} ? ${'Application for ' + vacancyName + ' role'} : 'Application for'"></p>
 
-        <!--     <input type="hidden" id="clientID" name="clientID" th:field="*{vacancyID}" th:value="${newApplicationDTO.vacancyID == vacancyID}"/>-->
-        <input type="hidden" name="vacancyID" th:value="${vacancyID}" />
-        <input type="hidden" name="vacancyName" th:value="${vacancyName}" />
+        <label for="vacancyID">Select a Vacancy:</label>
 
+        <select name="vacancyID" id="vacancyID">
+            <option th:each="v : ${vacancies}" th:value="${v.vacancyID}" th:text="${v.job_title}"></option>
+        </select>
+        <br>
         <label for="FirstName">
             First Name:
         </label>
@@ -57,15 +57,12 @@
         <input type="text" th:field="${newApplicationDTO.phone_number}" id="phoneNumber" placeholder="Enter Phone Number"
                class="form-control mb-4 w-25"/>
 
-
         <label for="currentProvince">Current Location:
             <select id="currentProvince" th:field="${newApplicationDTO.current_province}">
                 <option th:each="province : ${T(za.co.RecruitmentZone.util.Enums.Province).values()}"
                         th:value="${province}" th:text="${province}"></option>
             </select>
         </label>
-
-
         <label for="CurrentRole">
             Current Role:
         </label>
@@ -89,8 +86,6 @@
                         th:value="${statusVal}" th:text="${statusVal}"></option>
             </select>
         </label>
-        <br/>
-
         <br/>
         <label>Willing to relocate?</label>
 

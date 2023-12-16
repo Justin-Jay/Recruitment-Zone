@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/Employee")
 public class EmployeeController {
     private final RecruitmentZoneService recruitmentZoneService;
 
@@ -59,7 +60,7 @@ public class EmployeeController {
             return "fragments/employee/add-employee";
         }
         saveNewEmployee(employeeDTO);
-        return "redirect:/employee-admin";
+        return "redirect:/Employee/employee-admin";
     }
     @PostMapping("/update-employee")
     public String updateEmployee(@RequestParam("employeeID") Long employeeID, Model model) {
@@ -74,7 +75,7 @@ public class EmployeeController {
             return "fragments/employee/update-employee";
         }
         saveUpdatedEmployee(employee);
-        return "redirect:/employee-admin";
+        return "redirect:/Employee/employee-admin";
     }
 
 

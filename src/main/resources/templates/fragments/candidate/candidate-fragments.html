@@ -1,4 +1,5 @@
 <div class="container-fluid" th:fragment="candidateView(candidate)">
+    <h2>Candidate Profile</h2>
     <div>
         <label>Candidate ID:</label>
         <span th:text="${candidate.candidateID}"></span>
@@ -77,18 +78,18 @@
 
     <div>
         <label>View Documents:</label>
-        <form th:action="@{/view-candidate-documents}" th:method="post">
+        <form th:action="@{/Candidate/view-candidate-documents}" th:method="post">
             <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
             <button type="submit" class="btn btn-primary">View Docs</button>
         </form>
     </div>
+    <br>
 </div>
-
 
 <!-- | TRY THIS | -->
 
-
 <div class="container-fluid" th:fragment="existingNotes(existingNotes)">
+   <h2>Candidate Comments</h2>
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
@@ -111,7 +112,7 @@
 
 
 <div class="container-fluid" th:fragment="add-note-fragment(candidateNote)">
-    <form action="#" th:action="@{/save-candidate-note}" th:object="${candidateNote}"
+    <form action="#" th:action="@{/Candidate/save-candidate-note}" th:object="${candidateNote}"
           th:method="post">
         <div class="form-group">
             <!-- Hidden input field to include the candidateID in the POST request -->
@@ -143,11 +144,34 @@
         </li>
 
         <li class="key-value-item">
-            <a th:href="@{/download-document/{fileID}(fileID=${document.fileID})}" class="download-button">Download</a>
+            <a th:href="@{/Document/download-document/{fileID}(fileID=${document.fileID})}" class="download-button">Download</a>
         </li>
     </ul>
 </div>
 
+<table class="table table-bordered table-striped" th:fragment="candidateTable(candidates)">
+    <thead class="table-dark">
+    <tr>
+        <th>Candidate ID</th>
+        <th>Candidate Name</th>
+        <th>View Candidate</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="candidate : ${candidates}">
+        <td th:text="${candidate.candidateID}"></td>
+        <td th:text="${candidate.first_name}"></td>
+        <td>
+            <form th:action="@{/Candidate/view-candidate}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button type="submit" class="btn btn-primary">View Candidate</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 
 

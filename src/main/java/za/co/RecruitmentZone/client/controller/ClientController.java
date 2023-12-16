@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
+@RequestMapping("/Client")
 public class ClientController {
     private final RecruitmentZoneService recruitmentZoneService;
     private final Storage storage; // Injected or initialized as needed
@@ -68,18 +69,12 @@ public class ClientController {
             return "fragments/clients/add-client";
         }
         recruitmentZoneService.saveNewClient(clientDTO);
-        return "redirect:/client-administration";
+        return "redirect:/Client/client-administration";
     }
 
     @GetMapping("/client-administration")
     public String clientAdministration(Model model) {
-        List<Client> allClients = new ArrayList<>();
-        try {
-            allClients = recruitmentZoneService.getClients();
-        } catch (Exception e) {
-            log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
-        }
-        model.addAttribute("clients", allClients);
+        model.addAttribute("clients", recruitmentZoneService.getClients());
         return "/fragments/clients/client-administration";
     }
 
@@ -117,7 +112,7 @@ public class ClientController {
             return "fragments/clients/update-client";
         }
         recruitmentZoneService.addContactToClient(contactPersonDTO);
-        return "redirect:/client-administration";
+        return "redirect:/Client/client-administration";
     }
 
     @PostMapping("/save-updated-client")
@@ -128,7 +123,7 @@ public class ClientController {
             return "fragments/clients/update-client";
         }
         recruitmentZoneService.saveUpdatedClient(clientID, client);
-        return "redirect:/client-administration";
+        return "redirect:/Client/client-administration";
     }
     @PostMapping("/view-client-notes")
     public String showClientNotes(@RequestParam("clientID") Long clientID, Model model) {
@@ -170,28 +165,7 @@ public class ClientController {
         return "fragments/clients/view-client-notes";
     }
 
-    @GetMapping("/download-document/{id}")
-    public ResponseEntity<InputStreamResource> downloadDocument(@PathVariable String id) throws IOException {
-        // Specify the path to the file on your local machine
-        id = "_1.pdf";
-        String filePath = "C:\\uploads\\Spring_details"+ id; // Update with the actual path
 
-        // Read the file from the local machine
-        InputStream inputStream = new FileInputStream(filePath);
-
-        // Prepare the response headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", id); // Use the file name as attachment name
-
-        // Create an InputStreamResource from the file's content
-        InputStreamResource resource = new InputStreamResource(inputStream);
-
-        // Return the ResponseEntity with the InputStreamResource and headers
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(resource);
-    }
 
     // upload to GCP
 /*    @GetMapping("/download-document/{id}")

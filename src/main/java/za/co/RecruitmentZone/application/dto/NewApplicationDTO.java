@@ -2,25 +2,37 @@ package za.co.RecruitmentZone.application.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
+import za.co.RecruitmentZone.util.Enums.Province;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
-
+//    @NotEmpty(message = "Please enter job title")
+//   @FutureOrPresent(message = "Date cannot be in the past")
+//  @Future(message = "Date must be in the future")
 
 public class NewApplicationDTO {
     private Long vacancyID;
-
     private String vacancyName;
+    @NotEmpty(message = "First Name Is Mandatory")
     private String first_name;
+    @NotEmpty(message = "Last Name Is Mandatory")
     private String last_name;
+    @NotEmpty(message = "ID Number is mandatory")
     private String id_number;
+    @NotEmpty(message = " ")
     private String email_address;
+    @NotEmpty(message = " ")
     private String phone_number;
-    private String current_province;
+    @Enumerated(EnumType.STRING)
+    private Province current_province;
+    @NotEmpty(message = " ")
     private String current_role;
+
     private String current_employer;
+    @NotEmpty(message = " ")
     private String seniority_level;
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
@@ -31,7 +43,8 @@ public class NewApplicationDTO {
     public NewApplicationDTO() {
     }
 
-    public NewApplicationDTO(Long vacancyID, String vacancyName, String first_name, String last_name, String id_number, String email_address, String phone_number, String current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, MultipartFile cvFile) {
+    public NewApplicationDTO(Long vacancyID, String vacancyName, String first_name, String last_name,
+                             String id_number, String email_address, String phone_number, Province current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, MultipartFile cvFile) {
         this.vacancyID = vacancyID;
         this.vacancyName = vacancyName;
         this.first_name = first_name;
@@ -104,11 +117,11 @@ public class NewApplicationDTO {
         this.phone_number = phone_number;
     }
 
-    public String getCurrent_province() {
+    public Province getCurrent_province() {
         return current_province;
     }
 
-    public void setCurrent_province(String current_province) {
+    public void setCurrent_province(Province current_province) {
         this.current_province = current_province;
     }
 

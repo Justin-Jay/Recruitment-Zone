@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -28,28 +28,27 @@
         <!--    <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
     -->
         <!--th:fragment="add-note-fragment(candidateNote)"-->
-        <div class="container-fluid">
-            <form action="@{/upload-candidate-document}" th:action="@{/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post" enctype="multipart/form-data">
+        <div class="container-fluid" style="border: 1px solid #ddd; padding: 15px;" >
+            <form action="#" th:action="@{/Candidate/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post"
+                  enctype="multipart/form-data">
                 <div class="form-group">
                     <!-- Hidden input field to include the candidateID in the POST request -->
-                    <input type="hidden" name="candidateID" th:field="${candidateFileDTO.candidateID}" th:value="${candidateID}" />
-                    <p th:text="${noteSaved} ? 'Note Saved' : ''"></p>
-                    <p th:text="${message} ? 'Message' : ''"></p>
-                    <p th:if="${candidateID}" th:text="'Candidate ID: ' + ${candidateID}"></p>
+                    <input type="hidden" name="candidateID" th:field="${candidateFileDTO.candidateID}"
+                           th:value="${candidateID}"/>
+                    <p th:if="${message}" th:text="${message}"></p>
 
                     <label for="cvAttachment">Attach CV:</label>
                     <input type="file" name="cvFile" id="cvAttachment" class="form-control mb-4 w-25"/>
 
-                    <label for="documentType">Document Type:</label>
-                    <select id="documentType" name="documentType"  >
-                        <option th:each="docType : ${T(za.co.RecruitmentZone.util.Enums.DocumentType).values()}"
-                                th:value="${documentType}" th:text="${docType.name()}"></option>
-                    </select>
-
+                    <label for="documentType">Document Type:
+                        <select id="documentType" th:field="${candidateFileDTO.documentType}">
+                            <option th:each="docType : ${T(za.co.RecruitmentZone.util.Enums.DocumentType).values()}"
+                                    th:value="${docType}" th:text="${docType}"></option>
+                        </select></label>
                 </div>
-
+                <br>
                 <!-- Submit button to trigger the form submission -->
-                <button type="submit" class="btn btn-primary">Upload Document</button>
+                <button type="submit" class="btn btn-primary">Add New Document</button>
             </form>
         </div>
 

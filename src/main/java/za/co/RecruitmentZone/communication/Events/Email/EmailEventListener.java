@@ -1,10 +1,11 @@
-package za.co.RecruitmentZone.communication.Events;
+package za.co.RecruitmentZone.communication.Events.Email;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import za.co.RecruitmentZone.communication.Events.WebsiteQueryReceivedEvent;
 import za.co.RecruitmentZone.communication.entity.ContactMessage;
 import za.co.RecruitmentZone.vacancy.repository.VacancyRepository;
 import za.co.RecruitmentZone.communication.service.CommunicationService;

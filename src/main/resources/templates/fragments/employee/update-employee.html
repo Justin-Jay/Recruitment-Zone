@@ -20,7 +20,7 @@
     <div class="container-fluid"><h2>View Blog</h2></div>
     <hr/>
 <div class="container-fluid">
-    <form action="#" th:action="@{/save-updated-employee}" th:object="${employee}" th:method="POST">
+    <form action="#" th:action="@{/Employee/save-updated-employee}" th:object="${employee}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" th:field="*{employeeID}" />
         <div class="md-10">

@@ -19,7 +19,7 @@
         <td th:text="${employee.email_address}"></td>
         <td th:text="${employee.contact_number}"></td>
         <td>
-            <form th:action="@{/update-employee}" th:method="post">
+            <form th:action="@{/Employee/update-employee}" th:method="post">
                 <!-- Hidden input field to include the id in the POST request -->
                 <input type="hidden" name="employeeID" th:value="*{employee.employeeID}"/>
                 <!-- Submit button to trigger the form submission -->

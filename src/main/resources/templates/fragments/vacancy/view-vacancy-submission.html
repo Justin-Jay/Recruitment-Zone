@@ -20,7 +20,7 @@
     <div class="container-fluid"><h2>View Submission</h2></div>
     <hr/>
     <div class="container-fluid">
-        <a class="nav-link" th:href="@{/vacancy-administration}">Back</a>
+        <a class="nav-link" th:href="@{/Vacancy/vacancy-administration}">Back</a>
     </div>
     <div class="container-fluid">
         <div id="vacancies-list">
@@ -33,15 +33,14 @@
                         <th>Vacancy Title</th>
                         <th>Candidate Name</th>
                         <th>Candidate Last Name</th>
-                        <th>ID Number</th>
                         <th>Phone Number</th>
                         <th>Current Province</th>
                         <th>Current Role</th>
-                        <th>Employer</th>
                         <th>Seniority</th>
                         <th>Education Level</th>
                         <th>Relocation</th>
-                        <th>View Candidate Documents</th>
+                        <th>View Candidate</th>
+                        <th>View Notes</th>
                         <!-- Add more columns as needed -->
                     </tr>
                     </thead>
@@ -50,39 +49,38 @@
                     <tr th:each="candidate : ${Vapplication.candidate}">
                         <td th:text="*{vacancy.job_title}"></td>
                         <td th:text="${candidate.last_name}"></td>
-                        <td th:text="${candidate.id_number}"></td>
                         <td th:text="${candidate.email_address}"></td>
                         <td th:text="${candidate.phone_number}"></td>
                         <td th:text="${candidate.current_province}"></td>
                         <td th:text="${candidate.current_role}"></td>
-                        <td th:text="${candidate.current_employer}"></td>
                         <td th:text="${candidate.seniority_level}"></td>
                         <td th:text="${candidate.education_level}"></td>
                         <td th:text="${candidate.relocation}"></td>
-
                         <td>
-                        <!--    <form  >
-                                <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
-                                <button th:action="@{/view-candidate-notes}"
-                                        hx-post="/view-candidate-notes"
-                                        hx-target='#candidate-notes'
-                                        hx-swap='innerHTML'
-                                        hx-include="[name='candidateID']">
-                                    View Notes
-                                </button>
-                            </form>-->
+                            <form th:action="@{/Candidate/view-candidate}" th:method="post">
+                                <!-- Hidden input field to include the vacancyID in the POST request -->
+                                <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
+                                <!-- Submit button to trigger the form submission -->
+                                <button type="submit" class="btn btn-secondary">View Candidate</button>
+                            </form>
+
+
+                        </td>
+                        <td>
                             <form  >
                                 <!-- Hidden input field to include the brandVal in the POST request -->
                                 <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
                                 <!-- Submit button to trigger the form submission -->
-                                <button th:action="@{/view-candidate-notes}"
+                                <button th:action="@{/Candidate/view-candidate-notes}"
                                         class='btn'
                                         hx-post="/view-candidate-notes"
                                         hx-target="#candidate-notes"
                                         hx-swap='innerHTML'
-                                        hx-include="[name='candidateID']" >
+                                        hx-include="[name='candidateID']"
+                                        disabled>
                                     View Notes
                                 </button>
+
                             </form>
                         </td>
                     </tr>

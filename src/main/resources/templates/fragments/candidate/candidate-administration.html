@@ -6,7 +6,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
           th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
@@ -23,16 +22,16 @@
             </div>
         </div>
 
-        <!--    <div class="container-fluid">
-                ABOVE CARD GROUP
-            </div>-->
+        <div class="container-fluid">
+            <div class="float-end">
+                <a class="btn btn-primary btn-sm mb-3" th:href="@{/Candidate/add-candidate}">Add Candidate</a>
+            </div>
+        </div>
         <div class="container-fluid">
             <div class="container-fluid">
-                <h3>Blog Administration</h3>
-                <hr>
+                <h3>Candidate Administration</h3>
+                <div th:replace="fragments/candidate/candidate-fragments :: candidateTable(${candidates})"></div>
             </div>
-            <div th:replace="fragments/blog/view-blog-list">Blogs</div>
-            <a class="btn btn-primary btn-sm mb-3" th:href="@{/Blog/add-blog}">Add Blog</a>
         </div>
 
         <div class="container-fluid">
@@ -45,9 +44,6 @@
 
 
 </div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
