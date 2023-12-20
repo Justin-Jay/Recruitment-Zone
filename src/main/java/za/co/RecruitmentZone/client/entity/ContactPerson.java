@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import za.co.RecruitmentZone.client.entity.Client;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "contact_person")
 public class ContactPerson {
@@ -16,6 +18,8 @@ public class ContactPerson {
     private String email_address;
     private String land_line;
     private String cell_phone;
+    @Column(name="created")
+    private Timestamp created;
     @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
     })
@@ -31,6 +35,14 @@ public class ContactPerson {
         this.email_address = email_address;
         this.land_line = land_line;
         this.cell_phone = cell_phone;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
     }
 
     public Long getContactPersonID() {

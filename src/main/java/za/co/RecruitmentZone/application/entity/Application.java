@@ -5,6 +5,8 @@ import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "application")
 public class Application {
@@ -15,6 +17,9 @@ public class Application {
     private String date_received;
 
     private String submission_date;
+
+    @Column(name="created")
+    private Timestamp created;
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
@@ -31,6 +36,13 @@ public class Application {
     public Application() {
     }
 
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
 
     public Long getApplicationID() {
         return applicationID;

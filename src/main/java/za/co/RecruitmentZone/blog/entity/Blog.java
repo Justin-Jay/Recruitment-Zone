@@ -5,6 +5,8 @@ import za.co.RecruitmentZone.util.Enums.BlogStatus;
 import za.co.RecruitmentZone.blog.dto.BlogDTO;
 import za.co.RecruitmentZone.employee.entity.Employee;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name ="blog")
 public class Blog {
@@ -20,7 +22,8 @@ public class Blog {
     private String body;
     private String publish_date;
     private String end_date;
-
+    @Column(name="created")
+    private Timestamp created;
     @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
     })
@@ -36,6 +39,14 @@ public class Blog {
         this.body = body;
         this.publish_date=publish_date;
         this.end_date=end_date;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
     }
 
     public Blog(BlogDTO blogDTO) {

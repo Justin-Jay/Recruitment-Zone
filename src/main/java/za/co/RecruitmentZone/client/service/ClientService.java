@@ -10,6 +10,9 @@ import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.client.repository.ClientRepository;
 import za.co.RecruitmentZone.client.repository.ContactPersonRepository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,9 @@ public class ClientService {
         ContactPerson contactPerson = new ContactPerson(clientDTO.getContactPerson_FirstName(),
                 clientDTO.getContactPerson_last_name(),clientDTO.getContactPerson_email_address(),clientDTO.getContactPerson_land_line(),clientDTO.getContactPerson_cell_phone());
         contactPerson.setClient(client);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
+        contactPerson.setCreated(timestamp);
         contactPersonRepository.save(contactPerson);
     }
     public void saveUpdatedClient(Client client){

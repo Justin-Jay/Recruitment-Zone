@@ -27,8 +27,8 @@
             ABOVE CARD GROUP
         </div>-->
         <div class="container-fluid">
+            <p th:if="${message}" th:text="${message}"> </p>
             <div class="container-fluid">
-
                 <div class="float-end">
                     <a class="btn btn-primary btn-sm mb-3" th:href="@{/Employee/add-employee}">Add Employee</a>
                 </div>

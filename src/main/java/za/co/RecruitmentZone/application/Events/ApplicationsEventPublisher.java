@@ -9,6 +9,7 @@ import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.candidate.Events.FileUploadEvent;
 import za.co.RecruitmentZone.candidate.Events.SaveSubmissionEvent;
+import za.co.RecruitmentZone.employee.entity.Employee;
 
 @Component
 public class ApplicationsEventPublisher {
@@ -46,6 +47,8 @@ public class ApplicationsEventPublisher {
         }
 
     }
+
+
    /* public boolean publishApplicationSubmittedEvent(CandidateApplicationDTO candidateApplication) {
         try {
             ApplicationSubmittedEvent event = new ApplicationSubmittedEvent(candidateApplication);

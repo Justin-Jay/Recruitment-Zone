@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="container-fluid">
-
+    <p th:if="${tokenMessage}" th:text="${tokenMessage}"></p>
 
     <form action="#" th:action="@{/authenticateTheUser}" method="post">
         <div class="row top-1">

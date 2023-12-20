@@ -19,7 +19,9 @@
 
     <div class="container-fluid"><h2>Add Employee</h2></div>
     <hr/>
-
+    <div class="container-fluid">
+        <p th:if="${message}" th:text="${message}"> </p>
+    </div>
     <div class="container-fluid">
         <form action="#" th:action="@{/Employee/save-employee}" th:object="${employeeDTO}" method="POST">
             <label>
@@ -39,6 +41,14 @@
             </label>
 
             <label>
+                Employee Password:
+                <p th:class="error" th:if="${#fields.hasErrors('password')}"
+                   th:errors="${employeeDTO.password}"
+                ></p>
+                <input type="password" th:field="*{password}" placeholder="Password" class="form-control">
+            </label>
+
+            <label>
                 Contact Number:
                 <p th:class="error" th:if="${#fields.hasErrors('contact_number')}"
                    th:errors="${employeeDTO.contact_number}"
@@ -46,6 +56,13 @@
 
                 <input type="text" th:field="*{contact_number}" placeholder="Contact Number" class="form-control">
             </label>
+
+            <!-- Show the list if it's not empty -->
+            <label for="role">Select Role:</label>
+            <select id="role" th:field="*{role}">
+                <option th:each="role : ${availableRoles}" th:value="${role}" th:text="${role.getRoleName()}"></option>
+            </select>
+
             <button type="submit" class="btn btn-primary btn-sm mb-3">Add Employee</button>
         </form>
     </div>

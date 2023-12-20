@@ -14,7 +14,10 @@ import za.co.RecruitmentZone.employee.entity.Employee;
 import za.co.RecruitmentZone.blog.service.BlogService;
 import za.co.RecruitmentZone.employee.service.EmployeeService;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -100,13 +103,20 @@ public class BlogController {
 
     public void saveNewBlog(BlogDTO blogDTO) {
         //Optional<Employee> op = employeeService.findEmployeeByUserName(blogDTO.getEmployee());
-        Optional<Employee> op = employeeService.findEmployeeByUserName("Justin.Maboshego@kiunga.co.za");
+        Optional<Employee> op = employeeService.findEmployeeByEmail("Justin.Maboshego@kiunga.co.za");
         Blog newBlog = new Blog();
         newBlog.setBlog_title(blogDTO.getBlog_title());
         newBlog.setBlog_description(blogDTO.getBlog_description());
         newBlog.setBody(blogDTO.getBody());
         newBlog.setEnd_date(blogDTO.getEnd_date().toString());
         newBlog.setPublish_date(blogDTO.getPublish_date().toString());
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
+        newBlog.setCreated(timestamp);
+
+
         LocalDate today = LocalDate.now();
         if(blogDTO.getPublish_date().isAfter(today))
         {

@@ -7,6 +7,7 @@ import za.co.RecruitmentZone.client.dto.ClientNoteDTO;
 import za.co.RecruitmentZone.util.Enums.Industry;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +22,8 @@ public class Client {
     private String name;
     @Enumerated(EnumType.STRING)
     private Industry industry;
+    @Column(name="created")
+    private Timestamp created;
     @OneToMany(mappedBy = "client",
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
@@ -49,6 +52,14 @@ public class Client {
     private Set<ClientNote> notes;
 
     public Client() {
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
     }
 
     public Client(String name, Industry industry) {
