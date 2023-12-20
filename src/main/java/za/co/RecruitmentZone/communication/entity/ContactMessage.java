@@ -3,8 +3,6 @@ package za.co.RecruitmentZone.communication.entity;
 import org.springframework.beans.factory.annotation.Value;
 
 public class ContactMessage {
-
-
     private String name;
     private String email;
     private String messageBody;
@@ -53,6 +51,10 @@ public class ContactMessage {
 
     public void setMessageBody(String messageBody) {
         this.messageBody = messageBody;
+    }
+
+    public void setToEmail(String toEmail) {
+        this.toEmail = toEmail;
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import za.co.RecruitmentZone.communication.entity.ContactMessage;
-
+import za.co.RecruitmentZone.communication.entity.RegistrationMessage;
 
 
 @Slf4j
@@ -91,4 +91,37 @@ public class CommunicationService {
         }
     }
 
+
+    public boolean sendRegistrationEmail(RegistrationMessage message) {
+        log.info("<---SEND REGISTRATION EMAIL --->");
+        log.info(" RegistrationMessage {}",message);
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        log.info("<- to - subject - userName - userEmail - userQuery - >");
+        log.info(" mimeMessage {}",mimeMessage);
+        try {
+            helper.setFrom(kiungaMailAddress);
+            log.info(" mimeMessage {}",mimeMessage);
+            log.info(" email we sending to {}",message.getEmployee().getEmail());
+            helper.setTo(message.getEmployee().getEmail());
+            helper.setSubject("Recruitment Zone Registration");
+
+            Context context = new Context();
+            context.setVariable("registeredUser", message.getEmployee().getFirst_name());
+            context.setVariable("registrationLink", message.getApplicationURL());
+
+            String emailContent = templateEngine.process("emailTemplates/user-registered", context);
+            helper.setText(emailContent, true);
+
+            javaMailSender.send(mimeMessage);
+            log.info("<---EMAIL MESSAGE SENT--->");
+
+            return true;
+        } catch (MessagingException e) {
+            log.info("<---EMAIL RESPONSE FAILED--->");
+            log.info(e.getMessage());
+            // Handle exception (log or throw custom exception)
+            return false;
+        }
+    }
 }

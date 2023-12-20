@@ -2,6 +2,7 @@ package za.co.RecruitmentZone.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.auditing.AuditingHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.application.dto.NewAssistedApplicationDTO;
@@ -18,11 +19,13 @@ import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.client.service.ClientService;
 import za.co.RecruitmentZone.documents.CandidateFile;
 import za.co.RecruitmentZone.documents.FileService;
+import za.co.RecruitmentZone.employee.entity.Authority;
 import za.co.RecruitmentZone.employee.entity.Employee;
 import za.co.RecruitmentZone.employee.service.EmployeeService;
 import za.co.RecruitmentZone.storage.StorageService;
 import za.co.RecruitmentZone.util.Enums.DocumentType;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
+import za.co.RecruitmentZone.util.Enums.ROLE;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 import za.co.RecruitmentZone.application.Events.ApplicationsEventPublisher;
 import za.co.RecruitmentZone.vacancy.dto.VacancyDTO;
@@ -33,10 +36,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static za.co.RecruitmentZone.util.Enums.ROLE.*;
 import static za.co.RecruitmentZone.util.Enums.VacancyStatus.*;
 
 
@@ -51,6 +59,7 @@ public class RecruitmentZoneService {
     private final StorageService storageService;
     private final ClientService clientService;
     private final FileService fileService;
+
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
                                   EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService, FileService fileService) {
@@ -81,12 +90,14 @@ public class RecruitmentZoneService {
 
     // EMPLOYEE
 
-    public Employee findEmployeeByUserName(String name) {
-        Optional<Employee> oe = employeeService.findEmployeeByUserName(name);
-        if (oe.isPresent()) {
-            return oe.get();
+    public Employee findEmployeeByEmail(String email) {
+        Optional<Employee> oe = employeeService.findEmployeeByEmail(email);
+        if(oe.isPresent())
+        {
+            log.info("FOUND EMPLOYEE {}",oe.get());
         }
-        return null;
+
+        return oe.orElse(null);
     }
 
     public Employee findEmployeeByID(Long id) {
@@ -101,6 +112,9 @@ public class RecruitmentZoneService {
         return employeeService.getEmployees();
     }
 
+    public Employee findEmployeeByName(String name){
+        return employeeService.findEmployeeByName(name);
+    }
 
     /* public void updateExistingEmployee(Long employeeID, EmployeeDTO employeeDTO) {
          log.info("--Attempting updateExistingEmployee ---");
@@ -121,6 +135,12 @@ public class RecruitmentZoneService {
         newVacancy.setJobType(vacancy.getJobType());
         newVacancy.setEmpType(vacancy.getEmpType());
         newVacancy.setCategory(vacancy.getCategory());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
+        newVacancy.setCreated(timestamp);
+
+
         LocalDate today = LocalDate.now();
 
         if (vacancy.getPublish_date().isAfter(today)) {
@@ -150,8 +170,6 @@ public class RecruitmentZoneService {
         // Check if the existingVacancy is not null (it exists in the database)
         if (existingVacancy != null) {
             // Compare and update fields
-
-
             if (existingVacancy.getJob_title() != null && !existingVacancy.getJob_title().equals(vacancy.getJob_title())) {
                 existingVacancy.setJob_title(vacancy.getJob_title());
             }
@@ -176,12 +194,16 @@ public class RecruitmentZoneService {
             if (existingVacancy.getIndustry() != null && !existingVacancy.getIndustry().equals(vacancy.getIndustry())) {
                 existingVacancy.setIndustry(vacancy.getIndustry());
             }
-            if (existingVacancy.getPublish_date() != null && !existingVacancy.getPublish_date().equals(vacancy.getPublish_date())) {
+
+            if (vacancy.getPublish_date() != null && vacancy.getPublish_date() != existingVacancy.getPublish_date()) {
                 existingVacancy.setPublish_date(vacancy.getPublish_date());
+
             }
-            if (existingVacancy.getEnd_date() != null && !existingVacancy.getEnd_date().equals(vacancy.getEnd_date())) {
+            if (vacancy.getEnd_date() != null && vacancy.getEnd_date() != existingVacancy.getEnd_date()) {
                 existingVacancy.setEnd_date(vacancy.getEnd_date());
             }
+
+
             if (existingVacancy.getStatus() != null && !existingVacancy.getStatus().equals(vacancy.getStatus())) {
                 existingVacancy.setStatus(vacancy.getStatus());
             }
@@ -235,6 +257,37 @@ public class RecruitmentZoneService {
         return vacancyService.findVacanciesByTitle(title);
     }
 
+// AUTHORITIES
+
+    public List<ROLE> getAuthorities(Employee employee) {
+        List<Authority> userAuths = employee.getAuthorities();
+
+        Authority admin = new Authority(ROLE_ADMIN);
+        admin.setEmployee(employee);
+        Authority manager = new Authority(ROLE_MANAGER);
+        manager.setEmployee(employee);
+        Authority emp = new Authority(ROLE_EMPLOYEE);
+        emp.setEmployee(employee);
+        List<ROLE> returnList;
+
+        if(userAuths.contains(admin)){
+            returnList = new ArrayList<>();
+            returnList.add(ROLE_ADMIN);
+            returnList.add(ROLE_MANAGER);
+            returnList.add(ROLE_EMPLOYEE);
+        }
+        else if (!userAuths.contains(admin) && userAuths.contains(manager)){
+            returnList = new ArrayList<>();
+            returnList.add(ROLE_MANAGER);
+            returnList.add(ROLE_EMPLOYEE);
+        }
+        else {
+            returnList = null;
+        }
+
+        return returnList;
+    }
+
 
     // APPLICATIONS
 
@@ -252,6 +305,9 @@ public class RecruitmentZoneService {
         candidate.setEducation_level(newApplicationDTO.getEducation_level());
         candidate.setRelocation(newApplicationDTO.getRelocation());
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
+        candidate.setCreated(timestamp);
         // Local file storage
 
         String directory = "C:/uploads";
@@ -379,10 +435,11 @@ public class RecruitmentZoneService {
 
 
     }
+
     public boolean createFile(CandidateFileDTO fileDTO) throws IOException {
         CandidateFile file = new CandidateFile();
         file.setContenttype(fileDTO.getCvFile().getContentType());
-       // file.setFiledata(fileDTO.getCvFile().getBytes());
+        // file.setFiledata(fileDTO.getCvFile().getBytes());
         file.setFilename(fileDTO.getCvFile().getOriginalFilename());
         file.setFilesize(Long.toString(fileDTO.getCvFile().getSize()));
         file.setCandidate(candidateService.getcandidateByID(fileDTO.getCandidateID()));
@@ -425,9 +482,6 @@ public class RecruitmentZoneService {
     }
 
 
-
-
-
 //  getVacancyApplications
 
     public boolean saveUpdatedApplicationStatus(Long applicationID, ApplicationStatus applicationStatus) {
@@ -459,9 +513,11 @@ public class RecruitmentZoneService {
     public void saveNewClient(ClientDTO clientDTO) {
         clientService.saveClient(clientDTO);
     }
+
     public List<Client> getClients() {
         return clientService.findAllClients();
     }
+
     public Client findClientByID(Long clientID) {
         return clientService.findClientByID(clientID);
     }
@@ -480,7 +536,7 @@ public class RecruitmentZoneService {
             oc.setName(updatedClient.getName());
         }
 
-        if (oc.getIndustry()!=updatedClient.getIndustry()) {
+        if (oc.getIndustry() != updatedClient.getIndustry()) {
             oc.setIndustry(updatedClient.getIndustry());
         }
         clientService.saveUpdatedClient(oc);

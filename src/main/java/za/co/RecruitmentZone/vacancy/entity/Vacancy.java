@@ -9,6 +9,7 @@ import za.co.RecruitmentZone.util.Enums.Industry;
 import za.co.RecruitmentZone.util.Enums.JobType;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +37,8 @@ public class Vacancy {
     private JobType jobType;
     @Enumerated(EnumType.STRING)
     private EmpType empType;
-
+    @Column(name="created")
+    private Timestamp created;
     @ManyToOne(
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
@@ -73,6 +75,14 @@ public class Vacancy {
         this.status = status;
         this.jobType = jobType;
         this.empType = empType;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
     }
 
     public String getCategory() {

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Registration</title>
+</head>
+<body>
+<div>
+    <p>Hello <span th:text="${registeredUser}"></span>,</p>
+    <p>Website Query Details:</p>
+    <ul>
+        <li><strong>Name:</strong> <span th:text="${registeredUser}"></span></li>
+        <li><strong>Link:</strong> <span th:text="${registrationLink}"></span></li>
+
+
+    </ul>
+    <div>
+        <p>
+            <strong>Registration Link:</strong> <span th:text="${registrationLink}"></span>
+        </p>
+    </div>
+    <p>Kiunga Recruitment Services</p>
+</div>
+</body>
+</html>

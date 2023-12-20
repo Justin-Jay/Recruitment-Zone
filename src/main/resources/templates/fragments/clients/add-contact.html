@@ -18,37 +18,41 @@
     <div th:insert="fragments/layout/header">Header</div>
 
 
-    <div class="container-fluid"  >
+    <div class="container-fluid">
         <h2>Add Contact Person</h2>
     </div>
     <hr/>
 
     <div class="container-fluid">
         <form action="#" th:action="@{/Client/save-new-contact}" th:object="${contactPersonDTO}" th:method="POST">
-            <input type="hidden" name="clientID" th:value="${clientID}" />
-            <label>
-                First Name<input type="text" th:field="${contactPersonDTO.first_name}"
-                                                 placeholder="Contact Person First Name" class="form-control">
+            <input type="hidden" name="clientID" th:value="${clientID}"/>
+            <label for="firstName">
+                First Name: <input type="text"  id="firstName" th:field="${contactPersonDTO.first_name}"
+                       placeholder="Contact Person First Name" class="form-control">
             </label>
 
+            <br/>
             <label>
                 Last Name<input type="text" th:field="${contactPersonDTO.last_name}"
-                                                 placeholder="Last Name" class="form-control">
+                                placeholder="Last Name" class="form-control">
             </label>
+            <br/>
             <label>
                 Email Address<input type="text" th:field="${contactPersonDTO.email_address}"
-                                placeholder="Email Address" class="form-control">
+                                    placeholder="Email Address" class="form-control">
             </label>
+            <br/>
             <label>
                 Land Line<input type="text" th:field="${contactPersonDTO.land_line}"
                                 placeholder="Land Line" class="form-control">
             </label>
-
+            <br/>
             <label>
                 Cell Phone<input type="text" th:field="${contactPersonDTO.cell_phone}"
-                                placeholder="Cell Phone Number" class="form-control">
+                                 placeholder="Cell Phone Number" class="form-control">
             </label>
-
+            <br/>
+            <br/>
 
             <button type="submit" class="btn btn-primary btn-sm mb-3">Add To Client</button>
         </form>

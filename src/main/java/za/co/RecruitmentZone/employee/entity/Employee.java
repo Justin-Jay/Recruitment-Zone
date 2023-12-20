@@ -1,62 +1,77 @@
 package za.co.RecruitmentZone.employee.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 import za.co.RecruitmentZone.blog.entity.Blog;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
+import javax.security.auth.Subject;
+import java.security.Principal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "employee")
-public class Employee {
+@Table(name = "users")
+public class Employee implements Principal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "employeeID")
     private Long employeeID;
     @Column(name = "username", unique = true)
     private String username;
-
+    @Column(name = "password")
+    private String password;
+    //    @NaturalId(mutable = true)
+    @Column(name = "email")
+    private String email;
     @Column(name = "first_name")
     private String first_name;
     @Column(name = "last_name")
     private String last_name;
-    @Column(name = "email_address")
-    private String email_address;
     @Column(name = "contact_number")
     private String contact_number;
+    @Column(name = "enabled")
+    private boolean isEnabled;
+    @Column(name="created")
+    private Timestamp created;
+    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER,
+            cascade = {
+                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+            })
+    private List<Authority> authorities;
 
     @OneToMany(mappedBy = "employee",
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-  /*  @JoinTable(
-            name = "employee_blog",
-            joinColumns = @JoinColumn(name = "employeeID"),
-            inverseJoinColumns = @JoinColumn(name = "blogID")
-    )*/
     private Set<Blog> blogs;
 
     @OneToMany(mappedBy = "employee",
                 cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
                 })
- /*   @JoinTable(
-            name = "employee_vacancy",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "vacancyID")
-    )*/
     private Set<Vacancy> vacancies;
 
     public Employee() {
     }
 
-    public Employee(String username, String first_name, String last_name, String email_address, String contact_number) {
-        this.username = username;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.email_address = email_address;
-        this.contact_number = contact_number;
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     public Set<Blog> getBlogs() {
@@ -107,12 +122,12 @@ public class Employee {
         this.last_name = last_name;
     }
 
-    public String getEmail_address() {
-        return email_address;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmail_address(String email_address) {
-        this.email_address = email_address;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getContact_number() {
@@ -123,11 +138,37 @@ public class Employee {
         this.contact_number = contact_number;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
                 "username='" + username + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getName() {
+        return this.username;
+    }
+
+    @Override
+    public boolean implies(Subject subject) {
+        return Principal.super.implies(subject);
     }
 
     public void addBlog(Blog blog){
@@ -144,6 +185,22 @@ public class Employee {
         }
         vacancies.add(vacancy);
         vacancy.setEmployee(this);
+    }
+
+    public void addAuthority(Authority authority){
+        if (authorities ==null){
+            authorities = new ArrayList<>();
+        }
+        authorities.add(authority);
+        authority.setEmployee(this);
+    }
+
+    public void addAuthorities(Set<Authority> NewAuthorities){
+        if (this.authorities ==null){
+            this.authorities = new ArrayList<>();
+        }
+        this.authorities.addAll(NewAuthorities);
+        NewAuthorities.forEach(n->n.setEmployee(this));
     }
 
 

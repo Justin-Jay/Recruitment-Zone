@@ -7,6 +7,7 @@ import za.co.RecruitmentZone.documents.CandidateFile;
 import za.co.RecruitmentZone.util.Enums.EducationLevel;
 import za.co.RecruitmentZone.util.Enums.Province;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +31,8 @@ public class Candidate {
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
     private Boolean relocation;
-
+    @Column(name="created")
+    private Timestamp created;
     @OneToMany(mappedBy = "candidate",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Application> applications;
@@ -66,6 +68,14 @@ public class Candidate {
         this.seniority_level = seniority_level;
         this.education_level = education_level;
         this.relocation = relocation;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
     }
 
     public Set<CandidateFile> getDocuments() {
