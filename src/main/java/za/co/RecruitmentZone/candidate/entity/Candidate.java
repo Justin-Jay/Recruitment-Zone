@@ -32,7 +32,7 @@ public class Candidate {
     private EducationLevel education_level;
     private Boolean relocation;
     @Column(name="created")
-    private Timestamp created;
+    private LocalDateTime created;
     @OneToMany(mappedBy = "candidate",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Application> applications;
@@ -70,11 +70,11 @@ public class Candidate {
         this.relocation = relocation;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 

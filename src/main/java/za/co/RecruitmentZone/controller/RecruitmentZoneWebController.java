@@ -3,6 +3,16 @@ package za.co.RecruitmentZone.controller;
 import com.google.rpc.context.AttributeContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +27,29 @@ import java.util.List;
 @Controller
 public class RecruitmentZoneWebController {
     private final RecruitmentZoneService recruitmentZoneService;
+    private final JobLauncher jobLauncher;
+    private final Job vacancyJob;
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneWebController.class);
-    public RecruitmentZoneWebController(RecruitmentZoneService recruitmentZoneService) {
+
+    public RecruitmentZoneWebController(RecruitmentZoneService recruitmentZoneService, JobLauncher jobLauncher, Job vacancyJob) {
         this.recruitmentZoneService = recruitmentZoneService;
+        this.jobLauncher = jobLauncher;
+        this.vacancyJob = vacancyJob;
     }
-  /*  @GetMapping("/")
-    public String redirectToHome() {
-        return "redirect:/home";
-    }*/
+
+    /*  @GetMapping("/")
+      public String redirectToHome() {
+          return "redirect:/home";
+      }*/
     // Home pages
-    @GetMapping({"/","/home"})
+    @GetMapping({"/", "/home"})
     public String home(@RequestParam(name = "name", required = false) String title, Model model, Principal principal) {
         List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
         log.info("Total Vacancies: " + vacancies.size());
-        if (title!=null){
+        if (title != null) {
             vacancies = recruitmentZoneService.searchVacancyByTitle(title);
         }
-        log.info("Principal Name: {} \n {}",principal.getName(),principal);
+        log.info("Principal Name: {} \n {}", principal.getName(), principal);
         Employee emp = recruitmentZoneService.findEmployeeByEmail(principal.getName());
         List<Authority> empAuthorities = emp.getAuthorities();
         log.info("Authorities: ");
@@ -41,9 +57,10 @@ public class RecruitmentZoneWebController {
         log.info("DONE:");
         model.addAttribute("totalNumberOfVacancies", vacancies.size());
         model.addAttribute("vacancies", vacancies);
-        model.addAttribute("title",title);
+        model.addAttribute("title", title);
         return "home";
     }
+
     @GetMapping("/aboutus")
     public String aboutUs() {
         return "fragments/info/about-us";
@@ -63,4 +80,35 @@ public class RecruitmentZoneWebController {
         }
         return "home";
     }
+
+    @GetMapping("/admin")
+    public String showBatchForm() {
+        return "admin";
+    }
+
+    @PostMapping("/start-batch-job")
+    public String batchJobEntry(Model model) {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLong("created", System.currentTimeMillis())
+                .toJobParameters();
+        String batchMessage = "";
+        try {
+            jobLauncher.run(vacancyJob, jobParameters);
+            batchMessage = "Batch Successfully Launched";
+            model.addAttribute("batchMessage", batchMessage);
+            return "admin";
+        } catch (JobInstanceAlreadyCompleteException |
+                 JobExecutionAlreadyRunningException |
+                 JobParametersInvalidException |
+                 JobRestartException
+                e) {
+            log.info("Failed {}", e.getMessage());
+            batchMessage = "Batch Failed to launch";
+            model.addAttribute("batchMessage", batchMessage);
+            return "admin";
+        }
+    }
 }
+
+
+

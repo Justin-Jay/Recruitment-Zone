@@ -11,11 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.RecruitmentZone.blog.entity.Blog;
 import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -87,11 +90,13 @@ public class DocumentController {
         return "fragments/documents/document-administration";
     }
 
+    //   String directory = "C:/uploads/"+formattedDate+"/"+docType+"/"+candidateIDNumber;
     @GetMapping("/download-document/{id}")
     public ResponseEntity<InputStreamResource> downloadDocument(@PathVariable String id) throws IOException {
         // Specify the path to the file on your local machine
         id = "_1.pdf";
         String filePath = "C:\\uploads\\Spring_details"+ id; // Update with the actual path
+
 
         // Read the file from the local machine
         InputStream inputStream = new FileInputStream(filePath);
@@ -109,4 +114,5 @@ public class DocumentController {
                 .headers(headers)
                 .body(resource);
     }
+
 }

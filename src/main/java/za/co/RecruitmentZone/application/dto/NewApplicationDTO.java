@@ -14,6 +14,7 @@ import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
 public class NewApplicationDTO {
     private Long vacancyID;
+      private Long clientID;
     private String vacancyName;
     @NotEmpty(message = "First Name Is Mandatory")
     private String first_name;
@@ -58,6 +59,14 @@ public class NewApplicationDTO {
         this.education_level = education_level;
         this.relocation = relocation;
         this.cvFile = cvFile;
+    }
+
+    public Long getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(Long clientID) {
+        this.clientID = clientID;
     }
 
     public String getVacancyName() {

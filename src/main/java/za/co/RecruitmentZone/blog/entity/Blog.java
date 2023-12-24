@@ -6,6 +6,7 @@ import za.co.RecruitmentZone.blog.dto.BlogDTO;
 import za.co.RecruitmentZone.employee.entity.Employee;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name ="blog")
@@ -23,7 +24,7 @@ public class Blog {
     private String publish_date;
     private String end_date;
     @Column(name="created")
-    private Timestamp created;
+    private LocalDateTime created;
     @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
     })
@@ -41,11 +42,11 @@ public class Blog {
         this.end_date=end_date;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 

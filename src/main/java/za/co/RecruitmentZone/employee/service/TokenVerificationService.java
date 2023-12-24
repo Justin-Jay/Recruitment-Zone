@@ -54,7 +54,8 @@ public class TokenVerificationService {
                             You can now proceed start using the system.
                              """;
                     // delete used token
-                    tokenRepository.deleteById(ov.getId());
+                    int rowCount = tokenRepository.deleteEmployeeVerificationTokenById(ov.getId());
+                    log.info("Employee Token Has Been Deleted \n {} token deleted",rowCount);
                 }
 
             } else {

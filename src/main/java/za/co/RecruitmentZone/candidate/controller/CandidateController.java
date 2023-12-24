@@ -1,18 +1,15 @@
 package za.co.RecruitmentZone.candidate.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
-import za.co.RecruitmentZone.application.dto.NewAssistedApplicationDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateNoteDTO;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
@@ -118,9 +115,9 @@ public class CandidateController {
             return "fragments/applications/apply-now";
         }
         try {
-            //   recruitmentZoneService.createCandidateApplication(newApplicationDTO);
 
-            recruitmentZoneService.createFile(candidateFileDTO);
+            CandidateFile file = recruitmentZoneService.createCandidateFile(candidateFileDTO);
+            recruitmentZoneService.saveCandidateFile(file);
             // publish file upload event and give the file
             //recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
 
@@ -150,7 +147,7 @@ public class CandidateController {
 
 
     @PostMapping("/create-application")
-    public String saveSubmission(@Valid @ModelAttribute("newApplicationDTO") NewAssistedApplicationDTO newApplicationDTO,
+    public String saveSubmission(@Valid @ModelAttribute("newApplicationDTO") NewApplicationDTO newApplicationDTO,
                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             applicationAttributes(model,"",false);
@@ -194,7 +191,7 @@ public class CandidateController {
         model.addAttribute("message", message);
         if(newApplication)
         {
-            model.addAttribute("newApplicationDTO", new NewAssistedApplicationDTO());
+            model.addAttribute("newApplicationDTO", new NewApplicationDTO());
         }
     }
 

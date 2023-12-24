@@ -131,8 +131,9 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> findEmployeeByID(Long employeeID) {
-        return employeeRepository.findById(employeeID);
+    public Employee findEmployeeByID(Long employeeID) {
+        Optional<Employee> op = employeeRepository.findById(employeeID);
+        return op.orElse(null);
     }
 
     public Employee save(Employee employee) {

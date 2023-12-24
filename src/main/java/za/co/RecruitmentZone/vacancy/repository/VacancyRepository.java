@@ -1,5 +1,6 @@
 package za.co.RecruitmentZone.vacancy.repository;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,9 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     List<Vacancy> findVacanciesByJobTitle(@Param("title") String title);
 
     List<Vacancy> findVacanciesByStatus(VacancyStatus status);
+
+    @Query("SELECT v FROM Vacancy v")
+    List<Vacancy> findAllVacancies();
 
 
 }

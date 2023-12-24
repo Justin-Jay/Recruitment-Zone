@@ -166,11 +166,7 @@ public class EmployeeController {
     }
 
     public Employee findEmployeeByID(Long employeeID) {
-        Employee employee = null;
-        Optional<Employee> optionalEmployee = employeeService.findEmployeeByID(employeeID);
-        if (optionalEmployee.isPresent()) {
-            employee = optionalEmployee.get();
-        }
+        Employee employee = employeeService.findEmployeeByID(employeeID);
         return employee;
     }
 

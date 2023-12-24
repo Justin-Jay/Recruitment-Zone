@@ -2,6 +2,7 @@ package za.co.RecruitmentZone.client.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import za.co.RecruitmentZone.client.dto.ClientDTO;
 import za.co.RecruitmentZone.client.dto.ContactPersonDTO;
@@ -37,9 +38,7 @@ public class ClientService {
         ContactPerson contactPerson = new ContactPerson(clientDTO.getContactPerson_FirstName(),
                 clientDTO.getContactPerson_last_name(),clientDTO.getContactPerson_email_address(),clientDTO.getContactPerson_land_line(),clientDTO.getContactPerson_cell_phone());
         contactPerson.setClient(client);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
-        contactPerson.setCreated(timestamp);
+        contactPerson.setCreated(LocalDateTime.now());
         contactPersonRepository.save(contactPerson);
     }
     public void saveUpdatedClient(Client client){
@@ -50,6 +49,7 @@ public class ClientService {
     public List<Client> findAllClients(){
         return clientRepository.findAll();
     }
+
 
     public Client findClientByID(Long clientID){
         Optional<Client> op = clientRepository.findById(clientID);
