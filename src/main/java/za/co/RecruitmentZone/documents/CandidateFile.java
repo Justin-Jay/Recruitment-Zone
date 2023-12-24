@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import za.co.RecruitmentZone.candidate.entity.Candidate;
 import za.co.RecruitmentZone.util.Enums.DocumentType;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "document")
 public class CandidateFile {
@@ -16,6 +18,8 @@ public class CandidateFile {
     private String filesize;
     private byte[] filedata;
     private String documentLocation;
+    @Column(name="created")
+    private LocalDateTime created;
     @ManyToOne(
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
@@ -35,6 +39,14 @@ public class CandidateFile {
         this.documentLocation = documentLocation;
         this.candidate = candidate;
         this.documentType = documentType;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     public Long getFileID() {

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  recruitment-zone-application:
+    build: .
+    image: recruitment-zone-image
+    restart: always
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - recruitmentzonedb
+    networks:
+      - recruitment-zone-network
+    env_file:
+      - .env
+    environment:
+        - SPRING_PROFILES_ACTIVE=production
+        - SPRING_DATASOURCE_URL=jdbc:mysql://recruitmentzonedb:3306/recruitmentzonedb
+        - SPRING_DATASOURCE_USERNAME=${RZ_DB_USER}
+        - SPRING_DATASOURCE_PASSWORD=${RZ_DB_PASSWORD}
+
+  recruitmentzonedb:
+    platform: linux/x86_64
+    image: mysql:8.2.0-oracle
+    ports:
+        - "3306:3306"
+    env_file:
+    - .env
+    restart: always
+    networks:
+      - recruitment-zone-network
+
+networks:
+  recruitment-zone-network:
+    driver: bridge

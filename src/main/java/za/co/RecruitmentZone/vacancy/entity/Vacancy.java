@@ -11,6 +11,7 @@ import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,23 +35,27 @@ public class Vacancy {
     @Enumerated(EnumType.STRING)
     private VacancyStatus status;
     @Enumerated(EnumType.STRING)
+    @Column(name ="job_type")
     private JobType jobType;
     @Enumerated(EnumType.STRING)
+    @Column(name ="emp_type")
     private EmpType empType;
     @Column(name="created")
-    private Timestamp created;
+    private LocalDateTime created;
     @ManyToOne(
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
     @JoinColumn(name = "clientid")
     private Client client;
-
+private Long theClientID;
     @ManyToOne(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "employeeID")
     private Employee employee;
+
+    private Long theEmpID;
 
     @OneToMany(mappedBy = "vacancy",
             cascade = {
@@ -77,11 +82,27 @@ public class Vacancy {
         this.empType = empType;
     }
 
-    public Timestamp getCreated() {
+    public Long getTheClientID() {
+        return theClientID;
+    }
+
+    public void setTheClientID(Long theClientID) {
+        this.theClientID = theClientID;
+    }
+
+    public Long getTheEmpID() {
+        return theEmpID;
+    }
+
+    public void setTheEmpID(Long theEmpID) {
+        this.theEmpID = theEmpID;
+    }
+
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
@@ -199,7 +220,6 @@ public class Vacancy {
     public void setClient(Client client) {
         this.client = client;
     }
-
     public Employee getEmployee() {
         return employee;
     }

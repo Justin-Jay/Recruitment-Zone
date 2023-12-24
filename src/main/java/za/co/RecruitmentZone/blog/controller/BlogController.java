@@ -112,9 +112,7 @@ public class BlogController {
         newBlog.setPublish_date(blogDTO.getPublish_date().toString());
 
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
-        newBlog.setCreated(timestamp);
+        newBlog.setCreated(LocalDateTime.now());
 
 
         LocalDate today = LocalDate.now();

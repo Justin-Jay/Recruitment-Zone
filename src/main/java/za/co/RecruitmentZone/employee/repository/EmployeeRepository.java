@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 
-
     @Query("SELECT e FROM Employee e WHERE LOWER(e.email) = LOWER(:email)")
     Optional<Employee> findEmployeeByEmailIgnoreCase(@Param("email") String email);
 

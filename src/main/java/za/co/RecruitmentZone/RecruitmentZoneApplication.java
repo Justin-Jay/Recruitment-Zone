@@ -10,6 +10,4 @@ public class RecruitmentZoneApplication {
         SpringApplication.run(RecruitmentZoneApplication.class, args);
     }
 
-
-
 }

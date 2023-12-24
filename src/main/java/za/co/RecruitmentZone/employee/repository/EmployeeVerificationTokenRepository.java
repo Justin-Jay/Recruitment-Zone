@@ -16,5 +16,8 @@ public interface EmployeeVerificationTokenRepository extends JpaRepository<Emplo
     @Query("SELECT t FROM EmployeeVerificationToken t JOIN t.employee e WHERE e.employeeID = :employeeId")
     EmployeeVerificationToken findEmployeeVerificationTokenByEmployeeID(@Param("employeeId") Long employeeId);
 
+    @Query("DELETE FROM EmployeeVerificationToken t WHERE t.employee.employeeID = :employeeId")
+    int deleteEmployeeVerificationTokenById(@Param("employeeId") Long employeeId);
+
 
 }

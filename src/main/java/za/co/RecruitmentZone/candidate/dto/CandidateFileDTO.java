@@ -9,6 +9,7 @@ import za.co.RecruitmentZone.util.Enums.DocumentType;
 
 public class CandidateFileDTO {
     private Long candidateID;
+    private String candidateIDNumber;
     @Enumerated(EnumType.STRING)
     private DocumentType documentType;
     @Transient
@@ -20,6 +21,14 @@ public class CandidateFileDTO {
     public CandidateFileDTO(Long candidateID, MultipartFile cvFile) {
         this.candidateID = candidateID;
         this.cvFile = cvFile;
+    }
+
+    public String getCandidateIDNumber() {
+        return candidateIDNumber;
+    }
+
+    public void setCandidateIDNumber(String candidateIDNumber) {
+        this.candidateIDNumber = candidateIDNumber;
     }
 
     public DocumentType getDocumentType() {

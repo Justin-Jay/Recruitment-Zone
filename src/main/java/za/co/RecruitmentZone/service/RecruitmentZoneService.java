@@ -2,10 +2,8 @@ package za.co.RecruitmentZone.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.auditing.AuditingHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.RecruitmentZone.application.dto.NewAssistedApplicationDTO;
 import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.application.entity.Application;
@@ -23,7 +21,6 @@ import za.co.RecruitmentZone.employee.entity.Authority;
 import za.co.RecruitmentZone.employee.entity.Employee;
 import za.co.RecruitmentZone.employee.service.EmployeeService;
 import za.co.RecruitmentZone.storage.StorageService;
-import za.co.RecruitmentZone.util.Enums.DocumentType;
 import za.co.RecruitmentZone.util.Enums.ApplicationStatus;
 import za.co.RecruitmentZone.util.Enums.ROLE;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
@@ -44,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static za.co.RecruitmentZone.util.Enums.DocumentType.CURRICULUM_VITAE;
 import static za.co.RecruitmentZone.util.Enums.ROLE.*;
 import static za.co.RecruitmentZone.util.Enums.VacancyStatus.*;
 
@@ -92,27 +90,24 @@ public class RecruitmentZoneService {
 
     public Employee findEmployeeByEmail(String email) {
         Optional<Employee> oe = employeeService.findEmployeeByEmail(email);
-        if(oe.isPresent())
-        {
-            log.info("FOUND EMPLOYEE {}",oe.get());
+        if (oe.isPresent()) {
+            log.info("FOUND EMPLOYEE {}", oe.get());
         }
 
         return oe.orElse(null);
     }
 
     public Employee findEmployeeByID(Long id) {
-        Optional<Employee> oe = employeeService.findEmployeeByID(id);
-        if (oe.isPresent()) {
-            return oe.get();
-        }
-        return null;
+        Employee oe = employeeService.findEmployeeByID(id);
+
+        return oe;
     }
 
     public List<Employee> getEmployees() {
         return employeeService.getEmployees();
     }
 
-    public Employee findEmployeeByName(String name){
+    public Employee findEmployeeByName(String name) {
         return employeeService.findEmployeeByName(name);
     }
 
@@ -136,10 +131,14 @@ public class RecruitmentZoneService {
         newVacancy.setEmpType(vacancy.getEmpType());
         newVacancy.setCategory(vacancy.getCategory());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
-        newVacancy.setCreated(timestamp);
+// Get the current date and time
+        LocalDateTime now = LocalDateTime.now();
 
+// Truncate seconds and nanoseconds
+        LocalDateTime truncated = now.withSecond(0).withNano(0);
+
+// Set the truncated value to the vacancy
+        newVacancy.setCreated(truncated);
 
         LocalDate today = LocalDate.now();
 
@@ -153,9 +152,8 @@ public class RecruitmentZoneService {
         Client client = clientService.findClientByID(vacancy.getClientID());
         newVacancy.setClient(client);
 
-        Optional<Employee> op = employeeService.findEmployeeByID(vacancy.getEmployeeID());
-        op.ifPresent(newVacancy::setEmployee);
-
+        Employee op = employeeService.findEmployeeByID(vacancy.getEmployeeID());
+        newVacancy.setEmployee(op);
         vacancyService.save(newVacancy);
     }
 
@@ -270,27 +268,23 @@ public class RecruitmentZoneService {
         emp.setEmployee(employee);
         List<ROLE> returnList;
 
-        if(userAuths.contains(admin)){
+        if (userAuths.contains(admin)) {
             returnList = new ArrayList<>();
             returnList.add(ROLE_ADMIN);
             returnList.add(ROLE_MANAGER);
             returnList.add(ROLE_EMPLOYEE);
-        }
-        else if (!userAuths.contains(admin) && userAuths.contains(manager)){
+        } else if (!userAuths.contains(admin) && userAuths.contains(manager)) {
             returnList = new ArrayList<>();
             returnList.add(ROLE_MANAGER);
             returnList.add(ROLE_EMPLOYEE);
-        }
-        else {
+        } else {
             returnList = null;
         }
 
         return returnList;
     }
 
-
     // APPLICATIONS
-
     public void createCandidateApplication(NewApplicationDTO newApplicationDTO) {
         Candidate candidate = new Candidate();
         candidate.setFirst_name(newApplicationDTO.getFirst_name());
@@ -304,49 +298,27 @@ public class RecruitmentZoneService {
         candidate.setSeniority_level(newApplicationDTO.getSeniority_level());
         candidate.setEducation_level(newApplicationDTO.getEducation_level());
         candidate.setRelocation(newApplicationDTO.getRelocation());
+        candidate.setCreated(LocalDateTime.now());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
-        candidate.setCreated(timestamp);
-        // Local file storage
-
-        String directory = "C:/uploads";
-
-        Path storageLocation = null;
-        try {
-            Path uploadPath = Path.of(directory);
-            if (Files.notExists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            storageLocation = uploadPath.resolve(newApplicationDTO.getCvFile().getOriginalFilename());
-            Files.copy(newApplicationDTO.getCvFile().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
-
-        } catch (Exception e) {
-            log.info("Failed to create directory {}", e.getMessage());
-        }
-
-
-        // Google storage
-        //String storageLocation = saveFile(newApplicationDTO.getVacancyID(),newApplicationDTO.getCvFile());
-
-
-        // File object Creation
-        CandidateFile newCandidatFile = new CandidateFile();
-        newCandidatFile.setContenttype(newApplicationDTO.getCvFile().getContentType());
-        newCandidatFile.setFilesize(String.valueOf(newApplicationDTO.getCvFile().getSize()));
-        newCandidatFile.setFilename(newApplicationDTO.getCvFile().getOriginalFilename());
-        newCandidatFile.setDocumentType(DocumentType.CURRICULUM_VITAE);
-        newCandidatFile.setDocumentLocation(String.valueOf(storageLocation));
-
-        log.info("StorageLocation: {}", storageLocation);
-
-
-        candidate.AddDocument(newCandidatFile);
 
         // create candidate and save and link with document
+
         candidate = candidateService.save(candidate);
 
         // create application  and link candidate
+        CandidateFileDTO fileDTO = new CandidateFileDTO();
+        fileDTO.setCandidateIDNumber(newApplicationDTO.getId_number());
+        fileDTO.setCvFile(newApplicationDTO.getCvFile());
+        fileDTO.setDocumentType(CURRICULUM_VITAE);
+        CandidateFile file = null;
+        try {
+            file = createCandidateFile(fileDTO);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+
+        candidate.AddDocument(file);
+        fileService.save(file);
 
 
         Application application = new Application();
@@ -365,88 +337,21 @@ public class RecruitmentZoneService {
 
     }
 
-    public void createCandidateApplication(NewAssistedApplicationDTO newApplicationDTO) {
-        Candidate candidate = new Candidate();
-        candidate.setFirst_name(newApplicationDTO.getFirst_name());
-        candidate.setLast_name(newApplicationDTO.getLast_name());
-        candidate.setId_number(newApplicationDTO.getId_number());
-        candidate.setEmail_address(newApplicationDTO.getEmail_address());
-        candidate.setPhone_number(newApplicationDTO.getPhone_number());
-        candidate.setCurrent_province(newApplicationDTO.getCurrent_province());
-        candidate.setCurrent_role(newApplicationDTO.getCurrent_role());
-        candidate.setCurrent_employer(newApplicationDTO.getCurrent_employer());
-        candidate.setSeniority_level(newApplicationDTO.getSeniority_level());
-        candidate.setEducation_level(newApplicationDTO.getEducation_level());
-        candidate.setRelocation(newApplicationDTO.getRelocation());
-
-        // Local file storage
-
-        String directory = "C:/uploads";
-
-        Path storageLocation = null;
-        try {
-            Path uploadPath = Path.of(directory);
-            if (Files.notExists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            storageLocation = uploadPath.resolve(newApplicationDTO.getCvFile().getOriginalFilename());
-            Files.copy(newApplicationDTO.getCvFile().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
-
-        } catch (Exception e) {
-            log.info("Failed to create directory {}", e.getMessage());
-        }
-
-
-        // Google storage
-        //String storageLocation = saveFile(newApplicationDTO.getVacancyID(),newApplicationDTO.getCvFile());
-
-
-        // File object Creation
-        CandidateFile newCandidatFile = new CandidateFile();
-        newCandidatFile.setContenttype(newApplicationDTO.getCvFile().getContentType());
-        newCandidatFile.setFilesize(String.valueOf(newApplicationDTO.getCvFile().getSize()));
-        newCandidatFile.setFilename(newApplicationDTO.getCvFile().getOriginalFilename());
-        newCandidatFile.setDocumentType(DocumentType.CURRICULUM_VITAE);
-        newCandidatFile.setDocumentLocation(String.valueOf(storageLocation));
-
-        log.info("StorageLocation: {}", storageLocation);
-
-
-        candidate.AddDocument(newCandidatFile);
-
-        // create candidate and save and link with document
-        candidate = candidateService.save(candidate);
-
-        // create application  and link candidate
-
-
-        Application application = new Application();
-        LocalDate date = LocalDate.now();
-        application.setDate_received(date.toString());
-        application.setSubmission_date(date.toString());
-        application.setStatus(ApplicationStatus.PENDING);
-
-        // link application with vacancy
-        application.setVacancy(vacancyService.findById(newApplicationDTO.getVacancyID()));
-
-        // link candidate with application
-        candidate.AddApplication(application);
-        applicationService.save(application);
-
-
-    }
-
-    public boolean createFile(CandidateFileDTO fileDTO) throws IOException {
+    public CandidateFile createCandidateFile(CandidateFileDTO fileDTO) throws IOException {
         CandidateFile file = new CandidateFile();
+        Candidate candidate = candidateService.getcandidateByID(fileDTO.getCandidateID());
+        file.setCandidate(candidate);
         file.setContenttype(fileDTO.getCvFile().getContentType());
-        // file.setFiledata(fileDTO.getCvFile().getBytes());
         file.setFilename(fileDTO.getCvFile().getOriginalFilename());
         file.setFilesize(Long.toString(fileDTO.getCvFile().getSize()));
-        file.setCandidate(candidateService.getcandidateByID(fileDTO.getCandidateID()));
         file.setDocumentType(fileDTO.getDocumentType());
+        file.setCreated(LocalDateTime.now());
         // Local file storage
 
-        String directory = "C:/uploads";
+        String docType = fileDTO.getDocumentType().toString();
+        String candidateIDNumber = candidate.getId_number();
+        String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+        String directory = "C:/uploads/" + "CANDIDATE_FILES/" + candidateIDNumber + "/" + docType + "/" + formattedDate;
 
         Path storageLocation = null;
         try {
@@ -454,6 +359,7 @@ public class RecruitmentZoneService {
             if (Files.notExists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
+
             storageLocation = uploadPath.resolve(fileDTO.getCvFile().getOriginalFilename());
             Files.copy(fileDTO.getCvFile().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
 
@@ -462,12 +368,10 @@ public class RecruitmentZoneService {
         }
 
         // Google storage
-        //  String storageLocation = addDocumentToCandidate(candidateID,uploadedFile);
-
+        //file.setDocumentLocation(saveFile(fileDTO));
 
         file.setDocumentLocation(storageLocation.toString());
-        fileService.save(file);
-        return true;
+        return file;
     }
 
     public List<Application> getApplications() {
@@ -494,9 +398,12 @@ public class RecruitmentZoneService {
 
 
     // STORAGE
+    public void saveCandidateFile(CandidateFile candidateFile) {
+        fileService.save(candidateFile);
+    }
 
-    public String saveFile(Long vacancyID, MultipartFile file) {
-        return storageService.uploadFile(vacancyID, file);
+    public String saveFile(CandidateFileDTO fileDTO) {
+        return storageService.uploadFile(fileDTO);
     }
 
     public String saveTempFile() throws IOException {

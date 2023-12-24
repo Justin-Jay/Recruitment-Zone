@@ -12,8 +12,9 @@ public class EmployeeVerificationToken {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
+    @Column(name = "token")
     private String token;
-
+    @Column(name = "randomVal")
     private String randomVal;
     @Column(name = "creation_time")
     private LocalDateTime creationTime;

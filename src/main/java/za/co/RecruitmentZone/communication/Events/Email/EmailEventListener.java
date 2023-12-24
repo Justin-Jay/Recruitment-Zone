@@ -41,13 +41,15 @@ public class EmailEventListener {
 
 
     public void sendAutoResponse(ContactMessage m){
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()){
             log.info("About to submit request");
             executor.submit(() -> {
                 // Perform repo IO operation
                 // send acknowledgment to candidate
                 communicationService.sendAutoResponse( m.getEmail(), "Auto Response - Query Received", m.getName(), m.getEmail(), m.getMessageBody());
             });
+            communicationService.sendAutoResponse( m.getEmail(), "Auto Response - Query Received", m.getName(), m.getEmail(), m.getMessageBody());
+
             log.info("sendAutoResponse submitted");
         } catch (Exception e) {
             log.info("Failed to send Email Query");
@@ -55,11 +57,12 @@ public class EmailEventListener {
     }
 
     public void sendWebsiteNotification(ContactMessage m){
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()){
             log.info("About to submit request");
             executor.submit(() -> {
                 communicationService.sendWebsiteQuery(m);
             });
+            communicationService.sendWebsiteQuery(m);
             log.info("sendWebsiteNotification submitted");
         } catch (Exception e) {
             log.info("Failed to send Email Query");

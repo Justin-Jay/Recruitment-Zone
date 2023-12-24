@@ -2,8 +2,17 @@ package za.co.RecruitmentZone.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 import za.co.RecruitmentZone.service.RecruitmentZoneService;
@@ -17,9 +26,13 @@ public class RecruitmentZoneAPIController {
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneAPIController.class);
 
     private final RecruitmentZoneService vacancyService;
+    private final JobLauncher jobLauncher;
+    private final Job vacancyJob;
 
-    public RecruitmentZoneAPIController(RecruitmentZoneService vacancyService) {
+    public RecruitmentZoneAPIController(RecruitmentZoneService vacancyService, JobLauncher jobLauncher, Job vacancyJob) {
         this.vacancyService = vacancyService;
+        this.jobLauncher = jobLauncher;
+        this.vacancyJob = vacancyJob;
     }
 
     @GetMapping("/getAllVacancies")
@@ -31,6 +44,23 @@ public class RecruitmentZoneAPIController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/start-batch-job")
+    public ResponseEntity<String>  batchJobEntry() {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLong("created", System.currentTimeMillis())
+                .toJobParameters();
+        try {
+            jobLauncher.run(vacancyJob, jobParameters);
+            return new ResponseEntity<>("Batch Started Successfully", HttpStatus.OK);
+        } catch (JobInstanceAlreadyCompleteException |
+                 JobExecutionAlreadyRunningException |
+                 JobParametersInvalidException |
+                 JobRestartException
+                e) {
+            log.info("Failed {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 /*    @DeleteMapping("/deleteVacancy/{id}")
     public ResponseEntity<String> deleteVacancy(@PathVariable Long id) {
         boolean vacancyDeleted = vacancyService.deleteVacancy(id);
@@ -40,6 +70,7 @@ public class RecruitmentZoneAPIController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }*/
+
 
 
 

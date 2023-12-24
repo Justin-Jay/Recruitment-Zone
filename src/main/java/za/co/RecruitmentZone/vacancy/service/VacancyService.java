@@ -2,6 +2,8 @@ package za.co.RecruitmentZone.vacancy.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
@@ -47,5 +49,6 @@ public class VacancyService {
     public List<Vacancy> getActiveVacancies(VacancyStatus status){
         return vacancyRepository.findVacanciesByStatus(status);
     }
+
 
 }

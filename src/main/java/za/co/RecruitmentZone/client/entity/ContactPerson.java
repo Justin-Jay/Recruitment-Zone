@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import za.co.RecruitmentZone.client.entity.Client;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "contact_person")
@@ -19,7 +20,7 @@ public class ContactPerson {
     private String land_line;
     private String cell_phone;
     @Column(name="created")
-    private Timestamp created;
+    private LocalDateTime created;
     @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
     })
@@ -37,11 +38,11 @@ public class ContactPerson {
         this.cell_phone = cell_phone;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
