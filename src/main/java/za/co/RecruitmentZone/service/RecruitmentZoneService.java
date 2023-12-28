@@ -3,7 +3,6 @@ package za.co.RecruitmentZone.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 import za.co.RecruitmentZone.application.dto.NewApplicationDTO;
 import za.co.RecruitmentZone.application.entity.Application;
@@ -16,7 +15,7 @@ import za.co.RecruitmentZone.client.entity.Client;
 import za.co.RecruitmentZone.client.entity.ContactPerson;
 import za.co.RecruitmentZone.client.service.ClientService;
 import za.co.RecruitmentZone.documents.CandidateFile;
-import za.co.RecruitmentZone.documents.FileService;
+import za.co.RecruitmentZone.documents.CandidateFileService;
 import za.co.RecruitmentZone.employee.entity.Authority;
 import za.co.RecruitmentZone.employee.entity.Employee;
 import za.co.RecruitmentZone.employee.service.EmployeeService;
@@ -33,7 +32,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -56,11 +54,11 @@ public class RecruitmentZoneService {
     private final ApplicationsEventPublisher applicationsEventPublisher;
     private final StorageService storageService;
     private final ClientService clientService;
-    private final FileService fileService;
+    private final CandidateFileService fileService;
 
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
-                                  EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService, FileService fileService) {
+                                  EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService, CandidateFileService fileService) {
         this.applicationService = applicationService;
         this.vacancyService = vacancyService;
         this.candidateService = candidateService;

@@ -4,12 +4,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import za.co.RecruitmentZone.util.Enums.VacancyStatus;
 import za.co.RecruitmentZone.vacancy.entity.Vacancy;
 
 import java.util.List;
 
-
+@Repository
 public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     // You can add custom query methods here if needed
 

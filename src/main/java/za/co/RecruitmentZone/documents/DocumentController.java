@@ -11,24 +11,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import za.co.RecruitmentZone.blog.entity.Blog;
-import za.co.RecruitmentZone.candidate.dto.CandidateFileDTO;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
 @RequestMapping("/Document")
 public class DocumentController {
 
-    private final FileService fileService;
+    private final CandidateFileService fileService;
     private final Logger log = LoggerFactory.getLogger(DocumentController.class);
 
-    public DocumentController(FileService fileService) {
+    public DocumentController(CandidateFileService fileService) {
         this.fileService = fileService;
     }
 
