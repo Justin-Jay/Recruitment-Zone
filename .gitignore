@@ -37,4 +37,4 @@ build/
 backup-configuration/
 redis-config/
 mysql.env
-scripts/
+scripts/**
