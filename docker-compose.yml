@@ -1,36 +1,81 @@
 version: '3.8'
 
 services:
-  recruitment-zone-application:
+  recruitmentzoneapplication:
     build: .
-    image: recruitment-zone-image
+    image: recruitment-zone
+    container_name: recruitmentzoneapplication
     restart: always
     ports:
       - "8080:8080"
-
     depends_on:
       - recruitmentzonedb
-    networks:
-      - recruitment-zone-network
     env_file:
       - .env
-    environment:
-        - SPRING_PROFILES_ACTIVE=production
-        - SPRING_DATASOURCE_URL=jdbc:mysql://recruitmentzonedb:3306/recruitmentzonedb
-        - SPRING_DATASOURCE_USERNAME=${RZ_DB_USER}
-        - SPRING_DATASOURCE_PASSWORD=${RZ_DB_PASSWORD}
+    volumes:
+      - recruitment-zone-app-data:/recruitment-zone-app/data
+    labels:
+    - "docker-volume-backup.stop-during-backup=recruitmentzoneapplication"
+    command: ["java", "-jar","org.springframework.boot.loader.JarLauncher"]
 
   recruitmentzonedb:
-    platform: linux/x86_64
-    image: mysql:8.2.0-oracle
-    ports:
-        - "3306:3306"
+    image: mysql:8.2.0
+    container_name: recruitmentzonedb
     env_file:
-    - .env
+      - mysql.env
     restart: always
-    networks:
-      - recruitment-zone-network
+    volumes:
+        - recruitment-zone-db-data:/var/lib/mysql
+    labels:
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - "docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --archive > /tmp/dumps/mysql.archive'"
+      - "docker-volume-backup.exec-label=recruitmentzonedb"
 
-networks:
-  recruitment-zone-network:
-    driver: bridge
+
+#  recruitment-zone-redis:
+#    image: redis/redis-stack-server:6.2.6-v10
+#    container_name: recruitment-zone-redis
+#    env_file:
+#      - redis-config/redis.env
+#    restart: always
+#    ports:
+#      - "6379:6379"
+#    networks:
+#      - recruitment-zone-network
+#    volumes:
+#      - recruitment-zone-redis-data:/redis/volume/data
+#    labels:
+#      - "docker-volume-backup.archive-pre=/bin/sh -c 'redisdump --archive > /tmp/dumps/redis.archive'"
+#      - "docker-volume-backup.exec-label=recruitment-zone-redis"
+
+
+ # backup:
+  #  image: offen/docker-volume-backup:v2
+   # container_name: backup
+    #restart: always
+    #env_file:
+     # - ./backup.env
+    #environment:
+     # BACKUP_FILENAME: backup-%Y-%m-%dT%H-%M-%S.tar.gz
+      #BACKUP_LATEST_SYMLINK: backup-latest.tar.gz
+    #volumes:
+     # - ./backup-configuration:/etc/dockervolumebackup/conf.d
+      #- /var/run/docker.sock:/var/run/docker.sock:ro
+      #- recruitment-zone-db-data:/backup/recruitment-zone-db-data-backup:ro
+      #- recruitment-zone-app-data:/backup/recruitment-zone-app-backup:ro
+      #- recruitment-zone-app-data:/backup/recruitment-zone-redis-data-backup:ro
+
+
+
+
+# ADD VOLUMES
+
+volumes:
+  recruitment-zone-app-data:
+    driver: local
+  recruitment-zone-db-data:
+    driver: local
+  #recruitment-zone-redis-data:
+  #  driver: local
+
+

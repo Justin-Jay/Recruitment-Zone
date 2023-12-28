@@ -43,13 +43,13 @@ public class Employee implements Principal {
             })
     private List<Authority> authorities;
 
-    @OneToMany(mappedBy = "employee",
+    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
     private Set<Blog> blogs;
 
-    @OneToMany(mappedBy = "employee",
+    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER,
                 cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
                 })

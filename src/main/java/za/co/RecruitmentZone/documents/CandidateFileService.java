@@ -5,19 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FileService {
-    private final Logger log = LoggerFactory.getLogger(FileService.class);
-    private final FileRepository fileRepository;
+public class CandidateFileService {
+    private final Logger log = LoggerFactory.getLogger(CandidateFileService.class);
+    private final CandidateFileRepository fileRepository;
 
-    public FileService(FileRepository fileRepository) {
+    public CandidateFileService(CandidateFileRepository fileRepository) {
         this.fileRepository = fileRepository;
     }
 
