@@ -21,9 +21,9 @@ import za.co.recruitmentzone.employee.entity.Authority;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.employee.service.EmployeeService;
 import za.co.recruitmentzone.storage.StorageService;
-import za.co.recruitmentzone.util.Enums.ApplicationStatus;
-import za.co.recruitmentzone.util.Enums.ROLE;
-import za.co.recruitmentzone.util.Enums.VacancyStatus;
+import za.co.recruitmentzone.util.enums.ApplicationStatus;
+import za.co.recruitmentzone.util.enums.ROLE;
+import za.co.recruitmentzone.util.enums.VacancyStatus;
 import za.co.recruitmentzone.application.Events.ApplicationsEventPublisher;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
@@ -40,9 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static za.co.recruitmentzone.util.Enums.DocumentType.CURRICULUM_VITAE;
-import static za.co.recruitmentzone.util.Enums.ROLE.*;
-import static za.co.recruitmentzone.util.Enums.VacancyStatus.*;
+import static za.co.recruitmentzone.util.enums.DocumentType.CURRICULUM_VITAE;
+import static za.co.recruitmentzone.util.enums.ROLE.*;
+import static za.co.recruitmentzone.util.enums.VacancyStatus.*;
 
 
 @Service

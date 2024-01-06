@@ -4,7 +4,7 @@ package za.co.recruitmentzone.client.dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
-import za.co.recruitmentzone.util.Enums.Industry;
+import za.co.recruitmentzone.util.enums.Industry;
 
 public class ClientDTO {
     private String name;

@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.employee.entity.Employee;
-import za.co.recruitmentzone.util.Enums.EmpType;
-import za.co.recruitmentzone.util.Enums.Industry;
-import za.co.recruitmentzone.util.Enums.JobType;
-import za.co.recruitmentzone.util.Enums.VacancyStatus;
+import za.co.recruitmentzone.util.enums.EmpType;
+import za.co.recruitmentzone.util.enums.Industry;
+import za.co.recruitmentzone.util.enums.JobType;
+import za.co.recruitmentzone.util.enums.VacancyStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

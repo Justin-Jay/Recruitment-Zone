@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import za.co.recruitmentzone.util.Enums.ApplicationStatus;
+import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.application.repository.ApplicationRepository;
 

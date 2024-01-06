@@ -2,8 +2,8 @@ package za.co.recruitmentzone.candidate.entity;
 
 import jakarta.persistence.*;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.recruitmentzone.util.Enums.EducationLevel;
-import za.co.recruitmentzone.util.Enums.Province;
+import za.co.recruitmentzone.util.enums.EducationLevel;
+import za.co.recruitmentzone.util.enums.Province;
 
 public class CandidateDTO {
     private String first_name;

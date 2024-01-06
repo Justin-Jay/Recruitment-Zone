@@ -1,7 +1,7 @@
 package za.co.recruitmentzone.application.entity;
 
 import jakarta.persistence.*;
-import za.co.recruitmentzone.util.Enums.ApplicationStatus;
+import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.candidate.entity.Candidate;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 

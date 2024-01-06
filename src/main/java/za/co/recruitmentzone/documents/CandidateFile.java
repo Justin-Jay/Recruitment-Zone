@@ -2,7 +2,7 @@ package za.co.recruitmentzone.documents;
 
 import jakarta.persistence.*;
 import za.co.recruitmentzone.candidate.entity.Candidate;
-import za.co.recruitmentzone.util.Enums.DocumentType;
+import za.co.recruitmentzone.util.enums.DocumentType;
 
 import java.time.LocalDateTime;
 

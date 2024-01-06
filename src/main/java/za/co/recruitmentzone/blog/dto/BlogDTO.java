@@ -5,7 +5,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
-import za.co.recruitmentzone.util.Enums.BlogStatus;
+import za.co.recruitmentzone.util.enums.BlogStatus;
 
 import java.time.LocalDate;
 

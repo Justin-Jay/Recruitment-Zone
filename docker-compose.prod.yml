@@ -5,7 +5,6 @@ services:
   recruitment-zone-db:
     image: mysql:8.2.0
     container_name: recruitment-zone-db
-    restart: always
     volumes:
       - recruitment-zone-db-vol:/var/lib/mysql
     labels:
@@ -17,7 +16,6 @@ services:
   recruitment-zone-application:
     image: recruitment-zone
     container_name: recruitment-zone-application
-    restart: always
     ports:
       - "8080:8080"
     depends_on:

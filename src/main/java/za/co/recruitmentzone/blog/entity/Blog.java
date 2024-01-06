@@ -1,7 +1,7 @@
 package za.co.recruitmentzone.blog.entity;
 
 import jakarta.persistence.*;
-import za.co.recruitmentzone.util.Enums.BlogStatus;
+import za.co.recruitmentzone.util.enums.BlogStatus;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
 import za.co.recruitmentzone.employee.entity.Employee;
 

@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.candidate.dto.CandidateNoteDTO;
 import za.co.recruitmentzone.documents.CandidateFile;
-import za.co.recruitmentzone.util.Enums.EducationLevel;
-import za.co.recruitmentzone.util.Enums.Province;
+import za.co.recruitmentzone.util.enums.EducationLevel;
+import za.co.recruitmentzone.util.enums.Province;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

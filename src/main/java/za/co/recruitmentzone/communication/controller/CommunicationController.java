@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import za.co.recruitmentzone.communication.entity.ContactMessage;
-import za.co.recruitmentzone.communication.Events.Email.EmailEventPublisher;
+import za.co.recruitmentzone.communication.events.Email.EmailEventPublisher;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 
 @Controller

@@ -7,13 +7,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.candidate.entity.Candidate;
-import za.co.recruitmentzone.candidate.Events.SaveSubmissionEvent;
+import za.co.recruitmentzone.candidate.events.SaveSubmissionEvent;
 import za.co.recruitmentzone.application.service.ApplicationService;
 import za.co.recruitmentzone.candidate.service.CandidateService;
 
 import java.time.LocalDate;
 
-import static za.co.recruitmentzone.util.Enums.ApplicationStatus.PENDING;
+import static za.co.recruitmentzone.util.enums.ApplicationStatus.PENDING;
 
 @Component
 public class ApplicationsListener {

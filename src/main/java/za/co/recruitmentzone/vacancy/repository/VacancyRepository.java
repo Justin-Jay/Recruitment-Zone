@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import za.co.recruitmentzone.util.Enums.VacancyStatus;
+import za.co.recruitmentzone.util.enums.VacancyStatus;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.util.List;

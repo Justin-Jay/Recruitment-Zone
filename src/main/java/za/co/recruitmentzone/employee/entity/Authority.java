@@ -2,7 +2,7 @@ package za.co.recruitmentzone.employee.entity;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-import za.co.recruitmentzone.util.Enums.ROLE;
+import za.co.recruitmentzone.util.enums.ROLE;
 
 import java.util.Objects;
 

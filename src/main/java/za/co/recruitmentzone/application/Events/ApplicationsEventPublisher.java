@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
 import za.co.recruitmentzone.candidate.entity.Candidate;
-import za.co.recruitmentzone.candidate.Events.FileUploadEvent;
-import za.co.recruitmentzone.candidate.Events.SaveSubmissionEvent;
+import za.co.recruitmentzone.candidate.events.FileUploadEvent;
+import za.co.recruitmentzone.candidate.events.SaveSubmissionEvent;
 
 @Component
 public class ApplicationsEventPublisher {

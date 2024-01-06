@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
-import za.co.recruitmentzone.util.Enums.ApplicationStatus;
+import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 
