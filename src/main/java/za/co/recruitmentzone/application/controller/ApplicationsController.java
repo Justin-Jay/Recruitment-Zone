@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
+import za.co.recruitmentzone.util.StringConstants;
+import za.co.recruitmentzone.util.WebPageURL;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 
 import java.io.IOException;
 import java.util.List;
+
 
 
 @Controller
@@ -36,7 +39,7 @@ public class ApplicationsController {
         newFileSubmission(model,vacancyName,vacancyID);
         log.info("vacancyName {}",vacancyName);
         log.info("VacancyID {}",vacancyID);
-        return "fragments/applications/apply-now";
+        return WebPageURL.APPLY_NOW_URL;
     }
 
 
@@ -45,32 +48,36 @@ public class ApplicationsController {
                                  BindingResult bindingResult, Model model,
                                  RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            FileSubmissionAttributes(model,newApplicationDTO);
-            return "fragments/applications/apply-now";
+            fileSubmissionAttributes(model,newApplicationDTO);
+            return WebPageURL.APPLY_NOW_URL;
         }
         else if (newApplicationDTO.getCvFile().isEmpty()) {
-            FileSubmissionAttributes(model,newApplicationDTO,"Please select a file to upload.");
-            return "fragments/applications/apply-now";
+            fileSubmissionAttributes(model,newApplicationDTO,"Please select a file to upload.");
+            return WebPageURL.APPLY_NOW_URL;
         }
         // Security check: Ensure the file name is not a path that could be exploited
         else if (newApplicationDTO.getCvFile().getOriginalFilename().contains("..")) {
-            FileSubmissionAttributes(model,newApplicationDTO,"Invalid file name.");
-            return "fragments/applications/apply-now";
+            fileSubmissionAttributes(model,newApplicationDTO,"Invalid file name.");
+            return WebPageURL.APPLY_NOW_URL;
         }
         else if (newApplicationDTO.getCvFile().getSize() > 1024 * 1024 * 25) { // 25MB
-            FileSubmissionAttributes(model,newApplicationDTO,"File size exceeds the maximum limit (25MB).");
-            return "fragments/applications/apply-now";
+            fileSubmissionAttributes(model,newApplicationDTO,"File size exceeds the maximum limit (25MB).");
+            return WebPageURL.APPLY_NOW_URL;
         }
         // Security check: Ensure the file content is safe (detect content type)
         else if (!isValidContentType(newApplicationDTO.getCvFile())) {
-            FileSubmissionAttributes(model,newApplicationDTO,"Invalid file type. Only Word (docx) and PDF files are allowed.");
+            fileSubmissionAttributes(model,newApplicationDTO,"Invalid file type. Only Word (docx) and PDF files are allowed.");
             return "fragments/applications/apply-now";
         }
         try {
             recruitmentZoneService.createCandidateApplication(newApplicationDTO);
-            // publish file upload event and give the file
-            //recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
-            redirectAttributes.addFlashAttribute("message",
+            /**
+             * publish file upload event and give the file
+             *
+             * // recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
+             */
+
+            redirectAttributes.addFlashAttribute(StringConstants.MESSAGE,
                     "Application Submitted Successfully!");
             return "redirect:/home";
         } catch (Exception e) {
@@ -126,20 +133,20 @@ public class ApplicationsController {
 
     private void newFileSubmission(Model model,String vacancyName,Long vacancyID) {
         model.addAttribute("newApplicationDTO",new NewApplicationDTO());
-        model.addAttribute("vacancyName", vacancyName);
-        model.addAttribute("vacancyID", vacancyID);
+        model.addAttribute(StringConstants.VACANCY_NAME, vacancyName);
+        model.addAttribute(StringConstants.VACANCY_ID, vacancyID);
     }
 
-    private void FileSubmissionAttributes(Model model, NewApplicationDTO newApplicationDTO) {
-        model.addAttribute("vacancyName",newApplicationDTO.getVacancyName());
-        model.addAttribute("vacancyID",newApplicationDTO.getVacancyID());
+    private void fileSubmissionAttributes(Model model, NewApplicationDTO newApplicationDTO) {
+        model.addAttribute(StringConstants.VACANCY_NAME,newApplicationDTO.getVacancyName());
+        model.addAttribute(StringConstants.VACANCY_ID,newApplicationDTO.getVacancyID());
     }
 
 
-    private void FileSubmissionAttributes(Model model, NewApplicationDTO newApplicationDTO, String message) {
-        model.addAttribute("vacancyName",newApplicationDTO.getVacancyName());
-        model.addAttribute("vacancyID",newApplicationDTO.getVacancyID());
-        model.addAttribute("message", message);
+    private void fileSubmissionAttributes(Model model, NewApplicationDTO newApplicationDTO, String message) {
+        model.addAttribute(StringConstants.VACANCY_NAME,newApplicationDTO.getVacancyName());
+        model.addAttribute(StringConstants.VACANCY_ID,newApplicationDTO.getVacancyID());
+        model.addAttribute(StringConstants.MESSAGE, message);
     }
 
     private boolean isValidContentType(MultipartFile file) {
@@ -147,7 +154,7 @@ public class ApplicationsController {
             String detectedContentType = new Tika().detect(file.getInputStream());
             return detectedContentType.equals("application/pdf") || detectedContentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         } catch (IOException e) {
-            //log.info(e.getMessage());
+            log.info(e.getMessage());
             return false;
         }
     }

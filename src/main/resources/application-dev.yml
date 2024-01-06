@@ -1,0 +1,104 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+
+
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+  main:
+    banner-mode: off
+  #cloud:
+    #gcp:
+      #credentials:
+       # location: ${googlekeyfile}
+  #mvc:
+   # hiddenmethod:
+    #  filter:
+     #   enabled: true
+  mail:
+    host: mail.recruitmentzone.co.za
+    port: 587
+    username: ${RZONE_MAIL_ADDRESS}
+    password: ${RZONE_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: mail.recruitmentzone.co.za
+
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 25MB
+  batch:
+    job:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  datasource:
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATASOURCE}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connectionTimeout: 30000
+      leakDetectionThreshold: 300000
+      maximumPoolSize: 10
+      minimumIdle: 5
+      idleTimeout: 600000
+      poolName: RecruitmentZonePool
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
+
+
+
+mail:
+  info: true
+
+# Enable virtual threads
+com:
+  sun:
+    java:
+      util:
+        concurrent:
+          UseVirtualThreads: true
+
+
+
+
+rzone:
+  to:
+    address: ${RZONE_WEBSITE_QUERIES}
+
+token:
+  Secret:
+    Key: ${tokenSecretKey}
+
+
+file:
+  directory: ${FILE_DIRECTORY:"~/recruitment-zone-app-test/data/file-uploads/"}
+
+upload:
+  folder: ${CANDIDATE_FILES:"CANDIDATE_FILES"}
+
+domain:
+  co:
+    za: recruitmentzone.co.za
