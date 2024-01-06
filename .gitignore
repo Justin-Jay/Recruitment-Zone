@@ -33,8 +33,6 @@ build/
 .vscode/
 
 ### ENVIRONMENT FILES
-.env
+Docker/**
 backup-configuration/
-redis-config/
-mysql.env
-scripts/**
+docker/**

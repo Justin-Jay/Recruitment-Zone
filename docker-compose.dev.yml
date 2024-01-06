@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+
+  recruitment-zone-db-dev:
+    image: mysql:8.2.0
+    container_name: recruitment-zone-db-dev
+    restart: always
+    volumes:
+      - recruitment-zone-db-dev-vol:/var/lib/mysql
+    env_file:
+      - docker/dev-vars/dev-mysql.env
+    labels:
+      - "docker-volume-backup.archive-pre=/bin/sh -c 'mysql --archive > /tmp/dumps/mysql.archive'"
+      - "docker-volume-backup.exec-label=mysql"
+
+  recruitment-zone-application-dev:
+    image: recruitment-zone-dev
+    container_name: recruitment-zone-application-dev
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - recruitment-zone-db-dev
+    volumes:
+      - recruitment-zone-application-dev-vol:/var/log/recruitment-zone
+    env_file:
+      - docker/dev-vars/dev.env
+    labels:
+      - "docker-volume-backup.stop-during-backup=recruitment-zone-application-service"
+
+
+#  backup:
+ #   image: offen/docker-volume-backup:v2
+  #  container_name: backup
+   # restart: always
+   # env_file:
+   #   - ./docker/backup/back-up-service/backup.env
+   # volumes:
+    #  - ./docker/backup/backup-configuration:/etc/dockervolumebackup/conf.d
+     # - /var/run/docker.sock:/var/run/docker.sock:ro
+      #- recruitment-zone-db-dev-vol:/backup/recruitment-zone-db-backup:ro
+      #- recruitment-zone-application-dev-vol:/backup/recruitment-zone-application-backup:ro
+
+volumes:
+  recruitment-zone-db-dev-vol:
+    driver: local
+  recruitment-zone-application-dev-vol:
+    driver: local

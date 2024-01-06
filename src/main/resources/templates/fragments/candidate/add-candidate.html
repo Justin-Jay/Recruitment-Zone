@@ -59,7 +59,7 @@
 
         <label for="currentProvince">Current Location:
             <select id="currentProvince" th:field="${newApplicationDTO.current_province}">
-                <option th:each="province : ${T(za.co.RecruitmentZone.util.Enums.Province).values()}"
+                <option th:each="province : ${T(za.co.recruitmentzone.util.Enums.Province).values()}"
                         th:value="${province}" th:text="${province}"></option>
             </select>
         </label>
@@ -82,7 +82,7 @@
 
         <label for="EduLevel">Highest Education Level:
             <select id="EduLevel" th:field="${newApplicationDTO.education_level}">
-                <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.EducationLevel).values()}"
+                <option th:each="statusVal : ${T(za.co.recruitmentzone.util.Enums.EducationLevel).values()}"
                         th:value="${statusVal}" th:text="${statusVal}"></option>
             </select>
         </label>

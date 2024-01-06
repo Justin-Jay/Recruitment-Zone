@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOGS" value="C:/ProjectLogs/RecruitmentZone" />
+    <property name="LOGS" value="${LOG_DIRECTORY:~/application_temp_logs}"/>
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -8,7 +8,7 @@
         </layout>
     </appender>
     <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS}/RecruitmentZone.log</file>
+        <file>${LOGS}/application-logs/RecruitmentZone.log</file>
         <encoder>
             <pattern> %d{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%8.15t] %-40.40logger{39} : %X{REQUEST_ID} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%throwable}</pattern>
         </encoder>
@@ -30,7 +30,7 @@
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </root>
-    <logger name="za.co.RecruitmentZone" level="DEBUG" additivity="false">
+    <logger name="za.co.recruitmentzone" level="DEBUG" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
