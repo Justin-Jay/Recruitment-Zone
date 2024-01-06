@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import static za.co.recruitmentzone.util.WebPageURL.APPLY_NOW_URL;
-
 
 @Controller
 @RequestMapping("/Candidate")
@@ -65,7 +63,7 @@ public class CandidateController {
 
         model.addAttribute("candidate", candidate);
         Set<CandidateNote> notes = candidate.getNotes();
-    // sort the set according to date
+        // sort the set according to date
         model.addAttribute("existingNotes",notes );
         CandidateNoteDTO dto = new CandidateNoteDTO();
         dto.setCandidateID(candidateID);
@@ -95,32 +93,33 @@ public class CandidateController {
                                BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             documentAttributes(model,candidateFileDTO,"Binding Failed");
-            return APPLY_NOW_URL;
+            return "fragments/applications/apply-now";
         }
         else if (candidateFileDTO.getCvFile().isEmpty()) {
             documentAttributes(model,candidateFileDTO,"Please select a file to upload.");
-            return APPLY_NOW_URL;
+            return "fragments/applications/apply-now";
         }
         // Security check: Ensure the file name is not a path that could be exploited
         else if (candidateFileDTO.getCvFile().getOriginalFilename().contains("..")) {
             documentAttributes(model,candidateFileDTO,"Invalid file name.");
 
-            return APPLY_NOW_URL;
+            return "fragments/applications/apply-now";
         }
         else if (candidateFileDTO.getCvFile().getSize() > 1024 * 1024 * 25) { // 25MB
             documentAttributes(model,candidateFileDTO,"File size exceeds the maximum limit (25MB).");
-            return APPLY_NOW_URL;
+            return "fragments/applications/apply-now";
         }
         // Security check: Ensure the file content is safe (detect content type)
         else if (!isValidContentType(candidateFileDTO.getCvFile())) {
             documentAttributes(model,candidateFileDTO,"Invalid file type. Only Word (docx) and PDF files are allowed.");
-            return APPLY_NOW_URL;
+            return "fragments/applications/apply-now";
         }
         try {
 
             CandidateFile file = recruitmentZoneService.createCandidateFile(candidateFileDTO);
             recruitmentZoneService.saveCandidateFile(file);
-
+            // publish file upload event and give the file
+            //recruitmentZoneService.publishFileUploadedEvent(candidateID,newApplicationDTO);
 
             documentAttributes(model,candidateFileDTO,"File Upload Successfully!");
             return "fragments/candidate/candidate-documents";
