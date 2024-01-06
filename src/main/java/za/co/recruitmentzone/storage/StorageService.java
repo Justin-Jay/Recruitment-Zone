@@ -28,33 +28,6 @@ public class StorageService {
         this.candidateService = candidateService;
     }
 
-/*
-    public String uploadFile(Long vacancyID,MultipartFile multi) {
-        try {
-
-            if (multi.getSize() > 25 * 1024 * 1024) {
-                return "File size exceeds the limit (25MB)";
-            }
-
-            if (!isValidContentType(multi)) {
-                return "Invalid file format. Only PDF and Word documents are allowed.";
-            }
-
-
-            // Perform the actual file upload to storage
-            String destinationFileName = "CurriculumVitae" + "/" +"Submissions"+vacancyID+"/"+ multi.getName();
-            BlobId id = BlobId.of("kiunga", destinationFileName);
-            BlobInfo info = BlobInfo.newBuilder(id).build();
-
-            Blob uploadedFile = storage.create(info, multi.getBytes());
-
-            return "File uploaded: " + uploadedFile.getName();
-        } catch (IOException e) {
-            return "File upload failed: " + e.getMessage();
-        }
-    }
-*/
-
     public String uploadFile(CandidateFileDTO fileDTO) {
          Candidate candidate = candidateService.getcandidateByID(fileDTO.getCandidateID());
         try {
@@ -62,7 +35,8 @@ public class StorageService {
             String candidateIDNumber = candidate.getId_number();
             String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
             String fileName = fileDTO.getCvFile().getName();
-            String destinationFileName = "CANDIDATE_FILES/"+candidateIDNumber+"/"+docType+"/"+formattedDate+fileName;
+            String filePathSplit = "/";
+            String destinationFileName = "CANDIDATE_FILES"+ filePathSplit +candidateIDNumber+ filePathSplit +docType+ filePathSplit +formattedDate+fileName;
 
             BlobId id = BlobId.of("kiunga", destinationFileName);
             BlobInfo info = BlobInfo.newBuilder(id).build();
@@ -75,15 +49,6 @@ public class StorageService {
         }
     }
 
-    private boolean isValidContentType(MultipartFile file) {
-        try {
-            String detectedContentType = new Tika().detect(file.getInputStream());
-            return detectedContentType.equals("application/pdf") || detectedContentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        } catch (IOException e) {
-            //log.info(e.getMessage());
-            return false;
-        }
-    }
     public String testMethod() throws IOException {
 
         System.out.println("Test method");
@@ -98,12 +63,5 @@ public class StorageService {
         System.out.println("saved result "+saved.getName());
         return "File Uploaded Successfully"+saved.getName();
     }
-
-
-
-
-
-
-
 
 }
