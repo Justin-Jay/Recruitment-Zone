@@ -42,7 +42,7 @@
 
                     <label for="documentType">Document Type:
                         <select id="documentType" th:field="${candidateFileDTO.documentType}">
-                            <option th:each="docType : ${T(za.co.RecruitmentZone.util.Enums.DocumentType).values()}"
+                            <option th:each="docType : ${T(za.co.recruitmentzone.util.Enums.DocumentType).values()}"
                                     th:value="${docType}" th:text="${docType}"></option>
                         </select></label>
                 </div>

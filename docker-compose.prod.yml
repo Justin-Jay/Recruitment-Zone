@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+
+  recruitment-zone-db:
+    image: mysql:8.2.0
+    container_name: recruitment-zone-db
+    restart: always
+    volumes:
+      - recruitment-zone-db-vol:/var/lib/mysql
+    labels:
+      - "docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump --archive > /tmp/dumps/mysqldump.archive'"
+      - "docker-volume-backup.exec-label=mysql"
+    env_file:
+     - docker/prod-vars/prod-mysql.env
+
+  recruitment-zone-application:
+    image: recruitment-zone
+    container_name: recruitment-zone-application
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - recruitment-zone-db
+    volumes:
+      - recruitment-zone-application-vol:/var/log/recruitment-zone
+    # - /host/path:/container/path
+    labels:
+      - "docker-volume-backup.stop-during-backup=recruitment-zone-service"
+    env_file:
+      - docker/prod-vars/prod.env
+
+
+volumes:
+  recruitment-zone-db-vol:
+  recruitment-zone-application-vol:

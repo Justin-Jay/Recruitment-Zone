@@ -101,7 +101,7 @@
                    th:errors="${vacancy.industry}"
                 ></p>
                 <select id="industry" th:field="*{industry}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.Industry).values()}"
+                    <option th:each="type : ${T(za.co.recruitmentzone.util.Enums.Industry).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
@@ -124,14 +124,14 @@
             <br>
             <label for="jobType">Select Job Type:
                 <select id="jobType" th:field="*{jobType}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.JobType).values()}"
+                    <option th:each="type : ${T(za.co.recruitmentzone.util.Enums.JobType).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
             <br>  <br>
             <label for="empType">Select Employment Type:
                 <select id="empType" th:field="*{empType}">
-                    <option th:each="type : ${T(za.co.RecruitmentZone.util.Enums.EmpType).values()}"
+                    <option th:each="type : ${T(za.co.recruitmentzone.util.Enums.EmpType).values()}"
                             th:value="${type}" th:text="${type}"></option>
                 </select>
             </label>
