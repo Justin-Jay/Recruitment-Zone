@@ -3,8 +3,8 @@ package za.co.recruitmentzone.application.dto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.recruitmentzone.util.Enums.EducationLevel;
-import za.co.recruitmentzone.util.Enums.Province;
+import za.co.recruitmentzone.util.enums.EducationLevel;
+import za.co.recruitmentzone.util.enums.Province;
 //    @NotEmpty(message = "Please enter job title")
 //   @FutureOrPresent(message = "Date cannot be in the past")
 //  @Future(message = "Date must be in the future")

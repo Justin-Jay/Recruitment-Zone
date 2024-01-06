@@ -4,13 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import za.co.recruitmentzone.employee.Events.EmployeeEventPublisher;
+import za.co.recruitmentzone.employee.events.EmployeeEventPublisher;
 import za.co.recruitmentzone.employee.entity.Authority;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.employee.dto.EmployeeDTO;
 import za.co.recruitmentzone.employee.exception.UserAlreadyExistsException;
 import za.co.recruitmentzone.employee.repository.EmployeeRepository;
-import za.co.recruitmentzone.util.Enums.ROLE;
+import za.co.recruitmentzone.util.enums.ROLE;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static za.co.recruitmentzone.util.Enums.ROLE.*;
+import static za.co.recruitmentzone.util.enums.ROLE.*;
 
 @Service
 public class EmployeeService {

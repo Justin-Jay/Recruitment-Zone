@@ -9,7 +9,7 @@ services:
     volumes:
       - recruitment-zone-db-dev-vol:/var/lib/mysql
     env_file:
-      - docker/dev-vars/dev-mysql.env
+      - docker/dev-vars/mysql.env
     labels:
       - "docker-volume-backup.archive-pre=/bin/sh -c 'mysql --archive > /tmp/dumps/mysql.archive'"
       - "docker-volume-backup.exec-label=mysql"
@@ -29,21 +29,48 @@ services:
     labels:
       - "docker-volume-backup.stop-during-backup=recruitment-zone-application-service"
 
+  sonarqube:
+    image: sonarqube:9.9.3-community
+    container_name: sonarqube
+    restart: always
+    depends_on:
+      - sonarqubedb
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonarqubedb:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    ports:
+      - "9000:9000"
 
-#  backup:
- #   image: offen/docker-volume-backup:v2
-  #  container_name: backup
-   # restart: always
-   # env_file:
-   #   - ./docker/backup/back-up-service/backup.env
-   # volumes:
-    #  - ./docker/backup/backup-configuration:/etc/dockervolumebackup/conf.d
-     # - /var/run/docker.sock:/var/run/docker.sock:ro
-      #- recruitment-zone-db-dev-vol:/backup/recruitment-zone-db-backup:ro
-      #- recruitment-zone-application-dev-vol:/backup/recruitment-zone-application-backup:ro
+  sonarqubedb:
+    image: postgres:12
+    container_name: sonarqubedb
+    restart: always
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    volumes:
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+
 
 volumes:
   recruitment-zone-db-dev-vol:
     driver: local
   recruitment-zone-application-dev-vol:
+    driver: local
+  sonarqube_data:
+    driver: local
+  sonarqube_extensions:
+    driver: local
+  sonarqube_logs:
+    driver: local
+  postgresql:
+    driver: local
+  postgresql_data:
     driver: local

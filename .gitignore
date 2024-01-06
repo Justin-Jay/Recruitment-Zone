@@ -33,6 +33,6 @@ build/
 .vscode/
 
 ### ENVIRONMENT FILES
-Docker/**
-backup-configuration/
 docker/**
+backup-configuration/
+.env

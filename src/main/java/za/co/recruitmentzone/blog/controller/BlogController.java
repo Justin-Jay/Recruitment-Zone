@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import za.co.recruitmentzone.util.Enums.BlogStatus;
+import za.co.recruitmentzone.util.enums.BlogStatus;
 import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
 import za.co.recruitmentzone.employee.entity.Employee;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static za.co.recruitmentzone.util.Enums.BlogStatus.ACTIVE;
-import static za.co.recruitmentzone.util.Enums.BlogStatus.PENDING;
+import static za.co.recruitmentzone.util.enums.BlogStatus.ACTIVE;
+import static za.co.recruitmentzone.util.enums.BlogStatus.PENDING;
 
 @Controller
 @RequestMapping("/Blog")

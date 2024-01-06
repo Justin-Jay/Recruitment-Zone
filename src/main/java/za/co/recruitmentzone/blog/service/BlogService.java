@@ -3,7 +3,7 @@ package za.co.recruitmentzone.blog.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import za.co.recruitmentzone.util.Enums.BlogStatus;
+import za.co.recruitmentzone.util.enums.BlogStatus;
 import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.repository.BlogRepository;
 

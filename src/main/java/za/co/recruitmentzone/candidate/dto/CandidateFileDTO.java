@@ -4,7 +4,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Transient;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.recruitmentzone.util.Enums.DocumentType;
+import za.co.recruitmentzone.util.enums.DocumentType;
 
 
 public class CandidateFileDTO {

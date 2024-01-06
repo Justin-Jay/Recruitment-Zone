@@ -26,7 +26,7 @@
         <div class="md-10">
             <label for="status" >Select Status:
                 <select id="status" th:field="${vacancyApplication.status}">
-                    <option th:each="statusVal : ${T(za.co.recruitmentzone.util.Enums.ApplicationStatus).values()}"
+                    <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.ApplicationStatus).values()}"
                             th:value="${statusVal}" th:text="${statusVal}"></option>
                 </select>
             </label>

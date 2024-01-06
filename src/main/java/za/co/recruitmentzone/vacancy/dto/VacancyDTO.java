@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
-import za.co.recruitmentzone.util.Enums.EmpType;
-import za.co.recruitmentzone.util.Enums.Industry;
-import za.co.recruitmentzone.util.Enums.JobType;
-import za.co.recruitmentzone.util.Enums.VacancyStatus;
+import za.co.recruitmentzone.util.enums.EmpType;
+import za.co.recruitmentzone.util.enums.Industry;
+import za.co.recruitmentzone.util.enums.JobType;
+import za.co.recruitmentzone.util.enums.VacancyStatus;
 
 import java.time.LocalDate;
 

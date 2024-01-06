@@ -18,7 +18,7 @@ import za.co.recruitmentzone.employee.exception.UserAlreadyExistsException;
 import za.co.recruitmentzone.employee.service.TokenVerificationService;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.employee.service.EmployeeService;
-import za.co.recruitmentzone.util.Enums.ROLE;
+import za.co.recruitmentzone.util.enums.ROLE;
 
 import java.security.Principal;
 import java.util.ArrayList;

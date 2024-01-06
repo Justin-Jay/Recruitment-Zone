@@ -2,7 +2,7 @@ package za.co.recruitmentzone.client.entity;
 
 import jakarta.persistence.*;
 import za.co.recruitmentzone.client.dto.ClientNoteDTO;
-import za.co.recruitmentzone.util.Enums.Industry;
+import za.co.recruitmentzone.util.enums.Industry;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.sql.Timestamp;

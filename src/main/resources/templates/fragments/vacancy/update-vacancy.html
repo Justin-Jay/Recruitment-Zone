@@ -53,7 +53,7 @@
 
                 <label for="industry">Select Industry:
                     <select id="industry" th:field="*{industry}">
-                        <option th:each="type : ${T(za.co.recruitmentzone.util.Enums.Industry).values()}"
+                        <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
                                 th:value="${type}" th:text="${type}"></option>
                     </select>
                 </label>
@@ -68,21 +68,21 @@
 
                 <label for="status">Select Status:
                     <select id="status" th:field="*{status}">
-                        <option th:each="statusVal : ${T(za.co.recruitmentzone.util.Enums.VacancyStatus).values()}"
+                        <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.VacancyStatus).values()}"
                                 th:value="${statusVal}" th:text="${statusVal}"></option>
                     </select>
                 </label>
                 <br><br>
                 <label for="jobType">Select Job Type:
                     <select id="jobType" th:field="*{jobType}">
-                        <option th:each="type : ${T(za.co.recruitmentzone.util.Enums.JobType).values()}"
+                        <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
                                 th:value="${type}" th:text="${type}"></option>
                     </select>
                 </label>
                 <br><br>
                 <label for="empType">Select Employment Type:
                     <select id="empType" th:field="*{empType}">
-                        <option th:each="type : ${T(za.co.recruitmentzone.util.Enums.EmpType).values()}"
+                        <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
                                 th:value="${type}" th:text="${type}"></option>
                     </select>
                 </label>
