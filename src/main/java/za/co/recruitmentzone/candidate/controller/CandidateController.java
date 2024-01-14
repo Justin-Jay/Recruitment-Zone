@@ -63,7 +63,7 @@ public class CandidateController {
 
         model.addAttribute("candidate", candidate);
         Set<CandidateNote> notes = candidate.getNotes();
-    // sort the set according to date
+        // sort the set according to date
         model.addAttribute("existingNotes",notes );
         CandidateNoteDTO dto = new CandidateNoteDTO();
         dto.setCandidateID(candidateID);
