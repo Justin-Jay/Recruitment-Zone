@@ -44,7 +44,7 @@ spring:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
     database-platform: org.hibernate.dialect.MySQLDialect
 
   datasource:
@@ -82,8 +82,6 @@ com:
           UseVirtualThreads: true
 
 
-
-
 rzone:
   to:
     address: ${RZONE_WEBSITE_QUERIES}
@@ -94,11 +92,12 @@ token:
 
 
 file:
-  directory: ${FILE_DIRECTORY:"~/recruitment-zone-app-test/data/file-uploads/"}
+  directory: ${FILE_DIRECTORY}
 
 upload:
-  folder: ${CANDIDATE_FILES:"CANDIDATE_FILES"}
+  folder: ${CANDIDATE_FILES}
 
 domain:
   co:
     za: recruitmentzone.co.za
+

@@ -36,6 +36,7 @@ public class WebSecurityConfig {
                                 .permitAll())
                 //.csrf(AbstractHttpConfigurer::disable)
                 .logout(LogoutConfigurer::permitAll);
+
         return httpSecurity.build();
     }
  /*   @Bean
