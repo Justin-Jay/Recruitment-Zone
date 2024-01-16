@@ -7,7 +7,6 @@
             <th>job_description</th>
             <th>seniority_level</th>
             <!--<th>requirements</th>-->
-            <th>category</th>
             <th>location</th>
             <th>industry</th>
             <th>publish_date</th>
@@ -26,7 +25,6 @@
             <td th:text="${vacancy.job_description}"></td>
             <td th:text="${vacancy.seniority_level}"></td>
           <!--  <td th:text="${vacancy.requirements}"></td>-->
-            <td th:text="${vacancy.category}"></td>
             <td th:text="${vacancy.location}"></td>
             <td th:text="${vacancy.industry}"></td>
             <td th:text="${#temporals.format(vacancy.publish_date, 'yyyy/MM/dd')}" ></td>

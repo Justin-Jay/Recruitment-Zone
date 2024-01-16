@@ -59,6 +59,9 @@ spring:
       minimumIdle: 5
       idleTimeout: 600000
       poolName: RecruitmentZonePool
+  threads:
+    virtual:
+      enabled: true
 
 
 
@@ -72,14 +75,6 @@ logging:
 
 mail:
   info: true
-
-# Enable virtual threads
-com:
-  sun:
-    java:
-      util:
-        concurrent:
-          UseVirtualThreads: true
 
 
 rzone:

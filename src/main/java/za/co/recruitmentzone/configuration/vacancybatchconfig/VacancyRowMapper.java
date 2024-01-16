@@ -20,7 +20,6 @@ public class VacancyRowMapper implements RowMapper<Vacancy> {
     private static final String job_description = "job_description";
     private static final String seniority_level = "seniority_level";
     private static final String requirements = "requirements";
-    private static final String category = "category";
     private static final String location = "location";
     private static final String industry = "industry";
     private static final String publish_date = "publish_date";
@@ -41,7 +40,6 @@ public class VacancyRowMapper implements RowMapper<Vacancy> {
         vacancy.setJob_description(rs.getString(job_description));
         vacancy.setSeniority_level(rs.getString(seniority_level));
         vacancy.setRequirements(rs.getString(requirements));
-        vacancy.setCategory(rs.getString(category));
         vacancy.setLocation(rs.getString(location));
         vacancy.setIndustry(Industry.valueOf(rs.getString(industry)) );
         vacancy.setPublish_date(LocalDate.parse(rs.getString(publish_date)));

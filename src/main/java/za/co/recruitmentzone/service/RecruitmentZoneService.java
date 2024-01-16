@@ -136,7 +136,6 @@ public class RecruitmentZoneService {
         newVacancy.setEnd_date(vacancy.getEnd_date());
         newVacancy.setJobType(vacancy.getJobType());
         newVacancy.setEmpType(vacancy.getEmpType());
-        newVacancy.setCategory(vacancy.getCategory());
 
 // Get the current date and time
         LocalDateTime now = LocalDateTime.now();
@@ -191,11 +190,6 @@ public class RecruitmentZoneService {
             if (existingVacancy.getRequirements() != null && !existingVacancy.getRequirements()
                     .equals(vacancy.getRequirements())) {
                 existingVacancy.setRequirements(vacancy.getRequirements());
-            }
-            if (existingVacancy.getCategory() != null && !existingVacancy.getCategory().equals(vacancy.getCategory())) {
-                existingVacancy.setCategory(vacancy.getCategory());
-            } else if (existingVacancy.getCategory() == null) {
-                existingVacancy.setCategory(vacancy.getCategory());
             }
             if (existingVacancy.getLocation() != null && !existingVacancy.getLocation().equals(vacancy.getLocation())) {
                 existingVacancy.setLocation(vacancy.getLocation());
