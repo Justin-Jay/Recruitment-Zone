@@ -1,9 +1,9 @@
 package za.co.recruitmentzone.storage;
 
 import com.google.cloud.storage.*;
-import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.candidate.dto.CandidateFileDTO;
 import za.co.recruitmentzone.candidate.entity.Candidate;
 import za.co.recruitmentzone.candidate.service.CandidateService;
@@ -18,10 +18,9 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class StorageService {
-
-
     private final Storage storage;
     private final CandidateService candidateService;
+    private final Logger log = LoggerFactory.getLogger(StorageService.class);
 
     public StorageService(Storage storage, CandidateService candidateService) {
         this.storage = storage;
@@ -51,7 +50,7 @@ public class StorageService {
 
     public String testMethod() throws IOException {
 
-        System.out.println("Test method");
+        log.info("Test method");
         String destinationFileName = "newFolder" + "/" + "New File Name.txt";
         BlobId id = BlobId.of("kiunga", destinationFileName);
         BlobInfo info = BlobInfo.newBuilder(id).build();
@@ -60,7 +59,7 @@ public class StorageService {
         byte[] arr = Files.readAllBytes(Paths.get(file.toURI()));
         Blob saved = storage.create(info,arr);
 
-        System.out.println("saved result "+saved.getName());
+        log.info("saved result {}",saved.getName());
         return "File Uploaded Successfully"+saved.getName();
     }
 

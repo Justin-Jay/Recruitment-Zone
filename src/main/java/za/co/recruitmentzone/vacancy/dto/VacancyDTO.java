@@ -23,8 +23,6 @@ public class VacancyDTO {
     private String requirements;
     @NotEmpty(message = "Location must not be empty")
     private String location;
-    @NotEmpty(message = "category must not be empty")
-    private String category;
     @Enumerated(EnumType.STRING)
     private Industry industry;
     @FutureOrPresent(message = "Date cannot be in the past")
@@ -44,13 +42,12 @@ public class VacancyDTO {
     public VacancyDTO() {
     }
 
-    public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, String category, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID, Long vacancyID) {
+    public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID, Long vacancyID) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
         this.requirements = requirements;
         this.location = location;
-        this.category = category;
         this.industry = industry;
         this.publish_date = publish_date;
         this.end_date = end_date;
@@ -100,14 +97,6 @@ public class VacancyDTO {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public Industry getIndustry() {
@@ -190,7 +179,6 @@ public class VacancyDTO {
                 ", seniority_level='" + seniority_level + '\'' +
                 ", requirements='" + requirements + '\'' +
                 ", location='" + location + '\'' +
-                ", category='" + category + '\'' +
                 ", industry=" + industry +
                 ", publish_date=" + publish_date +
                 ", end_date=" + end_date +

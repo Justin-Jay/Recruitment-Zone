@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "vacancy")
 public class Vacancy {
@@ -25,7 +24,6 @@ public class Vacancy {
     private String job_description;
     private String seniority_level;
     private String requirements;
-    private String category;
     private String location;
     @Enumerated(EnumType.STRING)
     private Industry industry;
@@ -66,12 +64,11 @@ private Long theClientID;
     }
 
 
-    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String category, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType) {
+    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType) {
         this.job_title = job_title;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
         this.requirements = requirements;
-        this.category = category;
         this.location = location;
         this.industry = industry;
         this.publish_date = publish_date;
@@ -103,14 +100,6 @@ private Long theClientID;
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public LocalDate getPublish_date() {
