@@ -1,14 +1,16 @@
 package za.co.recruitmentzone.documents;
 
 import jakarta.persistence.*;
+import org.springframework.data.redis.core.RedisHash;
 import za.co.recruitmentzone.candidate.entity.Candidate;
 import za.co.recruitmentzone.util.enums.DocumentType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "document")
-public class CandidateFile {
+public class CandidateFile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "docid")

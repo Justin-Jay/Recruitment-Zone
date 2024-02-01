@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +21,17 @@ public class CandidateFileService {
 
     public CandidateFile save(CandidateFile candidateFile) {
         return fileRepository.save(candidateFile);
+    }
+
+    public String getDocumentLocation(String id){
+        Long fileID = Long.valueOf(id);
+        String docLocation = "";
+        Optional<CandidateFile> optionalCandidateFile = fileRepository.findById(fileID);
+        if(optionalCandidateFile.isPresent()){
+            CandidateFile file = optionalCandidateFile.get();
+            docLocation = file.getDocumentLocation();
+        }
+        return docLocation;
     }
 
     public List<String> searchFiles(String searchTerm) {

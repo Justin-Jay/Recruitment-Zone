@@ -1,5 +1,6 @@
 package za.co.recruitmentzone.client.service;
 
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import za.co.recruitmentzone.client.entity.ContactPerson;
 import za.co.recruitmentzone.client.repository.ClientRepository;
 import za.co.recruitmentzone.client.repository.ContactPersonRepository;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,15 +33,20 @@ public class ClientService {
 
     public void saveClient(ClientDTO clientDTO){
         Client client = new Client(clientDTO.getName(),clientDTO.getIndustry());
+        client.setCreated(LocalDateTime.now());
         clientRepository.save(client);
         ContactPerson contactPerson = new ContactPerson(clientDTO.getContactPerson_FirstName(),
-                clientDTO.getContactPerson_last_name(),clientDTO.getContactPerson_email_address(),clientDTO.getContactPerson_land_line(),clientDTO.getContactPerson_cell_phone());
+                clientDTO.getContactPerson_last_name(),clientDTO.getContactPerson_email_address(),clientDTO.getContactPerson_land_line(),clientDTO.getContactPerson_cell_phone(),clientDTO.getContactPerson_designation());
         contactPerson.setClient(client);
         contactPerson.setCreated(LocalDateTime.now());
         contactPersonRepository.save(contactPerson);
     }
     public void saveUpdatedClient(Client client){
         clientRepository.save(client);
+    }
+
+    public void saveUpdatedContact(ContactPerson contactPerson){
+        contactPersonRepository.save(contactPerson);
     }
 
 
@@ -66,12 +73,22 @@ public class ClientService {
         Optional<Client> oc = clientRepository.findById(contactPersonDTO.getClientID());
         ContactPerson contactPerson = new ContactPerson(contactPersonDTO.getFirst_name(),
                 contactPersonDTO.getLast_name(),contactPersonDTO.getEmail_address(),
-                contactPersonDTO.getLand_line(),contactPersonDTO.getCell_phone());
+                contactPersonDTO.getLand_line(),contactPersonDTO.getCell_phone(),contactPersonDTO.getDesignation());
        if(oc.isPresent()){
            contactPerson.setClient(oc.get());
        }
         contactPersonRepository.save(contactPerson);
     }
 
-
+    public ContactPerson findContactsByID(Long contactPersonID){
+        Optional<ContactPerson> opc = contactPersonRepository.findById(contactPersonID);
+        ContactPerson contactPerson= null;
+        if (opc.isPresent()){
+            contactPerson = opc.get();
+        }
+        else {
+          //  throw ContactPersonNotFoundException();
+        }
+        return contactPerson;
+    }
 }

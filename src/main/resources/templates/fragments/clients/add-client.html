@@ -22,49 +22,68 @@
 
     <div class="container-fluid">
         <form action="#" th:action="@{/Client/save-client}" th:object="${ClientDTO}" method="POST">
-            <label>
-               Client Name:<input type="text" th:field="*{name}" placeholder="First Name" class="form-control">
-            </label>
+            <div class="form-group">
+                <label>
+                    Client Name:<input type="text" th:field="*{name}" placeholder="First Name" class="form-control">
+                </label>
 
-            <label for="industry" >Select Industry:
-                <select id="industry" th:field="*{industry}">
-                    <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
-                            th:value="${type}" th:text="${type}"></option>
-                </select>
-            </label>
+                <label for="industry" >Select Industry:
+                    <select id="industry" th:field="*{industry}">
+                        <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
+                                th:value="${type}" th:text="${type}"></option>
+                    </select>
+                </label>
+            </div>
 
-           <!-- <label>
-              Industry: <input type="text" th:field="*{industry}" placeholder="Last Name" class="form-control">
-            </label>-->
 
             <h1>Client Contact Person Information</h1>
+            <div class="form-group">
+                <label>
+                    First Name<input type="text" th:field="*{contactPerson_FirstName}"
+                                     placeholder="Contact Person First Name" class="form-control">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Last Name<input type="text" th:field="*{contactPerson_last_name}"
+                                    placeholder="Last Name" class="form-control">
+                </label>
+            </div>
 
-            <label>
-                First Name<input type="text" th:field="*{contactPerson_FirstName}"
-                                                 placeholder="Contact Person First Name" class="form-control">
-            </label>
+            <div class="form-group">
+                <label>
+                    Designation<input type="text" th:field="*{contactPerson_designation}"
+                                      placeholder="Designation" class="form-control">
+                </label>
+            </div>
 
-            <label>
-                Last Name<input type="text" th:field="*{contactPerson_last_name}"
-                                                 placeholder="Last Name" class="form-control">
-            </label>
-            <label>
-                Email Address<input type="text" th:field="*{contactPerson_email_address}"
-                                placeholder="Email Address" class="form-control">
-            </label>
-            <label>
-                Land Line<input type="text" th:field="*{contactPerson_land_line}"
-                                placeholder="Land Line" class="form-control">
-            </label>
+            <div class="form-group">
+                <label>
+                    Email Address<input type="text" th:field="*{contactPerson_email_address}"
+                                        placeholder="Email Address" class="form-control">
+                </label>
+            </div>
 
-            <label>
-                Cell Phone<input type="text" th:field="*{contactPerson_cell_phone}"
-                                placeholder="Cell Phone Number" class="form-control">
-            </label>
+            <div class="form-group">
+                <label>
+                    Land Line<input type="text" th:field="*{contactPerson_land_line}"
+                                    placeholder="Land Line" class="form-control">
+                </label>
+            </div>
 
-
+            <div class="form-group">
+                <label>
+                    Cell Phone<input type="text" th:field="*{contactPerson_cell_phone}"
+                                     placeholder="Cell Phone Number" class="form-control">
+                </label>
+            </div>
+            <br/>
             <button type="submit" class="btn btn-primary btn-sm mb-3">Add Client</button>
         </form>
+        <hr/>
+        <div class="container-fluid">
+            <a class="nav-link" th:href="@{/Client/client-administration}">Cancel</a>
+        </div>
     </div>
 
 

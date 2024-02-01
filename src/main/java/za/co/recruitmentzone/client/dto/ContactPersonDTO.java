@@ -13,17 +13,20 @@ public class ContactPersonDTO {
     private String land_line;
     @Size(min=10, max=10)
     private String cell_phone;
+
+    private String designation;
     private Long clientID;
 
     public ContactPersonDTO() {
     }
 
-    public ContactPersonDTO(String first_name, String last_name, String email_address, String land_line, String cell_phone, Long clientID) {
+    public ContactPersonDTO(String first_name, String last_name, String email_address, String land_line, String cell_phone, String designation,Long clientID) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email_address = email_address;
         this.land_line = land_line;
         this.cell_phone = cell_phone;
+        this.designation=designation;
         this.clientID = clientID;
     }
 
@@ -41,6 +44,14 @@ public class ContactPersonDTO {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 
     public String getEmail_address() {

@@ -38,6 +38,10 @@ jobs:
           mvn clean
           mvn -B package --file pom.xml
 
+  docker:
+    needs: maven
+    runs-on: ubuntu-latest
+    steps:
       - name: Build Docker Image
         uses: docker/build-push-action@v2
         with:

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.recruitmentzone.service.RecruitmentZoneService;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -90,11 +91,12 @@ public class DocumentController {
     @GetMapping("/download-document/{id}")
     public ResponseEntity<InputStreamResource> downloadDocument(@PathVariable String id) throws IOException {
         // Specify the path to the file on your local machine
-        id = "_1.pdf";
-        String filePath = "C:\\uploads\\Spring_details"+ id; // Update with the actual path
+       // id = "_1.pdf";
+        //String filePath = "C:\\uploads\\Spring_details"+ id; // Update with the actual path
 
-
+// /home/justin/RecruitmentZoneApplication/FileUploads/CANDIDATE_FILES/158568598712/CURRICULUM_VITAE/2024_01_31/sample.pdf
         // Read the file from the local machine
+        String filePath = fileService.getDocumentLocation(id);
         InputStream inputStream = new FileInputStream(filePath);
 
         // Prepare the response headers

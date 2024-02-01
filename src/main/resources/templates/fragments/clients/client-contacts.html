@@ -17,6 +17,8 @@
             <th>Contact Person</th>
             <th>Land Line</th>
             <th>Cell Number</th>
+            <th>Designation</th>
+            <th>Update Contact Person</th>
         </tr>
         </thead>
         <tbody>
@@ -24,6 +26,15 @@
             <td th:text="${contact.first_name +' ' +contact.last_name }"></td>
             <td th:text="${contact.land_line}"></td>
             <td th:text="${contact.cell_phone}"></td>
+            <td th:text="${contact.designation}"></td>
+            <td>
+                <form th:action="@{/Client/update-client-contact}" th:method="post">
+                    <!-- Hidden input field to include the id in the POST request -->
+                    <input type="hidden" name="contactPersonID" th:value="*{contact.contactPersonID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button type="submit" class="btn btn-primary">Update Contact</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -33,11 +44,5 @@
         <!-- Submit button to trigger the form submission -->
         <button type="submit" class="btn btn-primary">Add Contact Person</button>
     </form>
-    <!--
-        <ul>
-            <li th:each="contact : ${contacts}">
-                &lt;!&ndash; Display contact details &ndash;&gt;
-                <p th:text="${contact.name}"></p>
-            </li>
-        </ul>-->
+
 </div>

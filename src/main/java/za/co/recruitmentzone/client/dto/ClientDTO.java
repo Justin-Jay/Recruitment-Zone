@@ -17,12 +17,14 @@ public class ClientDTO {
     private String contactPerson_land_line;
     private String contactPerson_cell_phone;
 
+    private String contactPerson_designation;
+
     public ClientDTO() {
     }
 
     public ClientDTO(String name,Industry industry, String contactPerson_FirstName,
                      String contactPerson_last_name, String contactPerson_email_address,
-                     String contactPerson_land_line, String contactPerson_cell_phone) {
+                     String contactPerson_land_line, String contactPerson_cell_phone, String contactPerson_designation) {
         this.name = name;
         this.industry = industry;
         this.contactPerson_FirstName = contactPerson_FirstName;
@@ -30,6 +32,7 @@ public class ClientDTO {
         this.contactPerson_email_address = contactPerson_email_address;
         this.contactPerson_land_line = contactPerson_land_line;
         this.contactPerson_cell_phone = contactPerson_cell_phone;
+        this.contactPerson_designation=contactPerson_designation;
     }
 
     public String getName() {
@@ -54,6 +57,14 @@ public class ClientDTO {
 
     public void setContactPerson_FirstName(String contactPerson_FirstName) {
         this.contactPerson_FirstName = contactPerson_FirstName;
+    }
+
+    public String getContactPerson_designation() {
+        return contactPerson_designation;
+    }
+
+    public void setContactPerson_designation(String contactPerson_designation) {
+        this.contactPerson_designation = contactPerson_designation;
     }
 
     public String getContactPerson_last_name() {

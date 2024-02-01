@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisPooled;
 import za.co.recruitmentzone.candidate.dto.CandidateFileDTO;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
 import za.co.recruitmentzone.application.entity.Application;
@@ -64,7 +65,7 @@ public class RecruitmentZoneService {
     String Folder;
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
-                                  EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService, CandidateFileService fileService) {
+                                  EmployeeService employeeService, ApplicationsEventPublisher applicationsEventPublisher, StorageService storageService, ClientService clientService, CandidateFileService fileService ) {
         this.applicationService = applicationService;
         this.vacancyService = vacancyService;
         this.candidateService = candidateService;
@@ -350,6 +351,8 @@ public class RecruitmentZoneService {
         log.info("About to Save New Application \n {}",application);
         applicationService.save(application);
 
+        // is it neccesary
+//         candidate = candidateService.save(candidate);
 
     }
 
@@ -359,6 +362,7 @@ public class RecruitmentZoneService {
         Candidate candidate = candidateService.getcandidateByID(fileDTO.getCandidateID());
         file.setCandidate(candidate);
         file.setContenttype(fileDTO.getCvFile().getContentType());
+       // file.setFiledata(fileDTO.getCvFile().getBytes());
         file.setFilename(fileDTO.getCvFile().getOriginalFilename());
         file.setFilesize(Long.toString(fileDTO.getCvFile().getSize()));
         file.setDocumentType(fileDTO.getDocumentType());
@@ -370,10 +374,10 @@ public class RecruitmentZoneService {
         String candidateIDNumber = candidate.getId_number();
         String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
 
-        String fileDirectory = "/recruitment-zone-app/data/file-uploads/";
-        String Folder = "CANDIDATE_FILES";
-        log.info("fileDirectory/Folder: {},{}",fileDirectory,Folder);
-        String directory = fileDirectory + Folder + "/" + candidateIDNumber + "/" + docType + "/" + formattedDate;
+        //String fileDirectory = "~/RecruitmentZoneApplication/File Uploads/";
+        //String Folder = "CANDIDATE_FILES";
+        log.info("fileDirectory/Folder: {}{}",fileDirectory,"CANDIDATE_FILES");
+        String directory = fileDirectory + "/CANDIDATE_FILES/" + candidateIDNumber + "/" + docType + "/" + formattedDate;
 
         Path storageLocation = null;
         try {
@@ -392,9 +396,11 @@ public class RecruitmentZoneService {
         // Google storage
         //file.setDocumentLocation(saveFile(fileDTO));
 
+
         file.setDocumentLocation(storageLocation.toString());
         return file;
     }
+
 
     public List<Application> getApplications() {
         return applicationService.findApplications();
@@ -469,6 +475,56 @@ public class RecruitmentZoneService {
             oc.setIndustry(updatedClient.getIndustry());
         }
         clientService.saveUpdatedClient(oc);
+    }
+
+    public ContactPerson findContactsByID(Long contactPersonID){
+        return clientService.findContactsByID(contactPersonID);
+    }
+
+
+    public void saveUpdatedContactPerson(Long contactPersonID, ContactPersonDTO contactPersonDTO) {
+        ContactPerson contactPerson = clientService.findContactsByID(contactPersonID);
+
+        if(contactPerson.getFirst_name()!=null
+        && !contactPerson.getFirst_name().equalsIgnoreCase(contactPersonDTO.getFirst_name()))
+        {
+            contactPerson.setFirst_name(contactPersonDTO.getFirst_name());
+        }
+
+
+        if (contactPerson.getLast_name()!=null &&
+                !contactPerson.getLast_name().equalsIgnoreCase(contactPersonDTO.getLast_name())){
+            contactPerson.setLast_name(contactPersonDTO.getLast_name());
+        }
+
+
+        if (contactPerson.getLand_line()!=null&&
+                !contactPerson.getLand_line().equalsIgnoreCase(contactPersonDTO.getLand_line())){
+            contactPerson.setLand_line(contactPersonDTO.getLand_line());
+        }
+
+
+        if (contactPerson.getEmail_address()!=null&&
+                !contactPerson.getEmail_address().equalsIgnoreCase(contactPersonDTO.getEmail_address())){
+            contactPerson.setEmail_address(contactPersonDTO.getEmail_address());
+        }
+
+
+        if (contactPerson.getDesignation()!=null){
+            if (!contactPerson.getDesignation().equalsIgnoreCase(contactPersonDTO.getDesignation())){
+                contactPerson.setDesignation(contactPersonDTO.getDesignation());
+            }
+        }
+        else {
+            contactPerson.setDesignation(contactPersonDTO.getDesignation());
+        }
+
+        if (contactPerson.getCell_phone()!=null&&
+                !contactPerson.getCell_phone().equalsIgnoreCase(contactPersonDTO.getCell_phone())){
+            contactPerson.setCell_phone(contactPersonDTO.getCell_phone());
+        }
+
+        clientService.saveUpdatedContact(contactPerson);
     }
 
     public boolean saveClient(Client client) {

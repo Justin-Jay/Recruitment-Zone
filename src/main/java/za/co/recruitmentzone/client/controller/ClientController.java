@@ -85,7 +85,22 @@ public class ClientController {
         model.addAttribute("contacts", contacts);
         return "fragments/clients/view-client-contacts";
     }
-
+    @PostMapping("/update-client-contact")
+    public String updateClientContact(@RequestParam("contactPersonID") Long contactPersonID, Model model) {
+        ContactPerson contactPerson = recruitmentZoneService.findContactsByID(contactPersonID);
+        model.addAttribute("contactPerson", contactPerson);
+        return "fragments/clients/update-contact";
+    }
+    @PostMapping("/save-updated-contact")
+    public String saveUpdatedContact(@Valid @ModelAttribute("contactPerson") ContactPersonDTO contactPersonDTO,
+                                    @RequestParam("contactPersonID") Long contactPersonID,
+                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "fragments/clients/update-contact";
+        }
+        recruitmentZoneService.saveUpdatedContactPerson(contactPersonID, contactPersonDTO);
+        return "redirect:/Client/client-administration";
+    }
     @PostMapping("/update-client")
     public String updateClient(@RequestParam("clientID") Long clientID, Model model) {
         Client client = recruitmentZoneService.findClientByID(clientID);
