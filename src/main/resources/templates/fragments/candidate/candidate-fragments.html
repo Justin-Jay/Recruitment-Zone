@@ -138,10 +138,10 @@
             <span th:text="${document.documentType}"></span>
         </li>
 
-        <li class="key-value-item"  >
+    <!--    <li class="key-value-item"  >
             <span>Location Stored</span>
             <span th:text="${document.documentLocation}"></span>
-        </li>
+        </li>-->
 
         <li class="key-value-item">
             <a th:href="@{/Document/download-document/{fileID}(fileID=${document.fileID})}" class="download-button">Download</a>

@@ -10,8 +10,11 @@ RUN java -Djarmode=layertools -jar RecruitmentZoneApplication.jar extract
 
 FROM openjdk:17-jdk-slim
 WORKDIR RecruitmentZoneApplication
-# create directories
-# Add a timestamp as a comment
+# create required directories
+RUN mkdir -p /RecruitmentZoneApplication/ApplicationLogs/Archive/
+
+
+WORKDIR ~/RecruitmentZoneApplication/ApplicationLogs/
 
 COPY --from=builder RecruitmentZoneApplication/dependencies/ ./
 COPY --from=builder RecruitmentZoneApplication/spring-boot-loader/ ./
@@ -20,4 +23,4 @@ COPY --from=builder RecruitmentZoneApplication/application/ ./
 
 EXPOSE 8080
 # Entry point or command to start your application
-ENTRYPOINT ["java", "-Dcom.sun.java.util.concurrent.UseVirtualThreads=true","org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "-Dcom.sun.java.util.concurrent.UseVirtualThreads=true","org.springframework.boot.loader.launch.JarLauncher"]

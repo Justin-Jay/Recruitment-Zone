@@ -1,9 +1,8 @@
 server:
-  port: 8080
+  port: 8089
   error:
     whitelabel:
       enabled: false
-
 
 
 spring:
@@ -24,8 +23,8 @@ spring:
   mail:
     host: mail.recruitmentzone.co.za
     port: 587
-    username: ${RZONE_MAIL_ADDRESS}
-    password: ${RZONE_MAIL_PASSWORD}
+    username: ${RZONE_MAIL_ADDRESS:no-reply_test@recruitmentzone.co.za}
+    password: ${RZONE_MAIL_PASSWORD:R@m0r@t@@1992}
     properties:
       mail:
         smtp:
@@ -48,9 +47,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
 
   datasource:
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
-    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATASOURCE}
+    username: root
+    password: rootPassword
+    # "jdbc:mysql://localhost:3306/userDB",
+    url: jdbc:mysql://172.21.0.2:3306/testdatabase
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connectionTimeout: 30000
@@ -63,14 +63,9 @@ spring:
     virtual:
       enabled: true
 
-
-
 logging:
-  level:
-    org:
-      springframework:
-        security: debug
-
+  file:
+    path: /home/justin/RecruitmentZoneApplication/ApplicationLogs
 
 
 mail:
@@ -79,20 +74,22 @@ mail:
 
 rzone:
   to:
-    address: ${RZONE_WEBSITE_QUERIES}
+    address: ${RZONE_WEBSITE_QUERIES:websitequeries_test@recruitmentzone.co.za}
 
 token:
   Secret:
-    Key: ${tokenSecretKey}
+    Key: ${tokenSecretKey:G2TM3W0rk1ng@g!iN}
 
 
 file:
-  directory: ${FILE_DIRECTORY}
-
+  directory: /home/justin/RecruitmentZoneApplication/FileUploads
+#${FILE_DIRECTORY}
 upload:
-  folder: ${CANDIDATE_FILES}
+  folder: CANDIDATE_FILES
 
 domain:
   co:
     za: recruitmentzone.co.za
+
+
 

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div th:insert="fragments/layout/header">Header</div>
+
+    <div class="container-fluid"><h2>Update Client Contact Person Details</h2></div>
+    <hr/>
+<div class="container-fluid">
+    <form action="#" th:action="@{/Client/save-updated-contact}" th:object="${contactPerson}" th:method="POST">
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+        <input type="hidden" name="contactPersonID" th:field="${contactPerson.contactPersonID}" />
+        <br>
+        <div class="md-10">
+            <label for="name" >First name: </label>
+            <br>
+            <input type="text" th:field="*{first_name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
+        </div>
+        <br>
+        <div class="md-10">
+            <label for="name" >last Name: </label>
+            <br>
+            <input type="text" th:field="*{last_name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
+        </div>
+        <br>
+        <div class="md-10">
+            <label for="name" >Email Address: </label>
+            <br>
+            <input type="text" th:field="*{email_address}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
+        </div>
+        <br>
+        <div class="md-10">
+            <label for="name" >Designation: </label>
+            <br>
+            <input type="text" th:field="*{designation}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
+        </div>
+        <br>
+        <div class="md-10">
+            <label for="name" >Land Line: </label>
+            <br>
+            <input type="text" th:field="*{land_line}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
+        </div>
+        <br>
+        <div class="md-10">
+            <label for="name" >Cell Phone: </label>
+            <br>
+            <input type="text" th:field="*{cell_phone}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Save Updated Contact</button>
+    </form>
+
+</div>
+
+    <div class="container-fluid">
+        <a class="nav-link" th:href="@{/Client/client-administration}">Back to client admin</a>
+    </div>
+    <!--BOTTOM Navbar-->
+    <div th:insert="fragments/layout/footer">Footer</div>
+
+</div>
+
+
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
+</body>
+</html>

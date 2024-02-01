@@ -21,26 +21,16 @@ public class Client {
     @Enumerated(EnumType.STRING)
     private Industry industry;
     @Column(name="created")
-    private Timestamp created;
+    private LocalDateTime created;
     @OneToMany(mappedBy = "client",
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    /*@JoinTable(
-            name = "client_contact_person",
-            joinColumns = @JoinColumn(name = "clientID"),
-            inverseJoinColumns = @JoinColumn(name = "contactPersonID")
-    )*/
     private Set<ContactPerson> contactPeople;
     @OneToMany(mappedBy = "client",
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    /*@JoinTable(
-            name = "client_vacancy",
-            joinColumns = @JoinColumn(name = "clientID"),
-            inverseJoinColumns = @JoinColumn(name = "vacancyID")
-    )*/
     private Set<Vacancy> vacancies;
 
     @OneToMany(mappedBy = "client",
@@ -52,11 +42,11 @@ public class Client {
     public Client() {
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 

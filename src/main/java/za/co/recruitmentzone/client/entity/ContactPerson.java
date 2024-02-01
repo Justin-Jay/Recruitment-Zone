@@ -12,8 +12,8 @@ public class ContactPerson {
     private Long contactPersonID;
     private String first_name;
     private String last_name;
-
     private String email_address;
+    private String designation;
     private String land_line;
     private String cell_phone;
     @Column(name="created")
@@ -27,12 +27,21 @@ public class ContactPerson {
     public ContactPerson() {
     }
 
-    public ContactPerson(String first_name, String last_name, String email_address, String land_line, String cell_phone) {
+    public ContactPerson(String first_name, String last_name, String email_address, String land_line, String cell_phone,String designation) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email_address = email_address;
         this.land_line = land_line;
         this.cell_phone = cell_phone;
+        this.designation=designation;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 
     public LocalDateTime getCreated() {
