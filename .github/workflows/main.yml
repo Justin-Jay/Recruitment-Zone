@@ -39,7 +39,7 @@ jobs:
           mvn -B package --file pom.xml
 
   docker:
-    needs: maven
+   # needs: maven
     runs-on: ubuntu-latest
     steps:
       - name: Login to docker
@@ -47,7 +47,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build Docker Image
         uses: docker/build-push-action@v5
         with:
