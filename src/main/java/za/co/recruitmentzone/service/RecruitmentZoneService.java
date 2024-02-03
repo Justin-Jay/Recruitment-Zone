@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.JedisPooled;
 import za.co.recruitmentzone.candidate.dto.CandidateFileDTO;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
 import za.co.recruitmentzone.application.entity.Application;
