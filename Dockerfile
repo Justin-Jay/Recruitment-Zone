@@ -14,7 +14,7 @@ WORKDIR RecruitmentZoneApplication
 RUN mkdir -p /RecruitmentZoneApplication/ApplicationLogs/Archive/
 
 
-WORKDIR ~/RecruitmentZoneApplication/ApplicationLogs/
+WORKDIR RecruitmentZoneApplication/ApplicationLogs/
 
 COPY --from=builder RecruitmentZoneApplication/dependencies/ ./
 COPY --from=builder RecruitmentZoneApplication/spring-boot-loader/ ./
