@@ -21,7 +21,7 @@ jobs:
         run: echo "Truffle Scan Job"
 
   maven:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+   # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Maven check out
@@ -37,11 +37,6 @@ jobs:
         run: |
           mvn clean
           mvn -B package --file pom.xml
-
-  docker:
-   # needs: maven
-    runs-on: ubuntu-latest
-    steps:
       - name: Login to docker
         uses: docker/login-action@v3
         with:
@@ -52,6 +47,5 @@ jobs:
         with:
           push: false
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/recruitmentzone:latest
-
 
 
