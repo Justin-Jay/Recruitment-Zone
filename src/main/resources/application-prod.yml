@@ -5,7 +5,6 @@ server:
       enabled: false
 
 
-
 spring:
   thymeleaf:
     prefix: classpath:/templates/
@@ -17,9 +16,9 @@ spring:
       #gcp:
       #credentials:
       # location: ${googlekeyfile}
-      #mvc:
-      # hiddenmethod:
-      #  filter:
+    #mvc:
+    # hiddenmethod:
+    #  filter:
     #   enabled: true
   mail:
     host: ${MAIL_HOST}
@@ -41,9 +40,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
 
   datasource:
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
-    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATASOURCE}
+    username: root
+    password: rootPassword
+    # "jdbc:mysql://localhost:3306/userDB",
+    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATASOURCE}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connectionTimeout: 30000
@@ -52,34 +52,22 @@ spring:
       minimumIdle: 5
       idleTimeout: 600000
       poolName: RecruitmentZonePool
-
-
+  threads:
+    virtual:
+      enabled: true
 
 logging:
-  level:
-    org:
-      springframework:
-        security: debug
-
+  file:
+    path: /home/justin/RecruitmentZoneApplication/ApplicationLogs
 
 
 mail:
   info: true
 
-# Enable virtual threads
-com:
-  sun:
-    java:
-      util:
-        concurrent:
-          UseVirtualThreads: true
 
-
-
-
-#rzone:
- # to:
-  #  address: ${RZONE_WEBSITE_QUERIES}
+rzone:
+  to:
+    address: ${MAIL_RECIPIENT}
 
 token:
   Secret:
@@ -87,14 +75,14 @@ token:
 
 
 file:
-  directory: ${FILE_DIRECTORY:"~/recruitment-zone-app-test/data/file-uploads/"}
-
+  directory: /home/justin/RecruitmentZoneApplication/FileUploads
+#${FILE_DIRECTORY}
 upload:
-  folder: ${CANDIDATE_FILES:"CANDIDATE_FILES"}
+  folder: CANDIDATE_FILES
 
 domain:
   co:
     za: recruitmentzone.co.za
 
-logs:
-  path: /RecruitmentZoneApplication/ApplicationLogs/Archive/
+
+
