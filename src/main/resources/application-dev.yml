@@ -12,27 +12,20 @@ spring:
     mode: HTML
   main:
     banner-mode: off
-  #cloud:
-    #gcp:
+      #cloud:
+      #gcp:
       #credentials:
-       # location: ${googlekeyfile}
-  #mvc:
-   # hiddenmethod:
+      # location: ${googlekeyfile}
+      #mvc:
+    # hiddenmethod:
     #  filter:
-     #   enabled: true
+    #   enabled: true
   mail:
-    host: mail.recruitmentzone.co.za
-    port: 587
-    username: ${RZONE_MAIL_ADDRESS:no-reply_test@recruitmentzone.co.za}
-    password: ${RZONE_MAIL_PASSWORD:R@m0r@t@@1992}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            trust: mail.recruitmentzone.co.za
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_ADDRESS}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
 
   servlet:
     multipart:
@@ -43,14 +36,14 @@ spring:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: ${DDL_AUTO:update}
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
 
   datasource:
     username: root
     password: rootPassword
     # "jdbc:mysql://localhost:3306/userDB",
-    url: jdbc:mysql://172.21.0.2:3306/testdatabase
+    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATASOURCE}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connectionTimeout: 30000
@@ -74,11 +67,11 @@ mail:
 
 rzone:
   to:
-    address: ${RZONE_WEBSITE_QUERIES:websitequeries_test@recruitmentzone.co.za}
+    address: ${MAIL_RECIPIENT}
 
 token:
   Secret:
-    Key: ${tokenSecretKey:G2TM3W0rk1ng@g!iN}
+    Key: ${tokenSecretKey}
 
 
 file:

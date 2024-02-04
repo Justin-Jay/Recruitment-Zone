@@ -48,7 +48,7 @@ jobs:
           context: .
           dockerfile: Dockerfile
           push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/recruitmentzone:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/recruitmentzone:${{ secrets.APPLICATION_VERSION }}
 
 
 

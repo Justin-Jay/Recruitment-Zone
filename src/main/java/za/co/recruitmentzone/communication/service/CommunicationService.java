@@ -4,8 +4,11 @@ package za.co.recruitmentzone.communication.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
@@ -13,32 +16,33 @@ import org.thymeleaf.context.Context;
 import za.co.recruitmentzone.communication.entity.ContactMessage;
 import za.co.recruitmentzone.communication.entity.RegistrationMessage;
 
+import java.util.Properties;
+
 
 @Slf4j
 @Component
 public class CommunicationService {
 
+
     @Value("${spring.mail.username}")
     String rzoneMailAddress;
-
     @Value("${rzone.to.address}")
     String rzoneToAddress;
-    @Value("${spring.mail.password}")
-    String rzoneMailPassword;
-
     private final TemplateEngine templateEngine;
-    private final JavaMailSender javaMailSender;
-    public CommunicationService(TemplateEngine templateEngine, JavaMailSender javaMailSender) {
+
+    private final JavaMailSenderImpl javaMailSender;
+
+    public CommunicationService(TemplateEngine templateEngine,JavaMailSenderImpl javaMailSender) {
         this.templateEngine = templateEngine;
-        this.javaMailSender = javaMailSender;
+        this.javaMailSender=javaMailSender;
     }
 
     public void sendWebsiteQuery(ContactMessage message) {
         log.info("<---WEBSITE QUERY EMAIL --->");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        log.info("<- to - subject - userName - userEmail - userQuery - >");
-        log.info("< {} - {} - {} - \n {} - >", rzoneToAddress,message.getSubject(),message.getName(),message.getSubject());
+        //log.info("<- to - subject - userName - userEmail - userQuery - >");
+        log.info("< sendWebsiteQuery - {},{},{},{} - >", rzoneToAddress,message.getSubject(),message.getName(),message.getSubject());
         try {
             helper.setFrom(rzoneMailAddress);
             helper.setTo(rzoneToAddress);
@@ -66,8 +70,8 @@ public class CommunicationService {
         log.info("<---AUTO EMAIL RESPONSE --->");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        log.info("<- to - subject - userName - userEmail - userQuery - >");
-        log.info("< {} - {} - {} - {} - {} - >",to,subject,userName,userEmail,userQuery);
+        //log.info("<- to - subject - userName - userEmail - userQuery - >");
+        log.info("< sendAutoResponse - {}, {}, {},{},{}>",to,subject,userName,userEmail,userQuery);
         try {
             helper.setFrom(rzoneMailAddress);
             helper.setTo(to);
@@ -90,7 +94,6 @@ public class CommunicationService {
             // Handle exception (log or throw custom exception)
         }
     }
-
 
     public boolean sendRegistrationEmail(RegistrationMessage message) {
         log.info("<---SEND REGISTRATION EMAIL --->");
@@ -124,4 +127,7 @@ public class CommunicationService {
             return false;
         }
     }
+
+
+
 }

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.2.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>za.co.RecruitmentZone</groupId>
@@ -35,17 +35,17 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-        <dependency>
+<!--        <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>5.2.0-alpha2</version>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch -->
-        <dependency>
+<!--        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-elasticsearch</artifactId>
             <version>5.2.2</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -89,11 +89,11 @@
             <version>8.1.0</version>
         </dependency>
 
-        <dependency>
+  <!--      <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
 
 
         <!-- SECURITY -->
@@ -221,6 +221,12 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.12.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
     </dependencies>
