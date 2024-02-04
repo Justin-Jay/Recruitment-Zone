@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="/home/justin/RecruitmentZoneApplication/ApplicationLogs" />
-
+<!--    <property name="LOG_PATH" value="/home/justin/RecruitmentZoneApplication/ApplicationLogs" />-->
+    <property name="LOG_ROOT" value="/home/justin/RecruitmentZoneApplication/ApplicationLogs/Archive/" />
+    <property name="LOG_FILE_NAME" value="RecruitmentZone.log" />
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern> %d{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%8.15t] %-40.40logger{39} : %X{REQUEST_ID} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%throwable}</Pattern>
         </layout>
     </appender>
-
 
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
@@ -18,7 +18,7 @@
     </appender>
 
     <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/Archive/RecruitmentZone.log</file>
+        <file>${LOG_ROOT}/${LOG_FILE_NAME}.log</file>
         <encoder>
             <pattern> %d{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%8.15t] %-40.40logger{39} : %X{REQUEST_ID} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%throwable}</pattern>
         </encoder>
