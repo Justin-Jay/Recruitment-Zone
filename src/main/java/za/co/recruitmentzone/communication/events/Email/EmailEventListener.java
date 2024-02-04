@@ -21,9 +21,9 @@ public class EmailEventListener {
     private final CommunicationService communicationService;
     Logger log = LoggerFactory.getLogger(EmailEventListener.class);
 
-    public EmailEventListener(VacancyRepository vacancyRepository, CommunicationService communicationService) {
+    public EmailEventListener(VacancyRepository vacancyRepository,CommunicationService communicationService) {
         this.vacancyRepository = vacancyRepository;
-        this.communicationService = communicationService;
+       this.communicationService = communicationService;
     }
 
 
@@ -49,7 +49,7 @@ public class EmailEventListener {
                 // send acknowledgment to candidate
                 communicationService.sendAutoResponse( m.getEmail(), "Auto Response - Query Received", m.getName(), m.getEmail(), m.getMessageBody());
             });
-            communicationService.sendAutoResponse( m.getEmail(), "Auto Response - Query Received", m.getName(), m.getEmail(), m.getMessageBody());
+           // communicationService.sendAutoResponse( m.getEmail(), "Auto Response - Query Received", m.getName(), m.getEmail(), m.getMessageBody());
 
             log.info("sendAutoResponse submitted");
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class EmailEventListener {
             executor.submit(() -> {
                 communicationService.sendWebsiteQuery(m);
             });
-            communicationService.sendWebsiteQuery(m);
+            //communicationService.sendWebsiteQuery(m);
             log.info("sendWebsiteNotification submitted");
         } catch (Exception e) {
             log.info("Failed to send Email Query");

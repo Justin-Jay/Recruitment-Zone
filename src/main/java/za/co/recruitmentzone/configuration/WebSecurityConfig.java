@@ -29,7 +29,6 @@ import za.co.recruitmentzone.employee.entity.EmployeeDetailsService;
 public class WebSecurityConfig {
     Logger log = LoggerFactory.getLogger(WebSecurityConfig.class);
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // requestMatchers(HttpMethod.DELETE,"accounts/**").hasAnyRole("SUPER_ADMIN")

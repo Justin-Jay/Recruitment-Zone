@@ -12,27 +12,20 @@ spring:
     mode: HTML
   main:
     banner-mode: off
-  #cloud:
-    #gcp:
+      #cloud:
+      #gcp:
       #credentials:
-       # location: ${googlekeyfile}
-  #mvc:
-   # hiddenmethod:
+      # location: ${googlekeyfile}
+      #mvc:
+    # hiddenmethod:
     #  filter:
-     #   enabled: true
+    #   enabled: true
   mail:
-    host: mail.recruitmentzone.co.za
-    port: 587
-    username: ${RZONE_MAIL_ADDRESS}
-    password: ${RZONE_MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            trust: mail.recruitmentzone.co.za
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_ADDRESS}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
 
   servlet:
     multipart:
@@ -74,7 +67,7 @@ mail:
 
 rzone:
   to:
-    address: ${RZONE_WEBSITE_QUERIES}
+    address: ${MAIL_RECIPIENT}
 
 token:
   Secret:
