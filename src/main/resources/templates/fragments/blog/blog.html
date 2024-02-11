@@ -1,16 +1,4 @@
 <div class="container">
-<!--
-
-title
-
-intro
-
-body
-
-conclusion
-
-
--->
       <main th:fragment="blogView(blog)">
         <article class="blog-post">
             <!-- Blog Title -->
@@ -45,52 +33,9 @@ conclusion
             <a class="nav-link" th:href="@{/Blog/blogs}">Back to blogs</a>
         </div>
     </main>
-
-
-
 </div>
 
 
 
 
 
-
-
-
-
-
-<!-- Header Section -->
-<header>
-    <h1>Your Blog Name</h1>
-    <!-- Add navigation or other header elements as needed -->
-</header>
-
-<!-- Main Content Section -->
-<main>
-    <!-- Blog Post 1 -->
-    <article>
-        <h2>Blog Post Title 1</h2>
-        <p class="post-meta">Published on Date | Author Name</p>
-        <div class="post-content">
-            <!-- Your blog post content goes here -->
-        </div>
-    </article>
-
-    <!-- Blog Post 2 -->
-    <article>
-        <h2>Blog Post Title 2</h2>
-        <p class="post-meta">Published on Date | Author Name</p>
-        <div class="post-content">
-            <!-- Your blog post content goes here -->
-        </div>
-    </article>
-
-    <!-- Add more blog posts as needed -->
-
-</main>
-
-<!-- Footer Section -->
-<footer>
-    <!-- Add footer content such as copyright information, links, etc. -->
-    <p>&copy; 2023 Your Blog Name. All rights reserved.</p>
-</footer>

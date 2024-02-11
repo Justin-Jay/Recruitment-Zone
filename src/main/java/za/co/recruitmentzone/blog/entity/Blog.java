@@ -24,7 +24,9 @@ public class Blog {
     private String end_date;
     @Column(name="created")
     private LocalDateTime created;
-    @ManyToOne(cascade = {
+
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
     })
     @JoinColumn(name = "employeeID")
@@ -40,6 +42,7 @@ public class Blog {
         this.publish_date=publish_date;
         this.end_date=end_date;
     }
+
 
     public LocalDateTime getCreated() {
         return created;
@@ -128,6 +131,10 @@ public class Blog {
                 ", end_date='" + end_date + '\'' +
                 ", employee=" + employee +
                 '}';
+    }
+
+    public Employee getOwnwr(){
+        return this.employee;
     }
 }
 

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<!--    <property name="LOG_PATH" value="/home/justin/RecruitmentZoneApplication/ApplicationLogs" />-->
-    <property name="LOG_ROOT" value="/home/justin/RecruitmentZoneApplication/ApplicationLogs/Archive/" />
-    <property name="LOG_FILE_NAME" value="RecruitmentZone.log" />
+    <property name="LOG_ROOT" value="~/RecruitmentZoneApplication/ApplicationFiles/ApplicationLogs" />
+    <property name="LOG_FILE_NAME" value="RecruitmentZone" />
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">

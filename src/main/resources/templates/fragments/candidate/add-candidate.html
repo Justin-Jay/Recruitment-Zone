@@ -16,7 +16,7 @@
 
 <div class="container-fluid">
     <div class="container-fluid">
-        <div th:insert="fragments/layout/header">Header</div>
+        <div th:insert="fragments/layout/top-nav">Header</div>
     </div>
     <p th:if="${message}" th:text="${message}"></p>
     <form action="#" th:action="@{/Candidate/create-application}" th:object="${newApplicationDTO}"
@@ -112,7 +112,7 @@
 
 <div class="container-fluid">
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+    <div th:insert="fragments/layout/bottom-nav">Footer</div>
 
 </div>
 

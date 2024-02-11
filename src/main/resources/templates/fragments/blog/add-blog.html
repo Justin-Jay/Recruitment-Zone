@@ -16,7 +16,7 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
+    <div th:insert="fragments/layout/top-nav">Header</div>
 
     <div class="container-fluid"><h2>Add Blog</h2></div>
     <hr/>
@@ -25,6 +25,9 @@
         <form action="#" th:action="@{/Blog/save-blog}" th:object="${blog}" method="POST" class="form">
 
             <!--  <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>-->
+<!--
+            <input type="hidden" name="name" th:field="${blog.employee}" th:value="${#authentication.principal.username}"/>
+-->
             <input type="hidden" name="name" th:field="*{employee}" th:value="${#authentication.principal.username}"/>
 
             <div class="md-10">
@@ -42,7 +45,6 @@
                 <input type="text" id="blog_title" th:field="*{blog_title}" placeholder="Enter The Title"
                        class="form-control mb-4 w-25">
             </div>
-
             <div class="form-group">
                 <label for="description">
                     Blog Description:
@@ -93,7 +95,7 @@
 
     </div>
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+    <div th:insert="fragments/layout/bottom-nav">Footer</div>
 
 </div>
 <script type="text/javascript"
