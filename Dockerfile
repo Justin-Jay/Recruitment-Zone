@@ -1,13 +1,13 @@
-FROM openjdk:17-jdk-slim AS builder
+FROM eclipse-temurin:17-jre AS builder
 
-WORKDIR RecruitmentZoneApplication
+WORKDIR /RecruitmentZoneApplication
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} RecruitmentZoneApplication.jar
 RUN java -Djarmode=layertools -jar RecruitmentZoneApplication.jar extract
 
+RUN mkdir /RecruitmentZoneApplication/ApplicationFiles/
 
-FROM openjdk:17-jdk-slim
-#WORKDIR RecruitmentZoneApplication
+FROM eclipse-temurin:17-jre
 
 COPY --from=builder RecruitmentZoneApplication/dependencies/ ./
 COPY --from=builder RecruitmentZoneApplication/spring-boot-loader/ ./

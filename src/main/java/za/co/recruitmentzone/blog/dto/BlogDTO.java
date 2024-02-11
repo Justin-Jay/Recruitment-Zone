@@ -38,6 +38,7 @@ public class BlogDTO {
         this.employee = employee;
     }
 
+
     public String getBlog_title() {
         return blog_title;
     }
@@ -92,6 +93,19 @@ public class BlogDTO {
 
     public void setEmployee(String employee) {
         this.employee = employee;
+    }
+
+    @Override
+    public String toString() {
+        return "BlogDTO{" +
+                "blog_title='" + blog_title + '\'' +
+                ", blog_description='" + blog_description + '\'' +
+                ", status=" + status +
+                ", body='" + body + '\'' +
+                ", publish_date=" + publish_date +
+                ", end_date=" + end_date +
+                ", employee='" + employee + '\'' +
+                '}';
     }
 }
 

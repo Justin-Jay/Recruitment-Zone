@@ -1,12 +1,30 @@
 <div class="container-fluid border border-dark" th:fragment="blogCard(blog)" style="padding: 10px;">
 
-    <article class="blog-post">
+<!--    <article class="blog-post">
         <header>
             <h1 th:text="${blog.blog_title}">Blog Title</h1>
-        <!--    <p th:text="${blog.employeeID}">by Author ID</p>-->
+        &lt;!&ndash;    <p th:text="${blog.employeeID}">by Author ID</p>&ndash;&gt;
             <p th:text="${blog.publish_date}">Published on January 1, 2023</p>
         </header>
         <p th:text="${blog.blog_description}">Blog Description.</p>
+        <hr>
+        <form th:action="@{/Blog/view-blog}" th:method="post">
+            &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+            <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
+            &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
+            <button type="submit" class="btn btn-primary">View Blog</button>
+        </form>
+    </article>-->
+
+    <div class="card">
+        <h2 th:text="${blog.blog_title}">TITLE HEADING</h2>
+        <p th:text="${blog.publish_date}">Published on January 1, 2023</p>
+        <div class="fakeimg" style="height:200px;">Image</div>
+        <h5 th:text="${blog.blog_description}">Description</h5>
+        By
+      <!--  <table th:each="vApplication : ${vacancy.applications}">-->
+        <p th:text="${blog.employee}">Author:</p>
+
         <hr>
         <form th:action="@{/Blog/view-blog}" th:method="post">
             <!-- Hidden input field to include the vacancyID in the POST request -->
@@ -14,5 +32,7 @@
             <!-- Submit button to trigger the form submission -->
             <button type="submit" class="btn btn-primary">View Blog</button>
         </form>
-    </article>
+    </div>
+
 </div>
+

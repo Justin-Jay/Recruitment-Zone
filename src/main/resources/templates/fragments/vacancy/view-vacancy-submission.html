@@ -15,20 +15,18 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
+    <div th:insert="fragments/layout/top-nav">Header</div>
 
-    <div class="container-fluid"><h2>View Submission</h2></div>
-    <hr/>
-    <div class="container-fluid">
-        <a class="nav-link" th:href="@{/Vacancy/vacancy-administration}">Back</a>
-    </div>
     <div class="container-fluid">
         <div id="vacancies-list">
-        <!--    <table th:replace="fragments/vacancy/submission-fragment :: submission(${vacancy})">
-            </table>-->
-            <div class="container-fluid" >
-                <table  >
+
+            <div class="container-fluid">
+                <h2>View Submissions</h2>
+                <hr/>
+                <!-- th:unless="${#lists.isEmpty(allSeedStarters)}"-->
+                <table th:each="vApplication : ${vacancy.applications}">
                     <thead>
+                    <!-- Your table headers here -->
                     <tr>
                         <th>Vacancy Title</th>
                         <th>Candidate Name</th>
@@ -44,9 +42,9 @@
                         <!-- Add more columns as needed -->
                     </tr>
                     </thead>
-                    <tbody th:each="Vapplication : ${vacancy.applications}">
-                    <!-- Use th:fragment to define the vacancy card template -->
-                    <tr th:each="candidate : ${Vapplication.candidate}">
+                    <tbody>
+
+                    <tr th:each="candidate : ${vApplication.candidate}">
                         <td th:text="*{vacancy.job_title}"></td>
                         <td th:text="${candidate.last_name}"></td>
                         <td th:text="${candidate.email_address}"></td>
@@ -67,7 +65,7 @@
 
                         </td>
                         <td>
-                            <form  >
+                            <form>
                                 <!-- Hidden input field to include the brandVal in the POST request -->
                                 <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
                                 <!-- Submit button to trigger the form submission -->
@@ -77,10 +75,9 @@
                                         hx-target="#candidate-notes"
                                         hx-swap='innerHTML'
                                         hx-include="[name='candidateID']"
-                                        >
+                                >
                                     View Notes
                                 </button>
-
                             </form>
                         </td>
                     </tr>
@@ -92,8 +89,11 @@
     </div>
     <div id="candidate-notes"></div>
 
+    <div class="container-fluid">
+        <a class="nav-link" th:href="@{/Vacancy/vacancy-administration}">Back</a>
+    </div>
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+    <div th:insert="fragments/layout/bottom-nav">Footer</div>
 
 </div>
 <script type="text/javascript" th:src="@{/webjars/htmx.org/1.9.9/dist/htmx.min.js}"></script>

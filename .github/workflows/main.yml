@@ -20,7 +20,7 @@ jobs:
       - name: Truffle Scan Job
         run: echo "Truffle Scan Job"
 
-  maven:
+  maven_docker:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
