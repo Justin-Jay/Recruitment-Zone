@@ -15,14 +15,14 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/header">Header</div>
+    <div th:insert="fragments/layout/top-nav">Header</div>
 
     <div class="container-fluid"><h2>View Client</h2></div>
     <hr/>
     <div th:insert="fragments/clients/client">Clients</div>
 
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/footer">Footer</div>
+    <div th:insert="fragments/layout/bottom-nav">Footer</div>
 
     <div class="container-fluid">
         <a class="nav-link" th:href="@{/Client/client-administration}">Back</a>

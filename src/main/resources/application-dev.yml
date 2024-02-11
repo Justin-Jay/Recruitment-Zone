@@ -35,8 +35,11 @@ spring:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        show_sql: true
 
   datasource:
     username: ${MYSQL_USER}

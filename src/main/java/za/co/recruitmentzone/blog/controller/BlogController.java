@@ -14,6 +14,7 @@ import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.blog.service.BlogService;
 import za.co.recruitmentzone.employee.service.EmployeeService;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,6 +46,14 @@ public class BlogController {
         } catch (Exception e) {
             log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
         }
+        log.info("All Blogs");
+        log.info(allBlogs.toString());
+
+        for (Blog blogs: allBlogs){
+            Employee n = blogs.getOwnwr();
+            log.info("Owner: {}",n);
+        }
+        log.info(allBlogs.toString());
         model.addAttribute("blogs", allBlogs);
         return "/fragments/blog/blog-page";
     }
@@ -66,12 +75,12 @@ public class BlogController {
     }
 
     @PostMapping("/save-blog")
-    public String saveBlog(@Valid @ModelAttribute("blog")BlogDTO blog, BindingResult bindingResult) {
+    public String saveBlog(@Valid @ModelAttribute("blog")BlogDTO blog, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasFieldErrors()) {
             log.info("HAS ERRORS");
             return "fragments/blog/add-blog";
         }
-        saveNewBlog(blog);
+        saveNewBlog(blog,principal);
         return "redirect:/Blog/blog-administration";
     }
 
@@ -99,9 +108,10 @@ public class BlogController {
     }
 
 
-    public void saveNewBlog(BlogDTO blogDTO) {
+    public void saveNewBlog(BlogDTO blogDTO,Principal principal) {
         //Optional<Employee> op = employeeService.findEmployeeByUserName(blogDTO.getEmployee());
-        Optional<Employee> op = employeeService.findEmployeeByEmail("Justin.Maboshego@kiunga.co.za");
+        log.info("Saving new blog \n {}", principal);
+        Optional<Employee> op = employeeService.findEmployeeByEmail(principal.getName());
         Blog newBlog = new Blog();
         newBlog.setBlog_title(blogDTO.getBlog_title());
         newBlog.setBlog_description(blogDTO.getBlog_description());

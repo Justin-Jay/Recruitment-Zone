@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -16,45 +16,57 @@
 <div class="container-fluid">
 
     <div class="container-fluid">
-        <div class="container-fluid">
-            <div class="row">
-                <!--TOP Navbar-->
-                <div th:replace="fragments/layout/header">Header</div>
-            </div>
+        <div class="row">
+            <!--TOP Navbar-->
+            <div th:replace="fragments/layout/top-nav">Header</div>
         </div>
+    </div>
 
-        <!--    <div class="container-fluid">
-                ABOVE CARD GROUP
-            </div>-->
-        <div class="container-fluid">
-            <div class="container-fluid">
-                <h3>Blogs</h3>
-                <hr>
-            </div>
-
-            <div class="container">
-                <div class="row col-auto" th:each="blog: ${blogs}">
-                    <div class="col-md-8">
-                        <div th:insert="fragments/blog/blog-fragment :: blogCard(${blog})">
-                        </div>
-
+    <h3>Blogs</h3>
+    <hr>
+    <div class="row">
+        <div class="col-2">
+            1 of 3
+        </div>
+        <div class="col-8">
+            <div class="row col-auto" th:each="blog: ${blogs}">
+                <div>
+                    <div th:insert="fragments/blog/blog-fragment :: blogCard(${blog})">
                     </div>
-
                 </div>
+
             </div>
-
         </div>
-
-        <div class="container-fluid">
-            <div class="row">
-                <!--BOTTOM Navbar-->
-                <div th:replace="fragments/layout/footer">Footer</div>
+        <div class="col-2">
+            <div class="card">
+                <h2>About Me</h2>
+                <div class="fakeimg" style="height:100px;">Image</div>
+                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+            </div>
+            <div class="card">
+                <h3>Popular Post</h3>
+                <div class="fakeimg">Image</div><br>
+                <div class="fakeimg">Image</div><br>
+                <div class="fakeimg">Image</div>
+            </div>
+            <div class="card">
+                <h3>Follow Me</h3>
+                <p>Some text..</p>
             </div>
         </div>
     </div>
 
 
+    <div class="row">
+        <!--BOTTOM Navbar-->
+        <div th:replace="fragments/layout/bottom-nav">Bottom Nav</div>
+    </div>
 </div>
+
+
+
+
+
 <script type="text/javascript"
         th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
 <script type="text/javascript"
