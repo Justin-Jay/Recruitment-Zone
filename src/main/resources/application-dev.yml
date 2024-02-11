@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT}
   error:
     whitelabel:
       enabled: false
@@ -35,14 +35,14 @@ spring:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     database-platform: org.hibernate.dialect.MySQLDialect
 
   datasource:
-    username: root
-    password: rootPassword
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
     # "jdbc:mysql://localhost:3306/userDB",
-    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATASOURCE}
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATASOURCE}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connectionTimeout: 30000
@@ -57,7 +57,7 @@ spring:
 
 logging:
   file:
-    path: /home/justin/RecruitmentZoneApplication/ApplicationLogs
+    path: ${LOG_PATH}
 
 
 mail:
@@ -74,14 +74,14 @@ token:
 
 
 file:
-  directory: /home/justin/RecruitmentZoneApplication/FileUploads
+  directory: ${FILE_DIRECTORY}
 #${FILE_DIRECTORY}
 upload:
   folder: CANDIDATE_FILES
 
 domain:
   co:
-    za: recruitmentzone.co.za
+    za: ${DOMAIN}
 
 
 
