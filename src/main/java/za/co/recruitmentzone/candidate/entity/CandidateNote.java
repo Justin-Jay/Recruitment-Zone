@@ -6,7 +6,7 @@ import za.co.recruitmentzone.util.Note;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "candidateNote")
+@Table(name = "CANDIDATE_NOTE")
 public class CandidateNote implements Note {
 
     @Id

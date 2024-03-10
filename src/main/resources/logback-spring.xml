@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_ROOT" value="~/RecruitmentZoneApplication/ApplicationFiles/ApplicationLogs" />
-    <property name="LOG_FILE_NAME" value="RecruitmentZone" />
-    <appender name="Console"
-              class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern> %d{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%8.15t] %-40.40logger{39} : %X{REQUEST_ID} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%throwable}</Pattern>
-        </layout>
-    </appender>
+    <property name="LOG_ROOT" value="/RecruitmentZoneApplication/Logs/" />
+
+    <property name="LOG_FILE_NAME" value="RecruitmentZoneLogFile" />
 
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
@@ -37,7 +32,7 @@
 
 
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </root>

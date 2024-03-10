@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "USERS")
 public class Employee implements Principal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

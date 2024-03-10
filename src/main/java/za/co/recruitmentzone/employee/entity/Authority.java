@@ -7,7 +7,7 @@ import za.co.recruitmentzone.util.enums.ROLE;
 import java.util.Objects;
 
 @Entity
-@Table(name = "authorities")
+@Table(name = "AUTHORITIES")
 public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

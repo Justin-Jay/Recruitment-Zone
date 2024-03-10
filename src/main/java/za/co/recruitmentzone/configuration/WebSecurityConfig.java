@@ -35,7 +35,8 @@ public class WebSecurityConfig {
 
         httpSecurity.authorizeHttpRequests(configurer ->
                         configurer
-                                .requestMatchers("/Vacancies","/Employee/register/verifyEmail").permitAll() // Allow /guest-home for anyone
+                                .requestMatchers("/","/home","/Employee/register/verifyEmail").permitAll()// Allow /guest-home for anyone
+                                .requestMatchers("/Client/**").hasAnyAuthority("ROLE_ADMIN","ROLE_MANAGER")
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form ->

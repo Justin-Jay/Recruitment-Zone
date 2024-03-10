@@ -25,6 +25,7 @@ public class BlogService {
     }
 
     public List<Blog> getActiveBlogs(BlogStatus status) {
+
         return blogRepository.findBlogsByStatus(status);
     }
 

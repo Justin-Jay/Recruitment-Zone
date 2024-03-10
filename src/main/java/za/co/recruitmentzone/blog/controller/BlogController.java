@@ -43,17 +43,16 @@ public class BlogController {
         List<Blog> allBlogs = new ArrayList<>();
         try {
             allBlogs = getActiveBlogs();
+            log.info("Blog Count: {}",allBlogs.size());
         } catch (Exception e) {
             log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
         }
-        log.info("All Blogs");
-        log.info(allBlogs.toString());
 
         for (Blog blogs: allBlogs){
             Employee n = blogs.getOwnwr();
             log.info("Owner: {}",n);
         }
-        log.info(allBlogs.toString());
+
         model.addAttribute("blogs", allBlogs);
         return "/fragments/blog/blog-page";
     }
@@ -109,7 +108,6 @@ public class BlogController {
 
 
     public void saveNewBlog(BlogDTO blogDTO,Principal principal) {
-        //Optional<Employee> op = employeeService.findEmployeeByUserName(blogDTO.getEmployee());
         log.info("Saving new blog \n {}", principal);
         Optional<Employee> op = employeeService.findEmployeeByEmail(principal.getName());
         Blog newBlog = new Blog();

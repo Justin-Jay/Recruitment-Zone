@@ -8,7 +8,7 @@ import za.co.recruitmentzone.vacancy.entity.Vacancy;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "application")
+@Table(name = "APPLICATION")
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
