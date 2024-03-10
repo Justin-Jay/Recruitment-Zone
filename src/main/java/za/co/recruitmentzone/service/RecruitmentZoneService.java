@@ -385,7 +385,8 @@ public class RecruitmentZoneService {
                 Files.createDirectories(uploadPath);
             }
 
-            storageLocation = uploadPath.resolve(fileDTO.getCvFile().getOriginalFilename());
+            String fileName = fileDTO.getCvFile().getOriginalFilename();
+            storageLocation = uploadPath.resolve(fileName);
             Files.copy(fileDTO.getCvFile().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
             log.info("File saved storageLocation: {}",storageLocation);
         } catch (Exception e) {

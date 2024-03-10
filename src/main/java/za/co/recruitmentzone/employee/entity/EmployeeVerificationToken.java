@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.threeten.bp.LocalDateTime;
 
 @Entity
-@Table(name = "employeeverificationtoken")
+@Table(name = "EMPLOYEEVERIFICATIONTOKEN")
 public class EmployeeVerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

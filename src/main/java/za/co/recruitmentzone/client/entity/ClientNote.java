@@ -6,7 +6,7 @@ import za.co.recruitmentzone.util.Note;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "candidateNote")
+@Table(name = "CLIENT_NOTE")
 public class ClientNote implements Note {
 
     @Id
@@ -21,7 +21,9 @@ public class ClientNote implements Note {
     @JoinColumn(name = "clientid")
     private Client client;
 
+    @Column(name = "date_captured")
     private LocalDateTime dateCaptured;
+    @Column(name = "comment")
     private String comment;
 
     public ClientNote() {

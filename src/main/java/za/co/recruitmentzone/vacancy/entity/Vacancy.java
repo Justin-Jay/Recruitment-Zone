@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "vacancy")
+@Table(name = "VACANCY")
 public class Vacancy {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

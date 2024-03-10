@@ -8,7 +8,7 @@ import za.co.recruitmentzone.employee.entity.Employee;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name ="blog")
+@Table(name ="BLOG")
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "document")
+@Table(name = "DOCUMENT")
 public class CandidateFile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

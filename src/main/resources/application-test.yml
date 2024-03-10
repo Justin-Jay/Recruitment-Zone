@@ -5,6 +5,14 @@ server:
       enabled: false
 
 spring:
+  ssl:
+    bundle:
+      pem:
+        recruitmentzone-bundle:
+          reload-on-update: true
+          keystore:
+            #certificate: "file:/recruitmentzone/ssl/cert/origin_certificate.crt"
+            #private-key: "file:/recruitmentzone/ssl/private_key/private_key.key"
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -15,7 +23,7 @@ spring:
       #gcp:
       #credentials:
       # location: ${googlekeyfile}
-    #mvc:
+      #mvc:
     # hiddenmethod:
     #  filter:
     #   enabled: true
@@ -37,11 +45,15 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        show_sql: true
 
   datasource:
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
-    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATASOURCE}
+    # "jdbc:mysql://localhost:3306/userDB",
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATASOURCE}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connectionTimeout: 30000
@@ -55,11 +67,9 @@ spring:
       enabled: true
 
 logging:
-  level:
-    org.springframework.jdbc: DEBUG
-    root: warn
   file:
     path: ${LOG_PATH}
+
 
 mail:
   info: true
@@ -83,5 +93,6 @@ upload:
 domain:
   co:
     za: ${DOMAIN}
+
 
 

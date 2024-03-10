@@ -2,7 +2,7 @@ server:
   port: ${SERVER_PORT}
   error:
     whitelabel:
-      enabled: false
+      enabled: true
 
 spring:
   thymeleaf:
@@ -40,7 +40,7 @@ spring:
     properties:
       hibernate:
         show_sql: true
-
+        globally_quoted_identifiers: true
   datasource:
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
@@ -57,10 +57,6 @@ spring:
   threads:
     virtual:
       enabled: true
-
-logging:
-  file:
-    path: ${LOG_PATH}
 
 
 mail:
@@ -85,6 +81,4 @@ upload:
 domain:
   co:
     za: ${DOMAIN}
-
-
 
