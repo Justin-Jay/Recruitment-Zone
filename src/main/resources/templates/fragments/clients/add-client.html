@@ -15,10 +15,11 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
 
     <div class="container-fluid"><h2>Add Client</h2></div>
     <hr/>
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
 
     <div class="container-fluid">
         <form action="#" th:action="@{/Client/save-client}" th:object="${ClientDTO}" method="POST">
@@ -88,7 +89,7 @@
 
 
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 <script type="text/javascript"

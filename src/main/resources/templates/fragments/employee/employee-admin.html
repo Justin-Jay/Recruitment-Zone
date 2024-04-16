@@ -19,19 +19,24 @@
         <div class="container-fluid">
             <div class="row">
                 <!--TOP Navbar-->
-                <div th:replace="fragments/layout/top-nav">Header</div>
+                <div th:replace="~{fragments/layout/top-nav}">Header</div>
             </div>
         </div>
 
         <div class="container-fluid">
             <p th:if="${message}" th:text="${message}"> </p>
+            <p th:if="${saveNewEmployeeResponse}" th:text="${saveNewEmployeeResponse}"> </p>
+            <p th:if="${internalServerError}" th:text="${internalServerError}"> </p>
+            <p th:if="${findEmployeeByIDResponse}" th:text="${findEmployeeByIDResponse}"> </p>
+
+
             <div class="container-fluid">
                 <div class="float-end">
                     <a class="btn btn-primary btn-sm mb-3" th:href="@{/Employee/add-employee}">Add Employee</a>
                 </div>
             </div>
             <div class="align-content-center">
-                <div id="employee-admin-table" th:replace="fragments/employee/employee">Employee Administration</div>
+                <div id="employee-admin-table" th:replace="~{fragments/employee/employee}">Employee Administration</div>
             </div>
 
         </div>
@@ -43,7 +48,7 @@
         <div class="container-fluid">
             <div class="row">
                 <!--BOTTOM Navbar-->
-                <div th:replace="fragments/layout/bottom-nav">Footer</div>
+                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
             </div>
         </div>
     </div>

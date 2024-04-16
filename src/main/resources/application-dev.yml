@@ -9,37 +9,28 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML
-  main:
-    banner-mode: off
-      #cloud:
-      #gcp:
-      #credentials:
-      # location: ${googlekeyfile}
-      #mvc:
-    # hiddenmethod:
-    #  filter:
-    #   enabled: true
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
     username: ${MAIL_ADDRESS}
     password: ${MAIL_PASSWORD}
     protocol: smtp
-
   servlet:
     multipart:
-      max-file-size: 25MB
-      max-request-size: 25MB
+     max-file-size: 25MB
+     max-request-size: 25MB
   batch:
     job:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQLDialect
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    #database-platform: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         globally_quoted_identifiers: true
   datasource:
     username: ${MYSQL_USER}
@@ -82,3 +73,22 @@ domain:
   co:
     za: ${DOMAIN}
 
+
+
+#logging:
+  #level:
+    #org.springframework.jdbc: off
+   # root: off
+   # za.co.recruitmentzone: info
+
+ # file:
+  #  path: ${LOG_PATH}
+
+
+
+LOGS: ${LOG_PATH}
+
+
+
+
+#docker run --network host --name my-dev-database -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Khum0Ram0 -d mysql:8.3.0

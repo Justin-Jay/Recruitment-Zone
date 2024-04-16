@@ -14,58 +14,86 @@
 </head>
 <body>
 <div class="container-fluid">
-
+    <!-- TOP Navbar -->
     <div class="container-fluid">
-        <div class="row">
-            <!--TOP Navbar-->
-            <div th:replace="fragments/layout/top-nav">Header</div>
+        <div th:replace="~{fragments/layout/top-nav}">Nav</div>
+    </div>
+
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+    <hr>
+    <!--PAGE HEADING-->
+    <div class="row">
+        <div class="container-fluid">
+            <h3>Blogs</h3>
         </div>
     </div>
 
-    <h3>Blogs</h3>
     <hr>
+    <!--BODY-->
     <div class="row">
         <div class="col-2">
-            1 of 3
+            <div class="container-fluid">
+                <div class="card">
+                    <h5>Older blog section ?</h5>
+                    <div class="fakeimg" style="height:100px;">Image</div>
+                    <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+                </div>
+            </div>
         </div>
-        <div class="col-8">
-            <div class="row col-auto" th:each="blog: ${blogs}">
-                <div>
-                    <div th:insert="fragments/blog/blog-fragment :: blogCard(${blog})">
+
+        <div class="col-6">
+            <div class="container-fluid">
+                <div class="card">
+                    <!-- If-then-else -->
+                    <div th:if="${activeBlogResponse}">
+                        <p>Error: <span th:text="${activeBlogResponse}"></span></p>
+                    </div>
+                    <div th:else>
+                        <!-- Display blog -->
+                        <div class="col-8">
+                            <div class="row col-auto" th:each="blog: ${blogs}">
+                                <div>
+                                    <div th:insert="~{fragments/blog/blog-fragment :: blogCard(${blog})}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
-        <div class="col-2">
-            <div class="card">
-                <h2>About Me</h2>
-                <div class="fakeimg" style="height:100px;">Image</div>
-                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+
+        <div class="col-4">
+            <div class="container-fluid">
+                <div class="card">
+                    <h2>About Me</h2>
+                    <div class="fakeimg" style="height:100px;">Image</div>
+                    <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+                </div>
+                <div class="card">
+                    <h3>Popular Post</h3>
+                    <div class="fakeimg">Image</div>
+                    <br>
+                    <div class="fakeimg">Image</div>
+                    <br>
+                    <div class="fakeimg">Image</div>
+                </div>
+                <div class="card">
+                    <h3>Follow Me</h3>
+                    <p>Some text..</p>
+                </div>
             </div>
-            <div class="card">
-                <h3>Popular Post</h3>
-                <div class="fakeimg">Image</div><br>
-                <div class="fakeimg">Image</div><br>
-                <div class="fakeimg">Image</div>
-            </div>
-            <div class="card">
-                <h3>Follow Me</h3>
-                <p>Some text..</p>
-            </div>
+
         </div>
     </div>
 
 
+    <!--PAGE FOOTER-->
     <div class="row">
         <!--BOTTOM Navbar-->
-        <div th:replace="fragments/layout/bottom-nav">Bottom Nav</div>
+        <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
     </div>
 </div>
-
-
-
-
 
 <script type="text/javascript"
         th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>

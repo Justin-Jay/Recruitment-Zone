@@ -21,20 +21,20 @@
 <div class="container-fluid">
 
     <div class="container-fluid">
+        <!-- TOP Navbar -->
         <div class="container-fluid">
-            <div class="row">
-                <!--TOP Navbar-->
-                <div th:replace="fragments/layout/top-nav">Header</div>
-            </div>
+            <div th:replace="~{fragments/layout/top-nav}">Nav</div>
         </div>
 
-
+        <div class="row">
+            <h1>About Recruitment Zone</h1>
+        </div>
+        <hr>
         <div class="container-fluid">
 
-            <main th:fragment="blogView(blog)">
+            <main>
                 <article>
                     <section>
-                        <h1>About Recruitment Zone</h1>
                         <p>
                             Recruitment Zone is an agile and impactful recruitment company addressing the need in the market for a more personal approach to candidates and clients. Kiunga means “Link” as we position ourselves as the link between client and candidate.
                             We find importance not only in identifying the right skills for our clients but also take into great consideration the culture and environment that best suits both parties.
@@ -93,15 +93,17 @@
         <div class="container-fluid">
             <div class="row">
                 <!--BOTTOM Navbar-->
-                <div th:replace="fragments/layout/bottom-nav">Footer</div>
+                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
             </div>
         </div>
     </div>
 
-
 </div>
 <script type="text/javascript"
         th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/webjars/htmx.org/1.9.9/dist/htmx.min.js}"></script>
+
 <script type="text/javascript"
         th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
 </body>

@@ -7,184 +7,120 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import za.co.recruitmentzone.util.enums.BlogStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
-import za.co.recruitmentzone.employee.entity.Employee;
-import za.co.recruitmentzone.blog.service.BlogService;
-import za.co.recruitmentzone.employee.service.EmployeeService;
+import za.co.recruitmentzone.util.enums.BlogStatus;
 
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import static za.co.recruitmentzone.util.enums.BlogStatus.ACTIVE;
-import static za.co.recruitmentzone.util.enums.BlogStatus.PENDING;
+import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
 @Controller
 @RequestMapping("/Blog")
 public class BlogController {
-    private final BlogService blogService;
-    private final EmployeeService employeeService;
+
+    private final RecruitmentZoneService recruitmentZoneService;
+
     private final Logger log = LoggerFactory.getLogger(BlogController.class);
 
-    public BlogController(BlogService blogService, EmployeeService employeeService) {
-        this.blogService = blogService;
-        this.employeeService = employeeService;
+    public BlogController(RecruitmentZoneService recruitmentZoneService) {
+        this.recruitmentZoneService = recruitmentZoneService;
     }
 
-    // Blog
+    // model = internalServerError , blogs , activeBlogResponse
     @GetMapping("/blogs")
     public String blogs(Model model) {
-        List<Blog> allBlogs = new ArrayList<>();
         try {
-            allBlogs = getActiveBlogs();
-            log.info("Blog Count: {}",allBlogs.size());
+            recruitmentZoneService.getActiveBlogs(model);
         } catch (Exception e) {
-            log.info("Exception trying to retrieve blogs, retrieving all vacancies ");
+            log.info("<-- blogs -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-
-        for (Blog blogs: allBlogs){
-            Employee n = blogs.getOwnwr();
-            log.info("Owner: {}",n);
-        }
-
-        model.addAttribute("blogs", allBlogs);
         return "/fragments/blog/blog-page";
     }
 
+    // blog , internalServerError
     @GetMapping("/add-blog")
     public String showCreateBlogForm(Model model) {
-        model.addAttribute("blog", new BlogDTO());
+        try {
+            model.addAttribute("blog", new BlogDTO());
+        } catch (Exception e) {
+            log.info("<-- showCreateBlogForm -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
         return "fragments/blog/add-blog";
     }
 
+    // blog , findBlogResponse , internalServerError
     @PostMapping("/view-blog")
     public String showBlog(@RequestParam("blogID") Long blogID, Model model) {
-        Blog optionalBlog = findBlogByID(blogID);
-        log.info("Looking for {}", blogID);
-        log.info(optionalBlog.toString());
-        model.addAttribute("blog", optionalBlog);
-        // model.addAttribute("author", optionalBlog.getEmployee().getFirst_name());
+        try {
+            recruitmentZoneService.findBlogById(blogID, model);
+        } catch (Exception e) {
+            log.info("<-- showBlog -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
         return "fragments/blog/view-blog";
     }
-
+    //  redirectAttributes = internalServerError , saveNewBlogResponse
     @PostMapping("/save-blog")
-    public String saveBlog(@Valid @ModelAttribute("blog")BlogDTO blog, BindingResult bindingResult, Principal principal) {
+    public String saveBlog(@Valid @ModelAttribute("blog") BlogDTO blog, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasFieldErrors()) {
             log.info("HAS ERRORS");
             return "fragments/blog/add-blog";
         }
-        saveNewBlog(blog,principal);
+        try {
+            recruitmentZoneService.saveNewBlog(blog, principal, redirectAttributes);
+        } catch (Exception e) {
+            log.info("<-- saveExistingBlog -->  Exception \n {}",e.getMessage());
+            redirectAttributes.addFlashAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
         return "redirect:/Blog/blog-administration";
     }
 
+    // redirect = saveBlogResponse , internalServerError
     @PostMapping("/save-updated-blog")
-    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") Blog blog, BindingResult bindingResult) {
+    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") Blog blog, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "fragments/blog/update-blog";
         }
-        saveBlog(blog);
+        try {
+            recruitmentZoneService.saveExistingBlog(blog,redirectAttributes);
+        } catch (Exception e) {
+            log.info("<-- saveUpdatedBlog -->  Exception \n {}",e.getMessage());
+            redirectAttributes.addFlashAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
         return "redirect:/Blog/blog-administration";
     }
-
+    // model = findBlogResponse , internalServerError
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
-        Blog blog = findBlogByID(blogID);
-        model.addAttribute("blog", blog);
-        model.addAttribute("status", BlogStatus.values());
+        try {
+            recruitmentZoneService.findBlogById(blogID, model);
+        } catch (Exception e) {
+            log.info("<-- updateBlog -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", e.getMessage());
+        }
         return "fragments/blog/update-blog";
     }
 
     @GetMapping("/blog-administration")
-    public String blogAdministration(Model model) {
-        model.addAttribute("blogs", getBlogs());
+    public String blogAdministration(Model model, @ModelAttribute("saveNewBlogResponse") String saveNewBlogResponse,
+                                     @ModelAttribute("saveBlogResponse") String saveBlogResponse,
+                                     @ModelAttribute("internalServerError") String internalServerError) {
+        try {
+            recruitmentZoneService.getBlogs(model);
+            model.addAttribute("saveNewBlogResponse", saveNewBlogResponse);
+            model.addAttribute("saveBlogResponse", saveBlogResponse);
+            model.addAttribute("internalServerError", internalServerError);
+        } catch (Exception e) {
+            log.info("<-- blogAdministration -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
         return "/fragments/blog/blog-administration";
     }
 
-
-    public void saveNewBlog(BlogDTO blogDTO,Principal principal) {
-        log.info("Saving new blog \n {}", principal);
-        Optional<Employee> op = employeeService.findEmployeeByEmail(principal.getName());
-        Blog newBlog = new Blog();
-        newBlog.setBlog_title(blogDTO.getBlog_title());
-        newBlog.setBlog_description(blogDTO.getBlog_description());
-        newBlog.setBody(blogDTO.getBody());
-        newBlog.setEnd_date(blogDTO.getEnd_date().toString());
-        newBlog.setPublish_date(blogDTO.getPublish_date().toString());
-
-
-        newBlog.setCreated(LocalDateTime.now());
-
-
-        LocalDate today = LocalDate.now();
-        if(blogDTO.getPublish_date().isAfter(today))
-        {
-            newBlog.setStatus(PENDING);
-        }
-        else {
-            newBlog.setStatus(ACTIVE);
-        }
-        op.ifPresent(newBlog::setEmployee);
-        blogService.save(newBlog);
-        // publish event
-    }
-
-    public void saveBlog(Blog blog) {
-        Optional<Blog> optionalBlog = blogService.findById(blog.getBlogID());
-        // title
-        if (optionalBlog.isPresent()) {
-            Blog b = optionalBlog.get();
-
-            if (!b.getBlog_title().equalsIgnoreCase(blog.getBlog_title())) {
-                b.setBlog_title(blog.getBlog_title());
-            }
-            // description
-            if (!b.getBlog_description().equalsIgnoreCase(blog.getBlog_description())) {
-                b.setBlog_description(blog.getBlog_description());
-            }
-            // body
-            if (!b.getBody().equalsIgnoreCase(blog.getBody())) {
-                b.setBody(blog.getBody());
-            }
-            // publish date
-
-            if (!Objects.equals(b.getPublish_date(), blog.getPublish_date())) {
-                b.setPublish_date(blog.getPublish_date());
-            }
-            // expiration date
-            if (!Objects.equals(b.getEnd_date(), blog.getEnd_date())) {
-                b.setEnd_date(blog.getEnd_date());
-            }
-            if (blog.getStatus() != null) {
-                // Only set the status if it is provided and different from the current status
-                b.setStatus(blog.getStatus());
-            }
-            blogService.save(b);
-        }
-
-
-    }
-
-    public Blog findBlogByID(Long blogID) {
-        Blog blog = null;
-        Optional<Blog> optionalBlog = blogService.findById(blogID);
-        if (optionalBlog.isPresent()) {
-            blog = optionalBlog.get();
-        }
-        return blog;
-    }
-
-    public List<Blog> getActiveBlogs() {
-        return blogService.getActiveBlogs(BlogStatus.ACTIVE);
-    }
-
-    public List<Blog> getBlogs() {
-        return blogService.getBlogs();
-    }
 
 }

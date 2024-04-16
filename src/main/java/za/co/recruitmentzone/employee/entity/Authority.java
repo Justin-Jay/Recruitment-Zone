@@ -10,7 +10,7 @@ import java.util.Objects;
 @Table(name = "AUTHORITIES")
 public class Authority implements GrantedAuthority {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ManyToOne()
     @JoinColumn(name = "employeeID")
     private Employee employee;

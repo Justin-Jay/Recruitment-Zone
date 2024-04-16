@@ -18,10 +18,16 @@
         <div class="container-fluid">
             <div class="row">
                 <!--TOP Navbar-->
-                <div th:replace="fragments/layout/top-nav">Header</div>
+                <div th:replace="~{fragments/layout/top-nav}">Header</div>
             </div>
         </div>
 
+
+        <p th:if="${message}" th:text="${message}"></p>
+        <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+        <p th:if="${searchFilesResponse}" th:text="${searchFilesResponse}"></p>
+
+        <p th:if="${searchFileContentResponse}" th:text="${searchFileContentResponse}"></p>
         <div class="container-fluid">
             <hr/>
             <div class="row ">
@@ -58,7 +64,7 @@
                 <div class="search-bar">
                     <h3>Search Results</h3>
 
-                    <div th:if="${resultCount > 0}" class="card-body" th:replace="fragments/documents/document-fragments :: documentSearchResults(${results},${term})">
+                    <div th:if="${resultCount > 0}" class="card-body" th:replace="~{fragments/documents/document-fragments :: documentSearchResults(${results},${term})}">
                     </div>
                     <div th:if="${resultCount == 0}">
                         <p>No results found.</p>
@@ -75,7 +81,7 @@
         <div class="container-fluid">
             <div class="row">
                 <!--BOTTOM Navbar-->
-                <div th:replace="fragments/layout/bottom-nav">Footer</div>
+                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
             </div>
         </div>
     </div>

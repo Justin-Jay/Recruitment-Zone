@@ -15,10 +15,13 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
 
     <div class="container-fluid"><h2>View Blog</h2></div>
     <hr/>
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+    <p th:if="${findEmployeeByIDResponse}" th:text="${findEmployeeByIDResponse}"></p>
+
 <div class="container-fluid">
     <form action="#" th:action="@{/Employee/save-updated-employee}" th:object="${employee}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
@@ -44,7 +47,7 @@
 
 
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 

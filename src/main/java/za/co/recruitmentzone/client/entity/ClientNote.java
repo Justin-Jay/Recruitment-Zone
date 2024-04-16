@@ -1,6 +1,7 @@
 package za.co.recruitmentzone.client.entity;
 
 import jakarta.persistence.*;
+import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.util.Note;
 
 import java.time.LocalDateTime;
@@ -10,20 +11,19 @@ import java.time.LocalDateTime;
 public class ClientNote implements Note {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "noteID")
     private Long noteID;
-
     @ManyToOne(
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    @JoinColumn(name = "clientid")
+    @JoinColumn(name = "clientID")
     private Client client;
 
     @Column(name = "date_captured")
     private LocalDateTime dateCaptured;
-    @Column(name = "comment")
+    @Column(name = "comment", length = 65535)
     private String comment;
 
     public ClientNote() {

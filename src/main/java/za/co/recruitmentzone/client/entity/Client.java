@@ -5,7 +5,6 @@ import za.co.recruitmentzone.client.dto.ClientNoteDTO;
 import za.co.recruitmentzone.util.enums.Industry;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,9 +13,10 @@ import java.util.Set;
 @Table(name = "CLIENT")
 public class Client {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "clientid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "clientID")
     private Long clientID;
+    @Column(name="name")
     private String name;
     @Enumerated(EnumType.STRING)
     private Industry industry;
@@ -42,6 +42,19 @@ public class Client {
     public Client() {
     }
 
+    public Client(String name, Industry industry) {
+        this.name = name;
+        this.industry = industry;
+    }
+
+    public Long getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(Long clientID) {
+        this.clientID = clientID;
+    }
+
     public LocalDateTime getCreated() {
         return created;
     }
@@ -50,8 +63,20 @@ public class Client {
         this.created = created;
     }
 
-    public Client(String name, Industry industry) {
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public Industry getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(Industry industry) {
         this.industry = industry;
     }
 
@@ -77,30 +102,6 @@ public class Client {
 
     public void setNotes(Set<ClientNote> notes) {
         this.notes = notes;
-    }
-
-    public Long getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Industry getIndustry() {
-        return industry;
-    }
-
-    public void setIndustry(Industry industry) {
-        this.industry = industry;
     }
 
     @Override

@@ -18,32 +18,56 @@
         <div class="container-fluid">
             <div class="row">
                 <!--TOP Navbar-->
-                <div th:replace="fragments/layout/top-nav">Header</div>
+                <div th:replace="~{fragments/layout/top-nav}">Header</div>
             </div>
         </div>
+
+        <p th:if="${loadCandidatesResponse}" th:text="${loadCandidatesResponse}"></p>
+        <p th:if="${findAllCandidates}" th:text="${findAllCandidates}"></p>
+
+        <p th:if="${createCandidateResponse}" th:text="${createCandidateResponse}"></p>
 
         <div class="container-fluid">
             <div class="float-end">
                 <a class="btn btn-primary btn-sm mb-3" th:href="@{/Candidate/add-candidate}">Add Candidate</a>
             </div>
         </div>
-        <div class="container-fluid">
+
+        <!-- If-then-else -->
+        <div th:if="${internalServerError}">
+            <p>Error: <span th:text="${internalServerError}"></span></p>
+        </div>
+        <div th:else>
+            <!-- Display vacancy application -->
             <div class="container-fluid">
-                <h3>Candidate Administration</h3>
-                <div th:replace="fragments/candidate/candidate-fragments :: candidateTable(${candidates})"></div>
+                <div class="container-fluid">
+                    <h3>Candidate Administration</h3>
+                    <div th:replace="~{fragments/candidate/candidate-fragments :: candidateTable(${candidates})}"></div>
+                </div>
             </div>
         </div>
+
+
 
         <div class="container-fluid">
             <div class="row">
                 <!--BOTTOM Navbar-->
-                <div th:replace="fragments/layout/bottom-nav">Footer</div>
+                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
             </div>
         </div>
     </div>
 
 
 </div>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/webjars/htmx.org/1.9.9/dist/htmx.min.js}"></script>
+
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
+
+
 </body>
 </html>

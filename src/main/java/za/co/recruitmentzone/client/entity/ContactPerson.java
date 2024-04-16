@@ -5,16 +5,23 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "contact_person")
+@Table(name = "CONTACT_PERSON")
 public class ContactPerson {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contactPersonID;
+    @Column(name="first_name")
     private String first_name;
+    @Column(name="last_name")
     private String last_name;
+    @Column(name="email_address")
     private String email_address;
+    @Column(name="designation")
     private String designation;
+
+    @Column(name="land_line")
     private String land_line;
+    @Column(name="cell_phone")
     private String cell_phone;
     @Column(name="created")
     private LocalDateTime created;

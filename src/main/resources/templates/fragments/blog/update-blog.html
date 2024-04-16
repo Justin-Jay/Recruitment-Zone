@@ -15,7 +15,12 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+
+
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+    <p th:if="${findBlogResponse}" th:text="${findBlogResponse}"></p>
+
 
     <div class="container-fluid"><h2>Update Blog</h2></div>
     <hr/>
@@ -41,13 +46,6 @@
             <label for="expirationDate"  >Expiration Date: </label>
             <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate" placeholder="Expiration Date:"/>
 
-
-            <!--     <label for="status" >Select Status:
-                     <select id="status" th:field="*{status}">
-                         <option th:each="statusVal : ${T(za.co.RecruitmentZone.util.Enums.BlogStatus).values()}"
-                                 th:value="${statusVal}" th:text="${statusVal}"></option>
-                     </select>
-                 </label>-->
         </div>
         <button type="submit" class="btn btn-primary">Save Updated Blog</button>
     </form>
@@ -56,7 +54,7 @@
 
 
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 

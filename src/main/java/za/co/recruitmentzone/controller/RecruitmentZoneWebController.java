@@ -13,8 +13,6 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import za.co.recruitmentzone.employee.entity.Authority;
-import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
@@ -34,48 +32,38 @@ public class RecruitmentZoneWebController {
         this.vacancyJob = vacancyJob;
     }
 
-      @GetMapping("/")
-      public String redirectToHome() {
-          return "redirect:/home";
-      }
+    /*     @GetMapping("/")
+         public String redirectToHome(Principal principal, RedirectAttributes redirectAttributes){
+             redirectAttributes.addAttribute(principal);
+             redirectAttributes.addAttribute(principal);
+             return "redirect:/home";
+         }*/
     // Home pages
-    @GetMapping("/home")
-    public String home(@RequestParam(name = "name", required = false) String title, Model model, Principal principal) {
-        List<Vacancy> vacancies = recruitmentZoneService.getActiveVacancies();
-        log.info("Total Vacancies: " + vacancies.size());
-        if (title != null) {
-            vacancies = recruitmentZoneService.searchVacancyByTitle(title);
+    @GetMapping(value = {"/", "/home"})
+    public String home(@RequestParam(name = "name", required = false) String title, Model model, Principal principal,
+                       @ModelAttribute("createCandidateApplicationResponse") String createCandidateApplicationResponse, @ModelAttribute("internalServerError") String internalServerError,
+                       @ModelAttribute("searchByTitleResponse") String searchByTitleResponse, @ModelAttribute("saveSubmissionFormResponse") String saveSubmissionFormResponse) {
+        try {
+            if (title != null) {
+                recruitmentZoneService.searchVacancyByTitle(title, model);
+            } else {
+                recruitmentZoneService.getActiveVacancies(model);
+            }
+            log.info("<-- User Name -->: {} ", principal.getName());
+
+            model.addAttribute("createCandidateApplicationResponse", createCandidateApplicationResponse);
+            model.addAttribute("title", title);
+            model.addAttribute("saveSubmissionFormResponse", saveSubmissionFormResponse);
+            model.addAttribute("internalServerError", internalServerError);
+        } catch (Exception e) {
+            model.addAttribute("internalServerError", e.getMessage());
         }
-        log.info("Principal Name: {} \n {}", principal.getName(), principal);
-        Employee emp = recruitmentZoneService.findEmployeeByEmail(principal.getName());
-        List<Authority> empAuthorities = emp.getAuthorities();
-        log.info("Authorities: ");
-        empAuthorities.forEach(System.out::println);
-        log.info("DONE:");
-        model.addAttribute("totalNumberOfVacancies", vacancies.size());
-        model.addAttribute("vacancies", vacancies);
-        model.addAttribute("title", title);
         return "home";
     }
 
     @GetMapping("/aboutus")
     public String aboutUs() {
         return "fragments/info/about-us";
-    }
-
-    @PostMapping("/TestSavingFiles")
-    public String testingSavingFiles() {
-
-        log.info("TestSavingFiles CONTROLLER ");
-        try {
-            log.info("About to try and save File");
-            recruitmentZoneService.saveTempFile();
-            return "home";
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            log.info("Failed to save file");
-        }
-        return "home";
     }
 
     @GetMapping("/admin")

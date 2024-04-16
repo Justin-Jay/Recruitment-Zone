@@ -11,16 +11,15 @@ import java.sql.Timestamp;
 @Table(name = "APPLICATION")
 public class Application {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "applicationID")
     private Long applicationID;
+    @Column(name="date_received")
     private String date_received;
-
+    @Column(name="submission_date")
     private String submission_date;
-
     @Column(name="created")
     private Timestamp created;
-
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})

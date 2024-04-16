@@ -26,7 +26,7 @@ public class VacancyProcessor implements ItemProcessor<Vacancy, Vacancy> {
     @Override
     public Vacancy process(Vacancy vacancy) {
         Client client = clientService.findClientByID(vacancy.getTheClientID());
-        Employee e = employeeService.findEmployeeByID(vacancy.getTheEmpID());
+        Employee e = employeeService.getEmployeeByid(vacancy.getTheEmpID());
         vacancy.setClient(client);
         vacancy.setEmployee(e);
         log.info("PROCESS Batch START");

@@ -6,6 +6,7 @@ public class ClientNoteDTO {
     private Long clientID;
     private LocalDateTime dateCaptured;
     private String comment;
+    private Long employeeID;
 
     public ClientNoteDTO() {
     }
@@ -16,7 +17,15 @@ public class ClientNoteDTO {
         this.comment = comment;
     }
 
-    public Long getClientID() {
+    public Long getEmployeeID() {
+        return employeeID;
+    }
+
+    public void setEmployeeID(Long employeeID) {
+        this.employeeID = employeeID;
+    }
+
+    public Long getclientID() {
         return clientID;
     }
 

@@ -11,20 +11,21 @@ import java.time.LocalDateTime;
 @Table(name ="BLOG")
 public class Blog {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="blogID")
     private Long blogID;
-
     private String blog_title;
     private String blog_description;
     @Enumerated(EnumType.STRING)
     private BlogStatus status;
+    @Column(name = "body", length = 65535)
     private String body;
+    @Column(name="publish_date")
     private String publish_date;
+    @Column(name="end_date")
     private String end_date;
     @Column(name="created")
     private LocalDateTime created;
-
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH

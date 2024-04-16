@@ -15,10 +15,13 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
 
     <div class="container-fluid"><h2>View Client Notes</h2></div>
     <hr/>
+
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+    <p th:if="${findClientByIDResponse}" th:text="${findClientByIDResponse}"></p>
 
     <div class="container-fluid" th:object="${existingNotes}">
         <table class="table table-bordered table-striped">
@@ -65,7 +68,7 @@
         <a class="nav-link" th:href="@{/Client/client-administration}">Back</a>
     </div>
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 

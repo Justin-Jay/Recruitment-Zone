@@ -2,38 +2,19 @@ server:
   port: ${SERVER_PORT}
   error:
     whitelabel:
-      enabled: false
+      enabled: true
 
 spring:
-  ssl:
-    bundle:
-      pem:
-        recruitmentzone-bundle:
-          reload-on-update: true
-          keystore:
-            #certificate: "file:/recruitmentzone/ssl/cert/origin_certificate.crt"
-            #private-key: "file:/recruitmentzone/ssl/private_key/private_key.key"
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML
-  main:
-    banner-mode: off
-      #cloud:
-      #gcp:
-      #credentials:
-      # location: ${googlekeyfile}
-      #mvc:
-    # hiddenmethod:
-    #  filter:
-    #   enabled: true
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
     username: ${MAIL_ADDRESS}
     password: ${MAIL_PASSWORD}
     protocol: smtp
-
   servlet:
     multipart:
       max-file-size: 25MB
@@ -43,12 +24,14 @@ spring:
       enabled: false
   jpa:
     hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQLDialect
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    #database-platform: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
         show_sql: true
-
+        globally_quoted_identifiers: true
   datasource:
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
@@ -65,10 +48,6 @@ spring:
   threads:
     virtual:
       enabled: true
-
-logging:
-  file:
-    path: ${LOG_PATH}
 
 
 mail:
@@ -94,5 +73,4 @@ domain:
   co:
     za: ${DOMAIN}
 
-
-
+LOGS: /RecruitmentZoneApplication/Logs/

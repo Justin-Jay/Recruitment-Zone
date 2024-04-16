@@ -15,13 +15,21 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
     <div th:class="container-fluid">
         <h2>Add Vacancy</h2>
     </div>
     <hr/>
 
     <div class="container-fluid">
+
+        <p th:if="${internalServerError}" th:text="${internalServerError}"> </p>
+
+
+        <p th:if="${findAllClientsResponse}" th:text="${findAllClientsResponse}"> </p>
+        <p th:if="${saveVacancyResponse}" th:text="${saveVacancyResponse}"> </p>
+
+
 
         <form action="#" th:action="@{/Vacancy/save-vacancy}" th:object="${vacancy}" method="POST">
             <div class="form-group">
@@ -148,7 +156,7 @@
 
 
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 

@@ -39,7 +39,7 @@ public class TokenVerificationService {
         EmployeeVerificationToken ov;
         if (optionalEmployee.isPresent()) {
             Employee emp = optionalEmployee.get();
-            ov = tokenRepository.findEmployeeVerificationTokenByEmployeeID(emp.getEmployeeID());
+            ov = tokenRepository.findEmployeeVerificationTokenByEmployeeID(emp.getUsername());
             if (ov != null && !ov.isExpired()) {
                 log.info("Token is not expired");
                 // set account to Enabled
@@ -54,7 +54,7 @@ public class TokenVerificationService {
                             You can now proceed start using the system.
                              """;
                     // delete used token
-                    int rowCount = tokenRepository.deleteEmployeeVerificationTokenById(ov.getId());
+                    int rowCount = tokenRepository.deleteEmployeeVerificationTokenById(ov.getEmployee().getUsername());
                     log.info("Employee Token Has Been Deleted \n {} token deleted",rowCount);
                 }
 

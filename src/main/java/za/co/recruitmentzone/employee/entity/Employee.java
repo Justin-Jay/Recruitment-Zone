@@ -1,7 +1,9 @@
 package za.co.recruitmentzone.employee.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 import za.co.recruitmentzone.blog.entity.Blog;
+import za.co.recruitmentzone.client.entity.ClientNote;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import javax.security.auth.Subject;
@@ -16,14 +18,14 @@ import java.util.Set;
 @Table(name = "USERS")
 public class Employee implements Principal {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employeeID")
     private Long employeeID;
-    @Column(name = "username", unique = true)
+    @Column(name = "username")
     private String username;
     @Column(name = "password")
     private String password;
-    //    @NaturalId(mutable = true)
+    @NaturalId(mutable = true)
     @Column(name = "email")
     private String email;
     @Column(name = "first_name")
@@ -32,7 +34,7 @@ public class Employee implements Principal {
     private String last_name;
     @Column(name = "contact_number")
     private String contact_number;
-    @Column(name = "enabled")
+    @Column(name = "isEnabled")
     private boolean isEnabled;
     @Column(name="created")
     private Timestamp created;
@@ -54,7 +56,34 @@ public class Employee implements Principal {
                 })
     private Set<Vacancy> vacancies;
 
+
     public Employee() {
+    }
+
+    public Employee(String username, String password, String email, String first_name, String last_name, String contact_number, boolean isEnabled, Timestamp created, List<Authority> authorities, Set<Blog> blogs, Set<Vacancy> vacancies) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.contact_number = contact_number;
+        this.isEnabled = isEnabled;
+        this.created = created;
+        this.authorities = authorities;
+        this.blogs = blogs;
+        this.vacancies = vacancies;
+    }
+
+    public Employee(Long employeeID) {
+        this.employeeID = employeeID;
+    }
+
+    public Long getEmployeeID() {
+        return employeeID;
+    }
+
+    public void setEmployeeID(Long employeeID) {
+        this.employeeID = employeeID;
     }
 
     public boolean isEnabled() {
@@ -87,14 +116,6 @@ public class Employee implements Principal {
 
     public void setVacancies(Set<Vacancy> vacancies) {
         this.vacancies = vacancies;
-    }
-
-    public Long getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
     }
 
     public String getUsername() {

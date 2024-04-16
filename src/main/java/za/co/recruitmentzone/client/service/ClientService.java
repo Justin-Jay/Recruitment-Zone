@@ -1,6 +1,5 @@
 package za.co.recruitmentzone.client.service;
 
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import za.co.recruitmentzone.client.entity.ContactPerson;
 import za.co.recruitmentzone.client.repository.ClientRepository;
 import za.co.recruitmentzone.client.repository.ContactPersonRepository;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,26 +29,26 @@ public class ClientService {
         this.contactPersonRepository = contactPersonRepository;
     }
 
-    public void saveClient(ClientDTO clientDTO){
+    public Client saveClient(ClientDTO clientDTO){
         Client client = new Client(clientDTO.getName(),clientDTO.getIndustry());
         client.setCreated(LocalDateTime.now());
-        clientRepository.save(client);
         ContactPerson contactPerson = new ContactPerson(clientDTO.getContactPerson_FirstName(),
                 clientDTO.getContactPerson_last_name(),clientDTO.getContactPerson_email_address(),clientDTO.getContactPerson_land_line(),clientDTO.getContactPerson_cell_phone(),clientDTO.getContactPerson_designation());
         contactPerson.setClient(client);
         contactPerson.setCreated(LocalDateTime.now());
-        contactPersonRepository.save(contactPerson);
-    }
-    public void saveUpdatedClient(Client client){
         clientRepository.save(client);
+        return client;
+    }
+    public Client saveUpdatedClient(Client client){
+        return clientRepository.save(client);
     }
 
-    public void saveUpdatedContact(ContactPerson contactPerson){
-        contactPersonRepository.save(contactPerson);
+    public ContactPerson saveUpdatedContact(ContactPerson contactPerson){
+        return contactPersonRepository.save(contactPerson);
     }
 
 
-    public List<Client> findAllClients(){
+    public List<Client> getAllClients(){
         return clientRepository.findAll();
     }
 
@@ -64,20 +62,20 @@ public class ClientService {
         return c;
     }
 
-    public List<ContactPerson> findContactsByClientID(Long clientID){
+    public List<ContactPerson> findContactPersonsByClientID(Long clientID){
         //return contactPersonRepository.findContactPeopleByClientID(clientID);
         return contactPersonRepository.findContactPersonByClient_ClientID(clientID);
     }
 
-    public void addContactToClient(ContactPersonDTO contactPersonDTO){
-        Optional<Client> oc = clientRepository.findById(contactPersonDTO.getClientID());
+    public ContactPerson addContactToClient(ContactPersonDTO contactPersonDTO){
+        Optional<Client> oc = clientRepository.findById(contactPersonDTO.getclientID());
         ContactPerson contactPerson = new ContactPerson(contactPersonDTO.getFirst_name(),
                 contactPersonDTO.getLast_name(),contactPersonDTO.getEmail_address(),
                 contactPersonDTO.getLand_line(),contactPersonDTO.getCell_phone(),contactPersonDTO.getDesignation());
        if(oc.isPresent()){
            contactPerson.setClient(oc.get());
        }
-        contactPersonRepository.save(contactPerson);
+        return contactPersonRepository.save(contactPerson);
     }
 
     public ContactPerson findContactsByID(Long contactPersonID){

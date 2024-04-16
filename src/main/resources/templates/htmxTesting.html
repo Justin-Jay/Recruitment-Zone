@@ -1,62 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+
+
+    <title>HTMX-Testing</title>
 </head>
 <body>
 
+<div class="container-fluid">
 
-<div hx-trigger="load" hx-get="/htmx/employee">
-    <div id="employee-admin-table" th:replace="fragments/employee/employee">Employees</div>
+    <div id="employee-admin-table">Employee List</div>
+    <form action="#" th:action="@{/htmx/employee}"  method="post">
+        <button hx-post="/htmx/employee"
+                hx-target="#employee-admin-table"
+                hx-swap="innerHTML">Load Employee List
+        </button>
+    </form>
+
 </div>
 
 
-<!--     <div class="container-fluid">
 
-         <table class="table table-bordered table-striped">
-             <thead class="table-dark">
-             <tr>
-                 <th>Brand</th>
-                 <th>LIK COLUMN</th>&lt;!&ndash; New column for the "View Job" link &ndash;&gt;
-             </tr>
-             </thead>
-             <tbody>
-             <tr th:each="brandVal : ${T(com.GroundZero.Entity.Enums.Brand).values()}">
-                 <td th:text="${brandVal}"></td>
-                 <td>
-                     <form  >
-                         &lt;!&ndash; Hidden input field to include the brandVal in the POST request &ndash;&gt;
-                         <input type="hidden" name="brand" th:value="${brandVal}"/>
-                         &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
-                         <button  th:action="@{/car-brand-owners}" class='btn' hx-post="/car-brand-owners"
-                                  hx-target='#owner-list'
-                                  hx-swap='innerHTML'
-                                  hx-include="[brand='brand']" >
-                             View Owners
-                         </button>
-                     </form>
-                 </td>
-             </tr>
-         </table>
-     </div>
+<!--
 
-     <div id="owner-list"></div>
+<script type="text/javascript" >
+    $(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e,xhr, options) {
+            xhr.setRequestHeader(header,token);
+        })
+    })
+</script>
+-->
 
-
-
-
-
-     #FIELD VALIDATION
-
-      <p th:class="error" th:if="${#fields.hasErrors('last_name')}"
-               th:errors="${employeeDTO.last_name}"
-            ></p>
-
-
-
-            -->
-
+<div class="container-fluid">
+    <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+</div>
 
 </body>
 </html>

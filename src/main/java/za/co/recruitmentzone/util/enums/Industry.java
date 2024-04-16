@@ -5,6 +5,7 @@ public enum Industry {
     CONSTRUCTION,
     ELECTRICAL,
     FINANCE,
+    FMCG,
     HEALTHCARE,
     INFORMATION_TECHNOLOGY,
     INSURANCE,

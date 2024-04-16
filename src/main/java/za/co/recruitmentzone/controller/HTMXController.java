@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.employee.service.EmployeeService;
@@ -22,7 +23,13 @@ public class HTMXController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employee")
+    @GetMapping("/TestPage1")
+    public String index(Model model) {
+        return "/htmxTesting";
+    }
+
+
+    @PostMapping("/employee")
     public String htmxEmployee(Model model) {
         List<Employee> allEmployees = new ArrayList<>();
         try {
@@ -31,6 +38,6 @@ public class HTMXController {
             log.info("Exception trying to retrieve employees, retrieving all employees ");
         }
         model.addAttribute("employees", allEmployees);
-        return "fragments/employee/employee";
+        return "/fragments/employee/employee";
     }
 }
