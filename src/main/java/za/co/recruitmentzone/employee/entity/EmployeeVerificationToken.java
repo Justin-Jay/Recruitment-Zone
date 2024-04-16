@@ -7,7 +7,7 @@ import org.threeten.bp.LocalDateTime;
 @Table(name = "EMPLOYEEVERIFICATIONTOKEN")
 public class EmployeeVerificationToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "token")

@@ -19,6 +19,9 @@
     <hr/>
     <div class="container-fluid">
         <p th:if="${message}" th:text="${message}"></p>
+        <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+        <p th:if="${verificationResponse}" th:text="${verificationResponse}"></p>
+        <p th:if="${tokenMessage}" th:text="${tokenMessage}"></p>
 
         <a class="nav-link" th:href="@{/log-in}">Log in</a>
 

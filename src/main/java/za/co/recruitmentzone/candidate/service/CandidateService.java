@@ -27,14 +27,8 @@ public class CandidateService {
         return candidateRepository.save(candidate);
     }
 
-public Candidate getcandidateByID(Long clientID){
-        Optional<Candidate> oc = candidateRepository.findById(clientID);
-        Candidate c = null;
-        if (oc.isPresent()){
-            c= oc.get();
-        }
-        return c;
-
+public Optional<Candidate>  getcandidateByID(Long clientID){
+        return candidateRepository.findById(clientID);
 }
 
 

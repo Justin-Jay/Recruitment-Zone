@@ -25,8 +25,6 @@ public class ApplicationService {
         return applicationRepository.save(application);
     }
 
-
-
     public List<Application> findApplications() {
         return applicationRepository.findAll();
     }
@@ -34,7 +32,6 @@ public class ApplicationService {
     public Optional<Application> findApplicationByID(Long id) {
         return applicationRepository.findById(id);
     }
-
     @Transactional
     public boolean saveUpdatedStatus(Long applicationID, ApplicationStatus applicationStatus){
         log.info("saveUpdatedStatus start");

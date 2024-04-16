@@ -15,11 +15,13 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+
+    <p th:if="${internalServerError}" th:text="${internalServerError}"> </p>
 
     <div class="container-fluid"><h2>View Vacancy</h2></div>
     <hr/>
-    <!--    <div th:insert="fragments/vacancy/vacancy">Vacancy</div>-->
+    <!--    <div th:insert="~{fragments/vacancy/vacancy}">Vacancy</div>-->
     <!--FORM TO UPDATE JOB -->
     <div class="container-fluid">
         <form action="#" th:action="@{/Vacancy/save-updated-vacancy}" th:object="${vacancy}" th:method="POST">
@@ -90,7 +92,7 @@
 
 
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 

@@ -38,14 +38,17 @@ public class EmployeeService {
         this.eventPublisher = eventPublisher;
     }
 
-    public Employee createEmployee(EmployeeDTO employeeDTO, String applicationURL) throws UserAlreadyExistsException {
+    public Employee saveNewEmployee(EmployeeDTO employeeDTO, String applicationURL) throws UserAlreadyExistsException {
+        log.info("<--  saveNewEmployee employeeDTO {}  applicationURL {} -->", employeeDTO, applicationURL);
         String userName = createUserNameAndEmail(employeeDTO.getFirst_name(), employeeDTO.getLast_name());
         Optional<Employee> employeeOptional = employeeRepository.findEmployeeByEmailIgnoreCase(userName);
         Employee newEmp = new Employee();
+
         if (employeeOptional.isPresent()) {
+            log.info("<--  saveNewEmployee - user already exists -->");
             throw new UserAlreadyExistsException("User Already Exists");
         } else {
-
+            log.info("<--  saveNewEmployee - New Employee Registration-->");
             newEmp.setFirst_name(employeeDTO.getFirst_name().strip());
             newEmp.setPassword(employeeDTO.getPassword());
             newEmp.setLast_name(employeeDTO.getLast_name());
@@ -66,11 +69,13 @@ public class EmployeeService {
             log.info("Employee Created {}", emp);
             // publish new employee Event
             eventPublisher.publishNewEmployeeEvent(emp, applicationURL);
+            log.info("<--  saveNewEmployee - publishNewEmployeeEvent Done-->");
         }
         return newEmp;
     }
 
     public ROLE getRole(String name) {
+        log.info("<--  getRole - name {} -->",name);
         ROLE role = null;
         switch (name) {
             case "ROLE_ADMIN" -> {
@@ -86,7 +91,6 @@ public class EmployeeService {
                 role = ROLE_GUEST;
             }
         }
-        ;
         return role;
     }
 
@@ -96,10 +100,12 @@ public class EmployeeService {
                 .collect(Collectors.toSet());
     }
 
-    public void saveUpdatedEmployee(Employee updated) {
+    public Employee saveUpdatedEmployee(Employee updated) {
+        log.info("<--  saveUpdatedEmployee - employee {} -->",updated);
         Employee employee = null;
-        Optional<Employee> optionalEmployee = employeeRepository.findById(updated.getEmployeeID());
+        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByName(updated.getName());
         if (optionalEmployee.isPresent()) {
+            log.info("<--  saveUpdatedEmployee - optionalEmployee.isPresent {} -->",updated);
             employee = optionalEmployee.get();
             if (!updated.getFirst_name().equalsIgnoreCase(employee.getFirst_name())) {
                 employee.setFirst_name(updated.getFirst_name());
@@ -114,7 +120,7 @@ public class EmployeeService {
             }
 
         }
-        employeeRepository.save(employee);
+        return employeeRepository.save(employee);
     }
 
 
@@ -122,7 +128,7 @@ public class EmployeeService {
         return firstName + "." + LastName + "@" + domainDotZa;
     }
 
-    public Optional<Employee> findEmployeeByEmail(String username) {
+    public Optional<Employee> getEmployeeByEmail(String username) {
         return employeeRepository.findEmployeeByEmailIgnoreCase(username);
     }
 
@@ -131,7 +137,7 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee findEmployeeByID(Long employeeID) {
+    public Employee getEmployeeByid(Long employeeID) {
         Optional<Employee> op = employeeRepository.findById(employeeID);
         return op.orElse(null);
     }

@@ -1,22 +1,30 @@
-<div class="container-fluid" th:fragment="candidateNotes(existingNotes)">
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-        <tr>
-            <th>Date Captured</th>
-            <th>Comment</th>
-        </tr>
-        </thead>
-        <tbody>
+<p th:if="${loadCandidateResponse}" th:text="${loadCandidateResponse}"></p>
+<!-- If-then-else -->
+<div th:if="${internalServerError}">
+    <p>Error: <span th:text="${internalServerError}"></span></p>
+</div>
+<div th:else>
+    <div class="container-fluid" th:fragment="candidateNotes(existingNotes)">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>Date Captured</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
 
-        <tr th:each="note : ${existingNotes}">
-            <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
+            <!-- Display vacancy application -->
+            <tr th:each="note : ${existingNotes}">
+                <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
 
-            <!--      <td th:text="${#temporals.format(note.dateCaptured, 'yyyy-MM-dd')}" ></td>-->
-            <td th:text="*{note.comment}"></td>
-            <!-- <td th:text="*{note.dateCaptured}"></td>
-             <td th:text="*{note.comment}"></td>-->
-        </tr>
-        </tbody>
-    </table>
+                <!--      <td th:text="${#temporals.format(note.dateCaptured, 'yyyy-MM-dd')}" ></td>-->
+                <td th:text="*{note.comment}"></td>
+                <!-- <td th:text="*{note.dateCaptured}"></td>
+                 <td th:text="*{note.comment}"></td>-->
+            </tr>
 
+            </tbody>
+        </table>
+    </div>
 </div>

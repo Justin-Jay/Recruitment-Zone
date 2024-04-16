@@ -78,7 +78,7 @@ public class ContactPersonDTO {
         this.cell_phone = cell_phone;
     }
 
-    public Long getClientID() {
+    public Long getclientID() {
         return clientID;
     }
 

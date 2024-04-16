@@ -7,9 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.recruitmentzone.communication.entity.ContactMessage;
 import za.co.recruitmentzone.communication.events.Email.EmailEventPublisher;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
+
+import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
 @Controller
 @RequestMapping("/Communication")
@@ -23,30 +26,38 @@ public class CommunicationController {
         this.recruitmentZoneService = recruitmentZoneService;
         this.emailEventPublisher = emailEventPublisher;
     }
+    // contactMessage , messageSent , internalServerError
     @GetMapping("/contact-us")
-    public String contactus(Model model,@RequestParam(name = "messageSent", defaultValue = "false")boolean messageSent) {
-        model.addAttribute("contactMessage",new ContactMessage());
-        if (messageSent){
-            model.addAttribute("messageSent",Boolean.TRUE);
-        }
-
+    public String contactus(Model model, @ModelAttribute("messageSent") String messageSent,@ModelAttribute("internalServerError") String internalServerError) {
+        log.info("<-- contactus --> ");
+        model.addAttribute("contactMessage", new ContactMessage());
+        model.addAttribute("messageSent", messageSent);
+        model.addAttribute("internalServerError", internalServerError);
         return "fragments/info/contact-us";
     }
+
     @PostMapping("/send-message")
-    public String sendMessage(@Valid @ModelAttribute("message")ContactMessage message, BindingResult bindingResult, Model model) {
+    public String sendMessage(@Valid @ModelAttribute("message") ContactMessage message, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("success",Boolean.FALSE);
+            model.addAttribute("messageSent", Boolean.FALSE);
+            log.info("<-- sendMessage --> model: \n {}", model.asMap().toString());
             return "fragments/info/contact-us";
         }
-        log.info("Website message received");
-        websiteQueryReceived(message);
-        model.addAttribute("success",Boolean.TRUE);
+        try {
+            log.info("Website message received");
+            websiteQueryReceived(message);
+            redirectAttributes.addFlashAttribute("messageSent", "Message has been received successfully");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            redirectAttributes.addFlashAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
         return "redirect:/Communication/contact-us";
     }
 
     // COMMUNICATION
 
     public void websiteQueryReceived(ContactMessage message) {
+        log.info("<-- websiteQueryReceived --> message: \n {}", message);
         // send message using virtual thread
        /* try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             log.info("About to submit");
@@ -63,7 +74,7 @@ public class CommunicationController {
         // publish event
         emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
 
-        log.info("Website Query received");
-        log.info(message.toString());
+        log.info("emailEventPublisher published for: {}",message);
+
     }
 }

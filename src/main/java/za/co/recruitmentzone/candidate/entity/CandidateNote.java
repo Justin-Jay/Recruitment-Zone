@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class CandidateNote implements Note {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "noteID")
     private Long noteID;
 
@@ -20,8 +20,9 @@ public class CandidateNote implements Note {
             })
     @JoinColumn(name = "candidateID")
     private Candidate candidate;
-
+    @Column(name = "dateCaptured")
     private LocalDateTime dateCaptured;
+    @Column(name = "comment", length = 65535)
     private String comment;
 
     public CandidateNote() {

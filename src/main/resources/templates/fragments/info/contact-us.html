@@ -23,12 +23,13 @@
         </div>
     </div>
 
-    <!--    <div class="container-fluid">
-            ABOVE CARD GROUP
-        </div>-->
-    <div class="container-fluid">
-        <p th:if="${success}">Message has been sent....</p>
-    </div>
+
+    <p th:if="${messageSent}" th:text="${messageSent}"></p>
+
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+
+
+
 
     <div class="container-fluid">
         <h2>Contact Us</h2>

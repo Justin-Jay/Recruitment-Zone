@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
@@ -16,16 +16,21 @@
 
 <div class="container-fluid">
     <div>
-        <div th:insert="fragments/layout/top-nav">Header</div>
+        <div th:insert="~{fragments/layout/top-nav}">Header</div>
     </div>
     <hr/>
-    <div>
-        <div th:replace="fragments/applications/application :: applicationView(${vacancyApplication})"></div>
+
+    <div th:if="${findApplicationByIDResponse}">
+        <p>Error: <span th:text="${findApplicationByIDResponse}"></span></p>
+    </div>
+    <div th:else>
+        <!-- Display vacancy application -->
+        <div th:replace="~{fragments/applications/application :: applicationView(${vacancyApplication})}"></div>
     </div>
 
     <div>
         <!--BOTTOM Navbar-->
-        <div th:insert="fragments/layout/bottom-nav">Footer</div>
+        <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
     </div>
 
 

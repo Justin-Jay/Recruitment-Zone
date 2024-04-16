@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "CANDIDATE")
 public class Candidate {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long candidateID;
     private String first_name;
     private String last_name;

@@ -1,7 +1,6 @@
 package za.co.recruitmentzone.documents;
 
 import jakarta.persistence.*;
-import org.springframework.data.redis.core.RedisHash;
 import za.co.recruitmentzone.candidate.entity.Candidate;
 import za.co.recruitmentzone.util.enums.DocumentType;
 
@@ -12,13 +11,18 @@ import java.time.LocalDateTime;
 @Table(name = "DOCUMENT")
 public class CandidateFile implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "docid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "fileID")
     private Long fileID;
-    private String filename;
-    private String contenttype;
-    private String filesize;
-    private byte[] filedata;
+    @Column(name = "file_name")
+    private String file_name;
+    @Column(name = "content_type")
+    private String content_type;
+    @Column(name = "file_size")
+    private String file_size;
+    @Column(name = "file_data")
+    private byte[] file_data;
+    @Column(name = "path")
     private String documentLocation;
     @Column(name="created")
     private LocalDateTime created;
@@ -33,11 +37,11 @@ public class CandidateFile implements Serializable {
     public CandidateFile() {
     }
 
-    public CandidateFile(Long fileID, String filename, String contenttype, String filesize,  String documentLocation, Candidate candidate, DocumentType documentType) {
+    public CandidateFile(Long fileID, String file_name, String content_type, String file_size, String documentLocation, Candidate candidate, DocumentType documentType) {
         this.fileID = fileID;
-        this.filename = filename;
-        this.contenttype = contenttype;
-        this.filesize = filesize;
+        this.file_name = file_name;
+        this.content_type = content_type;
+        this.file_size = file_size;
         this.documentLocation = documentLocation;
         this.candidate = candidate;
         this.documentType = documentType;
@@ -59,36 +63,36 @@ public class CandidateFile implements Serializable {
         this.fileID = fileID;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getFile_name() {
+        return file_name;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setFile_name(String filename) {
+        this.file_name = filename;
     }
 
-    public String getContenttype() {
-        return contenttype;
+    public String getContent_type() {
+        return content_type;
     }
 
-    public void setContenttype(String contenttype) {
-        this.contenttype = contenttype;
+    public void setContent_type(String contenttype) {
+        this.content_type = contenttype;
     }
 
-    public String getFilesize() {
-        return filesize;
+    public String getFile_size() {
+        return file_size;
     }
 
-    public void setFilesize(String filesize) {
-        this.filesize = filesize;
+    public void setFile_size(String filesize) {
+        this.file_size = filesize;
     }
 
-    public byte[] getFiledata() {
-        return filedata;
+    public byte[] getFile_data() {
+        return file_data;
     }
 
-    public void setFiledata(byte[] filedata) {
-        this.filedata = filedata;
+    public void setFile_data(byte[] filedata) {
+        this.file_data = filedata;
     }
 
     public String getDocumentLocation() {
@@ -119,9 +123,9 @@ public class CandidateFile implements Serializable {
     public String toString() {
         return "File{" +
                 "fileID=" + fileID +
-                ", filename='" + filename + '\'' +
-                ", contenttype='" + contenttype + '\'' +
-                ", filesize='" + filesize + '\'' +
+                ", filename='" + file_name + '\'' +
+                ", contenttype='" + content_type + '\'' +
+                ", filesize='" + file_size + '\'' +
                 ", documentLocation='" + documentLocation + '\'' +
                 ", candidate=" + candidate +
                 ", documentType=" + documentType +

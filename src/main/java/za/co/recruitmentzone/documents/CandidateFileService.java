@@ -78,4 +78,8 @@ public class CandidateFileService {
         return source.toLowerCase().contains(searchTerm.toLowerCase());
     }
 
+    public List<CandidateFile> getCandidateFiles(Long candidateID) {
+        log.info("<--- getCandidateFiles {} --->",candidateID);
+        return fileRepository.findByCandidateID(candidateID);
+    }
 }

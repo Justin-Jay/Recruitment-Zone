@@ -8,11 +8,11 @@ import za.co.recruitmentzone.employee.entity.EmployeeVerificationToken;
 public interface EmployeeVerificationTokenRepository extends JpaRepository<EmployeeVerificationToken, Long> {
     //    Optional<EmployeeVerificationToken> findEmployeeVerificationTokenByEmployeeName(String name);
 
-    @Query("SELECT t FROM EmployeeVerificationToken t JOIN t.employee e WHERE e.employeeID = :employeeId")
-    EmployeeVerificationToken findEmployeeVerificationTokenByEmployeeID(@Param("employeeId") Long employeeId);
+    @Query("SELECT t FROM EmployeeVerificationToken t JOIN t.employee e WHERE e.username = :username")
+    EmployeeVerificationToken findEmployeeVerificationTokenByEmployeeID(@Param("username") String username);
 
-    @Query("DELETE FROM EmployeeVerificationToken t WHERE t.employee.employeeID = :employeeId")
-    int deleteEmployeeVerificationTokenById(@Param("employeeId") Long employeeId);
+    @Query("DELETE FROM EmployeeVerificationToken t WHERE t.employee.username = :username")
+    int deleteEmployeeVerificationTokenById(@Param("username") String username);
 
 
 }

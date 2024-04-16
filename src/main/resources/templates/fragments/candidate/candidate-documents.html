@@ -16,18 +16,33 @@
 
 <div class="container-fluid">
     <div>
-        <div th:insert="fragments/layout/top-nav">Header</div>
+        <div th:insert="~{fragments/layout/top-nav}">Header</div>
     </div>
     <hr/>
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
 
-    <div>
-        <div th:replace="fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})"></div>
+    <p th:if="${message}" th:text="${message}"></p>
+
+    <p th:if="${createCandidateFileResponse}" th:text="${createCandidateFileResponse}"></p>
+
+    <p th:if="${loadCandidateResponse}" th:text="${loadCandidateResponse}"></p>
+
+    <!-- If-then-else -->
+    <div th:if="${loadCandidateResponse}">
+        <p>Error: <span th:text="${loadCandidateResponse}"></span></p>
+    </div>
+    <div th:else>
+        <!-- Display vacancy application -->
+        <div>
+<!-- OLD AND NEW UNWRAPPING BELLOW   -->
+<!--            <div th:replace="fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})"></div>-->
+            <div th:replace="~{fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})}"></div>
+        </div>
     </div>
 
+
     <div>
-        <!--    <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
-    -->
-        <!--th:fragment="add-note-fragment(candidateNote)"-->
+
         <div class="container-fluid" style="border: 1px solid #ddd; padding: 15px;" >
             <form action="#" th:action="@{/Candidate/upload-candidate-document}" th:object="${candidateFileDTO}" th:method="post"
                   enctype="multipart/form-data">
@@ -55,7 +70,7 @@
     </div>
     <div>
         <!--BOTTOM Navbar-->
-        <div th:insert="fragments/layout/bottom-nav">Footer</div>
+        <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
     </div>
 
 

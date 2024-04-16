@@ -2,16 +2,16 @@
       <main th:fragment="blogView(blog)">
         <article class="blog-post">
             <!-- Blog Title -->
-            <header class="blog-title" th:text="${blog.blog_title}">
+            <header class="blog-title" th:text="*{blog.blog_title}">
                 <!-- Customize metadata as needed -->
             </header>
 
             <!-- Blog Description -->
-            <section class="blog-description" th:text="${blog.blog_description}">
+            <section class="blog-description" th:text="*{blog.blog_description}">
             </section>
 
             <!-- Blog Body/Content -->
-            <section class="blog-content" th:text="${blog.body}">
+            <section class="blog-content" th:text="*{blog.body}">
                 <!-- Main content of your blog post -->
                 <!-- Add more content as needed, e.g., images, lists, etc. -->
             </section>
@@ -21,10 +21,14 @@
                 <!-- Additional elements like comment section, social media buttons, etc. can be added here -->
 
                 <!-- Publish Date -->
-                <p class="metadata publish-date" th:text="${blog.publish_date}">Publish Date: </p>
+                <p class="metadata publish-date" th:text="*{blog.publish_date}">Publish Date: </p>
 
                 <!-- Author -->
-                <p class="metadata author" th:text="${author}">Author: </p>
+
+                <!--DISPLAY ONLY NAME-->
+<!--                <td th:text="${vapp.candidate.first_name + ' '+ vapp.candidate.last_name}"></td>-->
+                <p class="metadata author" th:text="*{blog.employee.name}">Author: </p>
+
             </footer>
         </article>
 

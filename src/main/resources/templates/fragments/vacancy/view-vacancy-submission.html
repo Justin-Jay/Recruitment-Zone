@@ -15,11 +15,11 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
 
     <div class="container-fluid">
         <div id="vacancies-list">
-
+// findVacancyResponse
             <div class="container-fluid">
                 <h2>View Submissions</h2>
                 <hr/>
@@ -93,7 +93,7 @@
         <a class="nav-link" th:href="@{/Vacancy/vacancy-administration}">Back</a>
     </div>
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 <script type="text/javascript" th:src="@{/webjars/htmx.org/1.9.9/dist/htmx.min.js}"></script>

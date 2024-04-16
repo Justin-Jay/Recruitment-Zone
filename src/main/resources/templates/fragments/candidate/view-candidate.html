@@ -16,23 +16,37 @@
 
 <div class="container-fluid">
     <div>
-        <div th:insert="fragments/layout/top-nav">Header</div>
+        <div th:insert="~{fragments/layout/top-nav}">Header</div>
     </div>
     <hr/>
-    <div>
-        <div th:replace="fragments/candidate/candidate-fragments :: candidateView(${candidate})"></div>
+    <!-- If-then-else -->
+    <div th:if="${internalServerError}">
+        <p>Error: <span th:text="${internalServerError}"></span></p>
     </div>
 
-    <div>
-        <div th:replace="fragments/candidate/candidate-fragments :: existingNotes(${existingNotes})"></div>
+    <p th:if="${saveCandidateResponse}" th:text="${saveCandidateResponse}"></p>
+    <p th:if="${findCandidateByIDResponse}" th:text="${findCandidateByIDResponse}"></p>
+    <p th:if="${findCandidateNotesResponse}" th:text="${findCandidateNotesResponse}"></p>
+    <p th:if="${addCandidateNoteResponse}" th:text="${addCandidateNoteResponse}"></p>
+
+    <div th:else>
+        <div>
+            <div th:replace="~{fragments/candidate/candidate-fragments :: candidateView(${candidate})}"></div>
+        </div>
+
+        <div>
+            <div th:replace="~{fragments/candidate/candidate-fragments :: existingNotes(${existingNotes})}"></div>
+        </div>
+
+        <div>
+            <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
+        </div>
     </div>
 
-    <div>
-        <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
-    </div>
+
     <div>
         <!--BOTTOM Navbar-->
-        <div th:insert="fragments/layout/bottom-nav">Footer</div>
+        <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
     </div>
 
 

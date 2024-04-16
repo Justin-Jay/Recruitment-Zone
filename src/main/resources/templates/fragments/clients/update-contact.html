@@ -15,61 +15,74 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
 
     <div class="container-fluid"><h2>Update Client Contact Person Details</h2></div>
     <hr/>
-<div class="container-fluid">
-    <form action="#" th:action="@{/Client/save-updated-contact}" th:object="${contactPerson}" th:method="POST">
-        <!-- Hidden input field to include the vacancyID in the POST request -->
-        <input type="hidden" name="contactPersonID" th:field="${contactPerson.contactPersonID}" />
-        <br>
-        <div class="md-10">
-            <label for="name" >First name: </label>
-            <br>
-            <input type="text" th:field="*{first_name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
-        </div>
-        <br>
-        <div class="md-10">
-            <label for="name" >last Name: </label>
-            <br>
-            <input type="text" th:field="*{last_name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
-        </div>
-        <br>
-        <div class="md-10">
-            <label for="name" >Email Address: </label>
-            <br>
-            <input type="text" th:field="*{email_address}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
-        </div>
-        <br>
-        <div class="md-10">
-            <label for="name" >Designation: </label>
-            <br>
-            <input type="text" th:field="*{designation}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
-        </div>
-        <br>
-        <div class="md-10">
-            <label for="name" >Land Line: </label>
-            <br>
-            <input type="text" th:field="*{land_line}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
-        </div>
-        <br>
-        <div class="md-10">
-            <label for="name" >Cell Phone: </label>
-            <br>
-            <input type="text" th:field="*{cell_phone}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
-        </div>
-        <br>
-        <button type="submit" class="btn btn-primary">Save Updated Contact</button>
-    </form>
 
-</div>
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+
+    <!-- If-then-else -->
+    <div th:if="${contactPersonResponse}">
+        <p>Error: <span th:text="${contactPersonResponse}"></span></p>
+    </div>
+    <div th:else>
+        <!-- Display vacancy application -->
+        <div class="container-fluid">
+            <form action="#" th:action="@{/Client/save-updated-contact}" th:object="${contactPerson}" th:method="POST">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="contactPersonID" th:field="${contactPerson.contactPersonID}" />
+                <br>
+                <div class="md-10">
+                    <label for="first_name" >First name: </label>
+                    <br>
+                    <input type="text" th:field="*{first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="Name"/>
+                </div>
+                <br>
+                <div class="md-10">
+                    <label for="last_name" >last Name: </label>
+                    <br>
+                    <input type="text" th:field="*{last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Name"/>
+                </div>
+                <br>
+                <div class="md-10">
+                    <label for="email_address" >Email Address: </label>
+                    <br>
+                    <input type="text" th:field="*{email_address}" class="form-control mb-4 w-25" id="email_address" placeholder="Name"/>
+                </div>
+                <br>
+                <div class="md-10">
+                    <label for="designation" >Designation: </label>
+                    <br>
+                    <input type="text" th:field="*{designation}" class="form-control mb-4 w-25" id="designation" placeholder="Name"/>
+                </div>
+                <br>
+                <div class="md-10">
+                    <label for="land_line" >Land Line: </label>
+                    <br>
+                    <input type="text" th:field="*{land_line}" class="form-control mb-4 w-25" id="land_line" placeholder="Name"/>
+                </div>
+                <br>
+                <div class="md-10">
+                    <label for="cell_phone" >Cell Phone: </label>
+                    <br>
+                    <input type="text" th:field="*{cell_phone}" class="form-control mb-4 w-25" id="cell_phone" placeholder="Name"/>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Save Updated Contact</button>
+            </form>
+
+        </div>
+    </div>
+
+
+
 
     <div class="container-fluid">
         <a class="nav-link" th:href="@{/Client/client-administration}">Back to client admin</a>
     </div>
     <!--BOTTOM Navbar-->
-    <div th:insert="fragments/layout/bottom-nav">Footer</div>
+    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 

@@ -11,13 +11,14 @@ import static jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE;
 
 @Controller
 public class ErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
-    private static final Logger logger = LoggerFactory.getLogger(ErrorController.class);
+    private static final Logger log = LoggerFactory.getLogger(ErrorController.class);
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request) {
         Object status = request.getAttribute(ERROR_STATUS_CODE);
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());
-            logger.error("Error with status code {} occurred", statusCode);
+            log.error("Error {}", status);
+            log.error("Error with status code {} occurred", statusCode);
         }
         return "error";
     }

@@ -15,18 +15,22 @@
 <body>
 
 <div class="container-fluid">
-    <div th:insert="fragments/layout/top-nav">Header</div>
+    <div th:insert="~{fragments/layout/top-nav}">Header</div>
 
     <div class="container-fluid">
         <h3>Vacancies</h3>
+        <p th:if="${internalServerError}" th:text="${internalServerError}"> </p>
+        <p th:if="${loadVacanciesResponse}" th:text="${loadVacanciesResponse}"> </p>
+
         <hr>
-    <div th:insert="fragments/vacancy/vacancy">Vacancies</div>
+    <div th:insert="~{fragments/vacancy/vacancy}">Vacancies</div>
+        <p th:if="${saveVacancyResponse}" th:text="${saveVacancyResponse}"> </p>
     <a class="btn btn-primary btn-sm mb-3" th:href="@{/Vacancy/add-vacancy}">Add Vacancy</a>
     </div>
 
 
 <!--BOTTOM Navbar-->
-<div th:replace="fragments/layout/bottom-nav">Footer</div>
+<div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
 <script type="text/javascript"

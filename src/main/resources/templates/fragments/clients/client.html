@@ -13,12 +13,11 @@
     <tr th:each="client : ${clients}">
         <td th:text="${client.clientID}"></td>
         <td th:text="${client.name}"></td>
-
         <td th:text="${client.industry}"></td>
         <td>
             <form th:action="@{/Client/update-client}" th:method="post">
                 <!-- Hidden input field to include the id in the POST request -->
-                <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
+                <input type="hidden" name="clientID" th:value="${client.clientID}"/>
                 <!-- Submit button to trigger the form submission -->
                 <button type="submit" class="btn btn-primary">Update Client</button>
             </form>

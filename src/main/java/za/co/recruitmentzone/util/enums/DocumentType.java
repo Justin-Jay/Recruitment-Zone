@@ -5,5 +5,6 @@ public enum DocumentType {
     QUALIFICATION_CERTIFICATE,
     ID_DOCUMENT,
     DRIVERS_LICENCE,
-    PAYSLIP
+    PAYSLIP,
+    ROLE_PROFILE
 }

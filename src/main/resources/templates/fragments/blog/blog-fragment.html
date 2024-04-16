@@ -22,8 +22,7 @@
         <div class="fakeimg" style="height:200px;">Image</div>
         <h5 th:text="${blog.blog_description}">Description</h5>
         By
-      <!--  <table th:each="vApplication : ${vacancy.applications}">-->
-        <p th:text="${blog.employee}">Author:</p>
+        <p th:text="${blog.employee.name.substring(0,blog.employee.name.indexOf('@'))}">Author:</p>
 
         <hr>
         <form th:action="@{/Blog/view-blog}" th:method="post">

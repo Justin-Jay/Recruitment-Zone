@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 import za.co.recruitmentzone.util.enums.EmpType;
 import za.co.recruitmentzone.util.enums.Industry;
 import za.co.recruitmentzone.util.enums.JobType;
@@ -12,6 +13,7 @@ import za.co.recruitmentzone.util.enums.VacancyStatus;
 import java.time.LocalDate;
 
 
+@Data
 public class VacancyDTO {
     @NotEmpty(message = "Please enter job title")
     private String job_title;
@@ -59,117 +61,6 @@ public class VacancyDTO {
         this.vacancyID = vacancyID;
     }
 
-    public String getJob_title() {
-        return job_title;
-    }
-
-    public void setJob_title(String job_title) {
-        this.job_title = job_title;
-    }
-
-    public String getJob_description() {
-        return job_description;
-    }
-
-    public void setJob_description(String job_description) {
-        this.job_description = job_description;
-    }
-
-    public String getSeniority_level() {
-        return seniority_level;
-    }
-
-    public void setSeniority_level(String seniority_level) {
-        this.seniority_level = seniority_level;
-    }
-
-    public String getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(String requirements) {
-        this.requirements = requirements;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Industry getIndustry() {
-        return industry;
-    }
-
-    public void setIndustry(Industry industry) {
-        this.industry = industry;
-    }
-
-    public LocalDate getPublish_date() {
-        return publish_date;
-    }
-
-    public void setPublish_date(LocalDate publish_date) {
-        this.publish_date = publish_date;
-    }
-
-    public LocalDate getEnd_date() {
-        return end_date;
-    }
-
-    public void setEnd_date(LocalDate end_date) {
-        this.end_date = end_date;
-    }
-
-    public VacancyStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(VacancyStatus status) {
-        this.status = status;
-    }
-
-    public JobType getJobType() {
-        return jobType;
-    }
-
-    public void setJobType(JobType jobType) {
-        this.jobType = jobType;
-    }
-
-    public EmpType getEmpType() {
-        return empType;
-    }
-
-    public void setEmpType(EmpType empType) {
-        this.empType = empType;
-    }
-
-    public Long getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
-    }
-
-    public Long getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
-    }
-
-    public Long getVacancyID() {
-        return vacancyID;
-    }
-
-    public void setVacancyID(Long vacancyID) {
-        this.vacancyID = vacancyID;
-    }
 
     @Override
     public String toString() {

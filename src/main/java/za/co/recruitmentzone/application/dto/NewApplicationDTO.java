@@ -11,7 +11,7 @@ import za.co.recruitmentzone.util.enums.Province;
 
 public class NewApplicationDTO {
     private Long vacancyID;
-      private Long clientID;
+    private Long clientID;
     private String vacancyName;
     @NotEmpty(message = "First Name Is Mandatory")
     private String first_name;
@@ -21,7 +21,7 @@ public class NewApplicationDTO {
     private String id_number;
     @NotEmpty(message = " ")
     private String email_address;
-    @Size(min=10, max=10)
+    @Size(min = 10, max = 10)
     private String phone_number;
     @Enumerated(EnumType.STRING)
     private Province current_province;
@@ -58,7 +58,7 @@ public class NewApplicationDTO {
         this.cvFile = cvFile;
     }
 
-    public Long getClientID() {
+    public Long getclientID() {
         return clientID;
     }
 

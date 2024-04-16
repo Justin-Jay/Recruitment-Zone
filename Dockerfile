@@ -5,18 +5,12 @@ ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} RecruitmentZoneApplication.jar
 RUN java -Djarmode=layertools -jar RecruitmentZoneApplication.jar extract
 
-
-
 FROM eclipse-temurin:17-jre
 
 COPY --from=builder RecruitmentZone/dependencies/ ./
 COPY --from=builder RecruitmentZone/spring-boot-loader/ ./
 COPY --from=builder RecruitmentZone/snapshot-dependencies/ ./
 COPY --from=builder RecruitmentZone/application/ ./
-
-#RUN mkdir /scripts/
-#COPY recruitmentzonescript.sh /scripts/
-#RUN chmod +x /scripts/recruitmentzonescript.sh
 
 RUN mkdir -p /RecruitmentZoneApplication/Logs/
 

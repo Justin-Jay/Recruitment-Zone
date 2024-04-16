@@ -18,26 +18,31 @@ import java.util.Set;
 @Table(name = "VACANCY")
 public class Vacancy {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vacancyID;
+    @Column(name = "job_title")
     private String job_title;
+    @Column(name = "job_description", length = 65535)
     private String job_description;
+    @Column(name = "seniority_level")
     private String seniority_level;
+    @Column(name = "requirements", length = 65535)
     private String requirements;
+    @Column(name = "location")
     private String location;
     @Enumerated(EnumType.STRING)
     private Industry industry;
+    @Column(name = "publish_date")
     private LocalDate publish_date;
+    @Column(name = "end_date")
     private LocalDate end_date;
     @Enumerated(EnumType.STRING)
     private VacancyStatus status;
     @Enumerated(EnumType.STRING)
-    @Column(name ="job_type")
     private JobType jobType;
     @Enumerated(EnumType.STRING)
-    @Column(name ="emp_type")
     private EmpType empType;
-    @Column(name="created")
+    @Column(name = "created")
     private LocalDateTime created;
     @ManyToOne(
             cascade = {
@@ -45,18 +50,16 @@ public class Vacancy {
             })
     @JoinColumn(name = "clientid")
     private Client client;
-private Long theClientID;
+
     @ManyToOne(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "employeeID")
     private Employee employee;
 
-    private Long theEmpID;
-
     @OneToMany(mappedBy = "vacancy",
             cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
     private Set<Application> applications;
 
@@ -79,19 +82,21 @@ private Long theClientID;
     }
 
     public Long getTheClientID() {
-        return theClientID;
+        return client.getClientID();
     }
 
-    public void setTheClientID(Long theClientID) {
-        this.theClientID = theClientID;
-    }
 
     public Long getTheEmpID() {
-        return theEmpID;
+        return employee.getEmployeeID();
     }
 
-    public void setTheEmpID(Long theEmpID) {
-        this.theEmpID = theEmpID;
+    public void setTheClientID(Long id) {
+         client.setClientID(id);
+    }
+
+
+    public void setTheEmpID(Long id) {
+        employee.setEmployeeID(id);
     }
 
     public LocalDateTime getCreated() {
@@ -192,7 +197,6 @@ private Long theClientID;
     }
 
 
-
     public JobType getJobType() {
         return jobType;
     }
@@ -208,6 +212,7 @@ private Long theClientID;
     public void setClient(Client client) {
         this.client = client;
     }
+
     public Employee getEmployee() {
         return employee;
     }
@@ -245,7 +250,7 @@ private Long theClientID;
                 '}';
     }
 
-    public String printVacancy(){
+    public String printVacancy() {
         return "Vacancy{" +
                 "vacancyID=" + vacancyID +
                 ", job_title='" + job_title + '\'' +
@@ -257,8 +262,8 @@ private Long theClientID;
                 '}';
     }
 
-        public void addApplication(Application application){
-        if (applications ==null){
+    public void addApplication(Application application) {
+        if (applications == null) {
             applications = new HashSet<>();
         }
         applications.add(application);
