@@ -8,9 +8,9 @@
     <!-- Property placeholder directly in Logback configuration -->
     <property resource="application-${spring.profiles.active}.yml" />
 
-    <property name="LOG_ROOT" value=".logTesting"  />
+    <!--<property name="LOG_ROOT" value=".logTesting"  />-->
 
-  <!--  <property name="LOG_ROOT" value="${LOGS}"  />-->
+    <property name="LOG_ROOT" value="${LOGS}"  />
 
     <property name="LOG_FILE_NAME" value="RecruitmentZoneLogFile" />
 
