@@ -1,52 +1,104 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      lang="en">
+      lang="en" ><!--   data-bs-theme="dark"   -->
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" />
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
 <body>
+
+
 <div class="container-fluid">
-    <div class="container-fluid">
-        <div class="container-fluid">
-            <div class="row">
-                <!-- TOP Navbar -->
-                <div th:replace="~{fragments/layout/top-nav}">Header</div>
+    <!-- TOP Navbar -->
+    <div class="row">
+        <div class="container-fluid" id="navbar-top">
+            <div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="row">
+            <div class="col-12">
+                <h3> Admin </h3>
+
             </div>
         </div>
 
-        <div class="container-fluid">
-            <div class="row ">
-                <div class="float-end">
-                    <p th:if="${batchMessage}" th:text="${batchMessage}"></p>
-                    <h5>Start Batch Job</h5>
-                    <form th:action="@{/start-batch-job}" th:method="POST">
-                        <button type="submit">Start Batch</button>
-                    </form>
+
+        <!--MESSAGE AREA-->
+        <div class="row">
+            <div class="col-12">
+           <!-- PENDING MESSAGES -->
+                <br>
+            </div>
+        </div>
+
+
+
+        <div class="row 12 ">
+         <div class="container-fluid">
+             <p th:if="${batchMessage}" th:text="${batchMessage}"></p>
+             <h5>Start Batch Job</h5>
+             <form th:action="@{/start-batch-job}" th:method="POST">
+                 <button type="submit">Start Batch</button>
+             </form>
+         </div>
+        </div>
+
+
+        <div class="row 12 ">
+            <div class="container-fluid">
+                <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    Link with href
+                </a>
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                    Button with data-bs-target
+                </button>
+
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div>
+                            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+                        </div>
+                        <div class="dropdown mt-3">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-target="#targeting" data-bs-toggle="dropdown">
+                                Dropdown button
+                            </button>
+                            <ul class="dropdown-menu" id="targeting">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+    </div>
 
-        <div class="container-fluid">
-            <div class="row">
-                <!-- BOTTOM Navbar -->
-                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
-            </div>
+    <!--PAGE FOOTER-->
+    <div class="row">
+        <div class="container-fluid" id="navbar-bottom">
+            <!--BOTTOM Navbar-->
+            <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
         </div>
     </div>
-</div>
 
-<div class="container-fluid">
-    <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+    <div class="container-fluid">
+        <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+    </div>
 </div>
-
 </body>
 </html>

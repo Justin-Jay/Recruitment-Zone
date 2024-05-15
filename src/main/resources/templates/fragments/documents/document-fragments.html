@@ -1,4 +1,4 @@
-<table class="table table-bordered table-striped" th:fragment="documentSearchResults(results,term)">
+<table class="table table-bordered table-striped" th:fragment="documentSearchResults(resultList,term)">
     <thead class="table-dark">
     <tr>
         <th>File Name</th>
@@ -9,14 +9,11 @@
     </thead>
     <tbody>
     Displaying Search Results For<p th:text="${term}"></p>
-    <tr th:each="result : ${results}">
+    <tr th:each="result : ${resultList}">
         <td th:text="${result}"></td>
         <td>
-<!--            <a th:href="@{/download-document/{fileID}(fileID=${result.fileID})}" class="download-button">Download</a>-->
+<!--            <a th:href="@{/download-document/{fileID}(fileID=${result.fileID})}" class="download-button normal-button">Download</a>-->
         </td>
-
-
-
 
     </tr>
     </tbody>

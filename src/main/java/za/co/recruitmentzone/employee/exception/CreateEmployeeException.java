@@ -1,17 +1,14 @@
 package za.co.recruitmentzone.employee.exception;
 
-public class CreateEmployeeException extends Exception {
-    String failureReason;
+import za.co.recruitmentzone.exception.RzoneException;
 
-    public CreateEmployeeException(String failureReason) {
-        this.failureReason = failureReason;
+public class CreateEmployeeException extends RzoneException {
+
+    public CreateEmployeeException(String message) {
+        super(message);
+    }
+    public CreateEmployeeException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public String getFailureReason() {
-        return failureReason;
-    }
-
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
-    }
 }

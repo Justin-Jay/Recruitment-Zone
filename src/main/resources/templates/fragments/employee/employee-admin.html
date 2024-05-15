@@ -1,63 +1,131 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      lang="en">
+      lang="en"> <!--  data-bs-theme="dark" -->
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
 <body>
-<div class="container-fluid">
 
-    <div class="container-fluid">
+
+<!-- TOP Navbar -->
+<div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+
+
+<div class="container-fluid pt-2 pe-2" id="body-container">
+
+    <!--MAIN PAGE SECTION -->
+
+    <div class="row-12 ">
+
+        <!-- PAGE HEADING -->
+
         <div class="container-fluid">
-            <div class="row">
-                <!--TOP Navbar-->
-                <div th:replace="~{fragments/layout/top-nav}">Header</div>
-            </div>
+            <h3> Employee Administration
+
+            </h3>
+            <hr>
         </div>
 
+
+        <!--MESSAGE AREA-->
+
         <div class="container-fluid">
-            <p th:if="${message}" th:text="${message}"> </p>
-            <p th:if="${saveNewEmployeeResponse}" th:text="${saveNewEmployeeResponse}"> </p>
-            <p th:if="${internalServerError}" th:text="${internalServerError}"> </p>
-            <p th:if="${findEmployeeByIDResponse}" th:text="${findEmployeeByIDResponse}"> </p>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadEmployeesResponse})}"></div>
+        </div>
+
+        <!--PAGE CONTENT -->
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <!--LEFT PAGE COLUMN -->
+
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                    <div class="container-fluid left-page-frame" id="left-page-column">
+                        <form class="container d-none d-md-block" action="#" th:action="@{/Employee/add-employee}"
+                              th:method="post">
+
+                            <button class="btn btn-outline-secondary"
+                                    hx-post="/Employee/add-employee"
+                                    hx-target="#main-page-section"
+                                    hx-swap="innerHTML">Create Employee
+                            </button>
+                        </form>
+
+                        <br/>
 
 
-            <div class="container-fluid">
-                <div class="float-end">
-                    <a class="btn btn-primary btn-sm mb-3" th:href="@{/Employee/add-employee}">Add Employee</a>
+                        <div class=" my-card custom-border dropdown dropend" th:each="employee : ${employeeList}">
+
+                            <p th:text="*{employee.name}">
+                                Employee Name:</p>
+
+
+                            <p th:text="*{employee.enabled == true ? 'Employee Status: Active':'Not Active'}"
+                               th:value="${employee}"></p>
+
+                            <!--     <p th:text="*{'Status: ' + employee.enabled}"
+                                    th:value="${employee}"></p>-->
+
+                            <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Manage Employee
+                            </button>
+
+                            <div id="employee-admin-list"
+                                 th:insert="~{fragments/employee/employee-List :: listOptions(${employee})}">Employee
+                                Administration
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <!--    CENTER  PAGE COLUMN -->
+
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                    <div class="container-fluid " id="main-page-section">
+                        <!--RESPONSE TEMPLATE-->
+                        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveExistingEmployeeResponse})}"></div>
+
+                        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${passwordResetRequestResponse})}"></div>
+                    </div>
+                </div>
+
+                <!--RIGHT PAGE COLUMN -->
+
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                    <div class="container-fluid " id="right-page-column">
+
+                    </div>
                 </div>
             </div>
-            <div class="align-content-center">
-                <div id="employee-admin-table" th:replace="~{fragments/employee/employee}">Employee Administration</div>
-            </div>
+
 
         </div>
-        <hr/>
-        <div class="container-fluid">
-            <a class="nav-link" th:href="@{/}">Home</a>
-        </div>
-        <hr/>
-        <div class="container-fluid">
-            <div class="row">
-                <!--BOTTOM Navbar-->
-                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
-            </div>
-        </div>
+
     </div>
 
-
 </div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
+
+<!--BOTTOM Navbar-->
+<div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+
+<div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+
 </body>
 </html>

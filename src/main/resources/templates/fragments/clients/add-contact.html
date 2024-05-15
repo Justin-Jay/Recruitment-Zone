@@ -1,77 +1,50 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid right-page-frame">
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+    <h4 class="h4">Add Contact Person</h4>
+
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
 
-    <div class="container-fluid">
-        <h2>Add Contact Person</h2>
-    </div>
-    <hr/>
+    <form action="#" th:action="@{/Client/save-new-contact}" th:object="${contactPersonDTO}" th:method="POST">
+        <input type="hidden" name="clientID" th:value="${clientID}"/>
+        <label for="firstName">
+            First Name: <input type="text"  id="firstName" th:field="${contactPersonDTO.first_name}"
+                               placeholder="Contact Person First Name" class="form-control">
+        </label>
 
-    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+        <br/>
+        <label>
+            Last Name<input type="text" th:field="${contactPersonDTO.last_name}"
+                            placeholder="Last Name" class="form-control">
+        </label>
+        <br/>
+        <label>
+            Email Address<input type="text" th:field="${contactPersonDTO.email_address}"
+                                placeholder="Email Address" class="form-control">
+        </label>
+        <br/>
+        <label>
+            Land Line<input type="text" th:field="${contactPersonDTO.land_line}"
+                            placeholder="Land Line" class="form-control">
+        </label>
+        <br/>
+        <label>
+            Cell Phone<input type="text" th:field="${contactPersonDTO.cell_phone}"
+                             placeholder="Cell Phone Number" class="form-control">
+        </label>
+        <br/>
+        <label>
+            Contact Person Designation<input type="text" th:field="${contactPersonDTO.designation}"
+                                             placeholder="Designation" class="form-control">
+        </label>
+        <br/> <br/>
 
-    <div class="container-fluid">
-        <form action="#" th:action="@{/Client/save-new-contact}" th:object="${contactPersonDTO}" th:method="POST">
-            <input type="hidden" name="clientID" th:value="${clientID}"/>
-            <label for="firstName">
-                First Name: <input type="text"  id="firstName" th:field="${contactPersonDTO.first_name}"
-                       placeholder="Contact Person First Name" class="form-control">
-            </label>
-
-            <br/>
-            <label>
-                Last Name<input type="text" th:field="${contactPersonDTO.last_name}"
-                                placeholder="Last Name" class="form-control">
-            </label>
-            <br/>
-            <label>
-                Email Address<input type="text" th:field="${contactPersonDTO.email_address}"
-                                    placeholder="Email Address" class="form-control">
-            </label>
-            <br/>
-            <label>
-                Land Line<input type="text" th:field="${contactPersonDTO.land_line}"
-                                placeholder="Land Line" class="form-control">
-            </label>
-            <br/>
-            <label>
-                Cell Phone<input type="text" th:field="${contactPersonDTO.cell_phone}"
-                                 placeholder="Cell Phone Number" class="form-control">
-            </label>
-            <br/>
-            <label>
-                Contact Person Designation<input type="text" th:field="${contactPersonDTO.designation}"
-                                 placeholder="Designation" class="form-control">
-            </label>
-            <br/>
-
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Add To Client</button>
-        </form>
-    </div>
+        <button class="btn drop-down-button"
+                hx-post="/Client/save-new-contact"
+                hx-target="#right-page-column"
+                hx-swap="innerHTML"> Add To Client
+        </button>
 
 
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
-
+    </form>
 </div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

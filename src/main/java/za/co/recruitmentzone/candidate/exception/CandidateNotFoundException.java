@@ -1,15 +1,10 @@
 package za.co.recruitmentzone.candidate.exception;
 
-public class CandidateNotFoundException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class CandidateNotFoundException extends RzoneException {
     public CandidateNotFoundException(String message) {
         super(message);
     }
 
-    public CandidateNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public CandidateNotFoundException(Throwable cause) {
-        super(cause);
-    }
 }

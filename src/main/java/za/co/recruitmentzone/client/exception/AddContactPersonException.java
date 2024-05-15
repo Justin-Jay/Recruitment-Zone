@@ -1,6 +1,8 @@
 package za.co.recruitmentzone.client.exception;
 
-public class AddContactPersonException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class AddContactPersonException extends RzoneException {
 
     public AddContactPersonException(String message) {
         super(message);
@@ -10,7 +12,4 @@ public class AddContactPersonException extends RuntimeException {
         super(message, cause);
     }
 
-    public AddContactPersonException(Throwable cause) {
-        super(cause);
-    }
 }

@@ -1,60 +1,22 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section" >
 
-<div class="container-fluid">
-    <div>
-        <div th:insert="~{fragments/layout/top-nav}">Header</div>
-    </div>
-    <hr/>
-    <!-- If-then-else -->
-    <div th:if="${internalServerError}">
-        <p>Error: <span th:text="${internalServerError}"></span></p>
-    </div>
-
-    <p th:if="${saveCandidateResponse}" th:text="${saveCandidateResponse}"></p>
-    <p th:if="${findCandidateByIDResponse}" th:text="${findCandidateByIDResponse}"></p>
-    <p th:if="${findCandidateNotesResponse}" th:text="${findCandidateNotesResponse}"></p>
-    <p th:if="${addCandidateNoteResponse}" th:text="${addCandidateNoteResponse}"></p>
-
-    <div th:else>
-        <div>
-            <div th:replace="~{fragments/candidate/candidate-fragments :: candidateView(${candidate})}"></div>
-        </div>
-
-        <div>
-            <div th:replace="~{fragments/candidate/candidate-fragments :: existingNotes(${existingNotes})}"></div>
-        </div>
-
-        <div>
-            <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
-        </div>
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addCandidateNoteResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveCandidateResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
     </div>
 
 
     <div>
-        <!--BOTTOM Navbar-->
-        <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
+        <div th:replace="~{fragments/candidate/candidate-fragments :: candidateView(${candidate})}"></div>
     </div>
 
+    <div>
+        <div th:replace="~{fragments/candidate/candidate-fragments :: existingNotes(${existingNotes})}"></div>
+    </div>
 
+    <div>
+        <div th:replace="~{fragments/candidate/candidate-fragments :: add-note-fragment(${candidateNote})}"></div>
+    </div>
 </div>
 
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

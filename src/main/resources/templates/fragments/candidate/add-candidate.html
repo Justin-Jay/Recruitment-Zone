@@ -1,42 +1,26 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section">
 
-<div class="container-fluid">
-    <div class="container-fluid">
-        <div th:insert="~{fragments/layout/top-nav}">Header</div>
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${fileUploadError})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createCandidateResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
     </div>
-    <p th:if="${fileUploadError}" th:text="${fileUploadError}"></p>
 
-    <p th:if="${createCandidateResponse}" th:text="${createCandidateResponse}"></p>
 
-    <!-- If-then-else -->
-    <div th:if="${internalServerError}">
-        <p>Error: <span th:text="${internalServerError}"></span></p>
-    </div>
-    <div th:else>
-        <!-- Display vacancy application -->
-        <form action="#" th:action="@{/Candidate/create-application}" th:object="${newApplicationDTO}"
-              th:method="POST" enctype="multipart/form-data">
-            <!-- Debug statement in Thymeleaf template -->
+
+    <form action="#" th:action="@{/Candidate/create-application}" th:object="${newApplicationDTO}"
+          th:method="POST" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+
+        <div class="form-group">
 
             <label for="vacancyID">Select a Vacancy:</label>
+            <p th:if="${loadVacanciesResponse}" th:text="${loadVacanciesResponse}"></p>
 
-            <select name="vacancyID" id="vacancyID">
-                <option th:each="v : ${vacancies}" th:value="${v.vacancyID}" th:text="${v.job_title}"></option>
+            <select class="form-select-sm" aria-label=".form-select-sm"  name="vacancyID" id="vacancyID">
+                <option th:each="v : ${vacancyList}" th:value="${v.vacancyID}" th:text="${v.job_title}"></option>
             </select>
+
             <br>
             <label for="FirstName">
                 First Name:
@@ -69,11 +53,11 @@
                    class="form-control mb-4 w-25"/>
 
             <label for="currentProvince">Current Location:
-                <select id="currentProvince" th:field="${newApplicationDTO.current_province}">
-                    <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
-                            th:value="${province}" th:text="${province}"></option>
-                </select>
             </label>
+            <select class="form-select-sm" aria-label=".form-select-sm"  id="currentProvince" th:field="${newApplicationDTO.current_province}">
+                <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
+                        th:value="${province}" th:text="${province}"></option>
+            </select>
             <br/>
             <br/>
             <label for="CurrentRole">
@@ -98,11 +82,11 @@
                    class="form-control mb-4 w-25">
 
             <label for="EduLevel">Highest Education Level:
-                <select id="EduLevel" th:field="${newApplicationDTO.education_level}">
-                    <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
-                            th:value="${statusVal}" th:text="${statusVal}"></option>
-                </select>
             </label>
+            <select class="form-select-sm" aria-label=".form-select-sm" id="EduLevel" th:field="${newApplicationDTO.education_level}">
+                <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
+                        th:value="${statusVal}" th:text="${statusVal}"></option>
+            </select>
             <br/>
             <br/>
             <label>Willing to relocate?</label>
@@ -119,30 +103,24 @@
                 <label class="form-check-label" for="relocationNo">No</label>
             </div>
             <br/> <br/>
-            <label for="cvAttachment">
+            <label for="documentAttachment">
                 Attach CV:
             </label>
-            <input th:type="file" name="cvFile" th:value="${newApplicationDTO.cvFile}" id="cvAttachment"
+            <input th:type="file" name="documentAttachment" th:value="${newApplicationDTO.documentAttachment}"
+                   id="documentAttachment"
                    class="form-control mb-4 w-25"/>
 
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>
-        </form>
-    </div>
+            <!-- <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>-->
 
+            <button class="btn normal-button"
+                    hx-post="/Candidate/create-application"
+                    hx-target="#body-container"
+                    hx-swap="innerHTML"
+                    hx-include="[newApplicationDTO='newApplicationDTO']">Submit Application
+            </button>
+
+
+        </div>
+    </form>
 
 </div>
-
-
-<div class="container-fluid">
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
-
-</div>
-
-</div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

@@ -73,25 +73,28 @@
     </div>
 
 
-
     <!-- Repeat this structure for other candidate information -->
 
     <div>
-        <label>View Documents:</label>
         <form th:action="@{/Candidate/view-candidate-documents}" th:method="post">
             <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
-            <button type="submit" class="btn btn-primary">View Docs</button>
+
+            <button class="btn normal-button"
+                    hx-post="/Candidate/view-candidate-documents"
+                    hx-target="#right-page-column"
+                    hx-swap="innerHTML"
+                    hx-include="[candidateID='candidateID']">View Documents
+            </button>
         </form>
     </div>
     <br>
 </div>
 
-<!-- | TRY THIS | -->
 
 <div class="container-fluid" th:fragment="existingNotes(existingNotes)">
     <h2>Candidate Comments</h2>
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
+    <table class="table ">
+        <thead>
         <tr>
             <th>Date Captured</th>
             <th>Comment</th>
@@ -111,64 +114,49 @@
 </div>
 
 
-<div class="container-fluid" th:fragment="add-note-fragment(candidateNote)">
-    <form action="#" th:action="@{/Candidate/save-candidate-note}" th:object="${candidateNote}"
+<div class="container-fluid" th:fragment="add-note-fragment(candidateNoteDTO)">
+    <form action="#" th:action="@{/Candidate/save-candidate-note}" th:object="${candidateNoteDTO}"
           th:method="post">
         <div class="form-group">
             <!-- Hidden input field to include the candidateID in the POST request -->
-            <input type="hidden" name="candidateID" th:field="${candidateNote.candidateID}" th:value="${candidateID}" />
-            <p th:text="${noteSaved} ? 'Note Saved' : ''"></p>
+            <input type="hidden" name="candidateID" th:field="${candidate.candidateID}"
+                   th:value="${candidate.candidateID}"/>
+            <div th:insert="~{fragments/layout/response-messages :: successMessage(${noteSaved})}"></div>
 
-            <hr/>
             <label for="comment">
                 Comment:
             </label>
-            <textarea class="form-control mb-4 text-black-50" th:field="${candidateNote.comment}" id="comment"></textarea>
+            <textarea class="form-control mb-4 text-black-50" th:field="${candidateNoteDTO.comment}"
+                      id="comment"></textarea>
         </div>
-        <!-- Submit button to trigger the form submission -->
-        <button type="submit" class="btn btn-primary">Add Note</button>
+
+        <button class=" btn normal-button"
+                hx-post="/Candidate/save-candidate-note"
+                hx-target="#main-page-section"
+                hx-swap="innerHTML"
+                hx-include="[candidateID='candidateID']">Add Note
+        </button>
+
+
     </form>
 </div>
 
 
 <div class="container-fluid" th:fragment="existingDocuments(existingDocuments)">
-    <ul class="key-value-list"  th:each="document : ${existingDocuments}">
-        <li class="key-value-item"  >
-            <span>Document Type</span>
-            <span th:text="${document.documentType}"></span>
-        </li>
 
-    <!--    <li class="key-value-item"  >
-            <span>Location Stored</span>
-            <span th:text="${document.documentLocation}"></span>
-        </li>-->
+    <p th:if="${findCandidateDocumentsResponse}" th:text="${findCandidateDocumentsResponse}"></p>
 
-        <li class="key-value-item">
-            <a th:href="@{/Document/download-document/{fileID}(fileID=${document.fileID})}" class="download-button">Download</a>
+    <ol class="list-group" th:each="document, documentIndex : ${existingDocuments}">
+        <li class="list-group-item" >
+            <p th:text="${'Document Number: '+ documentIndex.index }"></p>
+            <p th:text="${'Document Type: ' + document.convertDocType}"></p>
+            <a class="download-button btn btn-light btn-outline-dark"
+               th:href="@{/Document/download-document/{fileID}(fileID=${document.fileID})}">
+                Download
+            </a>
         </li>
-    </ul>
+    </ol>
+
+
 </div>
 
-<table class="table table-bordered table-striped" th:fragment="candidateTable(candidates)">
-    <thead class="table-dark">
-    <tr>
-        <th>Candidate ID</th>
-        <th>Candidate Name</th>
-        <th>View Candidate</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="candidate : ${candidates}">
-        <td th:text="${candidate.candidateID}"></td>
-        <td th:text="${candidate.first_name}"></td>
-        <td>
-            <form th:action="@{/Candidate/view-candidate}" th:method="post">
-                <!-- Hidden input field to include the vacancyID in the POST request -->
-                <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
-                <!-- Submit button to trigger the form submission -->
-                <button type="submit" class="btn btn-primary">View Candidate</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>

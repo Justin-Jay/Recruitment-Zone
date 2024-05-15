@@ -10,11 +10,12 @@ import za.co.recruitmentzone.util.enums.Industry;
 import za.co.recruitmentzone.util.enums.JobType;
 import za.co.recruitmentzone.util.enums.VacancyStatus;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 
 @Data
-public class VacancyDTO {
+public class VacancyDTO implements Serializable {
     @NotEmpty(message = "Please enter job title")
     private String job_title;
     @NotEmpty(message = "Please enter job description")

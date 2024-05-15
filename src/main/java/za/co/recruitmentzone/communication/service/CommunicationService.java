@@ -4,19 +4,16 @@ package za.co.recruitmentzone.communication.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import za.co.recruitmentzone.communication.entity.AdminContactMessage;
 import za.co.recruitmentzone.communication.entity.ContactMessage;
-import za.co.recruitmentzone.communication.entity.RegistrationMessage;
-
-import java.util.Properties;
+import za.co.recruitmentzone.communication.events.RegistrationMessageEvent;
+import za.co.recruitmentzone.employee.entity.Employee;
 
 
 @Slf4j
@@ -95,7 +92,7 @@ public class CommunicationService {
         }
     }
 
-    public boolean sendRegistrationEmail(RegistrationMessage message) {
+    public boolean sendRegistrationEmail(RegistrationMessageEvent message) {
         log.info("<---SEND REGISTRATION EMAIL --->");
         log.info(" RegistrationMessage {}",message);
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -128,6 +125,84 @@ public class CommunicationService {
         }
     }
 
+    public void sendAdminNotification(AdminContactMessage message) {
+        log.info(" AdminContactMessage {}",message.printAdminContactMessage());
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        try {
+            helper.setFrom(rzoneMailAddress);
+            helper.setTo(message.getEventToEmail());
+            helper.setSubject(message.getSubject());
+            helper.setText(message.getMessageBody());
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            log.info(e.getMessage());
+        }
+    }
 
+
+
+    /*
+
+
+
+      String mailContent = "<p> Hi, " + employee.getFirst_name() + ", </p>" +
+                "<p><b>You recently requested to reset your password,</b>" + "\n" +
+                "Please, follow the link below to complete the action.</p>" +
+                "<a href=\"" + url + "\">Reset password</a>" +
+                "<p> Users Registration Portal Service";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        var messageHelper = new MimeMessageHelper(message);
+        messageHelper.setFrom("localtestaccount@kiunga.co.za", senderName);
+        messageHelper.setTo(theUser.getEmail());
+        messageHelper.setSubject(subject);
+        messageHelper.setText(mailContent, true);
+        mailSender.send(message);
+
+
+
+
+
+
+
+
+
+
+  */
+
+ /*   public void sentPasswordResetRequestEmail(Employee employee, String url) {
+        log.info("<---AUTO EMAIL RESPONSE --->");
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        //log.info("<- to - subject - userName - userEmail - userQuery - >");
+        log.info("< sendAutoResponse - {}, {}, {},{},{}>",to,subject,userName,userEmail,userQuery);
+        try {
+            helper.setFrom(rzoneMailAddress);
+            helper.setTo(to);
+            helper.setSubject(subject);
+
+            Context context = new Context();
+            context.setVariable("User", userName);
+            context.setVariable("UserEmail", userEmail);
+
+
+
+            context.setVariable("url", url);
+
+
+
+            String emailContent = templateEngine.process("emailTemplates/password-reset", context);
+            helper.setText(emailContent, true);
+
+            javaMailSender.send(mimeMessage);
+            log.info("<---AUTO EMAIL RESPONSE SUCCESS MESSAGE SENT--->");
+
+        } catch (MessagingException e) {
+            log.info("<---AUTO EMAIL RESPONSE FAILED--->");
+            log.info(e.getMessage());
+            // Handle exception (log or throw custom exception)
+        }
+    }*/
 
 }

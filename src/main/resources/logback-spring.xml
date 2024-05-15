@@ -3,16 +3,16 @@
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml">
     </include>
-    <springProperty scope="context" name="spring.profiles.active" source="spring.profiles.active" />
+    <springProperty scope="context" name="spring.profiles.active" source="spring.profiles.active"/>
 
     <!-- Property placeholder directly in Logback configuration -->
-    <property resource="application-${spring.profiles.active}.yml" />
+    <property resource="application-${spring.profiles.active}.yml"/>
 
     <!--<property name="LOG_ROOT" value=".logTesting"  />-->
 
-    <property name="LOG_ROOT" value="${LOGS}"  />
+    <property name="LOG_ROOT" value="${LOGS}"/>
 
-    <property name="LOG_FILE_NAME" value="RecruitmentZoneLogFile" />
+    <property name="LOG_FILE_NAME" value="RecruitmentZoneLogFile"/>
 
     <appender name="RollingFile"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -30,36 +30,41 @@
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
+
         <encoder>
-            <pattern> %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
-      <!--  <encoder>
-            <pattern> %d{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -&#45;&#45; [%8.15t] %-40.40logger{39} : %X{REQUEST_ID} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%throwable}</pattern>
-        </encoder>-->
+        <!--  <encoder>
+              <pattern> %d{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -&#45;&#45; [%8.15t] %-40.40logger{39} : %X{REQUEST_ID} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%throwable}</pattern>
+          </encoder>-->
 
     </appender>
 
-        <appender name="Console"
+    <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern> %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
-           <!-- <pattern> %d{ISO8601} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -&#45;&#45; [%8.15t] %-40.40logger{39} : %X{REQUEST_ID} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%throwable}
-            </pattern>-->
 
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%t] %highlight(%-5level) %logger{36} - %highlight(%msg%n)</pattern>
         </layout>
+
+
     </appender>
 
     <!-- LOG everything at INFO level -->
-    <root level="info">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
-    </root>
-
-    <!-- LOG "za.co.recruitmentzone*" at TRACE level -->
-    <logger name="za.co.recruitmentzone" level="info" additivity="false">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
+    <!-- Log your thymeleaf at off level -->
+    <logger name="org.thymeleaf" level="off" additivity="false">
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
     </logger>
-
+    <!-- Log your springframework at off level -->
+    <logger name="org.springframework" level="info" additivity="false">
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
+    </logger>
+    <!-- Log your recruitmentzone at TRACE level -->
+    <logger name="za.co.recruitmentzone" level="trace" additivity="false">
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
+    </logger>
 
 </configuration>

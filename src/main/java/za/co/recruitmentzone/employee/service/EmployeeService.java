@@ -4,13 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import za.co.recruitmentzone.application.exception.ApplicationsNotFoundException;
 import za.co.recruitmentzone.employee.events.EmployeeEventPublisher;
 import za.co.recruitmentzone.employee.entity.Authority;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.employee.dto.EmployeeDTO;
+import za.co.recruitmentzone.employee.exception.EmployeeNotFoundException;
+import za.co.recruitmentzone.employee.exception.EmployeeNotSavedException;
 import za.co.recruitmentzone.employee.exception.UserAlreadyExistsException;
 import za.co.recruitmentzone.employee.repository.EmployeeRepository;
 import za.co.recruitmentzone.util.enums.ROLE;
+
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -39,7 +43,7 @@ public class EmployeeService {
     }
 
     public Employee saveNewEmployee(EmployeeDTO employeeDTO, String applicationURL) throws UserAlreadyExistsException {
-        log.info("<--  saveNewEmployee employeeDTO {}  applicationURL {} -->", employeeDTO, applicationURL);
+        log.info("<--  saveNewEmployee employeeDTO {}  applicationURL {} -->", employeeDTO.printEmployeeDTO(), applicationURL);
         String userName = createUserNameAndEmail(employeeDTO.getFirst_name(), employeeDTO.getLast_name());
         Optional<Employee> employeeOptional = employeeRepository.findEmployeeByEmailIgnoreCase(userName);
         Employee newEmp = new Employee();
@@ -48,7 +52,7 @@ public class EmployeeService {
             log.info("<--  saveNewEmployee - user already exists -->");
             throw new UserAlreadyExistsException("User Already Exists");
         } else {
-            log.info("<--  saveNewEmployee - New Employee Registration-->");
+            log.info("<-- saveNewEmployee - New Employee Registration -->");
             newEmp.setFirst_name(employeeDTO.getFirst_name().strip());
             newEmp.setPassword(employeeDTO.getPassword());
             newEmp.setLast_name(employeeDTO.getLast_name());
@@ -56,8 +60,10 @@ public class EmployeeService {
             newEmp.setUsername(userName);
             newEmp.setEmail(userName);
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now().format(formatter));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String timestampString = LocalDateTime.now().format(formatter);
+            Timestamp timestamp = Timestamp.valueOf(timestampString);
+
             newEmp.setCreated(timestamp);
 
             String role = employeeDTO.getRole();
@@ -66,7 +72,7 @@ public class EmployeeService {
             newEmp.addAuthority(new Authority(chosenRole));
 
             Employee emp = employeeRepository.save(newEmp);
-            log.info("Employee Created {}", emp);
+            log.info("Employee Created {}", emp.printEmployee());
             // publish new employee Event
             eventPublisher.publishNewEmployeeEvent(emp, applicationURL);
             log.info("<--  saveNewEmployee - publishNewEmployeeEvent Done-->");
@@ -75,7 +81,7 @@ public class EmployeeService {
     }
 
     public ROLE getRole(String name) {
-        log.info("<--  getRole - name {} -->",name);
+        log.info("<--  getRole - name {} -->", name);
         ROLE role = null;
         switch (name) {
             case "ROLE_ADMIN" -> {
@@ -100,36 +106,58 @@ public class EmployeeService {
                 .collect(Collectors.toSet());
     }
 
-    public Employee saveUpdatedEmployee(Employee updated) {
-        log.info("<--  saveUpdatedEmployee - employee {} -->",updated);
-        Employee employee = null;
-        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByName(updated.getName());
-        if (optionalEmployee.isPresent()) {
-            log.info("<--  saveUpdatedEmployee - optionalEmployee.isPresent {} -->",updated);
-            employee = optionalEmployee.get();
-            if (!updated.getFirst_name().equalsIgnoreCase(employee.getFirst_name())) {
-                employee.setFirst_name(updated.getFirst_name());
+    public boolean saveUpdatedEmployee(Employee updated) {
+        log.info("<--  saveUpdatedEmployee - employee {} -->", updated.printEmployee());
+
+//        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByUsername(updated.getUsername());
+        Employee optionalEmployee = findEmployeeByID(updated.getEmployeeID());
+        if (optionalEmployee != null) {
+            log.info("<--  saveUpdatedEmployee - optionalEmployee.isPresent {} -->", updated);
+
+            if (!updated.getFirst_name().equalsIgnoreCase(optionalEmployee.getFirst_name())) {
+                optionalEmployee.setFirst_name(updated.getFirst_name());
             }
 
-            if (!updated.getContact_number().equalsIgnoreCase(employee.getContact_number())) {
-                employee.setContact_number(updated.getContact_number());
+            if (!updated.getContact_number().equalsIgnoreCase(optionalEmployee.getContact_number())) {
+                optionalEmployee.setContact_number(updated.getContact_number());
             }
 
-            if (!updated.getLast_name().equalsIgnoreCase(employee.getLast_name())) {
-                employee.setLast_name(updated.getLast_name());
+            if (!updated.getLast_name().equalsIgnoreCase(optionalEmployee.getLast_name())) {
+                optionalEmployee.setLast_name(updated.getLast_name());
             }
 
-        }
-        return employeeRepository.save(employee);
+            optionalEmployee.setEmail(
+                    createUserNameAndEmail(optionalEmployee.getFirst_name(), optionalEmployee.getLast_name())
+            );
+
+            Employee e = employeeRepository.save(optionalEmployee);
+
+            if (e != null) {
+                return true;
+            } else throw new EmployeeNotSavedException("Employee not found");
+
+        } else throw new EmployeeNotFoundException("Employee not found");
+
     }
 
+    public boolean enableEmployee(Employee employee) {
+        try {
+            employee.setEnabled(true);
+            employeeRepository.save(employee);
+        }
+        catch (Exception e) {
+            log.info("<--  enableEmployee - exception {}", e.getMessage());
+        }
+        return true;
+    }
 
     public String createUserNameAndEmail(String firstName, String LastName) {
         return firstName + "." + LastName + "@" + domainDotZa;
     }
 
-    public Optional<Employee> getEmployeeByEmail(String username) {
-        return employeeRepository.findEmployeeByEmailIgnoreCase(username);
+    public Employee getEmployeeByEmail(String username) {
+        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByEmailIgnoreCase(username);
+        return optionalEmployee.orElse(null);
     }
 
 
@@ -139,19 +167,22 @@ public class EmployeeService {
 
     public Employee getEmployeeByid(Long employeeID) {
         Optional<Employee> op = employeeRepository.findById(employeeID);
-        return op.orElse(null);
+        return op.orElseThrow(() -> new EmployeeNotFoundException("<--- getEmployeeByid Employee Not Found: " + employeeID + "--->"));
     }
 
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);
     }
 
-    public Employee findEmployeeByName(String name) {
-        Optional<Employee> op = employeeRepository.findEmployeeByName(name);
-        if (op.isPresent()) {
-            return op.get();
-        }
-        return null;
+    public Employee findEmployeeByUsername(String username) {
+        Optional<Employee> op = employeeRepository.findEmployeeByUsername(username);
+        return op.orElseThrow(() -> new EmployeeNotFoundException("Employee Not found " + username));
     }
+
+    public Employee findEmployeeByID(Long id) {
+        Optional<Employee> op = employeeRepository.findById(id);
+        return op.orElseThrow(() -> new EmployeeNotFoundException("EmployeeID Not found " + id));
+    }
+
 
 }

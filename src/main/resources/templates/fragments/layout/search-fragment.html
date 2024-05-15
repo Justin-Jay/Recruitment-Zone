@@ -1,0 +1,11 @@
+<div th:fragment="search">
+    <form class="d-flex" role="search" th:action="@{/Vacancy/search-vacancies}" th:method="POST">
+        <label for="vacancyTitle"></label>
+        <input class="form-control me-2" type="search" name="title" id="vacancyTitle"
+               placeholder="Search...">
+        <button class="btn" type="submit"
+                hx-post="/Vacancy/search-vacancies"
+                hx-target="#vacancy-list-section">Search
+        </button>
+    </form>
+</div>

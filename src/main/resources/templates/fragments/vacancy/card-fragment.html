@@ -1,12 +1,29 @@
-<div class="card-body" th:fragment="vacancyCard(vacancy)">
-    <h5 class="card-title" th:text="${vacancy.job_title}"></h5>
+<div class="m-2">
+    <img src="https://picsum.photos/450/300" class="card-img-top"  alt="img"> <!-- class="img-fluid" -->
+ <!--   <img src="/images/unsplash.jpg" class="card-img-top"  alt="img"/>
+-->
+
+    <h5 class="card-title" th:text="${vacancy.job_title}">Title</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Location: ' + vacancy.location}">Location</h6>
+    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Publish Date: ' + vacancy.publish_date}">Publish Date</h6>
+    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Closing Date: ' + vacancy.end_date}">End Date</h6>
+    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Contract Type: ' + vacancy.jobType}">Contract Type</h6>
+    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Time: ' + vacancy.empType}">Contract Type</h6>
+    <!--   Hybrid ? ,  -->
+
+    <p class="card-text" >Job Description: </p>
     <p class="card-text" th:text="${vacancy.job_description}"></p>
-    <p class="card-text" th:text="${vacancy.seniority_level}"></p>
-    <!-- Add more fields as needed -->
+
     <form th:action="@{/Application/apply-now}" th:method="post">
         <!-- Hidden input field to include the vacancyID in the POST request -->
-        <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/> 
-        <!-- Submit button to trigger the form submission -->
-        <button type="submit" class="btn btn-primary">Apply Now</button>
+        <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
+
+        <button class="btn btn-primary"
+                hx-post="/Vacancy/view-home-vacancy"
+                hx-target="#main-page-section"
+                hx-swap="outtaHTML"
+                hx-include="[vacancyID='vacancyID']">View Vacancy
+        </button>
     </form>
+
 </div>

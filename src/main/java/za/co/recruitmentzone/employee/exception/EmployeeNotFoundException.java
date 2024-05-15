@@ -1,6 +1,9 @@
 package za.co.recruitmentzone.employee.exception;
 
-public class EmployeeNotFoundException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class EmployeeNotFoundException extends RzoneException {
+
     public EmployeeNotFoundException(String message) {
         super(message);
     }
@@ -9,7 +12,4 @@ public class EmployeeNotFoundException extends RuntimeException {
         super(message, cause);
     }
 
-    public EmployeeNotFoundException(Throwable cause) {
-        super(cause);
-    }
 }

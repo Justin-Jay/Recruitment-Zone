@@ -30,7 +30,7 @@ spring:
     #database-platform: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         globally_quoted_identifiers: true
   datasource:
     username: ${MYSQL_USER}
@@ -73,4 +73,23 @@ domain:
   co:
     za: ${DOMAIN}
 
-LOGS: /RecruitmentZoneApplication/Logs/
+LOGS: ${LOG_PATH}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["prometheus"]
+
+storage:
+  bucket: ${BUCKET_NAME}
+
+KEY_DIR: ${KEY_DIR}
+
+event:
+  to:
+    email: ${EVENT_MAIL_BOX}
+
+google:
+  storage:
+    pre: ${G_PRE_PATH}

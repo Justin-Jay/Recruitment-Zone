@@ -1,66 +1,46 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section">
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findBlogResponse})}"></div>
+    </div>
 
 
-    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
-    <p th:if="${findBlogResponse}" th:text="${findBlogResponse}"></p>
-
-
-    <div class="container-fluid"><h2>Update Blog</h2></div>
-    <hr/>
-<div class="container-fluid">
     <form action="#" th:action="@{/Blog/save-updated-blog}" th:object="${blog}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
-        <input type="hidden" name="blogID" th:field="*{blogID}" />
+        <input type="hidden" name="blogID" th:field="*{blogID}"/>
         <div class="md-10">
-            <label for="title"  >Blog Title: </label>
-            <input type="text" th:field="*{blog_title}" class="form-control mb-4 w-25" id="title" placeholder="Blog Title"/>
+            <label for="title">Blog Title: </label>
+            <input type="text" th:field="*{blog_title}" class="form-control mb-4 w-25" id="title"
+                   placeholder="Blog Title"/>
 
-            <label for="description"  >Blog Description: </label>
-            <input type="text" th:field="*{blog_description}" class="form-control mb-4 w-25" id="description" placeholder="Blog Title"/>
+            <label for="description">Blog Description: </label>
+            <input type="text" th:field="*{blog_description}" class="form-control mb-4 w-25" id="description"
+                   placeholder="Blog Title"/>
 
-            <label for="body"  >Body: </label>
-            <textarea class="form-control" th:field="*{body}"  id="body" placeholder="Blog Body"></textarea>
-
-
-            <label for="publish_date"  >Publish Date: </label>
-            <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date" placeholder="Publish Date"/>
+            <label for="body">Body: </label>
+            <textarea class="form-control" th:field="*{body}" id="body" placeholder="Blog Body"></textarea>
 
 
-            <label for="expirationDate"  >Expiration Date: </label>
-            <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate" placeholder="Expiration Date:"/>
+            <label for="publish_date">Publish Date: </label>
+            <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date"
+                   placeholder="Publish Date"/>
+
+
+            <label for="expirationDate">Expiration Date: </label>
+            <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate"
+                   placeholder="Expiration Date:"/>
 
         </div>
-        <button type="submit" class="btn btn-primary">Save Updated Blog</button>
+
+        <!--    <button type="submit" class="btn">Save Updated Blog</button>-->
+
+        <button class="btn normal-button"
+                hx-post="/Blog/save-updated-blog"
+                hx-target="#main-page-section"
+                hx-swap="innerHTML"> Save Updated Blog
+        </button>
+
     </form>
 
 </div>
-
-
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
-
-</div>
-
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

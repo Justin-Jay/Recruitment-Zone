@@ -5,11 +5,13 @@ import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.util.enums.EducationLevel;
 import za.co.recruitmentzone.util.enums.Province;
+
+import java.io.Serializable;
 //    @NotEmpty(message = "Please enter job title")
 //   @FutureOrPresent(message = "Date cannot be in the past")
 //  @Future(message = "Date must be in the future")
 
-public class NewApplicationDTO {
+public class NewApplicationDTO implements Serializable {
     private Long vacancyID;
     private Long clientID;
     private String vacancyName;
@@ -35,13 +37,13 @@ public class NewApplicationDTO {
     private EducationLevel education_level;
     private Boolean relocation;
     @Transient
-    private MultipartFile cvFile;
+    private MultipartFile documentAttachment;
 
     public NewApplicationDTO() {
     }
 
     public NewApplicationDTO(Long vacancyID, String vacancyName, String first_name, String last_name,
-                             String id_number, String email_address, String phone_number, Province current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, MultipartFile cvFile) {
+                             String id_number, String email_address, String phone_number, Province current_province, String current_role, String current_employer, String seniority_level, EducationLevel education_level, Boolean relocation, MultipartFile documentAttachment) {
         this.vacancyID = vacancyID;
         this.vacancyName = vacancyName;
         this.first_name = first_name;
@@ -55,7 +57,7 @@ public class NewApplicationDTO {
         this.seniority_level = seniority_level;
         this.education_level = education_level;
         this.relocation = relocation;
-        this.cvFile = cvFile;
+        this.documentAttachment = documentAttachment;
     }
 
     public Long getclientID() {
@@ -170,30 +172,22 @@ public class NewApplicationDTO {
         this.relocation = relocation;
     }
 
-    public MultipartFile getCvFile() {
-        return cvFile;
+    public MultipartFile getDocumentAttachment() {
+        return documentAttachment;
     }
 
-    public void setCvFile(MultipartFile cvFile) {
-        this.cvFile = cvFile;
+    public void setDocumentAttachment(MultipartFile documentAttachment) {
+        this.documentAttachment = documentAttachment;
     }
 
-    @Override
-    public String toString() {
+
+    public String printNewApplicationDTO() {
         return "NewApplicationDTO{" +
                 "vacancyID=" + vacancyID +
                 ", clientID=" + clientID +
                 ", vacancyName='" + vacancyName + '\'' +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                ", current_province=" + current_province +
-                ", current_role='" + current_role + '\'' +
-                ", current_employer='" + current_employer + '\'' +
-                ", seniority_level='" + seniority_level + '\'' +
-                ", education_level=" + education_level +
-                ", relocation=" + relocation +
-                ", cvFile=" + cvFile +
                 '}';
     }
 }

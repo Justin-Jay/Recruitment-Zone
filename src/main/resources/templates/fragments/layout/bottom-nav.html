@@ -1,21 +1,25 @@
-<div class="row-cols-auto" xmlns:sec="http://www.w3.org/1999/xhtml">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="navbar-nav mr-auto">
-            <a class="nav-link" th:href="@{/home}">Home</a>
-            <a class="nav-link" th:href="@{/Blog/blogs}">Blogs</a>
-            <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-            <a class="nav-link" th:href="@{/Communication/contact-us}">Contact Us</a>
-            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Candidate/candidate-administration}">Candidate Administration</a>
-            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Document/document-administration}">Document Search</a>
-            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Client/client-administration}">Client Administration</a>
-            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Employee/employee-admin}">Employee Administration</a>
-            <a class="nav-link" th:href="@{/Blog/blog-administration}">Blog Administration</a>
-            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Vacancy/vacancy-administration}">Vacancy Administration</a>
-            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Application/applications-administration}">Applications Administration</a>
-
-        </div>
-        <!--        <footer class="footer">
-                    <span class="text-muted">Black Light Code &copy</span>
-                </footer>-->
-    </nav>
-</div>
+<nav class="navbar fixed-bottom-lg navbar-expand-lg d-none d-xxl-block" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="navbar-nav mr-auto">
+        <a class="nav-link" th:href="@{/home}">Home</a>
+        <a class="nav-link" th:href="@{/aboutus}">About Us</a>
+        <a class="nav-link" th:href="@{/Communication/contact-us}">Contact Us</a>
+        <a class="nav-link" th:href="@{/Blog/blogs}">Blogs</a>
+<!--        <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"
+           th:href="@{/Candidate/candidate-administration}">Candidate Administration</a>
+        <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"
+           th:href="@{/Document/document-administration}">Document Search</a>
+        <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"
+           th:href="@{/Client/client-administration}">Client Administration</a>
+        <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"
+           th:href="@{/Employee/employee-admin}">Employee Administration</a>
+        <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"
+           th:href="@{/Blog/blog-administration}">Blog Administration</a>
+        <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"
+           th:href="@{/Vacancy/vacancy-administration}">Vacancy Administration</a>
+        <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"
+           th:href="@{/Application/applications-administration}">Applications Administration</a>-->
+    </div>
+    <!--    <footer class="footer">
+            <span class="text-muted">Recruitment-Zone &copy</span>
+        </footer>-->
+</nav>

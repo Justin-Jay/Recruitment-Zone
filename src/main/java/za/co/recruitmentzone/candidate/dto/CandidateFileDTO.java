@@ -4,23 +4,25 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Transient;
 import org.springframework.web.multipart.MultipartFile;
-import za.co.recruitmentzone.util.enums.DocumentType;
+import za.co.recruitmentzone.util.enums.CandidateDocumentType;
+
+import java.io.Serializable;
 
 
-public class CandidateFileDTO {
+public class CandidateFileDTO implements Serializable {
     private Long candidateID;
     private String candidateIDNumber;
     @Enumerated(EnumType.STRING)
-    private DocumentType documentType;
+    private CandidateDocumentType documentType;
     @Transient
-    private MultipartFile cvFile;
+    private MultipartFile documentAttachment;
 
     public CandidateFileDTO() {
     }
 
-    public CandidateFileDTO(Long candidateID, MultipartFile cvFile) {
+    public CandidateFileDTO(Long candidateID, MultipartFile documentAttachment) {
         this.candidateID = candidateID;
-        this.cvFile = cvFile;
+        this.documentAttachment = documentAttachment;
     }
 
     public String getCandidateIDNumber() {
@@ -31,37 +33,37 @@ public class CandidateFileDTO {
         this.candidateIDNumber = candidateIDNumber;
     }
 
-    public DocumentType getDocumentType() {
-        return documentType;
-    }
 
-    public void setDocumentType(DocumentType documentType) {
-        this.documentType = documentType;
+    public CandidateDocumentType getDocumentType() {
+        return documentType;
     }
 
     public Long getCandidateID() {
         return candidateID;
     }
 
+    public void setDocumentType(CandidateDocumentType documentType) {
+        this.documentType = documentType;
+    }
+
     public void setCandidateID(Long candidateID) {
         this.candidateID = candidateID;
     }
 
-    public MultipartFile getCvFile() {
-        return cvFile;
+    public MultipartFile getDocumentAttachment() {
+        return documentAttachment;
     }
 
-    public void setCvFile(MultipartFile cvFile) {
-        this.cvFile = cvFile;
+    public void setDocumentAttachment(MultipartFile documentAttachment) {
+        this.documentAttachment = documentAttachment;
     }
 
-    @Override
-    public String toString() {
+    public String printCandidateFileDTO() {
         return "CandidateFileDTO{" +
                 "candidateID=" + candidateID +
                 ", candidateIDNumber='" + candidateIDNumber + '\'' +
                 ", documentType=" + documentType +
-                ", cvFile=" + cvFile +
+                ", documentAttachment is not empty =" + documentAttachment.isEmpty() +
                 '}';
     }
 }

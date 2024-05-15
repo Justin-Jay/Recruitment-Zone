@@ -6,7 +6,9 @@ import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.client.entity.ClientNote;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
+import javax.annotation.PostConstruct;
 import javax.security.auth.Subject;
+import java.io.Serializable;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
-public class Employee implements Principal {
+public class Employee implements Principal, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employeeID")
@@ -174,12 +176,6 @@ public class Employee implements Principal {
         this.created = created;
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "username='" + username + '\'' +
-                '}';
-    }
 
     @Override
     public String getName() {
@@ -224,4 +220,14 @@ public class Employee implements Principal {
     }
 
 
+    public String printEmployee() {
+        return "Employee{" +
+                "employeeID=" + employeeID +
+                ", username='" + username + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", contact_number='" + contact_number + '\'' +
+                ", isEnabled=" + isEnabled +
+                '}';
+    }
 }

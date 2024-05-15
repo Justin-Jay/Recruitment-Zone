@@ -1,44 +1,46 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
-
-<div class="container-fluid">
-    <div>
-        <div th:insert="~{fragments/layout/top-nav}">Header</div>
-    </div>
-    <hr/>
-
-    <div th:if="${findApplicationByIDResponse}">
-        <p>Error: <span th:text="${findApplicationByIDResponse}"></span></p>
-    </div>
-    <div th:else>
-        <!-- Display vacancy application -->
-        <div th:replace="~{fragments/applications/application :: applicationView(${vacancyApplication})}"></div>
+<div class="container-fluid main-page-section" th:fragment="applicationView(vacancyApplication)">
+    <div class="row">
+        <p th:if="${findApplicationByIDResponse}" th:text="${findApplicationByIDResponse}"></p>
+        <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
     </div>
 
-    <div>
-        <!--BOTTOM Navbar-->
-        <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
-    </div>
+    <table class="table ">
+        <thead class="table-dark">
+        <tr>
+            <th>Application ID</th>
+            <th>Date Received</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+            <th>CandidateID</th>
+            <th>VacancyID</th>
+            <th>Update Application</th><!-- New column for the "View Job" link -->
+        </tr>
+        </thead>
+        <tbody>
 
+        <tr >
+            <td th:text="*{vacancyApplication.applicationID}"></td>
+            <td th:text="${vacancyApplication.date_received}"></td>
+            <td th:text="${vacancyApplication.submission_date}"></td>
+            <td th:text="${vacancyApplication.status}"></td>
+            <td th:text="${vacancyApplication.candidateID}"></td>
+            <td th:text="${vacancyApplication.vacancyID}"></td>
+            <td>
+                <form th:action="@{/Application/update-application}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="applicationID" th:value="*{vacancyApplication.applicationID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <!--<button type="submit" class="btn">Update Application</button>-->
+                    <button class="btn normal-button"
+                            hx-post="/Application/update-application"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML"
+                            hx-include="[applicationID='applicationID']">Update Application
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
 </div>
-
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

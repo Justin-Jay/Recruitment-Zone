@@ -12,25 +12,12 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import za.co.recruitmentzone.application.dto.NewApplicationDTO;
-import za.co.recruitmentzone.application.entity.Application;
-import za.co.recruitmentzone.application.exception.ApplicationsNotFoundException;
-import za.co.recruitmentzone.blog.entity.Blog;
-import za.co.recruitmentzone.candidate.dto.CandidateFileDTO;
-import za.co.recruitmentzone.candidate.entity.Candidate;
-import za.co.recruitmentzone.candidate.exception.CandidateException;
-import za.co.recruitmentzone.client.dto.ContactPersonDTO;
-import za.co.recruitmentzone.client.entity.ContactPerson;
-import za.co.recruitmentzone.client.exception.FileContentException;
-import za.co.recruitmentzone.documents.CandidateFile;
 import za.co.recruitmentzone.employee.entity.Employee;
-import za.co.recruitmentzone.util.enums.ApplicationStatus;
-import za.co.recruitmentzone.util.enums.BlogStatus;
-import za.co.recruitmentzone.util.enums.ROLE;
-import za.co.recruitmentzone.service.RecruitmentZoneService;
+import za.co.recruitmentzone.employee.repository.EmployeeRepository;
+import za.co.recruitmentzone.vacancy.entity.Vacancy;
 import za.co.recruitmentzone.vacancy.exception.VacancyException;
+import za.co.recruitmentzone.vacancy.service.VacancyService;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,26 +28,18 @@ public class RecruitmentZoneAPIController {
 
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneAPIController.class);
 
-    private final RecruitmentZoneService recruitmentZoneService;
     private final JobLauncher jobLauncher;
     private final Job vacancyJob;
 
-    public RecruitmentZoneAPIController(RecruitmentZoneService recruitmentZoneService, JobLauncher jobLauncher, Job vacancyJob) {
-        this.recruitmentZoneService = recruitmentZoneService;
+    private final VacancyService vacancyService;
+    private final EmployeeRepository employeeRepository;
+
+    public RecruitmentZoneAPIController(JobLauncher jobLauncher, Job vacancyJob, VacancyService vacancyService, EmployeeRepository employeeRepository) {
         this.jobLauncher = jobLauncher;
         this.vacancyJob = vacancyJob;
+        this.vacancyService = vacancyService;
+        this.employeeRepository = employeeRepository;
     }
-
-/*
-    @GetMapping("/getAllVacancies")
-    public ResponseEntity<List<Vacancy>> getAllVacancies() {
-        List<Vacancy> vacancies = recruitmentZoneService.getAllVacancies();
-        if (!vacancies.isEmpty()) {
-            return new ResponseEntity<>(vacancies, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-*/
 
     @GetMapping("/start-batch-job")
     public ResponseEntity<String> batchJobEntry() {
@@ -79,17 +58,44 @@ public class RecruitmentZoneAPIController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-/*    @DeleteMapping("/deleteVacancy/{id}")
+
+
+    @GetMapping("/getAllVacancies")
+    public ResponseEntity<List<Vacancy>> getAllVacancies() {
+        List<Vacancy> vacancies = vacancyService.getAllVacancies();
+        if (!vacancies.isEmpty()) {
+            return new ResponseEntity<>(vacancies, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/deleteVacancy/{id}")
     public ResponseEntity<String> deleteVacancy(@PathVariable Long id) {
-        boolean vacancyDeleted = vacancyService.deleteVacancy(id);
-        if (vacancyDeleted) {
+        try {
+            vacancyService.deleteVacancy(id);
             return new ResponseEntity<>("Vacancy Deleted", HttpStatus.CREATED);
-        } else {
+        } catch (VacancyException exception) {
+            log.error("Error while deleting vacancy", exception);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/findEmployeeByEmail/")
+    public ResponseEntity<Employee> findEmployeeByEmail(String empName) {
+        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByUsername(empName);
+        if (optionalEmployee.isPresent()) {
+            return new ResponseEntity<>(optionalEmployee.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+/*    public ResponseEntity<List<ROLE>> getAuthorities(Employee e) {
+        List<ROLE> auths = employeeRepository.findEmployeeAuthorities(e);
+        if (auths != null) {
+            return new ResponseEntity<>(auths, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }*/
-
-
  /*   public ResponseEntity<String> getVacancyName(Long id) {
         String result = recruitmentZoneService.findVacancyTitleByID(id);
         if (result.length() > 0) {
@@ -156,13 +162,7 @@ public class RecruitmentZoneAPIController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }*/
 
-    public ResponseEntity<Employee> findEmployeeByEmail(String empName) {
-        Employee employee = recruitmentZoneService.findEmployeeByEmail(empName);
-        if (employee != null) {
-            return new ResponseEntity<>(employee, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+
 
 /*    public ResponseEntity<Blog> saveBlog(Blog blog) {
         Blog savedBlog = recruitmentZoneService.saveBlog(blog);
@@ -357,13 +357,7 @@ public class RecruitmentZoneAPIController {
     }
 */
 
-    public ResponseEntity<List<ROLE>> getAuthorities(Employee e){
-        List<ROLE> auths = recruitmentZoneService.findEmployeeAuthorities(e);
-        if (auths != null) {
-            return new ResponseEntity<>(auths, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+
    /* public ResponseEntity<Vacancy> findVacancyById(Long appID) {
         Vacancy vacancy = recruitmentZoneService.findVacancyById(appID);
         if (vacancy != null) {
@@ -372,8 +366,6 @@ public class RecruitmentZoneAPIController {
             throw new ApplicationsNotFoundException("Application Not Found");
         }
     }*/
-
-
 
 
 }

@@ -1,13 +1,17 @@
 package za.co.recruitmentzone.application.service;
 
 import jakarta.transaction.Transactional;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import za.co.recruitmentzone.application.exception.ApplicationsNotFoundException;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.application.repository.ApplicationRepository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +33,11 @@ public class ApplicationService {
         return applicationRepository.findAll();
     }
 
-    public Optional<Application> findApplicationByID(Long id) {
-        return applicationRepository.findById(id);
+    public Application findApplicationByID(Long id) {
+        Optional<Application> application = applicationRepository.findById(id);
+        return application.orElseThrow(()-> new ApplicationsNotFoundException("Application Not found "+id));
     }
-    @Transactional
+
     public boolean saveUpdatedStatus(Long applicationID, ApplicationStatus applicationStatus){
         log.info("saveUpdatedStatus start");
         log.info("applicationID: {}",applicationID);
@@ -41,7 +46,7 @@ public class ApplicationService {
         if(optionalApplication.isPresent()){
             log.info("Found application");
             Application application = optionalApplication.get();
-            log.info("Application: {}",application);
+            log.info("Application: {}",application.printApplication());
             application.setStatus(applicationStatus);
             log.info("SAVED");
             return true;

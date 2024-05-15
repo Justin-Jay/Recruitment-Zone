@@ -55,8 +55,8 @@ public class ContactMessage {
         this.toEmail = toEmail;
     }
 
-    @Override
-    public String toString() {
+
+    public String printContactMessage() {
         return "ContactMessage{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +

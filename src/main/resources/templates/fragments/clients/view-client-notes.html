@@ -1,80 +1,75 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section">
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findClientByIDResponse})}"></div>
 
-    <div class="container-fluid"><h2>View Client Notes</h2></div>
-    <hr/>
 
-    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
-    <p th:if="${findClientByIDResponse}" th:text="${findClientByIDResponse}"></p>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
-    <div class="container-fluid" th:object="${existingNotes}">
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-            <tr>
-                <th>Date Captured</th>
-                <th>Comment</th>
-            </tr>
-            </thead>
-            <tbody >
+    </div>
 
-            <tr th:each="note : ${existingNotes}">
-                <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
-                <!--      <td th:text="${#temporals.format(note.dateCaptured, 'yyyy-MM-dd')}" ></td>-->
-                <td th:text="${note.comment}"></td>
-                <!-- <td th:text="*{note.dateCaptured}"></td>
-                 <td th:text="*{note.comment}"></td>-->
-            </tr>
-            </tbody>
-        </table>
+
+    <div class="table-responsive" th:object="${existingNotes}">
+
+
+
+        <!-- Check if a condition is true -->
+        <div th:if="${noNotesFound}">
+            <p>No client notes. Add one bellow.</p>
+
+        </div>
+        <!-- If the condition is false, render this instead -->
+        <div th:else>
+<!--     <table class="table table-hover sort-asc">   -->
+            <table class="table table-hover table-responsive-sm" id="table_id" >
+            <!--    <caption th:text="${note.client.name}"  > </caption>
+-->
+                <thead >
+                <tr>
+                    <th>Date Captured</th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody >
+
+                <tr th:each="note : ${existingNotes}">
+                    <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
+
+                    <td th:text="${note.comment}"></td>
+                    <!-- <td th:text="*{note.dateCaptured}"></td>
+                     <td th:text="*{note.comment}"></td>-->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
     </div>
 
     <div class="container-fluid" >
-        <form action="#" th:action="@{/Client/save-client-note}" th:object="${clientNote}"
+        <form action="#" th:action="@{/Client/save-client-note}" th:object="${clientNoteDTO}"
               th:method="post">
             <div class="form-group">
                 <!-- Hidden input field to include the candidateID in the POST request -->
-                <input type="hidden" name="clientID" th:field="${clientNote.clientID}" th:value="${clientID}" />
-                <p th:text="${noteSaved} ? 'Note Saved' : ''"></p>
-
+                <input type="hidden" name="clientID" th:field="${clientNoteDTO.clientID}" th:value="${clientID}" />
+                <div th:insert="~{fragments/layout/response-messages :: successMessage(${noteSaved})}"></div>
                 <hr/>
                 <label for="comment">
                     Comment:
                 </label>
-                <textarea class="form-control mb-4 text-black-50" th:field="${clientNote.comment}" id="comment"></textarea>
+                <textarea class="form-control mb-4 text-black-50" th:field="${clientNoteDTO.comment}" id="comment"></textarea>
             </div>
-            <!-- Submit button to trigger the form submission -->
-            <button type="submit"  class="btn btn-primary">Add Note</button>
+
+            <button class="btn normal-button"
+                    hx-post="/Client/save-client-note"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML"
+                    hx-include="[clientNote='clientNote']">Add Note
+            </button>
         </form>
 
     </div>
-    <hr/>
-    <div class="container-fluid">
-        <a class="nav-link" th:href="@{/Client/client-administration}">Back</a>
-    </div>
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
+
+
 
 </div>
-
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

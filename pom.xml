@@ -70,11 +70,11 @@
             <version>8.1.0</version>
         </dependency>
 
-  <!--      <dependency>
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
-        </dependency>-->
+        </dependency>
 
 
         <!-- SECURITY -->
@@ -102,36 +102,25 @@
             <version>0.52</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.webjars/bootstrap -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>5.2.3</version>
+            <version>5.3.3</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>3.7.1</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>htmx.org</artifactId>
             <version>1.9.9</version>
         </dependency>
-  <!--      <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>popperjs__core</artifactId>
-            <version>2.11.7</version>
-        </dependency>
--->
 
         <!-- DEV TOOLS FOR DEVELOPMENT SUPPORT-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -204,11 +193,21 @@
             <version>3.12.1</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
+        <!-- SESSION MANAGEMENT -->
+     <!--   <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-jdbc</artifactId>
+        </dependency>-->
 
     </dependencies>
 

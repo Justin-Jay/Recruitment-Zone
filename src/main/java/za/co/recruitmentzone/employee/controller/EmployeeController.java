@@ -8,17 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.employee.dto.EmployeeDTO;
-import za.co.recruitmentzone.employee.entity.VerificationRequest;
-import za.co.recruitmentzone.employee.exception.*;
-import za.co.recruitmentzone.employee.service.TokenVerificationService;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
-import za.co.recruitmentzone.util.enums.ROLE;
 
 import java.security.Principal;
-import java.util.List;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
@@ -27,33 +21,27 @@ import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER
 public class EmployeeController {
 
     private  final RecruitmentZoneService recruitmentZoneService;
-    private final TokenVerificationService tokenVerificationService;
 
     private final Logger log = LoggerFactory.getLogger(EmployeeController.class);
 
-    public EmployeeController(RecruitmentZoneService recruitmentZoneService, TokenVerificationService tokenVerificationService) {
+    public EmployeeController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
-        this.tokenVerificationService = tokenVerificationService;
     }
 
-    // message , saveNewEmployeeResponse , internalServerError , employee  , findEmployeeByIDResponse
+
     @GetMapping("/employee-admin")
-    public String employees(Model model, @ModelAttribute("internalServerError") String internalServerError, @ModelAttribute("message") String message, @ModelAttribute("saveNewEmployeeResponse") String saveNewEmployeeResponse) {
+    public String employees(Model model) {
         try {
             recruitmentZoneService.findAllEmployees(model);
-            model.addAttribute("message", message);
-            model.addAttribute("saveNewEmployeeResponse", saveNewEmployeeResponse);
-            model.addAttribute("internalServerError", internalServerError);
         } catch (Exception e) {
             log.info("<-- employees -->  Exception \n {}",e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-
         }
-        log.info("<-- showVacancyApplicationForm --> model: \n {}", model.asMap().toString());
+        // employeeList , loadEmployeesResponse , internalServerError
         return "fragments/employee/employee-admin";
     }
 
-    // internalServerError ,   employee , findEmployeeByIDResponse
+
     @PostMapping("/view-employee")
     public String showEmployee(@RequestParam("employeeID") Long employeeID, Model model) {
         try {
@@ -62,23 +50,21 @@ public class EmployeeController {
         } catch (Exception e) {
             log.info("<-- showEmployee -->  Exception \n {}",e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-            log.info("<-- showEmployee --> model: \n {}", model.asMap().toString());
         }
-        log.info("<-- showEmployee --> model: \n {}", model.asMap().toString());
+        // employee , findEmployeeByIDResponse , internalServerError
         return "fragments/employee/view-employee";
     }
-    // rolesNotFoundException, employeeNotFound , authorities , employeeDTO, internalServerError
 
-    @GetMapping("/add-employee")
+
+    @PostMapping("/add-employee")
     public String showCreateEmployeeForm(Model model, Principal principal) {
         try {
             recruitmentZoneService.loadAuthorities(principal, model);
         } catch (Exception e) {
             log.info("<-- showCreateEmployeeForm -->  Exception \n {}",e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-
         }
-        log.info("<-- showCreateEmployeeForm --> model: \n {}", model.asMap().toString());
+        // employeeDTO , authorities , loadAuthoritiesResponse , internalServerError
         return "fragments/employee/add-employee";
     }
 
@@ -86,27 +72,26 @@ public class EmployeeController {
     @PostMapping("/save-employee")
     public String saveEmployee(@Valid @ModelAttribute("employeeDTO") EmployeeDTO employeeDTO, BindingResult bindingResult,
                                Model model,
-                               final HttpServletRequest request,
-                               RedirectAttributes redirectAttributes,Principal principal) {
+                               final HttpServletRequest request,Principal principal) {
         if (bindingResult.hasErrors()) {
             recruitmentZoneService.loadAuthorities(principal, model);
-            model.addAttribute("message", "Employee BINDING FAILED");
-            log.info("<-- saveEmployee --> model: \n {}", model.asMap().toString());
+            model.addAttribute("bindingResult", "Employee BINDING FAILED");
             return "fragments/employee/add-employee";
         }
         try {
-            recruitmentZoneService.saveNewEmployee(employeeDTO, request, model, redirectAttributes,principal);
+            recruitmentZoneService.saveNewEmployee(employeeDTO, request, model, principal);
+
         } catch (Exception e) {
             log.info("<-- saveEmployee -->  Exception \n {}",e.getMessage());
             recruitmentZoneService.loadAuthorities(principal, model);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-            log.info("<-- saveEmployee --> model: \n {}", model.asMap().toString());
             return "fragments/employee/add-employee";
         }
-        log.info("<-- saveEmployee --> redirectAttributes: \n {}", redirectAttributes.asMap().toString());
-        return "redirect:/Employee/employee-admin";
+        // saveNewEmployeeResponse  , employeeDTO , employeeList
+       // return "fragments/employee/employee-admin";
+        return "fragments/employee/add-employee";
     }
-    //   internalServerError
+
 
     @PostMapping("/update-employee")
     public String updateEmployee(@RequestParam("employeeID") Long employeeID, Model model) {
@@ -117,54 +102,120 @@ public class EmployeeController {
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
 
         }
-        log.info("<-- updateEmployee --> model: \n {}", model.asMap().toString());
         return "fragments/employee/update-employee";
     }
-    //   internalServerError
+    //   save-updated-employee //
     @PostMapping("/save-updated-employee")
-    public String saveUpdatedEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String saveUpdatedEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, Model model,Principal principal) {
         if (bindingResult.hasErrors()) {
+            recruitmentZoneService.findAllEmployees(model);
             return "fragments/employee/update-employee";
         }
         try {
-            recruitmentZoneService.saveExistingEmployee(employee, redirectAttributes);
+            recruitmentZoneService.saveExistingEmployee(principal,employee, model);
         } catch (Exception e) {
             log.info("<-- saveUpdatedEmployee -->  Exception \n {}",e.getMessage());
-            redirectAttributes.addFlashAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- saveUpdatedEmployee --> redirectAttributes: \n {}", redirectAttributes.asMap().toString());
-        return "redirect:/Employee/employee-admin";
+         // saveExistingEmployeeResponse
+        return "fragments/employee/view-employee";
     }
 
-    @GetMapping("/register/verifyEmail")
-    public String verifyEmail(@ModelAttribute VerificationRequest verificationRequest, Model model) {
+
+    @PostMapping("/activate-employee")
+    public String employeeActivation(@RequestParam("employeeID") Long employeeID, Model model) {
         try {
-            employeeVerification(verificationRequest,model);
+            recruitmentZoneService.findEmployeeByID(employeeID, model);
+        } catch (Exception e) {
+            log.info("<-- updateEmployee -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
+        return "fragments/employee/activate-employee";
+    }
+
+    @PostMapping("/enable-employee")
+    public String enableEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, Model model,Principal principal) {
+        if (bindingResult.hasErrors()) {
+            recruitmentZoneService.findAllEmployees(model);
+            return "fragments/employee/activate-employee";
+        }
+        try {
+            recruitmentZoneService.enableEmployee(principal,employee, model);
+        } catch (Exception e) {
+            log.info("<-- activateEmployee -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
+        // enableEmployeeResponse
+        return "fragments/employee/view-employee";
+    }
+
+// activate-employee
+
+    @GetMapping("/register/verifyEmail")
+    public String verifyEmail(@RequestParam("token") String token,Model model) {
+        try {
+            log.info("<--- verifyEmail {} --->",token);
+            recruitmentZoneService.employeeVerification(token,model);
         } catch (Exception e) {
             log.info("<-- verifyEmail -->  Exception \n {}",e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-            log.info("<-- verifyEmail --> model: \n {}", model.asMap().toString());
             return "log-in";
         }
-        log.info("<-- verifyEmail --> model: \n {}", model.asMap().toString());
+        // employeeVerificationResponse , internalServerError
         return "fragments/employee/email-verified";
     }
-//  message , verificationResponse , tokenMessage
-    public void employeeVerification(VerificationRequest verificationRequest,Model model) {
-        String token = verificationRequest.getToken();
-        String name = verificationRequest.getName();
-        // Your existing logic here
-        log.info("Received Token {}", token);
-        log.info("verificationRequest {}", verificationRequest);
+
+
+  /*  @GetMapping("/password-reset-request")
+    public String passwordResetRequest(@RequestParam("employeeID") Long employeeID, Model model, HttpServletRequest request){
         try {
-            String verificationResult = tokenVerificationService.verifyToken(name, token);
-            model.addAttribute("message", verificationResult);
-        } catch (TokenTimeOutException tokenTimeOutException) {
-            log.info("<-- Token Time out exception --> {}",tokenTimeOutException.getMessage());
-            model.addAttribute("verificationResponse",tokenTimeOutException.getMessage());
-            model.addAttribute("tokenMessage", tokenTimeOutException.getMessage());
+            recruitmentZoneService.requestPasswordReset(employeeID,model,request);
+        } catch (Exception e) {
+            log.info("<-- employees -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
+        return "fragments/employee/employee-admin";
     }
 
+    @PostMapping("/reset-password")
+    public String resetPassword(HttpServletRequest request){
+        String theToken = request.getParameter("token");
+        String password = request.getParameter("password");
+        String tokenVerificationResult = passwordResetTokenService.validatePasswordResetToken(theToken);
+        if (!tokenVerificationResult.equalsIgnoreCase("valid")){
+            return "redirect:/error?invalid_token";
+        }
+        Optional<User> theUser = passwordResetTokenService.findUserByPasswordResetToken(theToken);
+        if (theUser.isPresent()){
+            passwordResetTokenService.resetPassword(theUser.get(), password);
+            return "redirect:/login?reset_success";
+        }
+        return "redirect:/error?not_found";
+    }
+
+
+
+    @GetMapping("/forgot-password-request")
+    public String forgotPasswordForm(){
+        return "forgot-password-form";
+    }
+
+    @PostMapping("/forgot-password")
+    public String resetPasswordRequest(HttpServletRequest request, Model model){
+        String email = request.getParameter("email");
+        Optional<User> user= userService.findByEmail(email);
+        if (user.isEmpty()){
+            return  "redirect:/registration/forgot-password-request?not_fond";
+        }
+        String passwordResetToken = UUID.randomUUID().toString();
+        passwordResetTokenService.createPasswordResetTokenForUser(user.get(), passwordResetToken);
+        //send password reset verification email to the user
+        String url = UrlUtil.getApplicationUrl(request)+"/registration/password-reset-form?token="+passwordResetToken;
+        try {
+            eventListener.sendPasswordResetVerificationEmail(url);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "redirect:/registration/forgot-password-request?success";
+    }*/
 }

@@ -6,7 +6,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import za.co.recruitmentzone.util.enums.Industry;
 
-public class ClientDTO {
+import java.io.Serializable;
+
+public class ClientDTO implements Serializable {
     private String name;
     @Enumerated(EnumType.STRING)
     private Industry industry;
@@ -97,5 +99,19 @@ public class ClientDTO {
 
     public void setContactPerson_cell_phone(String contactPerson_cell_phone) {
         this.contactPerson_cell_phone = contactPerson_cell_phone;
+    }
+
+
+    public String printClientDTO() {
+        return "ClientDTO{" +
+                "name='" + name + '\'' +
+                ", industry=" + industry +
+                ", contactPerson_FirstName='" + contactPerson_FirstName + '\'' +
+                ", contactPerson_last_name='" + contactPerson_last_name + '\'' +
+                ", contactPerson_email_address='" + contactPerson_email_address + '\'' +
+                ", contactPerson_land_line='" + contactPerson_land_line + '\'' +
+                ", contactPerson_cell_phone='" + contactPerson_cell_phone + '\'' +
+                ", contactPerson_designation='" + contactPerson_designation + '\'' +
+                '}';
     }
 }

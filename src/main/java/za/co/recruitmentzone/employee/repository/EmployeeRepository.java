@@ -14,7 +14,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT e FROM Employee e WHERE LOWER(e.email) = LOWER(:email)")
     Optional<Employee> findEmployeeByEmailIgnoreCase(@Param("email") String email);
 
-    @Query("SELECT e FROM Employee e WHERE LOWER(e.first_name) = LOWER(:name)")
-    Optional<Employee> findEmployeeByName(@Param("name") String name);
+    @Query("SELECT e FROM Employee e WHERE LOWER(e.username) = LOWER(:username)")
+    Optional<Employee> findEmployeeByUsername(@Param("username") String username);
 
 }

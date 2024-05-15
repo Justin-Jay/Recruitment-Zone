@@ -1,0 +1,17 @@
+<ul class="dropdown-menu" th:fragment="listOptions(candidate)" >
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form th:action="@{/Candidate/view-candidate}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn"
+                        hx-post="/Candidate/view-candidate"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[candidateID='candidateID']">View Candidate
+                </button>
+            </form>
+        </a>
+    </li>
+</ul>

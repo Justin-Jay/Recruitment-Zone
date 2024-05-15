@@ -1,0 +1,58 @@
+<ul class="dropdown-menu" th:fragment="listOptions(employee)" >
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form th:action="@{/Employee/view-employee}" th:method="post">
+                <input type="hidden" name="employeeID" th:value="*{employee.employeeID}"/>
+                <button class="btn normal-button"
+                        hx-post="/Employee/view-employee"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[employeeID='employeeID']"> View Employee
+                </button>
+            </form>
+        </a>
+    </li>
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form th:action="@{/Employee/update-employee}" th:method="post">
+                <input type="hidden" name="employeeID" th:value="*{employee.employeeID}"/>
+                <button class="btn normal-button"
+                        hx-post="/Employee/update-employee"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[employeeID='employeeID']"> Update Employee
+                </button>
+            </form>
+        </a>
+    </li>
+
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form th:action="@{/Employee/activate-employee}" th:method="post">
+                <input type="hidden" name="employeeID" th:value="*{employee.employeeID}"/>
+                <button class="btn normal-button"
+                        hx-post="/Employee/activate-employee"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[employeeID='employeeID']"> Activate Employee
+                </button>
+            </form>
+        </a>
+    </li>
+
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">  <!--  passwordResetRequestResponse  "/Employee/password-reset-request" -->
+            <form th:action="@{/Employee/password-reset-request}" th:method="post">
+                <input type="hidden" name="employeeID" th:value="*{employee.employeeID}"/>
+                <button class="btn normal-button disabled"
+                        hx-post="/Employee/password-reset-request"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[employeeID='employeeID']">Password Reset Request
+                </button>
+            </form>
+        </a>
+    </li>
+
+
+</ul>

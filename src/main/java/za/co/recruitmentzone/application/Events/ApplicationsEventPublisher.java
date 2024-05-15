@@ -4,11 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import za.co.recruitmentzone.application.dto.NewApplicationDTO;
 import za.co.recruitmentzone.candidate.entity.Candidate;
-import za.co.recruitmentzone.candidate.events.FileUploadEvent;
 import za.co.recruitmentzone.candidate.events.SaveSubmissionEvent;
-
 @Component
 public class ApplicationsEventPublisher {
     private final ApplicationEventPublisher eventPublisher;
@@ -26,21 +23,7 @@ public class ApplicationsEventPublisher {
             log.info("EVENT  publishWebsiteQueryReceivedEvent POSTED");
             return true;
         } catch (Exception e) {
-            log.info("Unable to post event");
-            return false;
-        }
-
-    }
-
-    public boolean publishFileUploadEvent(Long candidateID, NewApplicationDTO newApplicationDTO) {
-        FileUploadEvent fileUploadEvent = new FileUploadEvent(newApplicationDTO.getCvFile(),candidateID,newApplicationDTO.getVacancyID());
-        log.info("Executing publishFileUploadedEvent");
-        try {
-            eventPublisher.publishEvent(fileUploadEvent);
-            log.info("EVENT publishFileUploadedEvent POSTED");
-            return true;
-        } catch (Exception e) {
-            log.info("Unable to post event");
+            log.error("Unable to post event");
             return false;
         }
 

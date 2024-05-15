@@ -15,15 +15,16 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request) {
         Object status = request.getAttribute(ERROR_STATUS_CODE);
+
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());
             log.error("Error {}", status);
+            log.error("request getPathInfo {}", request.getPathInfo());
+            log.error("request getContextPath {}", request.getPathInfo());
             log.error("Error with status code {} occurred", statusCode);
         }
         return "error";
     }
-    public String getErrorPath() {
-        return "/error";
-    }
+
 }
 

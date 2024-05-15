@@ -1,7 +1,8 @@
 package za.co.recruitmentzone.employee.entity;
 
 import jakarta.persistence.*;
-import org.threeten.bp.LocalDateTime;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "EMPLOYEEVERIFICATIONTOKEN")
@@ -12,8 +13,7 @@ public class EmployeeVerificationToken {
     private Long id;
     @Column(name = "token")
     private String token;
-    @Column(name = "randomVal")
-    private String randomVal;
+
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
@@ -46,13 +46,6 @@ public class EmployeeVerificationToken {
         this.expirationTime = expirationTime;
     }
 
-    public String getRandomVal() {
-        return randomVal;
-    }
-
-    public void setRandomVal(String randomVal) {
-        this.randomVal = randomVal;
-    }
 
     public Long getId() {
         return id;

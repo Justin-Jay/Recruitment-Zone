@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import za.co.recruitmentzone.candidate.entity.Candidate;
+import za.co.recruitmentzone.candidate.exception.CandidateNotFoundException;
 import za.co.recruitmentzone.candidate.repository.CandidateRepository;
 
 import java.util.List;
@@ -22,14 +23,16 @@ public class CandidateService {
     public List<Candidate> getCandidates() {
         return candidateRepository.findAll();
     }
-    public Candidate save(Candidate candidate){
-        log.info("About to Save new candidate \n {}",candidate);
+
+    public Candidate save(Candidate candidate) {
+        log.info("About to Save candidate \n {}", candidate.printCandidate());
         return candidateRepository.save(candidate);
     }
 
-public Optional<Candidate>  getcandidateByID(Long clientID){
-        return candidateRepository.findById(clientID);
-}
+    public Candidate getcandidateByID(Long clientID) {
+        Optional<Candidate> optionalCandidate = candidateRepository.findById(clientID);
+        return optionalCandidate.orElseThrow(() -> new CandidateNotFoundException("Could not find candidate with ID " + clientID));
+    }
 
 
 }

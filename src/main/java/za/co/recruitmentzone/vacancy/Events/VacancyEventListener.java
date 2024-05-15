@@ -131,6 +131,28 @@ public class VacancyEventListener {
     }
 
 
+public String suspendVacancy(Integer vacancyID) {
+
+        try {
+
+
+            // Deserialize the JSON string into a MyObject object
+            Optional<Vacancy> vacancyToSuspend = vacancyRepository.findById(vacancyID);
+
+
+            System.out.println("Vacancy Received: " + vacancyToSuspend.toString());
+
+
+            if (vacancyToSuspend.isPresent()) {
+                eventPoster.suspendVacancy(vacancyToSuspend);
+            }
+            return "Vacancy has been suspended";
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return "failed to suspend vacancy";
+        }
+
+    }
 
 
 }

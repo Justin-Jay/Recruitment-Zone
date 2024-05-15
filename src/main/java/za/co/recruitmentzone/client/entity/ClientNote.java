@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.util.Note;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CLIENT_NOTE")
-public class ClientNote implements Note {
+public class ClientNote implements Note, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,13 +77,13 @@ public class ClientNote implements Note {
         this.client = client;
     }
 
-    @Override
-    public String toString() {
+
+    public String printClientNote() {
         return "ClientNote{" +
                 "noteID=" + noteID +
-                ", client=" + client +
-                ", dateCaptured=" + dateCaptured +
-                ", comment='" + comment + '\'' +
+                ", client id =" + client.getClientID() +
+                ", dateCaptured =" + dateCaptured +
+                ", comment ='" + comment + '\'' +
                 '}';
     }
 }

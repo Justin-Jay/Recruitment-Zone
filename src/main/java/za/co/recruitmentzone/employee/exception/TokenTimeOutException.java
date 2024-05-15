@@ -1,18 +1,14 @@
 package za.co.recruitmentzone.employee.exception;
 
-public class TokenTimeOutException extends Exception {
-    String failureReason;
+import za.co.recruitmentzone.exception.RzoneException;
 
-    public TokenTimeOutException(String failureReason) {
-        this.failureReason = failureReason;
+public class TokenTimeOutException extends RzoneException {
+
+    public TokenTimeOutException(String message) {
+        super(message);
     }
 
-
-    public String getFailureReason() {
-        return failureReason;
-    }
-
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
+    public TokenTimeOutException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -9,14 +9,18 @@ import za.co.recruitmentzone.util.enums.Industry;
 import za.co.recruitmentzone.util.enums.JobType;
 import za.co.recruitmentzone.util.enums.VacancyStatus;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "VACANCY")
-public class Vacancy {
+public class Vacancy implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vacancyID;
@@ -57,7 +61,7 @@ public class Vacancy {
     @JoinColumn(name = "employeeID")
     private Employee employee;
 
-    @OneToMany(mappedBy = "vacancy",
+    @OneToMany(mappedBy = "vacancy",fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
@@ -221,45 +225,26 @@ public class Vacancy {
         this.employee = employee;
     }
 
+/*    public Set<Application> getApplications() {
+        // Your existing code to fetch and filter the set of Application objects
+        Set<Application> applicationList = applications;
+
+        // Create a TreeSet with a custom Comparator
+        TreeSet<Application> sortedApplications = new TreeSet<>(new ApplicationComparator());
+
+        // Add all applications to the sorted TreeSet
+        sortedApplications.addAll(applicationList);
+
+        // Return the sorted set
+        return sortedApplications;
+    }*/
+
     public Set<Application> getApplications() {
-        return applications;
+       return applications;
     }
 
     public void setApplications(Set<Application> applications) {
         this.applications = applications;
-    }
-
-    @Override
-    public String toString() {
-        return "Vacancy{" +
-                "vacancyID=" + vacancyID +
-                ", job_title='" + job_title + '\'' +
-                ", job_description='" + job_description + '\'' +
-                ", seniority_level='" + seniority_level + '\'' +
-                ", requirements='" + requirements + '\'' +
-                ", location='" + location + '\'' +
-                ", industry=" + industry +
-                ", publish_date='" + publish_date + '\'' +
-                ", end_date='" + end_date + '\'' +
-                ", status=" + status +
-                ", jobType=" + jobType +
-                ", empType=" + empType +
-                ", client=" + client +
-                ", employee=" + employee +
-                ", applications=" + applications +
-                '}';
-    }
-
-    public String printVacancy() {
-        return "Vacancy{" +
-                "vacancyID=" + vacancyID +
-                ", job_title='" + job_title + '\'' +
-                ", seniority_level='" + seniority_level + '\'' +
-                ", publish_date='" + publish_date + '\'' +
-                ", end_date='" + end_date + '\'' +
-                ", status=" + status +
-                ", client=" + client +
-                '}';
     }
 
     public void addApplication(Application application) {
@@ -269,6 +254,23 @@ public class Vacancy {
         applications.add(application);
         application.setVacancy(this);
     }
+    public int getApplicationsSize() {
+        if (applications == null) {
+            return 0;
+        }else return applications.size();
+    }
 
+
+    public String printVacancy() {
+        return "Vacancy{" +
+                "vacancyID=" + vacancyID +
+                ", job_title='" + job_title + '\'' +
+                ", seniority_level='" + seniority_level + '\'' +
+                ", publish_date='" + publish_date + '\'' +
+                ", end_date='" + end_date + '\'' +
+                ", status=" + status +
+                ", client=" + client.getName() +
+                '}';
+    }
 
 }
