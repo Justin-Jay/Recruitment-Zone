@@ -1,48 +1,63 @@
-<div th:if="${#lists.isEmpty(contacts)}">
-    <p>No contacts found for client.</p>
-    <a class="nav-link" th:href="@{/Client/client-admin}">Client Admin Page</a>
-    <form th:action="@{/Client/add-contact}" th:method="GET">
-        <!-- Hidden input field to include the id in the POST request -->
+<div class="container-fluid right-page-frame" th:if="${#lists.isEmpty(contactPersonList)}">
+
+    <form th:action="@{/Client/add-contact}" th:method="POST">
+
         <input type="hidden" name="clientID" th:value="${clientID}"/>
-        <!-- Submit button to trigger the form submission -->
-        <button type="submit" class="btn btn-primary">Add Contact Person To Client</button>
+
+        <button class="btn normal-button"
+                hx-post="/Client/add-contact"
+                hx-target="#right-page-column"
+                hx-swap="innerHTML"
+                hx-include="[clientID='clientID']">Add Contact Person To Client
+        </button>
     </form>
 </div>
-<div th:unless="${#lists.isEmpty(contacts)}">
+<div class="container-fluid right-page-frame" th:unless="${#lists.isEmpty(contactPersonList)}">
 
-    <table class="table table-bordered table-striped">
 
-        <thead class="table-dark">
-        <tr>
-            <th>Contact Person</th>
-            <th>Land Line</th>
-            <th>Cell Number</th>
-            <th>Designation</th>
-            <th>Update Contact Person</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="contact : ${contacts}">
-            <td th:text="${contact.first_name +' ' +contact.last_name }"></td>
-            <td th:text="${contact.land_line}"></td>
-            <td th:text="${contact.cell_phone}"></td>
-            <td th:text="${contact.designation}"></td>
-            <td>
-                <form th:action="@{/Client/update-client-contact}" th:method="post">
-                    <!-- Hidden input field to include the id in the POST request -->
-                    <input type="hidden" name="contactPersonID" th:value="*{contact.contactPersonID}"/>
-                    <!-- Submit button to trigger the form submission -->
-                    <button type="submit" class="btn btn-primary">Update Contact</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <form th:action="@{/Client/add-contact}" th:method="GET">
-        <!-- Hidden input field to include the id in the POST request -->
+    <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveUpdatedContactResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewClientResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+    <div class="container-fluid" th:each="contact : ${contactPersonList}">
+        <button class="btn" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            <p   th:text="${contact.first_name +' ' +contact.last_name }"></p>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end">
+            <!--  <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li>
+                  <hr class="dropdown-divider">
+              </li>-->
+            <li>
+                <a>
+                    <form th:action="@{/Client/update-client-contact}" th:method="post">
+
+                        <input type="hidden" name="contactPersonID" th:value="*{contact.contactPersonID}"/>
+
+                        <button class="btn"
+                                hx-post="/Client/update-client-contact"
+                                hx-target="#right-page-column"
+                                hx-swap="innerHTML"
+                                hx-include="[contactPersonID='contactPersonID']">Update Contact
+                        </button>
+                    </form>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+    <form th:action="@{/Client/add-contact}" th:method="POST">
         <input type="hidden" name="clientID" th:value="${clientID}"/>
-        <!-- Submit button to trigger the form submission -->
-        <button type="submit" class="btn btn-primary">Add Contact Person</button>
+        <button class="btn drop-down-button"
+                hx-post="/Client/add-contact"
+                hx-target="#right-page-column"
+                hx-swap="innerHTML"
+                hx-include="[clientID='clientID']">Add Contact Person
+        </button>
     </form>
-
 </div>

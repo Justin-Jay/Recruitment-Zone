@@ -1,5 +1,7 @@
 package za.co.recruitmentzone.util;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public class Constants {
 
     // Constants for error messages
@@ -7,6 +9,8 @@ public class Constants {
         public static final String INTERNAL_SERVER_ERROR = "Internal server error: Please contact system administrator";
     }
 
-    // Add more constant variables here as needed
+    public static  String applicationURL(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
 
 }

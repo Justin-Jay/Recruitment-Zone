@@ -1,0 +1,113 @@
+<div class="container-fluid main-page-section">
+
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findVacancyResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <!--   <main>
+                   &lt;!&ndash; additional page requirements  &ndash;&gt;
+                   <p class="card-text" th:text="${vacancy.job_description}"></p>
+                   <p class="card-text" th:text="${vacancy.seniority_level}"></p>
+
+
+                   <article>
+
+                       <header th:text="${vacancy.job_title}">
+
+                       </header>
+
+                       <section th:text="${vacancy.job_description}">
+                       </section>
+
+
+                       <section th:text="${vacancy.seniority_level}">
+
+                       </section>
+
+                       &lt;!&ndash; Footer Section &ndash;&gt;
+                       <footer>
+                           &lt;!&ndash; &ndash;&gt;
+                           <form th:action="@{/Application/apply-now}" th:method="post">
+                               &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+                               <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
+
+                               <button class="btn btn-primary"
+                                       hx-post="/Application/apply-now"
+                                       hx-target="#main-page-section"
+                                       hx-swap="outtaHTML"
+                                       hx-include="[vacancyID='vacancyID']">Apply Now
+                               </button>
+                           </form>
+
+
+                       </footer>
+                   </article>
+
+
+               </main>-->
+
+            <div class="blog-post">
+                <h2 class="blog-post-title" th:text="${vacancy.job_title}"></h2>
+                <p>Agent <a href="#">Author</a></p>
+                <p class="blog-post-meta" th:text="${'Publish Date: '+vacancy.publish_date}"></p>
+                <p class="blog-post-meta" th:text="${'End Date: '+vacancy.end_date}"></p>
+                <!--  -->
+                <h2>Description: </h2>
+
+                <blockquote th:text="${vacancy.job_description}">
+                </blockquote>
+
+                <h2>Requirements: </h2>
+
+                <blockquote th:text="${vacancy.requirements}">
+                </blockquote>
+                <ul>
+                    <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+                    <li>Donec id elit non mi porta gravida at eget metus.</li>
+                    <li>Nulla vitae elit libero, a pharetra augue.</li>
+                </ul>
+
+                <h3>Sub-heading</h3>
+
+
+                <blockquote th:text="${vacancy.seniority_level}">
+                </blockquote>
+
+                <h3>Sub-heading</h3>
+
+                <ol>
+                    <li>Vestibulum id ligula porta felis euismod semper.</li>
+                    <li>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</li>
+                    <li>Maecenas sed diam eget risus varius blandit sit amet non magna.</li>
+                </ol>
+
+                <a>
+                    <form th:action="@{/Application/apply-now}" th:method="post">
+                        <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
+
+                        <button class="btn btn-primary"
+                                hx-post="/Application/apply-now"
+                                hx-target="#main-page-section"
+                                hx-swap="outtaHTML"
+                                hx-include="[vacancyID='vacancyID']">Apply Now
+                        </button>
+                    </form>
+                </a>
+
+            </div>
+            <br/>
+            <a class="btn btn-secondary" th:href="@{/home}">Back to vacancies</a>
+        </div>
+
+        <div class="col-4">
+            <img src="https://picsum.photos/450/300" class="shadow -p3 mb-5 bg-body-tertiary rounded" alt="img">
+        </div>
+    </div>
+
+</div>
+
+
+
+

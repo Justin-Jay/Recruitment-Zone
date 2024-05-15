@@ -3,7 +3,9 @@ package za.co.recruitmentzone.employee.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public class EmployeeDTO {
+import java.io.Serializable;
+
+public class EmployeeDTO implements Serializable {
     @NotEmpty(message = "First Name Cannot be empty")
     public String first_name;
     @NotEmpty(message = "Last Name Cannot be empty")
@@ -73,8 +75,8 @@ public class EmployeeDTO {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
+
+    public String printEmployeeDTO() {
         return "EmployeeDTO{" +
                 "first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +

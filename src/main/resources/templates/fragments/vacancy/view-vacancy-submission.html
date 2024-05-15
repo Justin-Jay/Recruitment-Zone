@@ -1,108 +1,65 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section" th:each="vApplication : ${vacancyApplications}">
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
-
-    <div class="container-fluid">
-        <div id="vacancies-list">
-// findVacancyResponse
-            <div class="container-fluid">
-                <h2>View Submissions</h2>
-                <hr/>
-                <!-- th:unless="${#lists.isEmpty(allSeedStarters)}"-->
-                <table th:each="vApplication : ${vacancy.applications}">
-                    <thead>
-                    <!-- Your table headers here -->
-                    <tr>
-                        <th>Vacancy Title</th>
-                        <th>Candidate Name</th>
-                        <th>Candidate Last Name</th>
-                        <th>Phone Number</th>
-                        <th>Current Province</th>
-                        <th>Current Role</th>
-                        <th>Seniority</th>
-                        <th>Education Level</th>
-                        <th>Relocation</th>
-                        <th>View Candidate</th>
-                        <th>View Notes</th>
-                        <!-- Add more columns as needed -->
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <tr th:each="candidate : ${vApplication.candidate}">
-                        <td th:text="*{vacancy.job_title}"></td>
-                        <td th:text="${candidate.last_name}"></td>
-                        <td th:text="${candidate.email_address}"></td>
-                        <td th:text="${candidate.phone_number}"></td>
-                        <td th:text="${candidate.current_province}"></td>
-                        <td th:text="${candidate.current_role}"></td>
-                        <td th:text="${candidate.seniority_level}"></td>
-                        <td th:text="${candidate.education_level}"></td>
-                        <td th:text="${candidate.relocation}"></td>
-                        <td>
-                            <form th:action="@{/Candidate/view-candidate}" th:method="post">
-                                <!-- Hidden input field to include the vacancyID in the POST request -->
-                                <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
-                                <!-- Submit button to trigger the form submission -->
-                                <button type="submit" class="btn btn-secondary">View Candidate</button>
-                            </form>
-
-
-                        </td>
-                        <td>
-                            <form>
-                                <!-- Hidden input field to include the brandVal in the POST request -->
-                                <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
-                                <!-- Submit button to trigger the form submission -->
-                                <button th:action="@{/Candidate/view-candidate-notes}"
-                                        class='btn'
-                                        hx-post="/view-candidate-notes"
-                                        hx-target="#candidate-notes"
-                                        hx-swap='innerHTML'
-                                        hx-include="[name='candidateID']"
-                                >
-                                    View Notes
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
+    <div class="row">
+        <div class="container">
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findVacancyResponse})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
         </div>
     </div>
-    <div id="candidate-notes"></div>
 
-    <div class="container-fluid">
-        <a class="nav-link" th:href="@{/Vacancy/vacancy-administration}">Back</a>
+
+    <div th:each="candidate : ${vApplication.candidate}">
+        <table class="table table-hover table-responsive-sm">
+            <thead>
+            <tr>
+                <th>Candidate Name</th>
+                <th>Candidate Last Name</th>
+                <th>View Candidate</th>
+                <th>View Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${candidate.first_name}"></td>
+                <td th:text="${candidate.last_name}"></td>
+                <td>
+                    <form action="#" th:action="@{/Candidate/view-candidate}" th:method="post">
+                        <!-- Hidden input field to include the vacancyID in the POST request -->
+                        <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
+                        <!-- Submit button to trigger the form submission -->
+                        <button class="btn normal-button"
+                                hx-post="/Candidate/view-candidate"
+                                hx-target="#main-page-section"
+                                hx-swap="innerHTML"
+                                hx-include="[candidateID='candidateID']">View Candidate
+                        </button>
+                    </form>
+
+                </td>
+
+                <td>
+
+                    <form action="#" th:action="@{/Candidate/view-candidate-notes}" th:method="post">
+                        <!-- Hidden input field to include the brandVal in the POST request -->
+
+                        <input type="hidden" name="candidateID"
+                               th:value="${candidate.candidateID}"/>
+
+                        <!-- Submit button to trigger the form submission -->
+                        <button class='btn normal-button'
+                                hx-post="/Candidate/view-candidate-notes"
+                                hx-target="#right-page-column"
+                                hx-swap='innerHTML'
+                                hx-include="[candidateID='candidateID']">
+                            View Notes
+                        </button>
+
+                    </form>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
-<script type="text/javascript" th:src="@{/webjars/htmx.org/1.9.9/dist/htmx.min.js}"></script>
-
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>
-
-

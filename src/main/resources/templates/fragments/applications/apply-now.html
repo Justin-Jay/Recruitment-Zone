@@ -1,155 +1,125 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="main-page-section m-0 p-2">
+    <div class="row">
 
-<div class="container-fluid">
-    <div class="container-fluid">
-        <div th:insert="~{fragments/layout/top-nav}">Header</div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${invalidFileException})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${vacancyApplicationFormResponse})}"></div>
+
     </div>
 
-    <p th:if="${vacancyApplicationFormResponse}" th:text="${vacancyApplicationFormResponse}"></p>
-    <p th:if="${newFileSubmissionResponse}" th:text="${newFileSubmissionResponse}"></p>
+    <form class="form-group" action="#" th:action="@{/Application/save-application}" th:object="${newApplicationDTO}"
+          th:method="POST" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+
+        <p th:text="${vacancyName} ? ${'Application for ' + vacancyName + ' role'} : 'Application for'"></p>
 
 
-    <p th:if="${findAllApplicationsResponse}" th:text="${findAllApplicationsResponse}"></p>
+        <input type="hidden" name="vacancyID" th:value="${vacancyID}"/>
 
-    <div th:if="${internalServerError}">
-        <p>Error: <span th:text="${internalServerError}"></span></p>
-    </div>
+        <input type="hidden" name="vacancyName" th:value="${vacancyName}"/>
 
+        <label for="FirstName">
+            First Name:
+        </label>
 
-    <div th:else>
-        <!-- Display vacancy application -->
-        <form action="#" th:action="@{/Application/save-application}" th:object="${newApplicationDTO}"
-              th:method="POST" enctype="multipart/form-data">
-            <!-- Debug statement in Thymeleaf template -->
-            <h2></h2>
+        <input type="text" th:field="${newApplicationDTO.first_name}" id="FirstName" placeholder="Enter First Name"
+               class="form-control mb-4 w-25"/>
 
+        <label for="LastName">
+            Last Name:
+        </label>
 
-            <p th:text="${vacancyName} ? ${'Application for ' + vacancyName + ' role'} : 'Application for'"></p>
+        <input type="text" th:field="${newApplicationDTO.last_name}" id="LastName" placeholder="Enter Last Name"
+               class="form-control mb-4 w-25"/>
+        <label for="idNumber">
+            ID Number:
+        </label>
 
-            <!--     <input type="hidden" id="clientID" name="clientID" th:field="*{vacancyID}" th:value="${newApplicationDTO.vacancyID == vacancyID}"/>-->
-            <input type="hidden" name="vacancyID" th:value="${vacancyID}"/>
-            <input type="hidden" name="vacancyName" th:value="${vacancyName}"/>
+        <input type="text" th:field="${newApplicationDTO.id_number}" id="idNumber" placeholder="ID Number"
+               class="form-control mb-4 w-25"/>
+        <label for="email">
+            Email Address:
+        </label>
 
-            <label for="FirstName">
-                First Name:
-            </label>
-            <input type="text" th:field="${newApplicationDTO.first_name}" id="FirstName" placeholder="Enter First Name"
-                   class="form-control mb-4 w-25"/>
+        <input type="email" th:field="${newApplicationDTO.email_address}" id="email"
+               placeholder="Enter Email Address"
+               class="form-control mb-4 w-25"/>
 
-            <label for="LastName">
-                Last Name:
-            </label>
-            <input type="text" th:field="${newApplicationDTO.last_name}" id="LastName" placeholder="Enter Last Name"
-                   class="form-control mb-4 w-25"/>
-            <label for="idNumber">
-                ID Number:
-            </label>
-            <input type="text" th:field="${newApplicationDTO.id_number}" id="idNumber" placeholder="ID Number"
-                   class="form-control mb-4 w-25"/>
-            <label for="email">
-                Email Address:
-            </label>
-            <input type="email" th:field="${newApplicationDTO.email_address}" id="email"
-                   placeholder="Enter Email Address"
-                   class="form-control mb-4 w-25"/>
+        <label for="phoneNumber">
+            Phone Number:
+        </label>
 
-            <label for="phoneNumber">
-                Phone Number:
-            </label>
-            <input type="text" th:field="${newApplicationDTO.phone_number}" id="phoneNumber"
-                   placeholder="Enter Phone Number"
-                   class="form-control mb-4 w-25"/>
+        <input type="text" th:field="${newApplicationDTO.phone_number}" id="phoneNumber"
+               placeholder="Enter Phone Number"
+               class="form-control mb-4 w-25"/>
+        <label for="currentProvince">Current Location:
+        </label>
+        <select class="form-select-sm m-1" aria-label=".form-select"  id="currentProvince" th:field="${newApplicationDTO.current_province}">
+            <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
+                    th:value="${province}" th:text="${province}"></option>
+        </select>
+        <br>  <br>
+        <label for="CurrentRole">
+            Current Role:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.current_role}" id="CurrentRole"
+               placeholder="Enter Current Role"
+               class="form-control mb-4 w-25"/>
 
+        <label for="employer">
+            Current Employer:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.current_employer}" id="employer"
+               placeholder="Enter Current Employer"
+               class="form-control mb-4 w-25"/>
 
-            <label for="currentProvince">Current Location:
-                <select id="currentProvince" th:field="${newApplicationDTO.current_province}">
-                    <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
-                            th:value="${province}" th:text="${province}"></option>
-                </select>
-            </label>
+        <label for="seniorityLevel">
+            Seniority Level:
+        </label>
+        <input type="text" th:field="${newApplicationDTO.seniority_level}" id="seniorityLevel"
+               placeholder="Enter Seniority Level"
+               class="form-control mb-4 w-25">
 
+        <label for="EduLevel">Highest Education Level:
+        </label>
+        <select class="form-select-sm" aria-label=".form-select-sm" id="EduLevel" th:field="${newApplicationDTO.education_level}">
+            <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
+                    th:value="${statusVal}" th:text="${statusVal}"></option>
+        </select>
+        <br/>
 
-            <label for="CurrentRole">
-                Current Role:
-            </label>
-            <input type="text" th:field="${newApplicationDTO.current_role}" id="CurrentRole"
-                   placeholder="Enter Current Role"
-                   class="form-control mb-4 w-25"/>
-            <label for="employer">
-                Current Employer:
-            </label>
-            <input type="text" th:field="${newApplicationDTO.current_employer}" id="employer"
-                   placeholder="Enter Current Employer"
-                   class="form-control mb-4 w-25"/>
-            <label for="seniorityLevel">
-                Seniority Level:
+        <br/>
+        <label>Willing to relocate?</label>
 
-            </label>
-            <input type="text" th:field="${newApplicationDTO.seniority_level}" id="seniorityLevel"
-                   placeholder="Enter Seniority Level"
-                   class="form-control mb-4 w-25">
+        <div class="form-check form-check-inline">
+            <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationYes" value="true"
+                   class="form-check-input"/>
+            <label class="form-check-label" for="relocationYes">Yes</label>
+        </div>
 
-            <label for="EduLevel">Highest Education Level:
-                <select id="EduLevel" th:field="${newApplicationDTO.education_level}">
-                    <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
-                            th:value="${statusVal}" th:text="${statusVal}"></option>
-                </select>
-            </label>
-            <br/>
+        <div class="form-check form-check-inline">
+            <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationNo" value="false"
+                   class="form-check-input"/>
+            <label class="form-check-label" for="relocationNo">No</label>
+        </div>
+        <br/> <br/>
 
-            <br/>
-            <label>Willing to relocate?</label>
+        <label for="documentAttachment">
+            Attach CV:
+        </label>
 
-            <div class="form-check form-check-inline">
-                <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationYes" value="true"
-                       class="form-check-input"/>
-                <label class="form-check-label" for="relocationYes">Yes</label>
-            </div>
+        <input th:type="file" name="documentAttachment" th:value="${newApplicationDTO.documentAttachment}"
+               id="documentAttachment"
+               class="form-control mb-4 w-25"/>
 
-            <div class="form-check form-check-inline">
-                <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationNo" value="false"
-                       class="form-check-input"/>
-                <label class="form-check-label" for="relocationNo">No</label>
-            </div>
-            <br/> <br/>
-            <label for="cvAttachment">
-                Attach CV:
-            </label>
-            <input th:type="file" name="cvFile" th:value="${newApplicationDTO.cvFile}" id="cvAttachment"
-                   class="form-control mb-4 w-25"/>
-
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Submit Application</button>
-        </form>
-    </div>
-
-
+        <button class="btn normal-button"
+                hx-post="/Application/save-application"
+                hx-target="#main-page-section"
+                hx-swap="innerHTML"
+                hx-include="[newApplicationDTO='newApplicationDTO']">Submit Application
+        </button>
+    </form>
 </div>
-
-
-<div class="container-fluid">
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
-
-</div>
-
-</div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

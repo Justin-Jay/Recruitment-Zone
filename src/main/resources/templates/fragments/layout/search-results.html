@@ -1,0 +1,7 @@
+<div class="card vacancy-card" th:each="vacancy: ${vacancies}" >
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadVacanciesResponse})}"></div>
+    <div class="card-body"
+         th:insert="~{fragments/vacancy/card-fragment :: vacancyCard(${vacancy})}">
+    </div>
+</div>

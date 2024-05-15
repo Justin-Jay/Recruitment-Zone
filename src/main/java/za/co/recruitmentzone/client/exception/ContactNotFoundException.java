@@ -1,6 +1,8 @@
 package za.co.recruitmentzone.client.exception;
 
-public class ContactNotFoundException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class ContactNotFoundException extends RzoneException {
 
     public ContactNotFoundException(String message) {
         super(message);
@@ -10,7 +12,4 @@ public class ContactNotFoundException extends RuntimeException {
         super(message, cause);
     }
 
-    public ContactNotFoundException(Throwable cause) {
-        super(cause);
-    }
 }

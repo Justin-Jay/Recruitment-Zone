@@ -84,11 +84,26 @@ domain:
   # file:
   #  path: ${LOG_PATH}
 
-
-
 LOGS: ${LOG_PATH}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["prometheus"]
 
 
+storage:
+  bucket: ${BUCKET_NAME}
+
+KEY_DIR: ${KEY_DIR}
+
+event:
+  to:
+    email: ${EVENT_MAIL_BOX}
+
+google:
+  storage:
+    pre: ${G_PRE_PATH}
 
 #docker run --network host --name my-dev-database -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Khum0Ram0 -d mysql:8.3.0

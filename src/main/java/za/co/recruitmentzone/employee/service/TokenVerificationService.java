@@ -11,8 +11,8 @@ import za.co.recruitmentzone.employee.exception.TokenTimeOutException;
 import za.co.recruitmentzone.employee.repository.EmployeeRepository;
 import za.co.recruitmentzone.employee.repository.EmployeeVerificationTokenRepository;
 
+import java.util.Calendar;
 import java.util.Optional;
-
 
 
 @Service
@@ -32,49 +32,62 @@ public class TokenVerificationService {
         return tokenRepository.save(employeeVerificationToken);
     }
 
-    public String verifyToken(String username, String token) throws TokenTimeOutException {
+    public String verifyToken(String token) throws TokenTimeOutException {
+
         String returnString = "";
-        log.info("Employee Verification for employee {}", username);
-        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByEmailIgnoreCase(username);
-        EmployeeVerificationToken ov;
-        if (optionalEmployee.isPresent()) {
-            Employee emp = optionalEmployee.get();
-            ov = tokenRepository.findEmployeeVerificationTokenByEmployeeID(emp.getUsername());
-            if (ov != null && !ov.isExpired()) {
-                log.info("Token is not expired");
-                // set account to Enabled
 
-                boolean verified = verifyEncryptedToken(ov.getRandomVal(), token,SECRET_KEY);
-                if (verified) {
-                    log.info("Employee Email Verified!");
-                    emp.setEnabled(true);
-                    employeeRepository.save(emp);
-                    returnString = """
-                            Thank you for verifying your E-Mail Address.
-                            You can now proceed start using the system.
-                             """;
-                    // delete used token
-                    int rowCount = tokenRepository.deleteEmployeeVerificationTokenById(ov.getEmployee().getUsername());
-                    log.info("Employee Token Has Been Deleted \n {} token deleted",rowCount);
-                }
+        Optional<EmployeeVerificationToken> theToken = tokenRepository.findEmployeeVerificationTokenByToken(token);
 
-            } else {
-                log.info("TOKEN TIMED OUT");
-                throw new TokenTimeOutException("TOKEN TIMED OUT");
-            }
-        }
+       if (theToken.isPresent() ) {
+           log.info("Employee Verification for employee {}", theToken.get().getEmployee().getUsername());
+
+           //ov = tokenRepository.findEmployeeVerificationTokenByEmployeeID(emp.getUsername());
+           if (!theToken.get().isExpired()) {
+               log.info("Token is not expired");
+
+               log.info("Employee Email Verified!");
+               theToken.get().getEmployee().setEnabled(true);
+
+               employeeRepository.save(theToken.get().getEmployee());
+
+               returnString = """
+                    Thank you for verifying your E-Mail Address.
+                    You can now proceed to log in.
+                    """;
+
+               // delete used token
+
+/*               int rowCount = tokenRepository.deleteEmployeeVerificationTokenById(theToken.get().getEmployee().getUsername());
+               log.info("Employee Token Has Been Deleted \n {} token deleted", rowCount);*/
+
+
+             /*  try {
+                   tokenRepository.delete(theToken.get());
+                   log.info("Employee Token Has Been Deleted ");
+               }
+               catch (Exception e) {
+                   log.info("Failed to delete employee token");
+               }
+              */
+
+
+
+           } else {
+               returnString = "Token is not expired";
+           }
+       }
+       else if (theToken.get().getEmployee() == null )  {
+           returnString = "Employee not found";
+       }
+       else {
+           log.info("  theToken is null ");
+
+           returnString = "Invalid Token";
+       }
+
 
         return returnString;
     }
-
-    public static boolean verifyEncryptedToken(String randomToken, String token,String key) {
-        TokenGeneratorDecoder tokenGeneratorDecoder = new TokenGeneratorDecoder();
-        boolean isValid = tokenGeneratorDecoder.validateToken(randomToken, token,key);
-        System.out.println("Is Token Valid? " + isValid);
-        return isValid;
-    }
-
-    // Validate the token
 
 
 }

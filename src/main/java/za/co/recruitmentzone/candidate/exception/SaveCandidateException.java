@@ -1,6 +1,8 @@
 package za.co.recruitmentzone.candidate.exception;
 
-public class SaveCandidateException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class SaveCandidateException extends RzoneException {
 
     public SaveCandidateException(String message) {
         super(message);
@@ -10,7 +12,5 @@ public class SaveCandidateException extends RuntimeException {
         super(message, cause);
     }
 
-    public SaveCandidateException(Throwable cause) {
-        super(cause);
-    }
+
 }

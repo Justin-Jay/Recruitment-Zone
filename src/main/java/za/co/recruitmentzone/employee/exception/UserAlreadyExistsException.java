@@ -1,18 +1,14 @@
 package za.co.recruitmentzone.employee.exception;
 
-public class UserAlreadyExistsException extends Exception {
-    String failureReason;
+import za.co.recruitmentzone.exception.RzoneException;
 
-    public UserAlreadyExistsException(String failureReason) {
-        this.failureReason = failureReason;
+public class UserAlreadyExistsException extends RzoneException {
+
+    public UserAlreadyExistsException(String message) {
+        super(message);
     }
 
-
-    public String getFailureReason() {
-        return failureReason;
-    }
-
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
+    public UserAlreadyExistsException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

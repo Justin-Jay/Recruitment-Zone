@@ -5,14 +5,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import za.co.recruitmentzone.employee.entity.EmployeeVerificationToken;
 
+import java.util.Optional;
+
 public interface EmployeeVerificationTokenRepository extends JpaRepository<EmployeeVerificationToken, Long> {
     //    Optional<EmployeeVerificationToken> findEmployeeVerificationTokenByEmployeeName(String name);
 
     @Query("SELECT t FROM EmployeeVerificationToken t JOIN t.employee e WHERE e.username = :username")
     EmployeeVerificationToken findEmployeeVerificationTokenByEmployeeID(@Param("username") String username);
 
-    @Query("DELETE FROM EmployeeVerificationToken t WHERE t.employee.username = :username")
-    int deleteEmployeeVerificationTokenById(@Param("username") String username);
+    Optional<EmployeeVerificationToken> findEmployeeVerificationTokenByToken(String token);
+
+    @Override
+    void delete(EmployeeVerificationToken entity);
+
 
 
 }

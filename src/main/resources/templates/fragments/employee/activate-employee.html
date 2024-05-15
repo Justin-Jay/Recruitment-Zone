@@ -1,0 +1,29 @@
+<div class="container-fluid main-page-section">
+
+    <div class="container-fluid"><h2>Activate Employee</h2></div>
+
+
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findEmployeeByIDResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+    <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveExistingEmployeeResponse})}"></div>
+
+
+    <div class="container-fluid">
+        <form action="#" th:action="@{/Employee/enable-employee}" th:object="${employee}" th:method="POST">
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" th:field="*{employeeID}" />
+
+            <button class="btn normal-button"
+                    hx-post="/Employee/enable-employee"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML"
+                    hx-include="[employee='employee']"> Activate Employee
+            </button>
+
+        </form>
+
+    </div>
+
+
+</div>

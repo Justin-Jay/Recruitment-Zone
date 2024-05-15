@@ -1,93 +1,107 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      lang="en">
+      lang="en"> <!--  data-bs-theme="dark" -->
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
 <body>
-<div class="container-fluid">
 
-    <div class="container-fluid">
+<!-- TOP Navbar -->
+<div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+
+
+
+<div class="container-fluid pt-2 pe-2" id="body-container">
+
+    <div class="row-12 ">
+
         <div class="container-fluid">
-            <div class="row">
-                <!--TOP Navbar-->
-                <div th:replace="~{fragments/layout/top-nav}">Header</div>
-            </div>
+            <h3> Document Search
+
+            </h3>
+            <hr>
         </div>
 
 
-        <p th:if="${message}" th:text="${message}"></p>
-        <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
-        <p th:if="${searchFilesResponse}" th:text="${searchFilesResponse}"></p>
-
-        <p th:if="${searchFileContentResponse}" th:text="${searchFileContentResponse}"></p>
+        <!--MESSAGE AREA-->
         <div class="container-fluid">
-            <hr/>
-            <div class="row ">
-                <div class="search-bar">
-                    <h3>Search File Names</h3>
 
-                    <!-- Display validation error messages -->
+            <div th:insert="~{fragments/layout/response-messages :: successMessage(${bindingResult})}"></div>
 
-                    <form th:action="@{/Document/searchDocuments}" th:object="${searchDocumentsDTO}" th:method="POST">
-                        <input type="text" id="term" name="term" th:value="${searchDocumentsDTO.term}" placeholder="Search File Name" />
-                        <button type="submit">Search</button>
-                    </form>
+            <div th:insert="~{fragments/layout/response-messages :: successMessage(${searchFilesResponse})}"></div>
+
+            <div th:insert="~{fragments/layout/response-messages :: successMessage(${searchFileContentResponse})}"></div>
+
+        </div>
+
+
+        <div class="container-fluid main-page-section">
+
+            <div class="search-bar">
+
+
+                <!-- Display validation error messages -->
+
+                <form th:action="@{/Document/searchDocuments}" th:object="${searchDocumentsDTO}" th:method="POST">
+                    <input type="text" id="term" name="term" th:value="${searchDocumentsDTO.term}"
+                           placeholder="Search File Name"/>
+                    <button class="btn m-2"
+                            type="submit">Search
+                    </button>
+                </form>
+            </div>
+            <hr>
+
+            <div class="search-bar">
+                <h3>Search File Contents</h3>
+                <!-- Display validation error messages -->
+
+                <form th:action="@{/Document/searchFileContents}" th:object="${searchDocumentsDTO}" th:method="POST">
+                    <input type="text" id="content-term" name="content-term" th:value="${searchDocumentsDTO.term}"
+                           placeholder="Search String"/>
+                    <button class="btn m-2"
+                            type="submit">Search
+                    </button>
+                </form>
+            </div>
+
+            <hr>
+
+            <div class="search-bar">
+                <h3>Search Results</h3>
+
+                <div th:if="${resultCount > 0}" class="card-body"
+                     th:replace="~{fragments/documents/document-fragments :: documentSearchResults(${resultList},${term})}">
                 </div>
-            </div>
-            <hr/>
-            <div class="row ">
-                <div class="search-bar">
-                    <h3>Search File Contents</h3>
-                    <!-- Display validation error messages -->
-
-                    <form th:action="@{/Document/searchFileContents}" th:object="${searchDocumentsDTO}" th:method="POST">
-                        <input type="text" id="content-term" name="content-term" th:value="${searchDocumentsDTO.term}" placeholder="Search String" />
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
-            <hr/>
-        </div>
-
-
-        <div class="container-fluid">
-            <hr/>
-            <div class="row ">
-                <div class="search-bar">
-                    <h3>Search Results</h3>
-
-                    <div th:if="${resultCount > 0}" class="card-body" th:replace="~{fragments/documents/document-fragments :: documentSearchResults(${results},${term})}">
-                    </div>
-                    <div th:if="${resultCount == 0}">
-                        <p>No results found.</p>
-                    </div>
-
+                <div th:if="${resultCount == 0}">
+                    <p>No results found.</p>
                 </div>
 
             </div>
-            <hr/>
+
+
         </div>
 
 
 
-        <div class="container-fluid">
-            <div class="row">
-                <!--BOTTOM Navbar-->
-                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
-            </div>
-        </div>
+
     </div>
 
-
 </div>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+
+<!--BOTTOM Navbar-->
+<div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+
+<div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+
 </body>
 </html>

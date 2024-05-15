@@ -5,7 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.util.enums.EducationLevel;
 import za.co.recruitmentzone.util.enums.Province;
 
-public class CandidateDTO {
+import java.io.Serializable;
+
+public class CandidateDTO implements Serializable  {
     private String first_name;
     private String last_name;
     private String id_number;
@@ -145,5 +147,21 @@ public class CandidateDTO {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+
+    public String printCandidateDTO() {
+        return "CandidateDTO{" +
+                "first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email_address='" + email_address + '\'' +
+                ", current_province=" + current_province +
+                ", current_role='" + current_role + '\'' +
+                ", current_employer='" + current_employer + '\'' +
+                ", seniority_level='" + seniority_level + '\'' +
+                ", education_level=" + education_level +
+                ", relocation=" + relocation +
+                ", fileLocation='" + fileLocation + '\'' +
+                '}';
     }
 }

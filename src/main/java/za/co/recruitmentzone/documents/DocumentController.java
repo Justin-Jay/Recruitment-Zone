@@ -1,6 +1,7 @@
 package za.co.recruitmentzone.documents;
 
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.recruitmentzone.candidate.dto.CandidateFileDTO;
+import za.co.recruitmentzone.candidate.entity.CandidateFile;
+import za.co.recruitmentzone.client.dto.ClientFileDTO;
 import za.co.recruitmentzone.client.exception.FileContentException;
 import za.co.recruitmentzone.controller.RecruitmentZoneAPIController;
 import za.co.recruitmentzone.exception.DocumentLocationError;
@@ -43,11 +47,11 @@ public class DocumentController {
             log.info(e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- documentAdmin --> model: \n {}", model.asMap().toString());
+     // searchDocumentsDTO , internalServerError
         return "fragments/documents/document-administration";
     }
 
-    //  resultCount , results , term , searchFilesResponse , message , internalServerError
+
     @PostMapping("/searchDocuments")
     public String searchDocuments(@Valid
                                   @ModelAttribute("searchDocumentsDTO")
@@ -55,22 +59,21 @@ public class DocumentController {
                                   BindingResult bindingResult, Model model) {
         log.info("searchDocumentsDTO {}", searchDocumentsDTO);
         if (bindingResult.hasFieldErrors()) {
-            log.info("searchDocuments HAS ERRORS");
-            log.info("searchDocumentsDTO {}", searchDocumentsDTO);
-            // If there are validation errors, handle them accordingly
-            // You might want to return to the form page with error messages
-            model.addAttribute("message", "Please try again");
-            log.info("<-- searchDocuments --> model: \n {}", model.asMap().toString());
-            return "fragments/documents/document-administration"; // Replace with your error handling logic
+            log.info("searchDocumentsDTO Term {}", searchDocumentsDTO.getTerm());
+            model.addAttribute("searchDocumentsDTO", new SearchDocumentsDTO());
+            model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
+            return "fragments/documents/document-administration";
         }
         try {
             log.info("Search DTO: {}", searchDocumentsDTO);
             recruitmentZoneService.searchFiles(model, searchDocumentsDTO);
+            model.addAttribute("searchDocumentsDTO", new SearchDocumentsDTO());
         } catch (Exception e) {
             log.info(e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- searchDocuments --> model: \n {}", model.asMap().toString());
+        // resultCount , resultList , term , searchFilesResponse , internalServerError
+
         return "fragments/documents/document-administration";
     }
 
@@ -81,22 +84,21 @@ public class DocumentController {
                                      SearchDocumentsDTO searchDocumentsDTO,
                                      BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
-            log.info("searchDocuments HAS ERRORS");
+
             log.info("searchDocumentsDTO {}", searchDocumentsDTO);
-            // If there are validation errors, handle them accordingly
-            // You might want to return to the form page with error messages
-            model.addAttribute("message", "Please try again");
-            log.info("<-- searchFileContents --> model: \n {}", model.asMap().toString());
-            return "fragments/documents/document-administration"; // Replace with your error handling logic
+            model.addAttribute("searchDocumentsDTO", new SearchDocumentsDTO());
+            model.addAttribute("bindingResult",INTERNAL_SERVER_ERROR);
+            return "fragments/documents/document-administration";
         }
         try {
-            log.info("Search DTO: {}", searchDocumentsDTO);
+            log.info("Search DTO: {}", searchDocumentsDTO.getTerm());
             recruitmentZoneService.getFilesFromContent(searchDocumentsDTO, model);
+            model.addAttribute("searchDocumentsDTO", new SearchDocumentsDTO());
         } catch (Exception e) {
             log.info(e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- searchFileContents --> model: \n {}", model.asMap().toString());
+        // resultCount , resultList , term , searchFilesResponse , internalServerError
         return "fragments/documents/document-administration";
     }
 

@@ -5,11 +5,12 @@ import za.co.recruitmentzone.util.enums.BlogStatus;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
 import za.co.recruitmentzone.employee.entity.Employee;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name ="BLOG")
-public class Blog {
+public class Blog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="blogID")
@@ -120,22 +121,19 @@ public class Blog {
         this.employee = employee;
     }
 
-    @Override
-    public String toString() {
+    public Employee getOwner(){
+        return this.employee;
+    }
+
+
+    public String printBlog() {
         return "Blog{" +
                 "blogID=" + blogID +
                 ", blog_title='" + blog_title + '\'' +
-                ", blog_description='" + blog_description + '\'' +
                 ", status=" + status +
-                ", body='" + body + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
-                ", employee=" + employee +
                 '}';
-    }
-
-    public Employee getOwnwr(){
-        return this.employee;
     }
 }
 

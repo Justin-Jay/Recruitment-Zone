@@ -1,71 +1,42 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
-
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+<div class="container-fluid main-page-section">
 
     <div class="container-fluid"><h2>Update Client</h2></div>
-    <hr/>
 
+
+    <p th:if="${bindingResult}" th:text="${bindingResult}"></p>
     <p th:if="${findClientByIDResponse}" th:text="${findClientByIDResponse}"></p>
+    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
 
-    <!-- If-then-else -->
-    <div th:if="${internalServerError}">
-        <p>Error: <span th:text="${internalServerError}"></span></p>
-    </div>
-    <div th:else>
-        <!-- Display vacancy application -->
-        <div class="container-fluid">
+    <div class="container-fluid">
 
-            <form action="#" th:action="@{/Client/save-updated-client}" th:object="${client}" th:method="POST">
-                <!-- Hidden input field to include the vacancyID in the POST request -->
-                <input type="hidden" name="clientID" th:field="${client.clientID}" />
-                <div class="md-10">
-                    <label for="name" >Client Name: </label>
-                    <br>
-                    <input type="text" th:field="*{name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
-                </div>
-
-                <label for="industry" >Select Industry:
-                    <select id="industry" th:field="*{industry}">
-                        <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
-                                th:value="${type}" th:text="${type}"></option>
-                    </select>
-                </label>
-
-                <br>
-                <button type="submit" class="btn btn-primary">Save Updated Client</button>
-            </form>
-            <hr/>
-            <div class="container-fluid">
-                <a class="nav-link" th:href="@{/Client/client-administration}">Back</a>
+        <form action="#" th:action="@{/Client/save-updated-client}" th:object="${client}" th:method="POST">
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" name="clientID" th:field="${client.clientID}" />
+            <div class="md-10">
+                <label for="name" >Client Name: </label>
             </div>
+            <input type="text" th:field="*{name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
+            <label for="industry" >Select Industry:
+            </label>
+            <select class="form-select-sm m-2" aria-label=".form-select-sm" id="industry" th:field="*{industry}">
+                <option  value="1" th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
+                        th:value="${type}" th:text="${type}"></option>
+            </select>
+            <br>
+            <!--<button type="submit" class="btn">Save Updated Client</button>
+-->
 
-        </div>
+            <button class="btn normal-button"
+                    hx-post="/Client/save-updated-client"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML"
+                    hx-include="[client='client']"> Save Updated Client
+            </button>
+
+        </form>
+
+
+
     </div>
-
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
 
 </div>
-
-
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

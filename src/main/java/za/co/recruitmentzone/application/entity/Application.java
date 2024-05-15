@@ -5,21 +5,20 @@ import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.candidate.entity.Candidate;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "APPLICATION")
-public class Application {
+public class Application implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "applicationID")
     private Long applicationID;
     @Column(name="date_received")
     private String date_received;
-    @Column(name="submission_date")
-    private String submission_date;
-    @Column(name="created")
-    private Timestamp created;
+
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
@@ -32,13 +31,8 @@ public class Application {
     @JoinColumn(name="vacancyID")
     private Vacancy vacancy;
 
-    public Timestamp getCreated() {
-        return created;
-    }
 
-    public void setCreated(Timestamp created) {
-        this.created = created;
-    }
+
 
     public Long getApplicationID() {
         return applicationID;
@@ -56,13 +50,7 @@ public class Application {
         this.date_received = date_received;
     }
 
-    public String getSubmission_date() {
-        return submission_date;
-    }
 
-    public void setSubmission_date(String submission_date) {
-        this.submission_date = submission_date;
-    }
 
     public ApplicationStatus getStatus() {
         return status;
@@ -88,16 +76,29 @@ public class Application {
         this.vacancy = vacancy;
     }
 
-    @Override
-    public String toString() {
+
+    public String printApplication() {
         return "Application{" +
                 "applicationID=" + applicationID +
                 ", date_received='" + date_received + '\'' +
-                ", submission_date='" + submission_date + '\'' +
+
                 ", status=" + status +
-                ", candidate=" + candidate +
-                ", vacancy=" + vacancy +
+                ", candidate=" + candidate.getCandidateID() +
+                ", vacancy=" + vacancy.getJob_title() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Application that = (Application) o;
+        return Objects.equals(applicationID, that.applicationID) && Objects.equals(date_received, that.date_received) && status == that.status && Objects.equals(candidate, that.candidate) && Objects.equals(vacancy, that.vacancy);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(applicationID, date_received, status, candidate, vacancy);
     }
 }
 

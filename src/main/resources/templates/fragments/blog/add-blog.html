@@ -1,35 +1,13 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http:www.thymeleaf.org/extras/spring-security"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section">
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+    </div>
 
-    <div class="container-fluid"><h2>Add Blog</h2></div>
-    <hr/>
 
-    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+    <form action="#" th:action="@{/Blog/save-blog}" th:object="${blogDTO}" method="POST" class="form">
+        <div class="form-group">
 
-    <div class="container-fluid">
-        <form action="#" th:action="@{/Blog/save-blog}" th:object="${blog}" method="POST" class="form">
-
-            <!--  <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>-->
-<!--
-            <input type="hidden" name="name" th:field="${blog.employee}" th:value="${#authentication.principal.username}"/>
--->
             <input type="hidden" name="name" th:field="*{employee}" th:value="${#authentication.principal.username}"/>
 
             <div class="md-10">
@@ -37,72 +15,60 @@
             </div>
             <hr/>
 
-            <div class="form-group">
+            <label for="blog_title">
+                Blog Title:
+                <p th:class="error" th:if="${#fields.hasErrors('blog_title')}" th:errors="${blog.blog_title}"
+                ></p>
+            </label>
 
-                <label for="blog_title">
-                    Blog Title:
-                    <p th:class="error" th:if="${#fields.hasErrors('blog_title')}" th:errors="${blog.blog_title}"
-                    ></p>
-                </label>
-                <input type="text" id="blog_title" th:field="*{blog_title}" placeholder="Enter The Title"
-                       class="form-control mb-4 w-25">
-            </div>
-            <div class="form-group">
-                <label for="description">
-                    Blog Description:
-                    <p th:class="error" th:if="${#fields.hasErrors('blog_description')}"
-                       th:errors="${blog.blog_description}"
-                    ></p>
-                </label>
-                <input id="description" type="text" th:field="*{blog_description}"
-                       placeholder="Enter The Description" class="form-control mb-4 w-25">
-            </div>
+            <input type="text" id="blog_title" th:field="*{blog_title}" placeholder="Enter The Title"
+                   class="form-control">
 
 
-            <div class="form-group">
-                <label for="body">
-                    Body:
-                    <p th:class="error" th:if="${#fields.hasErrors('body')}"
-                       th:errors="${blog.body}"
-                    ></p>
-                </label>
-                <textarea class="form-control  mb-4 text-black-50" th:field="*{body}" id="body"
-                ></textarea>
-            </div>
+            <label for="description">
+                Blog Description:
+                <p th:class="error" th:if="${#fields.hasErrors('blog_description')}"
+                   th:errors="${blog.blog_description}"
+                ></p>
+            </label>
+            <input id="description" type="text" th:field="*{blog_description}"
+                   placeholder="Enter The Description" class="form-control ">
 
 
-            <div class="form-group">
-                <label for="publish_date">Publish Date:
-                    <p th:class="error" th:if="${#fields.hasErrors('publish_date')}"
-                       th:errors="${blog.publish_date}"
-                    ></p></label>
-                <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25"
-                       id="publish_date" placeholder="Publish Date"/>
-
-            </div>
-
-
-            <div class="form-group">
-                <label for="expirationDate">Expiration Date:
-                    <p th:class="error" th:if="${#fields.hasErrors('end_date')}"
-                       th:errors="${blog.end_date}"
-                    ></p></label>
-                <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25"
-                       id="expirationDate" placeholder="Expiration Date:"/>
-            </div>
+            <label for="body">
+                Body:
+                <p th:class="error" th:if="${#fields.hasErrors('body')}"
+                   th:errors="${blog.body}"
+                ></p>
+            </label>
+            <textarea class="form-control  mb-4 text-black-50" th:field="*{body}" id="body"
+            ></textarea>
 
 
-            <button type="submit" class="btn btn-primary btn-sm mb-3" value="Submit">Save blog</button>
-        </form>
+            <label for="publish_date">Publish Date:
+                <p th:class="error" th:if="${#fields.hasErrors('publish_date')}"
+                   th:errors="${blog.publish_date}"
+                ></p></label>
+            <input type="date" th:field="*{publish_date}" class="form-control  "
+                   id="publish_date" placeholder="Publish Date"/>
 
-    </div>
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
+
+            <label for="expirationDate">Expiration Date:
+                <p th:class="error" th:if="${#fields.hasErrors('end_date')}"
+                   th:errors="${blog.end_date}"
+                ></p></label>
+            <input type="date" th:field="*{end_date}" class="form-control "
+                   id="expirationDate" placeholder="Expiration Date:"/>
+
+            <br/>
+            <button class="btn normal-button"
+                    hx-post="/Blog/save-blog"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML"
+                    hx-include="[blogDTO='blogDTO']">Save Blog
+            </button>
+        </div>
+    </form>
 
 </div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>
+

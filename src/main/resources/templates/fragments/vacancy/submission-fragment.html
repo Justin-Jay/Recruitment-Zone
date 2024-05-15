@@ -1,4 +1,5 @@
-<div class="container-fluid" th:fragment="submission(vacancy)">
+<div class="container-fluid main-page-section" th:fragment="submission(vacancy)">
+
     <table th:each="Vapplication : ${vacancy.applications}" >
         <thead>
         <tr>
@@ -34,12 +35,12 @@
             <td th:text="${candidate.relocation}"></td>
             <td th:text="${candidate.cvFilePath}"></td>
             <td>
-                <form>
+                <form th:action="@{/Candidate/view-candidate-notes}" th:method="post">
                     <!-- Hidden input field to include the brandVal in the POST request -->
                     <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
 
                     <!-- Submit button to trigger the form submission -->
-                    <button  th:action="@{/Candidate/view-candidate-notes}" th:method="post"
+                    <button class="btn normal-button"
                              hx-post="/Candidate/view-candidate-notes"
                              hx-target='#candidate-notes'
                              hx-swap='innerHTML '
@@ -58,3 +59,4 @@
         <div th:replace="~{fragments/candidate/candidate-fragments :: candidateNotes(${existingNotes})}"></div>
     </div>
 </div>
+

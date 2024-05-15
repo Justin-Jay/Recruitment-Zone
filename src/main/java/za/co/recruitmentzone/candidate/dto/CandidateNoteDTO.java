@@ -1,8 +1,9 @@
 package za.co.recruitmentzone.candidate.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class CandidateNoteDTO {
+public class CandidateNoteDTO implements Serializable {
     private Long candidateID;
     private LocalDateTime dateCaptured;
     private String comment;
@@ -37,5 +38,14 @@ public class CandidateNoteDTO {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+
+    public String printCandidateNote() {
+        return "CandidateNoteDTO{" +
+                "candidateID=" + candidateID +
+                ", dateCaptured=" + dateCaptured +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

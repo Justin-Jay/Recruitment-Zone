@@ -1,154 +1,205 @@
-/* CSS STYLES */
+:root {
+    --bs-primary: #007bff; /* Your custom primary color */
+    --bs-btn-primary-bg: var(--bs-primary); /* Button background color */
+    --bs-btn-primary-color: #fff; /* Button text color */
+    --bs-btn-primary-border: #007bff; /* Button border color */
 
-/* GLOBAL STYLES */
 
-html {
-  position: relative;
-  min-height: 100%;
+    border-color: var(--bs-btn-primary-border);
+
+
 }
+
+/* NAVBAR STYLING */
+
+
+/* MAIN PAGE SECTION STYLES */
+
 body {
-  margin-bottom: 60px; /* Margin bottom by footer height */
+/*           background-color: var(--bs-border-color);*/
+}
+
+.contact-us {
+    position: relative;
+    top: 50%;
+    width: 100lvh;
+    text-align: center;
+    font-size: 18px;
 }
 
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  position: relative;
-  right: 100px;
-  height: 60px; /* Set the fixed height of the footer here */
-  line-height: 60px; /* Vertically center the text there */
-  background-color: #f5f5f5;
+.full-page-frame {
+    /*      <select class="form-select form-select-sm" aria-label=".form-select-sm"    */
 }
 
-.loginButton {
-position: relative;
-right: 100px;
+.main-page-section {
+    max-height: 75vh;
+    overflow: auto;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: grid;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    /* margin: 0;*/
 }
 
-.red-text {
-  color: red;
-}
 
-/* Default styles for larger screens */
-.navbar-large {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
 
-/* Default styles for smaller screens */
-.navbar-small {
-  display: none;
-}
 
-/* Styles for the burger menu */
-#menu-toggle {
-  display: none;
-}
-
-.menu-content {
-  display: none;
-  flex-direction: column;
-  position: absolute;
-  top: 50px; /* Adjust as needed based on your design */
-  left: 0;
-  background-color: #f9f9f9;
-  padding: 10px;
-  width: 100%;
-}
-
-/* Media query for smaller screens */
-@media only screen and (max-width: 600px) {
-  .navbar-large {
-    display: none;
-  }
-
-  .navbar-small {
+.home-page-section {
+    border: 1px solid #ccc;
+    background-color: var(--bs-border-color);
+    border-radius: 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  #menu-toggle:checked + .menu-content {
-    display: flex;
-  }
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 5px;
 }
 
-.vacancy-card {
-  margin-bottom: 20px; /* Adjust this value to set the desired space between cards */
+.blog-main-page-section {
+ /*   max-height: 75vh;*/
+    overflow: auto;
+    border: 2px solid #ccc;
+    background-color: var(--bs-border-color);
+    border-radius: 10px;
+    display: grid;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    /* margin: 0;*/
 }
 
-/* Example CSS Styles */
-.blog-post {
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin: 10px;
-  background-color: #f9f9f9;
+
+/*.main-page-section-contact{
+    overflow: auto;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: grid;
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+}*/
+
+
+
+.left-page-frame {
+    max-height: 75vh;
+    overflow: auto;
+    padding: 25px;
+/*    border: 2px solid #ccc;
+    border-radius: 10px;*/
+
+
+    /*
+       min-height: 80vh;
+       max-height: 80vh;
+
+       border: 2px solid #ccc;
+
+
+       display: flex;
+       */
 }
 
-.blog-title {
-  font-size: 24px;
-  color: #333;
+
+
+
+
+.right-page-frame {
+    max-height: 75vh;
+    padding: 10px;
+    overflow: auto;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    /* border: 1px solid #ccc;  Optional: Add border for visual clarity */
+    /*    min-height: 80vh;
+        max-height: 80vh;
+        overflow: auto;
+        border: 2px solid #ccc;
+        border-radius: 10px;*/
 }
 
-.blog-description {
-  font-style: italic;
-  color: #555;
+
+/* Add a card effect for articles */
+
+/* BUTTONS */
+
+
+/* Apply styles to the .drop-down-button class */
+.drop-down-button {
+    background-color: var(--bs-btn-primary-bg);
+    color: var(--bs-btn-primary-color);
+    border-color: var(--bs-btn-primary-border);
 }
 
-.blog-content {
-  line-height: 1.6;
+
+
+/*.drop-down-button:hover {
+    background-color: var(--bs-btn-primary-bg); !*  Change background color to light blue on hover *!
+    box-shadow: 0 0 0 2px black; !* Add a black outline *!
+}*/
+
+.normal-button {
+    /* Styles to match btn-light and btn-outline-dark */
+    background-color: #f8f9fa; /* Light background color */
+    color: #343a40; /* Dark text color */
+    /*   border-color: #343a40;  Dark border color */
 }
 
-.blog-footer {
-  margin-top: 10px;
-  color: #777;
+.normal-button:hover {
+    box-shadow: 0 0 0 2px black; /* Add a black outline */
 }
 
-.metadata {
-  font-size: 12px;
+.my-card.custom-border {
+    margin: 10px;
+    padding: 15px 15px 15px 15px;
+    border: 2px solid #ccc; /* Thin shade of grey border */
+    border-radius: 10px; /* Semi-rounded corners */
 }
 
-.back-to-blogs {
-  margin-top: 20px;
-}
-
-.leftcolumn {
-  float: left;
-  width: 60%;
-}
-
-/* Right column */
-.rightcolumn {
-  float: left;
-  width: 25%;
-  padding-left: 20px;
-}
 
 
 
 /* Fake image */
 .fakeimg {
-  background-color: #aaa;
-  width: 100%;
-  padding: 20px;
+    /*  background-color: #aaa;
+      width: 100%;
+      padding: 20px;*/
 }
 
-/* Add a card effect for articles */
-.card {
-  background-color: white;
-  padding: 10px;
-  margin-top: 10px;
+.blog-post {
+    /* border: 1px solid #ddd;
+     padding: 15px;
+     margin: 10px;
+     background-color: #f9f9f9;*/
+}
+
+.blog-title {
+    /*  font-size: 24px;
+      color: #333;*/
+}
+
+.blog-description {
+    /*  font-style: italic;
+      color: #555;*/
+}
+
+.blog-content {
+    /*  line-height: 1.6;*/
+}
+
+.blog-footer {
+    /*  margin-top: 10px;
+      color: #777;*/
+}
+
+.metadata {
+    /*  font-size: 12px;*/
 }
 
 
 
-/* Footer */
-.footer {
-  padding: 20px;
-  text-align: center;
-  background: #ddd;
-  margin-top: 20px;
-}
+
+
+
+
 

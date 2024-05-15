@@ -1,37 +1,50 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section">
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
-
-    <div class="container-fluid"><h2>View Vacancy</h2></div>
-    <hr/>
-    <p th:if="${internalServerError}" th:text="${internalServerError}"> </p>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findVacancyResponse})}"></div>
 
 
-    <div th:insert="~{fragments/vacancy/vacancy}">Vacancy</div>
+    <table class="table table-striped table-responsive">
+
+        <thead>
+
+        <tr>
+            <th>Vacancy ID</th>
+            <th>Client</th>
+            <th>No. Applications</th>
+            <th>Location</th>
+            <th>Publish Date</th>
+            <th>Status</th>
+
+            <th>Update Vacancy</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="foundVacancy : ${vacancy}">
+            <td th:text="*{foundVacancy.vacancyID}"></td>
+            <td th:text="${foundVacancy.client.name}"></td>
+            <td th:text="${foundVacancy.getApplicationsSize + ' total applications '}"></td>
+            <td th:text="${foundVacancy.location}"></td>
+            <td th:text="${foundVacancy.publish_date}"></td>
+            <td th:text="${foundVacancy.status}"></td>
+
+            <td>
+                <form action="#" th:action="@{/Vacancy/update-vacancy}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="vacancyID" th:value="*{foundVacancy.vacancyID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button class="btn normal-button"
+                            hx-post="/Vacancy/update-vacancy"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML"
+                            hx-include="[vacancyID='vacancyID']">Update Vacancy
+                    </button>
+                </form>
+
+            </td>
 
 
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
-
+        </tr>
+        </tbody>
+    </table>
 </div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

@@ -1,6 +1,8 @@
 package za.co.recruitmentzone.client.exception;
 
-public class SaveClientException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class SaveClientException extends RzoneException {
 
     public SaveClientException(String message) {
         super(message);
@@ -10,7 +12,4 @@ public class SaveClientException extends RuntimeException {
         super(message, cause);
     }
 
-    public SaveClientException(Throwable cause) {
-        super(cause);
-    }
 }

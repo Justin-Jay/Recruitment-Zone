@@ -7,9 +7,10 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
 import za.co.recruitmentzone.util.enums.BlogStatus;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class BlogDTO {
+public class BlogDTO implements Serializable {
     @NotEmpty(message = "Must not be empty")
     private String blog_title;
     @NotEmpty(message = "Please enter description")

@@ -1,17 +1,12 @@
-/*
-package za.co.RecruitmentZone.events.publisher;
+package za.co.recruitmentzone.candidate.events;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import za.co.RecruitmentZone.application.entity.Application;
-import za.co.RecruitmentZone.candidate.entity.Candidate;
-import za.co.RecruitmentZone.vacancy.entity.Vacancy;
-import za.co.RecruitmentZone.candidate.Events.CandidateAppliedEvent;
-import za.co.RecruitmentZone.vacancy.Events.VacancyCreateEvent;
 
-import java.time.Clock;
+import org.w3c.dom.DocumentType;
+import za.co.recruitmentzone.documents.Document;
 
 @Service
 public class CandidateEventPublisher {
@@ -21,26 +16,17 @@ public class CandidateEventPublisher {
     public CandidateEventPublisher(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
-    public boolean publishVacancyCreateEvent( Vacancy vacancy) {
-        try {
-            Clock baseClock = Clock.systemDefaultZone();
-            VacancyCreateEvent event = new VacancyCreateEvent(vacancy,baseClock);
-            eventPublisher.publishEvent(event);
-            return true;
-        } catch (Exception e) {
-            log.info("Unable to post event");
-            return false;
-        }
-    }
 
-    public boolean publishCandidateAppliedEvent(Application application) {
+
+    public boolean publishCandidateFileUploadedEvent(Long fileID, Document document) {
+        CandidateFileUploadEvent candidateFileUploadEvent = new CandidateFileUploadEvent(fileID,document);
+        log.info("Executing publishCandidateFileUploadedEvent");
         try {
-            Clock baseClock = Clock.systemDefaultZone();
-            CandidateAppliedEvent event = new CandidateAppliedEvent(application,baseClock);
-            eventPublisher.publishEvent(event);
+            eventPublisher.publishEvent(candidateFileUploadEvent);
+            log.info("EVENT publishCandidateFileUploadedEvent POSTED");
             return true;
         } catch (Exception e) {
-            log.info("Unable to post event");
+            log.error("Unable to post event");
             return false;
         }
 
@@ -49,35 +35,9 @@ public class CandidateEventPublisher {
 
 
 
-*/
-/*
-    public String suspendVacancy(Integer vacancyID) {
-
-        try {
 
 
-            // Deserialize the JSON string into a MyObject object
-            Optional<Vacancy> vacancyToSuspend = vacancyRepository.findById(vacancyID);
 
-
-            System.out.println("Vacancy Received: " + vacancyToSuspend.toString());
-
-
-            if (vacancyToSuspend.isPresent()) {
-                eventPoster.suspendVacancy(vacancyToSuspend);
-            }
-            return "Vacancy has been suspended";
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return "failed to suspend vacancy";
-        }
-
-    }
-
-*//*
-
-
-*/
 /*    public String rejectCandidate(Integer candidateID){
         try {
 
@@ -93,9 +53,9 @@ public class CandidateEventPublisher {
             log.info(e.getMessage());
             return "failed reject Candidate";
         }
-    }
+    }*/
 
-    public String shortList(Integer userID,Integer vacancyID){
+/*    public String shortList(Integer userID,Integer vacancyID){
         try {
             Optional<ApplicationUser> candidate = userRepository.findById(userID);
             Optional<Vacancy> vacancy = vacancyRepository.findById(vacancyID);
@@ -113,8 +73,8 @@ public class CandidateEventPublisher {
             log.info(e.getMessage());
             return "failed reject Candidate";
         }
-    }
-    public String removeFromShortList(Integer userID,Integer vacancyID){
+    }*/
+/*    public String removeFromShortList(Integer userID,Integer vacancyID){
         try {
             Optional<ApplicationUser> candidate = userRepository.findById(userID);
             Optional<Vacancy> vacancy = vacancyRepository.findById(vacancyID);
@@ -132,8 +92,7 @@ public class CandidateEventPublisher {
             log.info(e.getMessage());
             return "failed reject Candidate";
         }
-    }*//*
+    }*/
 
 
 }
-*/

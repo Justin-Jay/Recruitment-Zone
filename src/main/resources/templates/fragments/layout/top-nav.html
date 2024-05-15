@@ -1,31 +1,113 @@
-<div class="row-cols-auto" xmlns:sec="http://www.w3.org/1999/xhtml">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" th:href="@{/}">Recruitment Zone</a>
-        <!-- Toggle button for smaller devices -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
-                aria-label="Toggle navigation">
+<!--<nav class="navbar navbar-expand-lg " xmlns:sec="http://www.w3.org/1999/xhtml" >
+    &lt;!&ndash; Toggle button for smaller devices &ndash;&gt;
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-link" th:href="@{/home}">Home</a>
+            <a class="nav-link" th:href="@{/Blog/blogs}">Blogs</a>
+            <a class="nav-link" th:href="@{/aboutus}">About Us</a>
+            <a class="nav-link" th:href="@{/Communication/contact-us}">Contact Us</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Candidate/candidate-administration}">Candidate Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')" th:href="@{/Document/document-administration}">Document Search</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Client/client-administration}">Client Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Employee/employee-admin}">Employee Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"  th:href="@{/Blog/blog-administration}">Blog Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"  th:href="@{/Vacancy/vacancy-administration}">Vacancy Administration</a>
+            <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Application/applications-administration}">Applications Administration</a>
+           <a class="nav-link">
+               <form th:if="${#authorization.expression('isAuthenticated()')}" action="#" th:action="@{/logout}" method="POST">
+                   <input type="submit" th:value="Logout">
+               </form>
+           </a>
+            <a class="btn" th:if="${not #authorization.expression('isAuthenticated')}" th:href="@{/log-in}" role="button">Login</a>
+        </div>
+    </div>
+</nav>-->
+
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Kiunga</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link" th:href="@{/home}">Home</a>
-                <a class="nav-link" th:href="@{/Blog/blogs}">Blogs</a>
-                <a class="nav-link" th:href="@{/aboutus}">About Us</a>
-                <a class="nav-link" th:href="@{/Communication/contact-us}">Contact Us</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Candidate/candidate-administration}">Candidate Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"  th:href="@{/Document/document-administration}">Document Search</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Client/client-administration}">Client Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"  th:href="@{/Employee/employee-admin}">Employee Administration</a>
-                <a class="nav-link" th:href="@{/Blog/blog-administration}">Blog Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"  th:href="@{/Vacancy/vacancy-administration}">Vacancy Administration</a>
-                <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')" th:href="@{/Application/applications-administration}">Applications Administration</a>
-                <form th:if="${#authorization.expression('isAuthenticated()')}" action="#" th:action="@{/logout}" method="POST">
-                    <input type="submit" th:value="Logout">
-                </form>
-                <a class="btn btn-light" th:if="${not #authorization.expression('isAuthenticated')}" th:href="@{/log-in}" role="button">Login</a>
-            </div>
-        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/home}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/aboutus}">About Us</a>
+                </li>
 
-    </nav>
-</div>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/Communication/contact-us}">Contact Us</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/Blog/blogs}">Blogs</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false"
+                       sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')">
+                        Admin
+                    </a>
+                    <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item"
+                               th:href="@{/Blog/blog-administration}">Blog Administration</a></li>
+                        <!--sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"-->
+                        <li><a class="dropdown-item" th:href="@{/Candidate/candidate-administration}">Candidate
+                            Administration</a></li>
+                        <li><a class="dropdown-item"
+                               th:href="@{/Vacancy/vacancy-administration}">Vacancy Administration</a>
+                            <!--sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_EMPLOYEE')"-->
+                        </li>
+
+                        <li><a class="dropdown-item"
+                               th:href="@{/Application/applications-administration}">Applications Administration</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider"
+                                sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"
+                               th:href="@{/Document/document-administration}">Document Search</a>
+                        </li>
+                        <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"
+                               th:href="@{/Client/client-administration}">Client Administration</a>
+                        </li>
+                        <li><a class="dropdown-item" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')"
+                               th:href="@{/Employee/employee-admin}">Employee Administration</a></li>
+                        <li>
+                        </li>
+                        <li>
+                            <a class="nav-link">
+                                <form th:if="${#authorization.expression('isAuthenticated()')}" action="#"
+                                      th:action="@{/logout}" method="POST">
+                                    <input type="submit" th:value="Logout">
+                                </form>
+                            <!--    <a class="nav-link" th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Logout</a>-->
+                            </a>
+
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${not #authorization.expression('isAuthenticated')}" th:href="@{/log-in}">Login</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+

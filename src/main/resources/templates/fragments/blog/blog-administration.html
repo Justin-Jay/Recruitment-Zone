@@ -1,63 +1,125 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      lang="en">
+      lang="en"> <!--  data-bs-theme="dark" -->
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+
     <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
 <body>
-<div class="container-fluid">
 
-    <div class="container-fluid">
+<!-- TOP Navbar -->
+
+<div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+
+<div class="container-fluid pt-2 pe-2" id="body-container">
+
+    <!--MAIN PAGE SECTION -->
+
+
+    <div class="row-12 ">
+
+        <!-- PAGE HEADING -->
+
         <div class="container-fluid">
-            <div class="row">
-                <!--TOP Navbar-->
-                <div th:replace="~{fragments/layout/top-nav}">Header</div>
-            </div>
+            <h3> Blog Administration
+
+            </h3>
+            <hr>
         </div>
-        <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
-
-        <p th:if="${saveNewBlogResponse}" th:text="${saveNewBlogResponse}"></p>
 
 
-        <div class="container-fluid">
+        <!--MESSAGE AREA-->
+
+        <div class="row">
             <div class="container-fluid">
-                <h3>Blog Administration</h3>
-                <hr>
+                <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+                <div th:insert="~{fragments/layout/response-messages :: failureMessage(${getBlogsResponse})}"></div>
             </div>
-            <!-- If-then-else -->
-            <div th:if="${getBlogsResponse}">
-                <p>Error: <span th:text="${getBlogsResponse}"></span></p>
-            </div>
-            <div th:else>
-                <!-- Display vacancy application -->
-                <div th:replace="~{fragments/blog/view-blog-list}">Blogs</div>
-            </div>
-
-            <a class="btn btn-primary btn-sm mb-3" th:href="@{/Blog/add-blog}">Add Blog</a>
-
         </div>
 
-        <div class="container-fluid">
+        <!--PAGE CONTENT -->
+
+        <div class="container-fluid main-page-section" id="page-content">
+
+
             <div class="row">
-                <!--BOTTOM Navbar-->
-                <div th:replace="~{fragments/layout/bottom-nav}">Footer</div>
+                <!--LEFT PAGE COLUMN -->
+
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                    <div class="container-fluid left-page-frame" id="left-page-column">
+                        <br/>
+                        <form class="container d-none d-md-block" action="#" th:action="@{/Blog/add-blog}"
+                              th:method="post">
+                            <button class="btn btn-outline-secondary"
+                                    hx-post="/Blog/add-blog"
+                                    hx-target="#main-page-section"
+                                    hx-swap="innerHTML">Create Blog
+                            </button>
+                        </form>
+                        <hr/>
+
+                        <div class="my-card custom-border dropdown dropend" th:each="blog : ${blogList}">
+
+                            <p th:text="*{'User: ' + blog.blog_title}" th:value="${blog}"></p>
+                            <p th:text="*{'Status: ' + blog.status}"
+                               th:value="${blog}"></p>
+
+                            <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Manage Blog
+                            </button>
+
+                            <div id="blog-admin-list"
+                                 th:insert="~{fragments/blog/view-blog-list :: listOptions(${blog})}">Blog
+                                List
+                            </div>
+                            <br/>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!--MAIN PAGE SECTION-->
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                    <div class="container-fluid" id="main-page-section">
+                        <!--RESPONSE TEMPLATE-->
+
+
+                    </div>
+                </div>
+
+
+                <!--RIGHT PAGE LIST-->
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                    <div class="container-fluid" id="right-page-column">
+
+                    </div>
+                </div>
             </div>
         </div>
+
+
     </div>
 
 
 </div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
+<!--BOTTOM Navbar-->
+<div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+
+<div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+
+
+
 </body>
 </html>

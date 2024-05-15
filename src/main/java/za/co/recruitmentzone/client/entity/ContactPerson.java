@@ -2,11 +2,12 @@ package za.co.recruitmentzone.client.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CONTACT_PERSON")
-public class ContactPerson {
+public class ContactPerson implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contactPersonID;
@@ -115,16 +116,14 @@ public class ContactPerson {
         this.client = client;
     }
 
-    @Override
-    public String toString() {
+
+    public String printContactPerson() {
         return "ContactPerson{" +
                 "contactPersonID=" + contactPersonID +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", email_address='" + email_address + '\'' +
-                ", land_line='" + land_line + '\'' +
-                ", cell_phone='" + cell_phone + '\'' +
-                ", client=" + client +
+                ", client=" + client.getName() +
                 '}';
     }
 }

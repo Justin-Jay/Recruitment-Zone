@@ -2,8 +2,10 @@ package za.co.recruitmentzone.documents;
 
 import jakarta.validation.constraints.NotEmpty;
 
+import java.io.Serializable;
 
-public class SearchDocumentsDTO {
+
+public class SearchDocumentsDTO implements Serializable {
     @NotEmpty(message = "search value cannot be empty")
     private String term;
 

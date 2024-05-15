@@ -1,0 +1,79 @@
+<ul class="dropdown-menu dropdown-menu-lg-end" th:fragment="listOptions(client)" >
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form action="#" th:action="@{/Client/view-client}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="${client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+
+                <button class="btn normal-button"
+                        hx-post="/Client/view-client"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[clientID='clientID']"> View Client
+                </button>
+            </form>
+        </a>
+    </li>
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form action="#" th:action="@{/Client/update-client}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="${client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+
+                <button class="btn normal-button"
+                        hx-post="/Client/update-client"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[clientID='clientID']"> Update Client
+                </button>
+            </form>
+        </a>
+    </li>
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form th:action="@{/Client/view-client-contacts}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Client/view-client-contacts"
+                        hx-target="#right-page-column"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[clientID='clientID']"> View client contacts
+                </button>
+            </form>
+        </a>
+    </li>
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form th:action="@{/Client/view-client-notes}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Client/view-client-notes"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[clientID='clientID']"> View client notes
+                </button>
+            </form>
+        </a>
+    </li>
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form th:action="@{/Client/view-client-vacancies}" th:method="post">
+                <!-- Hidden input field to include the id in the POST request -->
+                <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Client/view-client-vacancies"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[clientID='clientID']"> View client vacancies
+                </button>
+            </form>
+        </a>
+    </li>
+</ul>

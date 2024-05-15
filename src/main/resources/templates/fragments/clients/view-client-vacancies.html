@@ -1,0 +1,14 @@
+<div class="container-fluid main-page-section">
+
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+
+    <div id="client-vacancies"  th:each="vacancy : ${clientVacancyList}" >
+
+        <h3 th:text="${vacancy.job_title}"></h3>
+
+    <!--    <div th:insert="~{fragments/clients/add-document}">Add Document</div>
+-->
+    </div>
+
+</div>

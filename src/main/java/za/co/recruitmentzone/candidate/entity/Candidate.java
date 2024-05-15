@@ -3,17 +3,17 @@ package za.co.recruitmentzone.candidate.entity;
 import jakarta.persistence.*;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.candidate.dto.CandidateNoteDTO;
-import za.co.recruitmentzone.documents.CandidateFile;
 import za.co.recruitmentzone.util.enums.EducationLevel;
 import za.co.recruitmentzone.util.enums.Province;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "CANDIDATE")
-public class Candidate {
+public class Candidate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long candidateID;
@@ -197,14 +197,6 @@ public class Candidate {
         this.notes = notes;
     }
 
-    @Override
-    public String toString() {
-        return "Candidate{" +
-                "first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                '}';
-    }
-
     public void AddApplication(Application application){
         if (applications ==null){
             applications = new HashSet<>() {
@@ -213,7 +205,7 @@ public class Candidate {
         applications.add(application);
         application.setCandidate(this);
     }
-
+//AddDocument
     public void AddDocument(CandidateFile document){
         if (documents ==null){
             documents = new HashSet<>() {
@@ -243,4 +235,13 @@ public class Candidate {
         notes.add(newNote);
 
     }
+
+
+    public String printCandidate() {
+        return "Candidate{" +
+                "first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                '}';
+    }
+
 }

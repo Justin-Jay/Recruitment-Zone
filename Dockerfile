@@ -12,6 +12,8 @@ COPY --from=builder RecruitmentZone/spring-boot-loader/ ./
 COPY --from=builder RecruitmentZone/snapshot-dependencies/ ./
 COPY --from=builder RecruitmentZone/application/ ./
 
+RUN mkdir -p /Gcloud/Key/
+
 RUN mkdir -p /RecruitmentZoneApplication/Logs/
 
 RUN mkdir -p /RecruitmentZoneApplication/Files/

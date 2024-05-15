@@ -10,68 +10,49 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
-import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 public class RecruitmentZoneWebController {
+
+
     private final RecruitmentZoneService recruitmentZoneService;
-    private final JobLauncher jobLauncher;
-    private final Job vacancyJob;
+
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private Job vacancyJob;
+
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneWebController.class);
 
-    public RecruitmentZoneWebController(RecruitmentZoneService recruitmentZoneService, JobLauncher jobLauncher, Job vacancyJob) {
+    public RecruitmentZoneWebController( RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
-        this.jobLauncher = jobLauncher;
-        this.vacancyJob = vacancyJob;
     }
 
-    /*     @GetMapping("/")
-         public String redirectToHome(Principal principal, RedirectAttributes redirectAttributes){
-             redirectAttributes.addAttribute(principal);
-             redirectAttributes.addAttribute(principal);
-             return "redirect:/home";
-         }*/
-    // Home pages
-    @GetMapping(value = {"/", "/home"})
-    public String home(@RequestParam(name = "name", required = false) String title, Model model, Principal principal,
-                       @ModelAttribute("createCandidateApplicationResponse") String createCandidateApplicationResponse, @ModelAttribute("internalServerError") String internalServerError,
-                       @ModelAttribute("searchByTitleResponse") String searchByTitleResponse, @ModelAttribute("saveSubmissionFormResponse") String saveSubmissionFormResponse) {
-        try {
-            if (title != null) {
-                recruitmentZoneService.searchVacancyByTitle(title, model);
-            } else {
-                recruitmentZoneService.getActiveVacancies(model);
-            }
-            log.info("<-- User Name -->: {} ", principal.getName());
+  /*  @GetMapping("/css/**")
+    public String redirectToHome() {
+        return "redirect:/home";
+    }
+*/
 
-            model.addAttribute("createCandidateApplicationResponse", createCandidateApplicationResponse);
-            model.addAttribute("title", title);
-            model.addAttribute("saveSubmissionFormResponse", saveSubmissionFormResponse);
-            model.addAttribute("internalServerError", internalServerError);
+    @GetMapping(value = {"/", "/home"})
+    public String home(Model model) {
+        try {
+            recruitmentZoneService.getActiveVacancies(model);
         } catch (Exception e) {
             model.addAttribute("internalServerError", e.getMessage());
         }
         return "home";
     }
 
-    @GetMapping("/aboutus")
-    public String aboutUs() {
-        return "fragments/info/about-us";
-    }
 
-    @GetMapping("/admin")
-    public String showBatchForm() {
-        return "admin";
-    }
-
-    @PostMapping("/start-batch-job")
+    @GetMapping("/start-batch-job")
     public String batchJobEntry(Model model) {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("created", System.currentTimeMillis())
@@ -93,6 +74,18 @@ public class RecruitmentZoneWebController {
             return "admin";
         }
     }
+
+
+    @GetMapping("/aboutus")
+    public String aboutUs() {
+        return "fragments/info/about-us";
+    }
+
+    @GetMapping("/admin")
+    public String showBatchForm() {
+        return "admin";
+    }
+
 }
 
 

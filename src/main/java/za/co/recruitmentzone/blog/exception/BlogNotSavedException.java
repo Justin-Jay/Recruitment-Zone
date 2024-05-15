@@ -1,15 +1,10 @@
 package za.co.recruitmentzone.blog.exception;
 
-public class BlogNotSavedException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class BlogNotSavedException extends RzoneException {
     public BlogNotSavedException(String message) {
         super(message);
     }
 
-    public BlogNotSavedException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public BlogNotSavedException(Throwable cause) {
-        super(cause);
-    }
 }

@@ -1,0 +1,14 @@
+<div class="container-fluid main-page-section">
+    <main>
+        <article>
+            <section>
+                <!--MESSAGE AREA-->
+                <div class="row-cols-8">
+                    <div th:insert="~{fragments/layout/response-messages :: successMessage(${applicationOutcome})}"></div>
+                </div>
+            </section>
+        </article>
+
+        <a th:href="@{/home}">Show Active Vacancies</a>
+    </main>
+</div>

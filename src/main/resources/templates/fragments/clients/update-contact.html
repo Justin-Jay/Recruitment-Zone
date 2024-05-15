@@ -1,95 +1,66 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
-
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+<div class="container-fluid right-page-frame">
 
     <div class="container-fluid"><h2>Update Client Contact Person Details</h2></div>
-    <hr/>
+
 
     <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
-
-    <!-- If-then-else -->
-    <div th:if="${contactPersonResponse}">
-        <p>Error: <span th:text="${contactPersonResponse}"></span></p>
-    </div>
-    <div th:else>
-        <!-- Display vacancy application -->
-        <div class="container-fluid">
-            <form action="#" th:action="@{/Client/save-updated-contact}" th:object="${contactPerson}" th:method="POST">
-                <!-- Hidden input field to include the vacancyID in the POST request -->
-                <input type="hidden" name="contactPersonID" th:field="${contactPerson.contactPersonID}" />
-                <br>
-                <div class="md-10">
-                    <label for="first_name" >First name: </label>
-                    <br>
-                    <input type="text" th:field="*{first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="Name"/>
-                </div>
-                <br>
-                <div class="md-10">
-                    <label for="last_name" >last Name: </label>
-                    <br>
-                    <input type="text" th:field="*{last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Name"/>
-                </div>
-                <br>
-                <div class="md-10">
-                    <label for="email_address" >Email Address: </label>
-                    <br>
-                    <input type="text" th:field="*{email_address}" class="form-control mb-4 w-25" id="email_address" placeholder="Name"/>
-                </div>
-                <br>
-                <div class="md-10">
-                    <label for="designation" >Designation: </label>
-                    <br>
-                    <input type="text" th:field="*{designation}" class="form-control mb-4 w-25" id="designation" placeholder="Name"/>
-                </div>
-                <br>
-                <div class="md-10">
-                    <label for="land_line" >Land Line: </label>
-                    <br>
-                    <input type="text" th:field="*{land_line}" class="form-control mb-4 w-25" id="land_line" placeholder="Name"/>
-                </div>
-                <br>
-                <div class="md-10">
-                    <label for="cell_phone" >Cell Phone: </label>
-                    <br>
-                    <input type="text" th:field="*{cell_phone}" class="form-control mb-4 w-25" id="cell_phone" placeholder="Name"/>
-                </div>
-                <br>
-                <button type="submit" class="btn btn-primary">Save Updated Contact</button>
-            </form>
-
-        </div>
-    </div>
-
-
-
+    <p th:if="${contactPersonResponse}" th:text="${contactPersonResponse}"></p>
 
     <div class="container-fluid">
-        <a class="nav-link" th:href="@{/Client/client-administration}">Back to client admin</a>
+        <form action="#" th:action="@{/Client/save-updated-contact}" th:object="${contactPerson}" th:method="POST">
+
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" name="contactPersonID" th:field="${contactPerson.contactPersonID}" />
+            <br>
+            <div class="md-10">
+                <label for="first_name" >First name: </label>
+                <br>
+                <input type="text" th:field="*{first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="Name"/>
+            </div>
+            <br>
+            <div class="md-10">
+                <label for="last_name" >last Name: </label>
+                <br>
+                <input type="text" th:field="*{last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Name"/>
+            </div>
+            <br>
+            <div class="md-10">
+                <label for="email_address" >Email Address: </label>
+                <br>
+                <input type="text" th:field="*{email_address}" class="form-control mb-4 w-25" id="email_address" placeholder="Name"/>
+            </div>
+            <br>
+            <div class="md-10">
+                <label for="designation" >Designation: </label>
+                <br>
+                <input type="text" th:field="*{designation}" class="form-control mb-4 w-25" id="designation" placeholder="Name"/>
+            </div>
+            <br>
+            <div class="md-10">
+                <label for="land_line" >Land Line: </label>
+                <br>
+                <input type="text" th:field="*{land_line}" class="form-control mb-4 w-25" id="land_line" placeholder="Name"/>
+            </div>
+            <br>
+            <div class="md-10">
+                <label for="cell_phone" >Cell Phone: </label>
+                <br>
+                <input type="text" th:field="*{cell_phone}" class="form-control mb-4 w-25" id="cell_phone" placeholder="Name"/>
+            </div>
+            <br>
+
+      <!--      <button type="submit" class="btn">Save Updated Contact</button>
+-->
+            <button class="btn normal-button"
+                    hx-post="/Client/save-updated-contact"
+                    hx-target="#right-page-column"
+                    hx-swap="innerHTML"
+                    hx-include="[contactPerson='contactPerson']">Save Updated Contact
+            </button>
+
+        </form>
+
     </div>
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
+
 
 </div>
-
-
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

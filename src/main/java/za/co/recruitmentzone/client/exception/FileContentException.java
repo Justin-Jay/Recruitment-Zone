@@ -1,6 +1,8 @@
 package za.co.recruitmentzone.client.exception;
 
-public class FileContentException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class FileContentException extends RzoneException {
 
     public FileContentException(String message) {
         super(message);
@@ -10,7 +12,4 @@ public class FileContentException extends RuntimeException {
         super(message, cause);
     }
 
-    public FileContentException(Throwable cause) {
-        super(cause);
-    }
 }

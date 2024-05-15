@@ -1,6 +1,8 @@
 package za.co.recruitmentzone.client.exception;
 
-public class ClientNotFoundException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class ClientNotFoundException extends RzoneException {
 
     public ClientNotFoundException(String message) {
         super(message);
@@ -10,7 +12,4 @@ public class ClientNotFoundException extends RuntimeException {
         super(message, cause);
     }
 
-    public ClientNotFoundException(Throwable cause) {
-        super(cause);
-    }
 }

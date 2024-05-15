@@ -1,0 +1,34 @@
+<ul class="dropdown-menu" th:fragment="listOptions(vapp)">
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form action="#" th:action="@{/Application/update-application}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="applicationID" th:value="*{vapp.applicationID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Application/update-application"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[applicationID='applicationID']" >Update Application
+                </button>
+            </form>
+        </a>
+    </li>
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <p th:field="*{vapp.date_received}" th:value="${vapp}"></p>
+            <form action="#" th:action="@{/Candidate/view-candidate}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="candidateID" th:value="*{vapp.candidate.candidateID}"/>
+
+                <button class="btn normal-button"
+                        hx-post="/Candidate/view-candidate"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[candidateID='candidateID']" >View Candidate  <!-- hx-href="#main-page-section" --> <!--   show:top" -->
+                </button>
+            </form>
+        </a>
+    </li>
+</ul>
+

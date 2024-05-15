@@ -1,84 +1,63 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
-
 <div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
 
-    <div class="container-fluid"><h2>Add Employee</h2></div>
-    <hr/>
-    <div class="container-fluid">
-        <p th:if="${message}" th:text="${message}"> </p>
-        <p th:if="${rolesNotFoundException}" th:text="${rolesNotFoundException}"> </p>
-        <p th:if="${employeeNotFound}" th:text="${employeeNotFound}"> </p>
-        <p th:if="${internalServerError}" th:text="${internalServerError}"> </p>
+    <div class="row">
+        <div class="container-fluid">
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadAuthoritiesResponse})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewEmployeeResponse})}"></div>
 
-    </div>
-    <div class="container-fluid">
-        <form action="#" th:action="@{/Employee/save-employee}" th:object="${employeeDTO}" method="POST">
-            <label>
-                Employee Name:
-                <p th:class="error" th:if="${#fields.hasErrors('first_name')}"
-                   th:errors="${employeeDTO.first_name}"
-                ></p>
-                <input type="text" th:field="*{first_name}" placeholder="First Name" class="form-control">
-            </label>
-
-            <label>
-                Last Name:
-                <p th:class="error" th:if="${#fields.hasErrors('last_name')}"
-                   th:errors="${employeeDTO.last_name}"
-                ></p>
-                <input type="text" th:field="*{last_name}" placeholder="Last Name" class="form-control">
-            </label>
-
-            <label>
-                Employee Password:
-                <p th:class="error" th:if="${#fields.hasErrors('password')}"
-                   th:errors="${employeeDTO.password}"
-                ></p>
-                <input type="password" th:field="*{password}" placeholder="Password" class="form-control">
-            </label>
-
-            <label>
-                Contact Number:
-                <p th:class="error" th:if="${#fields.hasErrors('contact_number')}"
-                   th:errors="${employeeDTO.contact_number}"
-                ></p>
-
-                <input type="text" th:field="*{contact_number}" placeholder="Contact Number" class="form-control">
-            </label>
-
-            <!-- Show the list if it's not empty -->
-            <label for="role">Select Role:</label>
-            <select id="role" th:field="*{role}">
-                <option th:each="role : ${authorities}" th:value="${role}" th:text="${role.getRoleName()}"></option>
-            </select>
-
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Add Employee</button>
-        </form>
+        </div>
     </div>
 
+    <form action="#" th:action="@{/Employee/save-employee}" th:object="${employeeDTO}" method="POST">
+        <label>
+            Employee Name:
+            <p th:class="error" th:if="${#fields.hasErrors('first_name')}"
+               th:errors="${employeeDTO.first_name}"
+            ></p>
+            <input type="text" th:field="*{first_name}" placeholder="First Name" class="form-control">
+        </label>
 
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
+        <label>
+            Last Name:
+            <p th:class="error" th:if="${#fields.hasErrors('last_name')}"
+               th:errors="${employeeDTO.last_name}"
+            ></p>
+            <input type="text" th:field="*{last_name}" placeholder="Last Name" class="form-control">
+        </label>
+
+        <label>
+            Employee Password:
+            <p th:class="error" th:if="${#fields.hasErrors('password')}"
+               th:errors="${employeeDTO.password}"
+            ></p>
+            <input type="password" th:field="*{password}" placeholder="Password" class="form-control">
+        </label>
+
+        <label>
+            Contact Number:
+            <p th:class="error" th:if="${#fields.hasErrors('contact_number')}"
+               th:errors="${employeeDTO.contact_number}"
+            ></p>
+
+            <input type="text" th:field="*{contact_number}" placeholder="Contact Number" class="form-control">
+        </label>
+
+        <!-- Show the list if it's not empty -->
+        <label for="role">Select Role:</label>
+        <select class="form-select-sm" aria-label=".form-select-sm" id="role" th:field="*{role}">
+            <option th:each="role : ${authorities}" th:value="${role}" th:text="${role.getRoleName()}"></option>
+        </select>
+
+        <hr/>
+        <button class="btn normal-button"
+                hx-post="/Employee/save-employee"
+                hx-target="#main-page-section"
+                hx-swap="innerHTML"
+                hx-include="[employeeDTO='employeeDTO']"> Add Employee
+        </button>
+    </form>
+
 
 </div>
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

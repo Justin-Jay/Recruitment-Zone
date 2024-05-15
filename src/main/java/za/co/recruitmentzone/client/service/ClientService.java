@@ -7,6 +7,7 @@ import za.co.recruitmentzone.client.dto.ClientDTO;
 import za.co.recruitmentzone.client.dto.ContactPersonDTO;
 import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.client.entity.ContactPerson;
+import za.co.recruitmentzone.client.exception.ContactNotFoundException;
 import za.co.recruitmentzone.client.repository.ClientRepository;
 import za.co.recruitmentzone.client.repository.ContactPersonRepository;
 
@@ -63,7 +64,6 @@ public class ClientService {
     }
 
     public List<ContactPerson> findContactPersonsByClientID(Long clientID){
-        //return contactPersonRepository.findContactPeopleByClientID(clientID);
         return contactPersonRepository.findContactPersonByClient_ClientID(clientID);
     }
 
@@ -80,13 +80,6 @@ public class ClientService {
 
     public ContactPerson findContactsByID(Long contactPersonID){
         Optional<ContactPerson> opc = contactPersonRepository.findById(contactPersonID);
-        ContactPerson contactPerson= null;
-        if (opc.isPresent()){
-            contactPerson = opc.get();
-        }
-        else {
-          //  throw ContactPersonNotFoundException();
-        }
-        return contactPerson;
+        return opc.orElseThrow(()-> new ContactNotFoundException("Contact Person not found: "+contactPersonID));
     }
 }

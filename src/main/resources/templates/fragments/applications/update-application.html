@@ -1,69 +1,39 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section">
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
-    <div class="container-fluid"><h2>Update Application Status</h2></div>
-    <hr/>
-
-    <p th:if="${applicationsError}" th:text="${applicationsError}"></p>
-
-
-    <div th:if="${internalServerError}">
-        <p>Error: <span th:text="${internalServerError}"></span></p>
-    </div>
-    <div th:else>
-        <!-- Display vacancy application -->
-
-        <form action="#" th:action="@{/Application/save-updated-application}" th:method="POST">
-            <!-- Hidden input field to include the vacancyID in the POST request -->
-            <input type="hidden" th:field="${vacancyApplication.applicationID}"/>
-
-
-            <!-- Check if error message does not exist -->
-            <div th:if="${#strings.isEmpty(applicationsError)}">
-                <!-- Display vacancy application -->
-                <label for="status">Select Status:
-                    <select id="status" th:field="${vacancyApplication.status}">
-                        <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.ApplicationStatus).values()}"
-                                th:value="${statusVal}" th:text="${statusVal}"></option>
-                    </select>
-                </label>
-                <button type="submit" class="btn btn-primary">Save Updated Application Status</button>
-            </div>
-
-        </form>
-
-
-    </div>
-
-    <div class="container-fluid">
-
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveApplicationStatusResponse})}"></div>
     </div>
 
 
-    <!--BOTTOM Navbar-->
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
+
+    <form class="form-control-sm" action="#" th:action="@{/Application/save-updated-application}" th:method="POST">
+
+        <input type="hidden" th:field="${vacancyApplication.applicationID}"/>
+
+
+        <div th:if="${#strings.isEmpty(applicationsError)}">
+
+            <label for="status">Select Status:
+            </label>
+            <select class="form-select-sm" aria-label=".form-select-sm"  id="status" th:field="${vacancyApplication.status}">
+                <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.ApplicationStatus).values()}"
+                        th:value="${statusVal}" th:text="${statusVal}"></option>
+            </select>
+            <br>
+            <br>
+            <button class="btn btn-primary"
+                    hx-post="/Application/save-updated-application"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML" >Save Updated Application Status
+            </button>
+
+
+        </div>
+
+    </form>
+
 
 </div>
-
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>

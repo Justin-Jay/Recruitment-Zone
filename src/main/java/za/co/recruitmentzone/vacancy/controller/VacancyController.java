@@ -1,5 +1,6 @@
 package za.co.recruitmentzone.vacancy.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,12 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.util.enums.VacancyStatus;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
+
 
 import java.util.List;
 
@@ -30,93 +31,101 @@ public class VacancyController {
     }
 
     @GetMapping("/vacancy-administration")
-    public String vacancies(Model model, @ModelAttribute("internalServerError") String internalServerError,
-                            @ModelAttribute("saveVacancyResponse") String saveVacancyResponse) {
+    public String vacancies(Model model, HttpServletRequest request) {
+
         try {
             recruitmentZoneService.getAllVacancies(model);
-            model.addAttribute("saveVacancyResponse", saveVacancyResponse);
-            model.addAttribute("internalServerError", internalServerError);
+
         } catch (Exception e) {
-            log.info("<-- vacancies -->  Exception \n {}",e.getMessage());
+            log.error("<-- vacancies -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-       // log.info("<-- vacancies --> model: \n {}",model.asMap().toString());
+        //  vacancyList , loadVacanciesResponse
         return "fragments/vacancy/vacancy-administration";
     }
 
-    @GetMapping("/add-vacancy")
+    @PostMapping("/add-vacancy")
     public String showCreateVacancyForm(Model model) {
         try {
-            recruitmentZoneService.findAllClients(model);
-            recruitmentZoneService.findAllEmployees(model);
-            model.addAttribute("vacancy", new VacancyDTO());
+            recruitmentZoneService.addVacancy(model);
         } catch (Exception e) {
-            log.info("<-- showCreateVacancyForm -->  Exception \n {}",e.getMessage());
+            log.error("<-- showCreateVacancyForm -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- showCreateVacancyForm --> model: \n {}",model.asMap().toString());
+        //  vacancyDTO , clients , findAllClientsResponse  , employeeList loadEmployeesResponse , internalServerError
         return "fragments/vacancy/add-vacancy";
     }
 
     @PostMapping("/view-vacancy")
     public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
-            recruitmentZoneService.findVacancyById(vacancyID,model);
+            recruitmentZoneService.findVacancy(vacancyID, model);
         } catch (Exception e) {
-            log.info("<-- showVacancy -->  Exception \n {}",e.getMessage());
-            model.addAttribute("internalServerError",INTERNAL_SERVER_ERROR);
+            log.error("<-- showVacancy -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- showVacancy --> model: \n {}",model.asMap().toString());
+        // vacancy  , findVacancyResponse
         return "fragments/vacancy/view-vacancy";
     }
 
+    @PostMapping("/view-home-vacancy")
+    public String showHomeVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
+        try {
+            recruitmentZoneService.findVacancy(vacancyID, model);
+        } catch (Exception e) {
+            log.error("<-- showVacancy -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
 
+        return "fragments/vacancy/view-home-vacancy";
+    }
 
     @PostMapping("/save-vacancy")
     public String saveVacancy(@Valid @ModelAttribute("vacancy") VacancyDTO vacancy,
-                              BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+                              BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
             recruitmentZoneService.findAllClients(model);
             recruitmentZoneService.findAllEmployees(model);
-            log.info("VACANCY ERRORS {}", bindingResult.getAllErrors());
+            model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
             return "fragments/vacancy/add-vacancy";
         }
         try {
-            recruitmentZoneService.saveNewVacancy(vacancy, redirectAttributes);
+            recruitmentZoneService.saveNewVacancy(vacancy, model);
         } catch (Exception e) {
-            log.info("<-- saveVacancy -->  Exception \n {}",e.getMessage());
+            log.error("<-- saveVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- saveVacancy --> model: \n {}",model.asMap().toString());
-        return "redirect:/Vacancy/vacancy-administration";
+        // saveVacancyResponse , internalServerError
+        return "fragments/vacancy/view-vacancy";
 
     }
+
     @PostMapping("/update-vacancy")
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
-            recruitmentZoneService.findVacancyById(vacancyID,model);
+            recruitmentZoneService.findVacancy(vacancyID, model);
             model.addAttribute("vacancyStatusValues", VacancyStatus.values());
         } catch (Exception e) {
-            log.info("<-- updateVacancy -->  Exception \n {}",e.getMessage());
+            log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- updateVacancy --> model: \n {}",model.asMap().toString());
+        // vacancy , findVacancyResponse
         return "fragments/vacancy/update-vacancy";
     }
 
     @PostMapping("/save-updated-vacancy")
-    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy") VacancyDTO vacancy, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy") VacancyDTO vacancy, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "fragments/vacancy/update-vacancy";
         }
         try {
-            recruitmentZoneService.updateVacancy(vacancy,redirectAttributes);
+            recruitmentZoneService.updateVacancy(vacancy, model);
         } catch (Exception e) {
-            log.info("<-- saveUpdatedVacancy -->  Exception \n {}",e.getMessage());
-            redirectAttributes.addFlashAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+            log.error("<-- saveUpdatedVacancy -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- saveUpdatedVacancy --> redirectAttributes: \n {}",redirectAttributes.asMap().toString());
-        return "redirect:/Vacancy/vacancy-administration";
+        // vacancy ,  saveVacancyResponse
+        return "fragments/vacancy/view-vacancy";
     }
 
     @PostMapping("/view-vacancy-submission")
@@ -125,11 +134,25 @@ public class VacancyController {
             recruitmentZoneService.findVacancyById(vacancyID, model);
             model.addAttribute("applicationStatus", ApplicationStatus.values());
         } catch (Exception e) {
-            log.info("<-- viewVacancySubmissions -->  Exception \n {}",e.getMessage());
+            log.error("<-- viewVacancySubmissions -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-        log.info("<-- viewVacancySubmissions --> model: \n {}",model.asMap().toString());
+
         return "fragments/vacancy/view-vacancy-submission";
+    }
+
+    @PostMapping("/search-vacancies")
+    public String searchVacancies(@RequestParam(name = "title") String title, Model model) {
+        try {
+            log.info("Searching for {}", title);
+            recruitmentZoneService.searchVacancyByTitle(title, model);
+
+            log.info("Vacancy search completed");
+
+        } catch (Exception e) {
+            model.addAttribute("internalServerError", e.getMessage());
+        }
+        return "fragments/layout/search-results";
     }
 
 }

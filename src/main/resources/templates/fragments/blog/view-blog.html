@@ -1,37 +1,50 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
-    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
-    <title>Recruitment Zone</title>
-</head>
-<body>
+<div class="container-fluid main-page-section">
 
-<div class="container-fluid">
-    <div th:insert="~{fragments/layout/top-nav}">Header</div>
+    <div class="row">
 
-    <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
-
-    <p th:if="${findBlogResponse}" th:text="${findBlogResponse}"></p>
-
-    <div class="container-fluid">
-        <div th:insert="~{fragments/blog/blog :: blogView(${blog})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: successMessage(${saveNewBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${savedBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${updateBlogResponse})}"></div>
     </div>
 
+    <table class="table" id="myTable">
+        <thead>
+        <!--   <p th:text="*{foundBlog.blog_title}" >Blog Title</p>-->
+        <tr >
+            <th>Blog ID</th>
+  <!--          <th>Blog Creator</th>-->
+            <th>Publish Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Update Blog</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--<tr th:each="candidate : ${foundVacancy.candidate}">-->
+        <tr th:each="foundBlog : ${blog}"  >
 
-    <div th:insert="~{fragments/layout/bottom-nav}">Footer</div>
-</div>
+            <td th:text="*{foundBlog.blogID}"></td>
+ <!--           <td th:text="*{foundBlog.employee.name}"></td>-->
+            <td th:text="*{foundBlog.publish_date}"></td>
+            <td th:text="*{foundBlog.end_date}"></td>
+            <td th:text="*{foundBlog.status}"></td>
 
-<script type="text/javascript"
-        th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        th:src="@{/webjars/jquery/3.7.1/jquery.min.js/}"></script>
-</body>
-</html>
+            <td>
+                <form action="#" th:action="@{/Blog/update-blog}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="blogID" th:value="*{foundBlog.blogID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button class="btn normal-button"
+                            hx-post="/Blog/update-blog"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML"
+                            hx-include="[blogID='blogID']">Update Blog
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>

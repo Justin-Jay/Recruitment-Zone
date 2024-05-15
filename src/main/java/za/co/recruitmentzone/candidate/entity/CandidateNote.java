@@ -3,11 +3,12 @@ package za.co.recruitmentzone.candidate.entity;
 import jakarta.persistence.*;
 import za.co.recruitmentzone.util.Note;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CANDIDATE_NOTE")
-public class CandidateNote implements Note {
+public class CandidateNote implements Note, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,11 +76,11 @@ public class CandidateNote implements Note {
         this.candidate = candidate;
     }
 
-    @Override
-    public String toString() {
+
+    public String printCandidateNote() {
         return "CandidateNote{" +
                 "noteID=" + noteID +
-                ", candidate=" + candidate +
+                ", candidate=" + candidate.getCandidateID() +
                 ", dateCaptured=" + dateCaptured +
                 ", comment='" + comment + '\'' +
                 '}';

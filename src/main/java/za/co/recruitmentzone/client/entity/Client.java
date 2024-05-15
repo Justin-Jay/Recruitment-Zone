@@ -1,17 +1,19 @@
 package za.co.recruitmentzone.client.entity;
 
 import jakarta.persistence.*;
+import za.co.recruitmentzone.candidate.entity.CandidateFile;
 import za.co.recruitmentzone.client.dto.ClientNoteDTO;
 import za.co.recruitmentzone.util.enums.Industry;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "CLIENT")
-public class Client {
+public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "clientID")
@@ -38,6 +40,12 @@ public class Client {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
     private Set<ClientNote> notes;
+
+    @OneToMany(mappedBy = "client",
+            cascade = {
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
+            })
+    private Set<ClientFile> documents;
 
     public Client() {
     }
@@ -84,6 +92,13 @@ public class Client {
         return contactPeople;
     }
 
+
+    public int getContactPeopleCount() {
+        if (contactPeople!=null)
+            return contactPeople.size();
+        else return 0;
+    }
+
     public void setContactPeople(Set<ContactPerson> contactPeople) {
         this.contactPeople = contactPeople;
     }
@@ -104,11 +119,12 @@ public class Client {
         this.notes = notes;
     }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "name='" + name + '\'' +
-                '}';
+    public Set<ClientFile> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Set<ClientFile> documents) {
+        this.documents = documents;
     }
 
     public void addContactPerson(ContactPerson contactPerson) {
@@ -127,12 +143,14 @@ public class Client {
         vacancy.setClient(this);
     }
 
-    public void addNote(ClientNote note) {
-        if (notes == null) {
-            notes = new HashSet<>();
+
+    public void AddDocument(ClientFile document){
+        if (documents ==null){
+            documents = new HashSet<>() {
+            };
         }
-        notes.add(note);
-        note.setClient(this);
+        documents.add(document);
+        document.setClient(this);
     }
 
     public void addNote(ClientNoteDTO noteDTO){
@@ -146,5 +164,14 @@ public class Client {
         newNote.setClient(this);
         notes.add(newNote);
 
+    }
+
+
+    public String printClient() {
+        return "Client{" +
+                "clientID=" + clientID +
+                ", name='" + name + '\'' +
+                ", industry=" + industry +
+                '}';
     }
 }

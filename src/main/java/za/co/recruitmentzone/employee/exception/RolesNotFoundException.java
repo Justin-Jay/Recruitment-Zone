@@ -1,6 +1,8 @@
 package za.co.recruitmentzone.employee.exception;
 
-public class RolesNotFoundException extends RuntimeException {
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class RolesNotFoundException extends RzoneException {
     public RolesNotFoundException(String message) {
         super(message);
     }
@@ -9,7 +11,4 @@ public class RolesNotFoundException extends RuntimeException {
         super(message, cause);
     }
 
-    public RolesNotFoundException(Throwable cause) {
-        super(cause);
-    }
 }

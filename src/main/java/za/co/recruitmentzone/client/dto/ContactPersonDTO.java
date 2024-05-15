@@ -3,8 +3,10 @@ package za.co.recruitmentzone.client.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
 
-public class ContactPersonDTO {
+
+public class ContactPersonDTO implements Serializable {
     private String first_name;
     @NotEmpty(message = "Last name must not be empty")
     private String last_name;
@@ -84,5 +86,18 @@ public class ContactPersonDTO {
 
     public void setClientID(Long clientID) {
         this.clientID = clientID;
+    }
+
+
+    public String printContactPersonDTO() {
+        return "ContactPersonDTO{" +
+                "first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email_address='" + email_address + '\'' +
+                ", land_line='" + land_line + '\'' +
+                ", cell_phone='" + cell_phone + '\'' +
+                ", designation='" + designation + '\'' +
+                ", clientID=" + clientID +
+                '}';
     }
 }
