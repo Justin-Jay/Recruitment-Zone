@@ -1,4 +1,4 @@
-<div class="m-2">
+<div class=" card-body m-2">
     <img src="https://picsum.photos/450/300" class="card-img-top"  alt="img"> <!-- class="img-fluid" -->
  <!--   <img src="/images/unsplash.jpg" class="card-img-top"  alt="img"/>
 -->
@@ -12,13 +12,13 @@
     <!--   Hybrid ? ,  -->
 
     <p class="card-text" >Job Description: </p>
-    <p class="card-text" th:text="${vacancy.job_description}"></p>
+    <p class="card-text card-truncate-text" th:text="${vacancy.job_description}"></p>
 
     <form th:action="@{/Application/apply-now}" th:method="post">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
 
-        <button class="btn btn-primary"
+        <button class="btn btn btn-primary"
                 hx-post="/Vacancy/view-home-vacancy"
                 hx-target="#main-page-section"
                 hx-swap="outtaHTML"
