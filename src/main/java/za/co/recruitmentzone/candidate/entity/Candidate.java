@@ -30,20 +30,20 @@ public class Candidate implements Serializable {
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
     private Boolean relocation;
-    @Column(name="created")
+    @Column(name = "created")
     private LocalDateTime created;
     @OneToMany(mappedBy = "candidate",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Application> applications;
     @OneToMany(mappedBy = "candidate",
             cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
     private Set<CandidateNote> notes;
 
     @OneToMany(mappedBy = "candidate",
             cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
     private Set<CandidateFile> documents;
 
@@ -197,17 +197,18 @@ public class Candidate implements Serializable {
         this.notes = notes;
     }
 
-    public void AddApplication(Application application){
-        if (applications ==null){
+    public void AddApplication(Application application) {
+        if (applications == null) {
             applications = new HashSet<>() {
             };
         }
         applications.add(application);
         application.setCandidate(this);
     }
-//AddDocument
-    public void AddDocument(CandidateFile document){
-        if (documents ==null){
+
+    //AddDocument
+    public void AddDocument(CandidateFile document) {
+        if (documents == null) {
             documents = new HashSet<>() {
             };
         }
@@ -215,16 +216,16 @@ public class Candidate implements Serializable {
         document.setCandidate(this);
     }
 
-    public void addNote(CandidateNote note){
-        if (notes ==null){
+    public void addNote(CandidateNote note) {
+        if (notes == null) {
             notes = new HashSet<>();
         }
         notes.add(note);
         note.setCandidate(this);
     }
 
-    public void addNote(CandidateNoteDTO noteDTO){
-        if (notes ==null){
+    public void addNote(CandidateNoteDTO noteDTO) {
+        if (notes == null) {
             notes = new HashSet<>();
         }
         CandidateNote newNote = new CandidateNote(noteDTO.getComment());
@@ -244,4 +245,32 @@ public class Candidate implements Serializable {
                 '}';
     }
 
+
+    public String printEducationLevel() {
+        switch (education_level) {
+            case MATRIC_CERTIFICATE -> {
+                return "MATRIC CERTIFICATE";
+            }
+            case BACHELORS_DEGREE -> {
+                return "BACHELORS DEGREE";
+            }
+            case NATIONAL_CERTIFICATE -> {
+                return "NATIONAL CERTIFICATE";
+            }
+
+            case HONORS -> {
+                return "HONORS";
+            }
+
+            case NQF_LEVEL_5 -> {
+                return "NQF LEVEL 5";
+            }
+            case NQF_LEVEL_6 -> {
+                return "NQF LEVEL 6";
+            }
+            default -> {
+                return "UNKNOWN";
+            }
+        }
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,9 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.csrf.*;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import za.co.recruitmentzone.employee.entity.EmployeeDetailsService;
@@ -56,20 +60,14 @@ public class WebSecurityConfig {
                         form.loginPage("/log-in")
                                 .loginProcessingUrl("/authenticateTheUser")
                                 .permitAll())
-                /* .csrf(csrf -> csrf
-                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-                 )
-                 .securityContext((securityContext) -> securityContext
-                         .securityContextRepository(new DelegatingSecurityContextRepository(
-                                         new RequestAttributeSecurityContextRepository(),
-                                         new HttpSessionSecurityContextRepository()
-                                 )
-                         ).requireExplicitSave(true)
-                 )*/
-                //.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .logout(LogoutConfigurer::permitAll);
-
+               /* httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
+                httpSecuritySessionManagementConfigurer.
+                        sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        //.expiredUrl("/sessionExpired")
+                        .invalidSessionUrl("/invalidSession")
+                        .sessionFixation().migrateSession()
+                );*/
         return httpSecurity.build();
     }
 
@@ -92,6 +90,15 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public HttpFirewall allowSemicolonHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowSemicolon(true);
+        return firewall;
+    }
+
+
 
 
 }

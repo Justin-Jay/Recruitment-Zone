@@ -57,7 +57,7 @@
         <appender-ref ref="Console"/>
     </logger>
     <!-- Log your springframework at off level -->
-    <logger name="org.springframework" level="info" additivity="false">
+    <logger name="org.springframework" level="debug" additivity="false">
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
     </logger>

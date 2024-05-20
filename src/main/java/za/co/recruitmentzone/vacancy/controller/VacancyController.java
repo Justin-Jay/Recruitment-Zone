@@ -12,10 +12,7 @@ import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.util.enums.VacancyStatus;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
-import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
-
-import java.util.List;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
@@ -96,6 +93,7 @@ public class VacancyController {
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // saveVacancyResponse , internalServerError
+
         return "fragments/vacancy/view-vacancy";
 
     }
@@ -104,7 +102,7 @@ public class VacancyController {
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
             recruitmentZoneService.findVacancy(vacancyID, model);
-            model.addAttribute("vacancyStatusValues", VacancyStatus.values());
+            //model.addAttribute("vacancyStatusValues", VacancyStatus.values());
         } catch (Exception e) {
             log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -131,13 +129,12 @@ public class VacancyController {
     @PostMapping("/view-vacancy-submission")
     public String viewVacancySubmissions(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
-            recruitmentZoneService.findVacancyById(vacancyID, model);
+            recruitmentZoneService.findVacancySubmissions(vacancyID, model);
             model.addAttribute("applicationStatus", ApplicationStatus.values());
         } catch (Exception e) {
             log.error("<-- viewVacancySubmissions -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-
         return "fragments/vacancy/view-vacancy-submission";
     }
 

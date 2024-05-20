@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import org.w3c.dom.DocumentType;
 import za.co.recruitmentzone.documents.Document;
 
 @Service
@@ -31,68 +30,6 @@ public class CandidateEventPublisher {
         }
 
     }
-
-
-
-
-
-
-
-/*    public String rejectCandidate(Integer candidateID){
-        try {
-
-            Optional<Vacancy> rejectedCandidate = vacancyRepository.findById(candidateID);
-
-            System.out.println("Vacancy Received: " + rejectedCandidate.toString());
-
-            if (rejectedCandidate.isPresent()) {
-                eventPoster.rejectCandidate(rejectedCandidate);
-            }
-            return "Candidate Rejected";
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return "failed reject Candidate";
-        }
-    }*/
-
-/*    public String shortList(Integer userID,Integer vacancyID){
-        try {
-            Optional<ApplicationUser> candidate = userRepository.findById(userID);
-            Optional<Vacancy> vacancy = vacancyRepository.findById(vacancyID);
-
-
-            System.out.println("Candidate Received: " + candidate.toString());
-            System.out.println("Vacancy Received: " + vacancy.toString());
-
-            if (candidate.isPresent() && vacancy.isPresent()) {
-                int[] array = {userID,vacancyID};
-                eventPoster.shortList(array);
-            }
-            return "Candidate Rejected";
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return "failed reject Candidate";
-        }
-    }*/
-/*    public String removeFromShortList(Integer userID,Integer vacancyID){
-        try {
-            Optional<ApplicationUser> candidate = userRepository.findById(userID);
-            Optional<Vacancy> vacancy = vacancyRepository.findById(vacancyID);
-
-
-            System.out.println("Candidate Received: " + candidate.toString());
-            System.out.println("Vacancy Received: " + vacancy.toString());
-
-            if (candidate.isPresent() && vacancy.isPresent()) {
-                int[] array = {userID,vacancyID};
-                eventPoster.removeFromShortList(array);
-            }
-            return "Candidate Rejected";
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return "failed reject Candidate";
-        }
-    }*/
 
 
 }

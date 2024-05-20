@@ -29,7 +29,7 @@ public class ContactPerson implements Serializable {
     @ManyToOne(cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
     })
-    @JoinColumn(name = "clientid")
+    @JoinColumn(name = "clientID")
     private Client client;
 
     public ContactPerson() {
@@ -42,6 +42,7 @@ public class ContactPerson implements Serializable {
         this.land_line = land_line;
         this.cell_phone = cell_phone;
         this.designation=designation;
+        this.created = LocalDateTime.now();
     }
 
     public String getDesignation() {

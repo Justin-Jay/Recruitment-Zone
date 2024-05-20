@@ -8,7 +8,7 @@ import za.co.recruitmentzone.util.enums.Industry;
 
 import java.io.Serializable;
 
-public class ClientDTO implements Serializable {
+public class NewClientDTO implements Serializable {
     private String name;
     @Enumerated(EnumType.STRING)
     private Industry industry;
@@ -21,12 +21,12 @@ public class ClientDTO implements Serializable {
 
     private String contactPerson_designation;
 
-    public ClientDTO() {
+    public NewClientDTO() {
     }
 
-    public ClientDTO(String name,Industry industry, String contactPerson_FirstName,
-                     String contactPerson_last_name, String contactPerson_email_address,
-                     String contactPerson_land_line, String contactPerson_cell_phone, String contactPerson_designation) {
+    public NewClientDTO(String name, Industry industry, String contactPerson_FirstName,
+                        String contactPerson_last_name, String contactPerson_email_address,
+                        String contactPerson_land_line, String contactPerson_cell_phone, String contactPerson_designation) {
         this.name = name;
         this.industry = industry;
         this.contactPerson_FirstName = contactPerson_FirstName;

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.recruitmentzone.application.dto.ApplicationDTO;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
@@ -120,19 +121,17 @@ public class ApplicationsController {
 
     @PostMapping("/save-updated-application")
     public String saveUpdatedApplicationStatus(
-            @RequestParam("applicationID") Long applicationID,
-            @RequestParam("status") ApplicationStatus status,
-            @Valid @ModelAttribute("application") Application application,
+            @Valid @ModelAttribute("vacancyApplication") ApplicationDTO applicationDTO,
             BindingResult bindingResult, Model model) {
         log.info("save-updated-application start");
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
-            recruitmentZoneService.findApplicationByID(applicationID, model);
+            recruitmentZoneService.findApplicationByID(applicationDTO.getApplicationID(), model);
             return "fragments/applications/update-application";
         }
         try {
-            recruitmentZoneService.saveUpdatedApplicationStatus(model, applicationID, status);
-            recruitmentZoneService.findApplicationByID(applicationID, model);
+            recruitmentZoneService.saveUpdatedApplicationStatus(model, applicationDTO);
+            recruitmentZoneService.findApplicationByID(applicationDTO.getApplicationID(), model);
 
         } catch (Exception e) {
             log.error("<-- saveUpdatedApplicationStatus -->  Exception \n {}", e.getMessage());

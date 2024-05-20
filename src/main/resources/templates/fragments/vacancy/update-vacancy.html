@@ -34,12 +34,13 @@
             </select>
             <br>
 
-            <label for="publish_date"  >Publish Date: </label>
-            <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date" placeholder="Publish Date"/>
+            <label for="publish_date">Publish Date: </label>
+            <input type="date" th:value="*{publish_date}" readonly class="form-control mb-4 w-25" id="publish_date"
+                   placeholder="Publish Date"/>
 
-
-            <label for="expirationDate"  >Expiration Date: </label>
-            <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate" placeholder="Expiration Date:"/>
+            <label for="expirationDate">Expiration Date: </label>
+            <input type="date" th:value="*{end_date}" class="form-control mb-4 w-25" id="expirationDate"
+                   placeholder="Expiration Date:"/>
 
             <label for="status">Select Status:
             </label>

@@ -8,26 +8,28 @@
     </div>
 
 
-
+    <!--  applicationID    -->
     <form class="form-control-sm" action="#" th:action="@{/Application/save-updated-application}" th:method="POST">
 
-        <input type="hidden" th:field="${vacancyApplication.applicationID}"/>
-
+        <input type="hidden" th:field="${vacancyApplicationDTO.applicationID}"/>
+        <p th:text="*{'Current Status: ' + vacancyApplicationDTO.status.getPrintableStatus()}" th:value="${vacancyApplicationDTO}"></p>
 
         <div th:if="${#strings.isEmpty(applicationsError)}">
 
             <label for="status">Select Status:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm"  id="status" th:field="${vacancyApplication.status}">
+            <select class="form-select-sm" aria-label=".form-select-sm"  id="status" th:field="${vacancyApplicationDTO.status}">
                 <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.ApplicationStatus).values()}"
-                        th:value="${statusVal}" th:text="${statusVal}"></option>
+                        th:value="${statusVal}" th:text="${statusVal.getPrintableStatus()}"></option>
+
             </select>
             <br>
             <br>
             <button class="btn btn-primary"
                     hx-post="/Application/save-updated-application"
                     hx-target="#main-page-section"
-                    hx-swap="innerHTML" >Save Updated Application Status
+                    hx-swap="innerHTML"
+                    hx-include="[vacancyApplicationDTO='vacancyApplicationDTO']">Save Updated Application Status
             </button>
 
 

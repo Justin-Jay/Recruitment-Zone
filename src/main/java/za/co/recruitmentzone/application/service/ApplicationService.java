@@ -5,6 +5,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import za.co.recruitmentzone.application.dto.ApplicationDTO;
 import za.co.recruitmentzone.application.exception.ApplicationsNotFoundException;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
@@ -35,20 +36,21 @@ public class ApplicationService {
 
     public Application findApplicationByID(Long id) {
         Optional<Application> application = applicationRepository.findById(id);
-        return application.orElseThrow(()-> new ApplicationsNotFoundException("Application Not found "+id));
+        return application.orElseThrow(() -> new ApplicationsNotFoundException("Application Not found " + id));
     }
 
-    public boolean saveUpdatedStatus(Long applicationID, ApplicationStatus applicationStatus){
-        log.info("saveUpdatedStatus start");
-        log.info("applicationID: {}",applicationID);
-        log.info("applicationStatus: {}",applicationStatus);
-        Optional<Application> optionalApplication = applicationRepository.findById(applicationID);
-        if(optionalApplication.isPresent()){
+    public boolean saveUpdatedStatus(ApplicationDTO applicationDTO) {
+        log.info("saveUpdatedStatus applicationDTO: {}", applicationDTO.printApplicationDTO());
+        Optional<Application> optionalApplication = applicationRepository.findById(applicationDTO.getApplicationID());
+        if (optionalApplication.isPresent()) {
             log.info("Found application");
             Application application = optionalApplication.get();
-            log.info("Application: {}",application.printApplication());
-            application.setStatus(applicationStatus);
-            log.info("SAVED");
+            log.info("Application: {}", application.printApplication());
+            log.info("Old status {} ", application.getStatus());
+            log.info("New status {} ", applicationDTO.getStatus());
+            application.setStatus(applicationDTO.getStatus());
+            applicationRepository.save(application);
+            log.info("SAVED {} ", application.printApplication());
             return true;
         }
         log.info("FAILED TO SAVE");

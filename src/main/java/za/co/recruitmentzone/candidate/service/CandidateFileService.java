@@ -21,7 +21,7 @@ public class CandidateFileService implements DocumentService {
         this.candidateFileRepository = candidateFileRepository;
     }
 
-    public CandidateFile saveCandidateFile(CandidateFile candidateFile) {
+    public CandidateFile   saveCandidateFile(CandidateFile candidateFile) {
         return candidateFileRepository.save(candidateFile);
     }
 

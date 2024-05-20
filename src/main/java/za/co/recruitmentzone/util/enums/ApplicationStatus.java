@@ -5,5 +5,22 @@ public enum ApplicationStatus {
     REJECTED,
     SHORT_LISTED,
     INTERVIEW,
-    OFFER
+    OFFER;
+
+    public String getPrintableStatus() {
+        switch (this) {
+            case OFFER:
+                return "OFFER";
+            case PENDING:
+                return "PENDING";
+            case SHORT_LISTED:
+                return "SHORT LISTED";
+            case INTERVIEW:
+                return "INTERVIEW";
+            case REJECTED:
+                return "REJECTED";
+            default:
+                return "UNKNOWN";
+        }
+    }
 }

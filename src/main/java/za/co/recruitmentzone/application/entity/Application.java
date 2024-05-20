@@ -33,7 +33,6 @@ public class Application implements Serializable {
 
 
 
-
     public Long getApplicationID() {
         return applicationID;
     }
@@ -49,8 +48,6 @@ public class Application implements Serializable {
     public void setDate_received(String date_received) {
         this.date_received = date_received;
     }
-
-
 
     public ApplicationStatus getStatus() {
         return status;
@@ -75,7 +72,6 @@ public class Application implements Serializable {
     public void setVacancy(Vacancy vacancy) {
         this.vacancy = vacancy;
     }
-
 
     public String printApplication() {
         return "Application{" +

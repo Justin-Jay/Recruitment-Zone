@@ -4,7 +4,7 @@
     <br>
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
-    <form action="#" th:action="@{/Client/save-client}" th:object="${clientDTO}" method="POST">
+    <form action="#" th:action="@{/Client/save-client}" th:object="${newClientDTO}" method="POST">
         <div class="form-group">
             <label>
                 Client Name:<input type="text" th:field="*{name}" placeholder="First Name" class="form-control">
@@ -15,7 +15,7 @@
             <select class="form-select-sm" aria-label=".form-select-sm" id="industry"
                     th:field="*{industry}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
-                        th:value="${type}" th:text="${type}"></option>
+                        th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>
             </select>
 
             <br>

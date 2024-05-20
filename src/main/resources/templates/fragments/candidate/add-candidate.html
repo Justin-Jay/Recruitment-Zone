@@ -56,7 +56,7 @@
             </label>
             <select class="form-select-sm" aria-label=".form-select-sm"  id="currentProvince" th:field="${newApplicationDTO.current_province}">
                 <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
-                        th:value="${province}" th:text="${province}"></option>
+                        th:value="${province}" th:text="${province.getPrintableProvinceName()}"></option>
             </select>
             <br/>
             <br/>
@@ -85,7 +85,7 @@
             </label>
             <select class="form-select-sm" aria-label=".form-select-sm" id="EduLevel" th:field="${newApplicationDTO.education_level}">
                 <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
-                        th:value="${statusVal}" th:text="${statusVal}"></option>
+                        th:value="${statusVal}" th:text="${statusVal.getPrintableEduLevel()}"></option>
             </select>
             <br/>
             <br/>

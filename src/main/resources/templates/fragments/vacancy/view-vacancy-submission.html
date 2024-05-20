@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section" th:each="vApplication : ${vacancyApplications}">
+<div class="container-fluid main-page-section" >
 
     <div class="row">
         <div class="container">
@@ -8,58 +8,56 @@
     </div>
 
 
-    <div th:each="candidate : ${vApplication.candidate}">
-        <table class="table table-hover table-responsive-sm">
-            <thead>
-            <tr>
-                <th>Candidate Name</th>
-                <th>Candidate Last Name</th>
-                <th>View Candidate</th>
-                <th>View Notes</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${candidate.first_name}"></td>
-                <td th:text="${candidate.last_name}"></td>
-                <td>
-                    <form action="#" th:action="@{/Candidate/view-candidate}" th:method="post">
-                        <!-- Hidden input field to include the vacancyID in the POST request -->
-                        <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
-                        <!-- Submit button to trigger the form submission -->
-                        <button class="btn normal-button"
-                                hx-post="/Candidate/view-candidate"
-                                hx-target="#main-page-section"
-                                hx-swap="innerHTML"
-                                hx-include="[candidateID='candidateID']">View Candidate
-                        </button>
-                    </form>
+    <table class="table table-hover table-responsive-sm" >
+        <thead >
+        <tr>
+            <th>Candidate Name</th>
+            <th>Candidate Last Name</th>
+            <th>View Candidate</th>
+            <th>View Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vApplication : ${vacancyApplications}" >
+            <td th:text="${vApplication.candidate.first_name}"></td>
+            <td th:text="${vApplication.candidate.last_name}"></td>
+            <td>
+                <form action="#" th:action="@{/Candidate/view-candidate}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="candidateID" th:value="*{vApplication.candidate.candidateID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button class="btn normal-button"
+                            hx-post="/Candidate/view-candidate"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML"
+                            hx-include="[candidateID='candidateID']">View Candidate
+                    </button>
+                </form>
 
-                </td>
+            </td>
 
-                <td>
+            <td>
 
-                    <form action="#" th:action="@{/Candidate/view-candidate-notes}" th:method="post">
-                        <!-- Hidden input field to include the brandVal in the POST request -->
+                <form action="#" th:action="@{/Candidate/view-candidate-notes}" th:method="post">
+                    <!-- Hidden input field to include the brandVal in the POST request -->
 
-                        <input type="hidden" name="candidateID"
-                               th:value="${candidate.candidateID}"/>
+                    <input type="hidden" name="candidateID"
+                           th:value="${vApplication.candidate.candidateID}"/>
 
-                        <!-- Submit button to trigger the form submission -->
-                        <button class='btn normal-button'
-                                hx-post="/Candidate/view-candidate-notes"
-                                hx-target="#right-page-column"
-                                hx-swap='innerHTML'
-                                hx-include="[candidateID='candidateID']">
-                            View Notes
-                        </button>
+                    <!-- Submit button to trigger the form submission -->
+                    <button class='btn normal-button'
+                            hx-post="/Candidate/view-candidate-notes"
+                            hx-target="#right-page-column"
+                            hx-swap='innerHTML'
+                            hx-include="[candidateID='candidateID']">
+                        View Notes
+                    </button>
 
-                    </form>
+                </form>
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
 </div>

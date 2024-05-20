@@ -52,7 +52,7 @@
             <div class="form-group">
                 <!-- Hidden input field to include the candidateID in the POST request -->
                 <input type="hidden" name="clientID" th:field="${clientNoteDTO.clientID}" th:value="${clientID}" />
-                <div th:insert="~{fragments/layout/response-messages :: successMessage(${noteSaved})}"></div>
+                <div th:insert="~{fragments/layout/response-messages :: successMessage(${saveNoteToClientResponse})}"></div>
                 <hr/>
                 <label for="comment">
                     Comment:

@@ -26,7 +26,7 @@
             </label>
             <select class="form-select-sm" aria-label=".form-select-sm" id="candidateDocumentType" th:field="${candidateFileDTO.documentType}">
                 <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.CandidateDocumentType).values()}"
-                        th:value="${docType}" th:text="${docType}"></option>
+                        th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
             </select>
             <br>
             <button type="submit" class="btn normal-button"

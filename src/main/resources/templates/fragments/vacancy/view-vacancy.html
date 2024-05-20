@@ -1,7 +1,7 @@
 <div class="container-fluid main-page-section">
 
-    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findVacancyResponse})}"></div>
-
+    <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findVacancyResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveVacancyResponse})}"></div>
 
     <table class="table table-striped table-responsive">
 

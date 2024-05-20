@@ -93,7 +93,7 @@
             ></p>
             <select class="form-select-sm" aria-label=".form-select-sm"  id="industry" th:field="*{industry}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
-                        th:value="${type}" th:text="${type}"></option>
+                        th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>
             </select>
 
             <br> <br>

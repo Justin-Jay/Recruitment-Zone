@@ -17,19 +17,23 @@ public class ContactPersonDTO implements Serializable {
     private String cell_phone;
 
     private String designation;
+
     private Long clientID;
 
-    public ContactPersonDTO() {
+    private Long contactPersonID;
+
+
+
+    public Long getClientID() {
+        return clientID;
     }
 
-    public ContactPersonDTO(String first_name, String last_name, String email_address, String land_line, String cell_phone, String designation,Long clientID) {
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.email_address = email_address;
-        this.land_line = land_line;
-        this.cell_phone = cell_phone;
-        this.designation=designation;
-        this.clientID = clientID;
+    public Long getContactPersonID() {
+        return contactPersonID;
+    }
+
+    public void setContactPersonID(Long contactPersonID) {
+        this.contactPersonID = contactPersonID;
     }
 
     public String getFirst_name() {
@@ -84,10 +88,10 @@ public class ContactPersonDTO implements Serializable {
         return clientID;
     }
 
+
     public void setClientID(Long clientID) {
         this.clientID = clientID;
     }
-
 
     public String printContactPersonDTO() {
         return "ContactPersonDTO{" +

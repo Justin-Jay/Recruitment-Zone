@@ -9,11 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import za.co.recruitmentzone.client.dto.ClientDTO;
-import za.co.recruitmentzone.client.dto.ClientFileDTO;
-import za.co.recruitmentzone.client.dto.ClientNoteDTO;
-import za.co.recruitmentzone.client.dto.ContactPersonDTO;
-import za.co.recruitmentzone.client.entity.Client;
+import za.co.recruitmentzone.client.dto.*;
 import za.co.recruitmentzone.client.entity.ClientFile;
 import za.co.recruitmentzone.documents.SaveFileException;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
@@ -50,7 +46,7 @@ public class ClientController {
     @PostMapping("/add-client")
     public String showCreateClientForm(Model model) {
         try {
-            model.addAttribute("clientDTO", new ClientDTO());
+            model.addAttribute("clientDTO", new NewClientDTO());
         } catch (Exception e) {
             log.info("<-- showCreateClientForm -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -75,13 +71,13 @@ public class ClientController {
     }
 
     @PostMapping("/save-client")
-    public String saveClient(@Valid @ModelAttribute("ClientDTO") ClientDTO clientDTO,
+    public String saveClient(@Valid @ModelAttribute("ClientDTO") NewClientDTO newClientDTO,
                              BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/add-client";
         }
         try {
-            recruitmentZoneService.saveNewClient(model, clientDTO);
+            recruitmentZoneService.saveNewClient(model, newClientDTO);
 
         } catch (Exception e) {
             log.info("<-- saveClient -->  Exception \n {}", e.getMessage());
@@ -108,7 +104,7 @@ public class ClientController {
     @PostMapping("/view-client-contacts")
     public String showClientContacts(@RequestParam("clientID") Long clientID, Model model) {
         try {
-            recruitmentZoneService.findContactPersonByClientID(clientID, model);
+            recruitmentZoneService.findClientContacts(clientID, model);
         } catch (Exception e) {
             log.info("<-- showClientContacts -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -145,14 +141,12 @@ public class ClientController {
 
     @PostMapping("/save-updated-contact")
     public String saveUpdatedContact(@Valid @ModelAttribute("contactPerson") ContactPersonDTO contactPersonDTO,
-                                     @RequestParam("contactPersonID") Long contactPersonID,
                                      BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/update-contact";
         }
         try {
-            recruitmentZoneService.saveUpdatedContactPerson(contactPersonID, contactPersonDTO, model);
-
+            recruitmentZoneService.saveUpdatedContactPerson(contactPersonDTO, model);
         } catch (Exception e) {
             log.info("<-- saveUpdatedContact -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -166,6 +160,7 @@ public class ClientController {
         log.info("<-- updateClient --> clientID {}", clientID);
         try {
             recruitmentZoneService.findClientByID(clientID, model);
+
         } catch (Exception e) {
             log.info("<-- updateClient -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -194,8 +189,7 @@ public class ClientController {
     }
 
     @PostMapping("/save-updated-client")
-    public String saveUpdatedClient(@Valid @ModelAttribute("client") Client client,
-                                    @RequestParam("clientID") Long clientID,
+    public String saveUpdatedClient(@Valid @ModelAttribute("client") ExistingClientDTO client,
                                     BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "fragments/clients/update-client";
