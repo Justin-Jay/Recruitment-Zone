@@ -78,7 +78,7 @@ public class VacancyController {
     }
 
     @PostMapping("/save-vacancy")
-    public String saveVacancy(@Valid @ModelAttribute("vacancy") VacancyDTO vacancy,
+    public String saveVacancy(@Valid @ModelAttribute("vacancyDTO") VacancyDTO vacancy,
                               BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
             recruitmentZoneService.findAllClients(model);
@@ -95,7 +95,6 @@ public class VacancyController {
         // saveVacancyResponse , internalServerError
 
         return "fragments/vacancy/view-vacancy";
-
     }
 
     @PostMapping("/update-vacancy")
