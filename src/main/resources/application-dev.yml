@@ -84,18 +84,6 @@ domain:
     za: ${DOMAIN}
 
 
-
-#logging:
-  #level:
-    #org.springframework.jdbc: off
-   # root: off
-   # za.co.recruitmentzone: info
-
- # file:
-  #  path: ${LOG_PATH}
-
-
-
 LOGS: ${LOG_PATH}
 
 management:

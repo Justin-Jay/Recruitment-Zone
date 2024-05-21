@@ -706,6 +706,7 @@ public class RecruitmentZoneService {
             Vacancy saved = vacancyService.save(newVacancy);
             // findVacancy(newVacancy.getVacancyID(), model);
             model.addAttribute("vacancy", saved);
+            // model.addAttribute("vacancyDTO", saved);
             model.addAttribute("saveVacancyResponse", newVacancy.getJob_title() + " vacancy saved");
         } catch (VacancyException vacancyException) {
             log.error("<-- saveVacancy  vacancyException: {} --> ", vacancyException.getFailureReason());
