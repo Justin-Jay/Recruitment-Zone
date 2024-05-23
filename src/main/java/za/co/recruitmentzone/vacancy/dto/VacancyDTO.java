@@ -41,8 +41,13 @@ public class VacancyDTO implements Serializable {
     private Long clientID;
     private Long employeeID;
     private Long vacancyID;
+    private long applicationCount;
 
     public VacancyDTO() {
+    }
+
+    public VacancyDTO(long vacancyID) {
+        this.vacancyID=vacancyID;
     }
 
     public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID, Long vacancyID) {
@@ -63,25 +68,6 @@ public class VacancyDTO implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return "VacancyDTO{" +
-                "job_title='" + job_title + '\'' +
-                ", job_description='" + job_description + '\'' +
-                ", seniority_level='" + seniority_level + '\'' +
-                ", requirements='" + requirements + '\'' +
-                ", location='" + location + '\'' +
-                ", industry=" + industry +
-                ", publish_date=" + publish_date +
-                ", end_date=" + end_date +
-                ", status=" + status +
-                ", jobType=" + jobType +
-                ", empType=" + empType +
-                ", clientID=" + clientID +
-                ", employeeID=" + employeeID +
-                ", vacancyID=" + vacancyID +
-                '}';
-    }
     public String printVacancy(){
         return "Vacancy{" +
                 "vacancyID=" + vacancyID +
@@ -92,4 +78,6 @@ public class VacancyDTO implements Serializable {
                 ", status=" + status +
                 '}';
     }
+
+
 }

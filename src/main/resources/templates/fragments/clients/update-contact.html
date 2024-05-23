@@ -11,47 +11,70 @@
 
             <!-- Hidden input field to include the vacancyID in the POST request -->
             <input type="hidden" name="contactPersonID" th:field="${contactPersonDTO.contactPersonID}" />
-            <br>
-            <div class="md-10">
+
+            <div class="form-group">
                 <label for="first_name" >First name: </label>
                 <br>
-                <input type="text" th:field="${contactPersonDTO.first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="Name"/>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('first_name')}"
+                   th:errors="${contactPersonDTO.first_name}"
+                >Error</p>
+                <input type="text" th:field="${contactPersonDTO.first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="First Name"/>
             </div>
+
+
             <br>
-            <div class="md-10">
+            <div class="form-group">
+
                 <label for="last_name" >last Name: </label>
                 <br>
-                <input type="text" th:field="${contactPersonDTO.last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Name"/>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('last_name')}"
+                   th:errors="${contactPersonDTO.last_name}"
+                >Error</p>
+                <input type="text" th:field="${contactPersonDTO.last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Last Name"/>
             </div>
-            <br>
-            <div class="md-10">
+
+
+            <div class="form-group">
                 <label for="email_address" >Email Address: </label>
                 <br>
-                <input type="text" th:field="${contactPersonDTO.email_address}" class="form-control mb-4 w-25" id="email_address" placeholder="Name"/>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('email_address')}"
+                   th:errors="${contactPersonDTO.email_address}"
+                >Error</p>
+                <input type="text" th:field="${contactPersonDTO.email_address}" class="form-control mb-4 w-25" id="email_address" placeholder="Email"/>
             </div>
-            <br>
-            <div class="md-10">
+
+
+
+
+            <div class="form-group">
                 <label for="designation" >Designation: </label>
                 <br>
-                <input type="text" th:field="${contactPersonDTO.designation}" class="form-control mb-4 w-25" id="designation" placeholder="Name"/>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('designation')}"
+                   th:errors="${contactPersonDTO.designation}"
+                >Error</p>
+                <input type="text" th:field="${contactPersonDTO.designation}" class="form-control mb-4 w-25" id="designation" placeholder="Designation"/>
             </div>
             <br>
-            <div class="md-10">
+            <div class="form-group">
                 <label for="land_line" >Land Line: </label>
                 <br>
-                <input type="text" th:field="${contactPersonDTO.land_line}" class="form-control mb-4 w-25" id="land_line" placeholder="Name"/>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('land_line')}"
+                   th:errors="${contactPersonDTO.land_line}"
+                >Error</p>
+                <input type="text" th:field="${contactPersonDTO.land_line}" class="form-control mb-4 w-25" id="land_line" placeholder="Land line"/>
             </div>
             <br>
-            <div class="md-10">
+            <div class="form-group">
                 <label for="cell_phone" >Cell Phone: </label>
                 <br>
-                <input type="text" th:field="${contactPersonDTO.cell_phone}" class="form-control mb-4 w-25" id="cell_phone" placeholder="Name"/>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('cell_phone')}"
+                   th:errors="${contactPersonDTO.cell_phone}"
+                >Error</p>
+                <input type="text" th:field="${contactPersonDTO.cell_phone}" class="form-control mb-4 w-25" id="cell_phone" placeholder="Cell number"/>
             </div>
             <br>
 
-      <!--      <button type="submit" class="btn">Save Updated Contact</button>
--->
-            <button class="btn normal-button"
+            <button class="btn btn-secondary"
                     hx-post="/Client/save-updated-contact"
                     hx-target="#right-page-column"
                     hx-swap="innerHTML"

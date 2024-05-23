@@ -15,50 +15,59 @@
             </div>
             <hr/>
 
-            <label for="blog_title">
-                Blog Title:
-                <p th:class="error" th:if="${#fields.hasErrors('blog_title')}" th:errors="${blog.blog_title}"
+            <!--   class="alert alert-danger alert-dismissible fade show"    // th:class="error"      -->
+            <div class="form-group">
+                <label for="blog_title">
+                    Blog Title:
+                </label>
+
+                <p class="alert alert-danger alert-dismissible fade show"  th:if="${#fields.hasErrors('blog_title')}" th:errors="*{blog_title}"
                 ></p>
-            </label>
+                <input type="text" id="blog_title" th:field="*{blog_title}" placeholder="Enter The Title"
+                       class="form-control">
+            </div>
 
-            <input type="text" id="blog_title" th:field="*{blog_title}" placeholder="Enter The Title"
-                   class="form-control">
-
-
-            <label for="description">
-                Blog Description:
-                <p th:class="error" th:if="${#fields.hasErrors('blog_description')}"
-                   th:errors="${blog.blog_description}"
+            <div class="form-group">
+                <label for="description">
+                    Blog Description:
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('blog_description')}"
+                   th:errors="*{blog_description}"
                 ></p>
-            </label>
-            <input id="description" type="text" th:field="*{blog_description}"
-                   placeholder="Enter The Description" class="form-control ">
+                <input id="description" type="text" th:field="*{blog_description}"
+                       placeholder="Enter The Description" class="form-control ">
+            </div>
 
-
-            <label for="body">
-                Body:
-                <p th:class="error" th:if="${#fields.hasErrors('body')}"
-                   th:errors="${blog.body}"
+            <div class="form-group">
+                <label for="body">
+                    Body:
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('body')}"
+                   th:errors="*{body}"
                 ></p>
-            </label>
-            <textarea class="form-control  mb-4 text-black-50" th:field="*{body}" id="body"
-            ></textarea>
+                <textarea class="form-control  mb-4 text-black-50" th:field="*{body}" id="body"
+                ></textarea>
+            </div>
 
+            <div class="form-group">
+                <label for="publish_date">Publish Date:
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('publish_date')}"
+                   th:errors="*{publish_date}"
+                ></p>
+                <input type="date" th:field="*{publish_date}" class="form-control  "
+                       id="publish_date" placeholder="Publish Date"/>
+            </div>
 
-            <label for="publish_date">Publish Date:
-                <p th:class="error" th:if="${#fields.hasErrors('publish_date')}"
-                   th:errors="${blog.publish_date}"
-                ></p></label>
-            <input type="date" th:field="*{publish_date}" class="form-control  "
-                   id="publish_date" placeholder="Publish Date"/>
-
-
-            <label for="expirationDate">Expiration Date:
-                <p th:class="error" th:if="${#fields.hasErrors('end_date')}"
-                   th:errors="${blog.end_date}"
-                ></p></label>
-            <input type="date" th:field="*{end_date}" class="form-control "
-                   id="expirationDate" placeholder="Expiration Date:"/>
+            <div class="form-group">
+                <label for="expirationDate">Expiration Date:
+                 </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('end_date')}"
+                   th:errors="*{end_date}"
+                ></p>
+                <input type="date" th:field="*{end_date}" class="form-control "
+                       id="expirationDate" placeholder="Expiration Date:"/>
+            </div>
 
             <br/>
             <button class="btn normal-button"

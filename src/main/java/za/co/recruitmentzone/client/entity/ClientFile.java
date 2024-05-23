@@ -1,19 +1,22 @@
 package za.co.recruitmentzone.client.entity;
 
 import jakarta.persistence.*;
+import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.documents.Document;
+import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.util.enums.ClientDocumentType;
+import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "CLIENT_FILE")
 public class ClientFile implements Document,Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fileID")
     private Long fileID;
     @Column(name = "file_name")
     private String file_name;
@@ -32,6 +35,7 @@ public class ClientFile implements Document,Serializable {
 
     @Column(name="created")
     private LocalDateTime created;
+
     @ManyToOne(
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
@@ -39,8 +43,22 @@ public class ClientFile implements Document,Serializable {
     @JoinColumn(name = "clientID")
     private Client client;
 
+    @OneToOne(
+            cascade = {
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
+            })
+    @JoinColumn(name = "vacancyID")
+    private Vacancy vacancy;
 
     public ClientFile() {
+    }
+
+    public Vacancy getVacancy() {
+        return vacancy;
+    }
+
+    public void setVacancy(Vacancy vacancy) {
+        this.vacancy = vacancy;
     }
 
     public Long getFileID() {
@@ -162,8 +180,7 @@ public class ClientFile implements Document,Serializable {
                 ", filesize='" + file_size + '\'' +
                 ", documentLocation='" + documentLocation + '\'' +
                 ", client=" + client.getClientID() +
-                ", documentType=" + documentType +
+                ", documentType=" +
                 '}';
     }
-
 }

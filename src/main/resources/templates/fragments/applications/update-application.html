@@ -12,6 +12,7 @@
     <form class="form-control-sm" action="#" th:action="@{/Application/save-updated-application}" th:method="POST">
 
         <input type="hidden" th:field="${vacancyApplicationDTO.applicationID}"/>
+
         <p th:text="*{'Current Status: ' + vacancyApplicationDTO.status.getPrintableStatus()}" th:value="${vacancyApplicationDTO}"></p>
 
         <div th:if="${#strings.isEmpty(applicationsError)}">

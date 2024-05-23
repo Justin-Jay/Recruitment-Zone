@@ -47,5 +47,10 @@ public class ClientFileService implements DocumentService {
         return clientFileRepository.findClientFileById(clientID);
     }
 
+    public List<ClientFile> loadVacancyDocs(Long vacancyID) {
+        log.info("<--- loadVacancyDocs {} --->",vacancyID);
+        return clientFileRepository.findClientFileByVacancyID(vacancyID);
+    }
+
 
 }

@@ -62,7 +62,7 @@ public class ClientService {
 
 
     public Client addContactToClient(ContactPersonDTO contactPersonDTO) {
-        Optional<Client> oc = clientRepository.findById(contactPersonDTO.getclientID());
+        Optional<Client> oc = clientRepository.findById(contactPersonDTO.getClientID());
         ContactPerson contactPerson = new ContactPerson(contactPersonDTO.getFirst_name(),
                 contactPersonDTO.getLast_name(), contactPersonDTO.getEmail_address(),
                 contactPersonDTO.getLand_line(), contactPersonDTO.getCell_phone(), contactPersonDTO.getDesignation());

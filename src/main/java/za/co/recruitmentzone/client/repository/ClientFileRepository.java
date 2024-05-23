@@ -15,4 +15,8 @@ public interface ClientFileRepository extends JpaRepository<ClientFile, Long> {
     List<ClientFile> findClientFileById(Long clientID);
 
 
+    @Query("SELECT d FROM ClientFile d WHERE d.vacancy.vacancyID = :vacancyID")
+    List<ClientFile> findClientFileByVacancyID(Long vacancyID);
+
+
 }

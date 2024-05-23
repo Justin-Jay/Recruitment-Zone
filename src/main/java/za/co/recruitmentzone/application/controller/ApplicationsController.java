@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import za.co.recruitmentzone.application.dto.ApplicationDTO;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
+
+import java.util.List;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
@@ -59,32 +62,38 @@ public class ApplicationsController {
 
     @PostMapping("/save-application")
     public String saveSubmission(@Valid @ModelAttribute("newApplicationDTO") NewApplicationDTO newApplicationDTO,
-                                 BindingResult bindingResult, Model model
-    ) {
-        if (bindingResult.hasErrors()) {
+                                 BindingResult bindingResult, Model model ) {
+        if (bindingResult.hasFieldErrors()) {
 
             recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
-            model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
+
+            List<ObjectError> errors = bindingResult.getAllErrors();
+            for (ObjectError error : errors) {
+                System.out.println(error.getDefaultMessage());
+            }
             //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , bindingResult
             return "fragments/applications/apply-now";
         }
-        try {
-            recruitmentZoneService.saveApplication(newApplicationDTO, model);
-            // applicationOutcome , createCandidateApplication , invalidFileException
-            if (model.getAttribute("invalidFileException") != null) {
-                log.info("<-- saveSubmission -->  invalidFileException Result : {}", model.getAttribute("invalidFileException"));
+
+        else {
+            try {
+                recruitmentZoneService.saveApplication(newApplicationDTO, model);
+                // applicationOutcome , createCandidateApplication , invalidFileException
+                if (model.getAttribute("invalidFileException") != null) {
+                    log.info("<-- saveSubmission -->  invalidFileException Result : {}", model.getAttribute("invalidFileException"));
+                    recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
+                    //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , invalidFileException
+                    return "fragments/applications/apply-now";
+                }
+
+            } catch (Exception e) {
+                log.error("<-- saveSubmission -->  Exception \n {}", e.getMessage());
+                model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
                 recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
-                //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , invalidFileException
+                // ContactMessage  =   emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
+
                 return "fragments/applications/apply-now";
             }
-
-        } catch (Exception e) {
-            log.error("<-- saveSubmission -->  Exception \n {}", e.getMessage());
-            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-            recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
-            // ContactMessage  =   emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
-
-            return "fragments/applications/apply-now";
         }
 
         // applicationOutcome

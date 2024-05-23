@@ -1,7 +1,6 @@
 <div class="container-fluid main-page-section">
 
     <div class="row">
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findAllClientsResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadEmployeesResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
@@ -13,18 +12,16 @@
 
             <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
             <label for="clientID">Select Client
-                <select class="form-select-sm" aria-label=".form-select-sm"  name="clientID">
+                <select class="form-select-sm" aria-label=".form-select-sm" name="clientID">
                     <option th:each="client : ${clientList}" th:text="${client.name}" th:value="${client.clientID}"
                             th:selected="${client.clientID == client.clientID}"></option>
                 </select>
                 <input type="hidden" id="clientID" name="clientID" th:value="${vacancyDTO.clientID}"/>
             </label>
 
-
             <br> <br>
-
             <label for="employeeID">Select Employee
-                <select class="form-select-sm" aria-label=".form-select-sm"  name="employeeID">
+                <select class="form-select-sm" aria-label=".form-select-sm" name="employeeID">
                     <option th:each="employee : ${employeeList}" th:text="${employee.username}"
                             th:value="${employee.employeeID}"
                             th:selected="${employee.employeeID == employee.employeeID}"></option>
@@ -33,89 +30,90 @@
             </label>
 
             <br> <br>
+
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('job_title')}"
+               th:errors="${vacancyDTO.job_title}"
+            ></p>
             <label for="job_title">
                 Job Title:
-                <p th:class="error" th:if="${#fields.hasErrors('job_title')}"
-                   th:errors="${vacancyDTO.job_title}"
-                ></p>
             </label>
             <input type="text" th:field="*{job_title}" id="job_title" placeholder="Enter The Job Title"
                    class="form-control mb-4 w-25">
             <br>
 
-
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('job_description')}"
+               th:errors="${vacancyDTO.job_description}"
+            ></p>
             <label for="job_description">
                 Job Description:
-                <p th:class="error" th:if="${#fields.hasErrors('job_description')}"
-                   th:errors="${vacancyDTO.job_description}"
-                ></p>
-            </label>
 
+            </label>
             <textarea class="form-control  mb-4 text-black-50" th:field="*{job_description}" id="job_description"
             ></textarea>
 
 
             <br>
+
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('seniority_level')}"
+               th:errors="${vacancyDTO.seniority_level}"
+            ></p>
             <label for="seniorityLevel">
                 Seniority Level:
-                <p th:class="error" th:if="${#fields.hasErrors('seniority_level')}"
-                   th:errors="${vacancyDTO.seniority_level}"
-                ></p>
+
             </label>
             <input type="text" th:field="*{seniority_level}" id="seniorityLevel"
                    placeholder="Enter The Seniority Level"
                    class="form-control mb-4 w-25">
             <br>
 
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('requirements')}"
+               th:errors="${vacancyDTO.requirements}"
+            ></p>
             <label for="requirements">Requirements:
-                <p th:class="error" th:if="${#fields.hasErrors('requirements')}"
-                   th:errors="${vacancyDTO.requirements}"
-                ></p>
+
             </label>
 
             <textarea class="form-control  mb-4 text-black-50" th:field="*{requirements}" id="requirements"
             ></textarea>
 
             <br>
+
+            <p class="alert alert-danger alert-dismissible fade show" role="alert"
+               th:if="${#fields.hasErrors('location')}"
+               th:errors="${vacancyDTO.location}">Error!</p>
             <label for="location">
                 Job Location:
-                <p th:class="error" th:if="${#fields.hasErrors('location')}"
-                   th:errors="${vacancyDTO.location}"
-                ></p>
             </label>
             <input type="text" th:field="*{location}" id="location" placeholder="Enter The Job Location"
                    class="form-control mb-4 w-25">
             <br>
             <label for="industry">Select Industry:
             </label>
-            <p th:class="error" th:if="${#fields.hasErrors('industry')}"
-               th:errors="${vacancyDTO.industry}"
-            ></p>
-            <select class="form-select-sm" aria-label=".form-select-sm"  id="industry" th:field="*{industry}">
+            <select class="form-select-sm" aria-label=".form-select-sm" id="industry" th:field="*{industry}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
                         th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>
             </select>
 
             <br> <br>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('publish_date')}"
+               th:errors="${vacancyDTO.publish_date}"
+            ></p>
             <label for="publish_date">
                 Publish Date:
-                <p th:class="error" th:if="${#fields.hasErrors('publish_date')}"
-                   th:errors="${vacancyDTO.publish_date}"
-                ></p>
             </label><input type="date" th:field="*{publish_date}" id="publish_date"
                            placeholder="Enter The Date to be published" class="form-control mb-4 w-25">
             <br>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('end_date')}"
+               th:errors="${vacancyDTO.end_date}"
+            ></p>
             <label for="end_date">
                 End Date:
-                <p th:class="error" th:if="${#fields.hasErrors('end_date')}"
-                   th:errors="${vacancyDTO.end_date}"
-                ></p>
             </label><input type="date" th:field="*{end_date}" id="end_date" placeholder="Enter The Expiration Date"
                            class="form-control mb-4 w-25">
             <br>
             <label for="jobType">Select Job Type:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm"  id="jobType" th:field="*{jobType}">
+            <select class="form-select-sm" aria-label=".form-select-sm" id="jobType" th:field="*{jobType}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
                         th:value="${type}" th:text="${type}"></option>
             </select>
@@ -123,15 +121,13 @@
             <br> <br>
             <label for="empType">Select Employment Type:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm"  id="empType" th:field="*{empType}">
+            <select class="form-select-sm" aria-label=".form-select-sm" id="empType" th:field="*{empType}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
                         th:value="${type}" th:text="${type}"></option>
             </select>
             <br>
-            <!-- <button type="submit" class="btn btn-primary btn-sm mb-3">Save vacancy</button>
- -->
 
-            <button class="btn normal-button"
+            <button class="btn btn-secondary"
                     hx-post="/Vacancy/save-vacancy"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"

@@ -64,7 +64,21 @@ public class BlogController {
         // blogDTO , internalServerError
         return "fragments/blog/add-blog";
     }
-
+    @PostMapping("/save-blog")
+    public String saveBlog(@Valid @ModelAttribute("blogDTO") BlogDTO blogDTO, BindingResult bindingResult, Principal principal, Model model) {
+        if (bindingResult.hasFieldErrors()) {
+            log.info("HAS ERRORS");
+            return "fragments/blog/add-blog";
+        }
+        try {
+            recruitmentZoneService.saveNewBlog(blogDTO, principal, model);
+        } catch (Exception e) {
+            log.error("<-- saveExistingBlog -->  Exception \n {}",e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
+        //   blog , findBlogResponse , internalServerError ,  saveNewBlogResponse
+        return "fragments/blog/view-blog";
+    }
 
     @PostMapping("/view-blog")
     public String viewBlog(@RequestParam("blogID") Long blogID, Model model) {
@@ -90,21 +104,7 @@ public class BlogController {
         return "fragments/blog/view-home-blog";
     }
 
-    @PostMapping("/save-blog")
-    public String saveBlog(@Valid @ModelAttribute("blog") BlogDTO blog, BindingResult bindingResult, Principal principal, Model model) {
-        if (bindingResult.hasFieldErrors()) {
-            log.info("HAS ERRORS");
-            return "fragments/blog/add-blog";
-        }
-        try {
-            recruitmentZoneService.saveNewBlog(blog, principal, model);
-        } catch (Exception e) {
-            log.error("<-- saveExistingBlog -->  Exception \n {}",e.getMessage());
-            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-        }
-        //   blog , findBlogResponse , internalServerError ,  saveNewBlogResponse
-        return "fragments/blog/view-blog";
-    }
+
 
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {

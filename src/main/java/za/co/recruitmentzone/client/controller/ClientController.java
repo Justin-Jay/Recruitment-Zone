@@ -8,12 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import za.co.recruitmentzone.client.dto.*;
 import za.co.recruitmentzone.client.entity.ClientFile;
 import za.co.recruitmentzone.documents.SaveFileException;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 
+
+import java.util.List;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
@@ -46,7 +50,7 @@ public class ClientController {
     @PostMapping("/add-client")
     public String showCreateClientForm(Model model) {
         try {
-            model.addAttribute("clientDTO", new NewClientDTO());
+            model.addAttribute("newClientDTO", new NewClientDTO());
         } catch (Exception e) {
             log.info("<-- showCreateClientForm -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -69,11 +73,30 @@ public class ClientController {
         // clientID , contactPersonDTO
         return "fragments/clients/add-contact";
     }
+    @PostMapping("/save-new-contact")
+    public String addContactToClient(@Valid @ModelAttribute("contactPersonDTO") ContactPersonDTO contactPersonDTO, BindingResult bindingResult,
+                                     Model model) {
+        if (bindingResult.hasFieldErrors()) {
+           recruitmentZoneService.findClientByID(contactPersonDTO.getClientID(), model);
+            model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
+            // client , findClientByIDResponse , bindingResult
+            return "fragments/clients/add-contact";
+        }
+        try {
+            recruitmentZoneService.addContactToClient(contactPersonDTO, model);
+        } catch (Exception e) {
+            log.info("<-- addContactToClient -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
+        //  clientID, contactPersonList,  addContactPersonResponse  , internalServerError
+        return "fragments/clients/view-client-contacts";
+    }
 
     @PostMapping("/save-client")
-    public String saveClient(@Valid @ModelAttribute("ClientDTO") NewClientDTO newClientDTO,
+    public String saveClient(@Valid @ModelAttribute("newClientDTO") NewClientDTO newClientDTO,
                              BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasFieldErrors()) {
+
             return "fragments/clients/add-client";
         }
         try {
@@ -84,7 +107,7 @@ public class ClientController {
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //  saveNewClientResponse saveNewClientResponse , clientsList , findAllClientsResponse
-        return "/fragments/clients/client-administration";
+        return "fragments/clients/view-client";
     }
 
 
@@ -117,7 +140,7 @@ public class ClientController {
     public String showClientVacancies(@RequestParam("clientID") Long clientID, Model model) {
         try {
             recruitmentZoneService.loadClientVacancies(clientID, model);
-            //  recruitmentZoneService.findClientDocuments(model,clientID);
+           // recruitmentZoneService.findClientDocuments(model,clientID);
         } catch (Exception e) {
             log.info("<-- showClientContacts -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -169,24 +192,7 @@ public class ClientController {
         return "fragments/clients/update-client";
     }
 
-    @PostMapping("/save-new-contact")
-    public String addContactToClient(@Valid @ModelAttribute("ContactPersonDTO") ContactPersonDTO contactPersonDTO, BindingResult bindingResult,
-                                     Model model) {
-        if (bindingResult.hasErrors()) {
-            recruitmentZoneService.findClientByID(contactPersonDTO.getclientID(), model);
-            model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
-            // client , findClientByIDResponse , bindingResult
-            return "fragments/clients/update-client";
-        }
-        try {
-            recruitmentZoneService.addContactToClient(contactPersonDTO, model);
-        } catch (Exception e) {
-            log.info("<-- addContactToClient -->  Exception \n {}", e.getMessage());
-            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-        }
-        //  clientID, contactPersonList,  addContactPersonResponse  , internalServerError
-        return "fragments/clients/view-client-contacts";
-    }
+
 
     @PostMapping("/save-updated-client")
     public String saveUpdatedClient(@Valid @ModelAttribute("client") ExistingClientDTO client,
@@ -218,12 +224,11 @@ public class ClientController {
     }
 
     @PostMapping("/save-client-note")
-    public String saveClientNote(@Valid @ModelAttribute("clientNote") ClientNoteDTO clientNote,
+    public String saveClientNote(@Valid @ModelAttribute("clientNoteDTO") ClientNoteDTO clientNote,
                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
             log.info("HAS ERRORS");
-            recruitmentZoneService.findClientNotes(clientNote.getclientID(), model);
-            model.addAttribute("noteSaved", Boolean.FALSE);
+            recruitmentZoneService.reloadClientNotes(clientNote.getClientID(), model);
             return "fragments/clients/view-client-notes";
         }
         try {

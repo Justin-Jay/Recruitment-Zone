@@ -1,0 +1,37 @@
+<div class="container-fluid main-page-section"><!--  th:fragment="vacancyStatus(VacancyDTO)" -->
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewVacancyStatusResponse})}"></div>
+
+    </div>
+
+
+    <form class="form-control-sm" action="#" th:action="@{/Vacancy/save-updated-vacancy-status}"  th:method="POST">
+
+        <input type="hidden" th:field="${vacancyStatusDTO.vacancyID}"/>
+
+        <p th:text="*{'Current Status: ' + vacancyStatusDTO.status}" th:value="${vacancyStatusDTO}"></p>
+        <div >
+            <label for="status">Select Status:
+            </label>
+            <select class="form-select-sm" aria-label=".form-select-sm"  id="status" th:field="${vacancyStatusDTO.status}">
+                <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.VacancyStatus).values()}"
+                        th:value="${statusVal}" th:text="${statusVal}"></option>
+            </select>
+            <br>
+            <br>
+            <button class="btn btn-primary"
+                    hx-post="/Vacancy/save-updated-vacancy-status"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML"
+                    hx-include="[vacancyStatusDTO='vacancyStatusDTO']">Save Updated Vacancy Status
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

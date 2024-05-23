@@ -1,0 +1,67 @@
+<div class="container-fluid main-page-section">
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+        <!--FILE UPLOAD ERRORS-->
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createClientFileResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${invalidFileUpload})}"></div>
+
+
+    </div>
+
+
+    <form action="#" th:action="@{/Vacancy/upload-document}" th:object="${clientFileDTO}"
+          th:method="post" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+     <!--   <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}" th:field="*{vacancyID}" />
+        <input type="hidden" name="clientID"  th:value="${vacancy.client.clientID}" th:field="*{clientID}" />
+-->
+        <input type="hidden" name="vacancyID" th:value="${clientFileDTO.vacancyID}" />
+
+        <input type="hidden" name="clientID" th:value="${clientFileDTO.clientID}" />
+
+        <div class="form-group">
+
+            <label for="documentAttachment">Attach Document:</label>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="*{#fields.hasErrors('fileMultipart')}"
+               th:errors="${clientFileDTO.fileMultipart}"
+            ></p>
+            <input th:type="file" name="fileMultipart" id="documentAttachment"
+                   th:field="${clientFileDTO.fileMultipart}"
+                   class="form-control "/>
+            <br><br>
+            <label for="candidateDocumentType">Document Type:
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('documentType')}"
+               th:errors="${clientFileDTO.documentType}"
+            ></p>
+
+            <select class="form-select-sm" aria-label=".form-select-sm" id="candidateDocumentType" th:field="*{documentType}">
+                <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.ClientDocumentType).values()}"
+                        th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
+            </select>
+            <br> <br>
+
+            <button class="btn btn-secondary"
+                    hx-post="/Vacancy/upload-document"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML"
+                    hx-include="[clientFileDTO='clientFileDTO']">Add New Document
+            </button>
+
+
+        </div>
+
+
+    </form>
+
+
+    <hr/>
+
+    <p>Existing Documents</p>
+
+    <div th:replace="~{fragments/documents/document-fragment :: existingDocuments(${existingDocuments})}"></div>
+
+</div>

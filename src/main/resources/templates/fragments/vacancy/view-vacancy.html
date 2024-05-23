@@ -14,7 +14,6 @@
             <th>Location</th>
             <th>Publish Date</th>
             <th>Status</th>
-
             <th>Update Vacancy</th>
         </tr>
         </thead>
@@ -22,8 +21,8 @@
 
         <tr th:each="foundVacancy : ${vacancy}">
             <td th:text="*{foundVacancy.vacancyID}"></td>
-            <td th:text="${foundVacancy.client.name}"></td>
-            <td th:text="${foundVacancy.getApplicationsSize + ' total applications '}"></td>
+            <td th:text="${foundVacancy.clientID}"></td>
+            <td th:text="${foundVacancy.applicationCount}"></td>
             <td th:text="${foundVacancy.location}"></td>
             <td th:text="${foundVacancy.publish_date}"></td>
             <td th:text="${foundVacancy.status}"></td>
@@ -40,11 +39,62 @@
                             hx-include="[vacancyID='vacancyID']">Update Vacancy
                     </button>
                 </form>
-
             </td>
 
 
         </tr>
         </tbody>
     </table>
+
+<!--    <div class="container-fluid" id="vacancy-file-section">
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createClientFileResponse})}"></div>
+
+        <form action="#" th:action="@{/Vacancy/upload-document}" th:object="${clientFileDTO}"
+              th:method="post" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+
+            &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+            <input type="hidden" name="clientID" th:value="${foundVacancy.client.clientID}"/>
+
+            <input type="hidden" th:field="${clientFileDTO.vacancyID}" th:value="${foundVacancy.vacancyID}" />
+
+            <div class="form-group">
+
+                <label for="documentAttachment">Attach Document:</label>
+                <p class="alert alert-danger alert-dismissible fade show"
+                   th:if="*{#fields.hasErrors('documentAttachment')}"
+                   th:errors="${clientFileDTO.documentAttachment}"
+                ></p>
+                <input th:type="file" name="documentAttachment" id="documentAttachment"
+                       th:field="${clientFileDTO.documentAttachment}"
+                       class="form-control "/>
+
+
+                <label for="candidateDocumentType">Document Type:
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('documentType')}"
+                   th:errors="${clientFileDTO.documentType}"
+                ></p>
+                <select class="form-select-sm" aria-label=".form-select-sm" id="candidateDocumentType"
+                        th:field="${clientFileDTO.documentType}">
+                    <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.ClientDocumentType).values()}"
+                            th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
+                </select>
+
+                <br>
+
+                <button class="btn btn-secondary"
+                        hx-post="/Vacancy/upload-document"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML"
+                        hx-include="[clientFileDTO='clientFileDTO']">Add New Document
+                </button>
+
+
+            </div>
+
+
+        </form>
+    </div>-->
+
 </div>

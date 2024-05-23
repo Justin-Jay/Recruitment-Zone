@@ -25,7 +25,6 @@ import java.time.format.DateTimeFormatter;
 public class StorageService {
     private final Logger log = LoggerFactory.getLogger(StorageService.class);
 
-
     private final Storage storage;
 
     @Value("${storage.bucket}")
@@ -41,6 +40,7 @@ public class StorageService {
 
 
     public String uploadFile(FileUploadEvent event) {
+        log.info("<--- uploadFile event {} ---> ",event.printEvent());
         String filename = "";
         try {
             String docType = event.getDocument().getDocType();

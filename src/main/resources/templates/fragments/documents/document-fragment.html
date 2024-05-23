@@ -1,8 +1,8 @@
 <div class="container-fluid" th:fragment="existingDocuments(existingDocuments)">
 
-    <p th:if="${findCandidateDocumentsResponse}" th:text="${findCandidateDocumentsResponse}"></p>
-    
-    <p th:if="${findClientteDocumentsResponse}" th:text="${findClientteDocumentsResponse}"></p>
+<!--    <p th:if="${findCandidateDocumentsResponse}" th:text="${findCandidateDocumentsResponse}"></p>
+    -->
+    <p th:if="${findVacancyDocumentsResponse}" th:text="${findVacancyDocumentsResponse}"></p>
 
     <ol class="list-group" th:each="document, documentIndex : ${existingDocuments}">
         <li class="list-group-item" >

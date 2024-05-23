@@ -57,6 +57,9 @@
                 <label for="comment">
                     Comment:
                 </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('comment')}"
+                   th:errors="${clientNoteDTO.comment}"
+                ></p>
                 <textarea class="form-control mb-4 text-black-50" th:field="${clientNoteDTO.comment}" id="comment"></textarea>
             </div>
 
@@ -64,7 +67,7 @@
                     hx-post="/Client/save-client-note"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"
-                    hx-include="[clientNote='clientNote']">Add Note
+                    hx-include="[clientNoteDTO='clientNoteDTO']">Add Note
             </button>
         </form>
 
