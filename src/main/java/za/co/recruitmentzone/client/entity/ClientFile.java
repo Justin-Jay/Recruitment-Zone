@@ -29,7 +29,7 @@ public class ClientFile implements Document,Serializable {
     @Column(name = "path")
     private String documentLocation;
     @Enumerated(EnumType.STRING)
-    private ClientDocumentType documentType;
+    private ClientDocumentType clientDocumentType;
     @Column(name = "gcpAddress")
     private String gcpAddress;
 
@@ -133,12 +133,12 @@ public class ClientFile implements Document,Serializable {
         this.client = client;
     }
 
-    public ClientDocumentType getDocumentType() {
-        return documentType;
+    public ClientDocumentType getClientDocumentType() {
+        return clientDocumentType;
     }
 
-    public void setDocumentType(ClientDocumentType documentType) {
-        this.documentType = documentType;
+    public void setClientDocumentType(ClientDocumentType clientDocumentType) {
+        this.clientDocumentType = clientDocumentType;
     }
 
     @Override
@@ -157,13 +157,13 @@ public class ClientFile implements Document,Serializable {
     @Override
     public String getDocType(){
 
-        return documentType.toString();
+        return clientDocumentType.toString();
     }
 
     @Override
     public String convertDocType() {
         String returnString = "";
-        switch (documentType) {
+        switch (clientDocumentType) {
             case ROLE_PROFILE:
                 returnString = "Role Profile";
                 break;

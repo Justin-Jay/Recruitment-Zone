@@ -1182,7 +1182,7 @@ public class RecruitmentZoneService {
         file.setVacancy(vacancy);
         file.setFile_name(fileDTO.getFileMultipart().getOriginalFilename());
         file.setFile_size(Long.toString(fileDTO.getFileMultipart().getSize()));
-        file.setDocumentType(fileDTO.getDocumentType());
+        file.setClientDocumentType(fileDTO.getDocumentType());
         file.setCreated(LocalDateTime.now());
         log.info("New clientFile {}", file.printDocument());
         // Local file storage

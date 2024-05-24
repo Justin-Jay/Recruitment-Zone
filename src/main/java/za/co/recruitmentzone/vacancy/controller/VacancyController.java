@@ -193,7 +193,7 @@ public class VacancyController {
         try {
             recruitmentZoneService.findVacancyDocuments(model, vacancyID);
         } catch (Exception e) {
-            log.error("<-- candidateDocs -->  Exception \n {}", e.getMessage());
+            log.error("<-- vacancyDocs -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // candidate, candidateFileDTO , existingDocuments,  internalServerError , findCandidateDocumentsResponse
