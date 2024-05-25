@@ -226,6 +226,10 @@ public class RecruitmentZoneService {
             log.info("CandidateID: {}", candidateID);
             model.addAttribute("candidate", candidate);
             Set<CandidateNote> notes = candidate.getNotes();
+            log.info("Candidate notes ");
+            for (CandidateNote note : notes) {
+                log.info("note: {}", note.printCandidateNote());
+            }
             model.addAttribute("existingNotes", notes);
             model.addAttribute("candidateNoteDTO", candidateNoteDTO);
 
@@ -258,14 +262,14 @@ public class RecruitmentZoneService {
         try {
             Candidate candidate = candidateService.getcandidateByID(candidateID);
             log.info("<-- saveCandidateNote  candidate {} --> ", candidate.printCandidate());
+            //candidateNote.setDateCaptured(LocalDateTime.now());
             candidate.addNote(candidateNote);
             try {
                 Candidate savedCandidate = candidateService.save(candidate);
                 if (savedCandidate != null) {
                     model.addAttribute("noteSaved", "Note Added");
-
                     addCandidateNote(savedCandidate.getCandidateID(), model);
-                    log.error("<-- saveCandidateNote  savedCandidate {} --> ", savedCandidate.printCandidate());
+                    log.info("<-- saveCandidateNote  savedCandidate {} --> ", savedCandidate.printCandidate());
                 } else
                     throw new SaveCandidateException("Failed to save candidate : " + candidate.getCandidateID());
 
@@ -827,7 +831,7 @@ public class RecruitmentZoneService {
             vacancyDTO.setJob_description(vacancy.getJob_description());
             vacancyDTO.setSeniority_level(vacancy.getSeniority_level());
             vacancyDTO.setRequirements(vacancy.getRequirements());
-            vacancyDTO.setLocation(vacancy.getSeniority_level());
+            vacancyDTO.setLocation(vacancy.getLocation());
             vacancyDTO.setIndustry(vacancy.getIndustry());
             vacancyDTO.setPublish_date(vacancy.getPublish_date());
             vacancyDTO.setEnd_date(vacancy.getEnd_date());
@@ -838,6 +842,8 @@ public class RecruitmentZoneService {
             vacancyDTO.setVacancyID(vacancyID);
             vacancyDTO.setEmployeeID(vacancy.getTheEmpID());
             vacancyDTO.setApplicationCount(vacancy.getApplicationsSize());
+            vacancyDTO.setClientName(vacancy.getClient().getName());
+            // clientName , vacancyName = jobTitle
             model.addAttribute("vacancy", vacancyDTO);
 
             model.addAttribute("clientFileDTO",new ClientFileDTO());
@@ -1384,8 +1390,10 @@ public class RecruitmentZoneService {
                 existingClientDTO.setIndustry(client.getIndustry());
                 existingClientDTO.setName(client.getName());
                 existingClientDTO.setClientID(clientID);
+                existingClientDTO.setCreated(client.getCreated());
                 existingClientDTO.setContactPeopleCount(client.getContactPeopleCount());
                 model.addAttribute("client", client);
+
             } else throw new ClientNotFoundException("Client Not Found");
 
         } catch (ClientNotFoundException clientNotFoundException) {
@@ -1438,12 +1446,11 @@ public class RecruitmentZoneService {
                 log.info("<--  findClientByID client {} -->", client.printClient());
                 model.addAttribute("client", client);
                 client.addNote(clientNoteDTO);
-                //saveNoteToClient(model, client);
                 clientService.saveExistingClient(client);
-                model.addAttribute("saveNoteToClientResponse", "Client Note Saved" + client.getClientID());
+                model.addAttribute("saveNoteToClientResponse", "Note saved");
 
                 //   model.addAttribute("noteSaved", Boolean.TRUE);
-                Set<ClientNote> notes = client.getNotes();
+                List<ClientNote> notes = client.getNotes();
                 model.addAttribute("existingNotes", notes);
                 ClientNoteDTO noteDTO = new ClientNoteDTO();
                 noteDTO.setClientID(clientNoteDTO.getClientID());
@@ -1463,8 +1470,9 @@ public class RecruitmentZoneService {
         try {
             Client clientResponse = clientService.findClientByID(clientID);
             if (clientResponse != null) {
-                Set<ClientNote> notes = clientResponse.getNotes();
+                List<ClientNote> notes = clientResponse.getNotes();
                 model.addAttribute("existingNotes", notes);
+                model.addAttribute("client", clientResponse);
                 if (notes.isEmpty() && notes != null) {
                     model.addAttribute("noNotesFound", Boolean.TRUE);
                 }
@@ -1486,7 +1494,7 @@ public class RecruitmentZoneService {
         try {
             Client clientResponse = clientService.findClientByID(clientID);
             if (clientResponse != null) {
-                Set<ClientNote> notes = clientResponse.getNotes();
+                List<ClientNote> notes = clientResponse.getNotes();
                 model.addAttribute("existingNotes", notes);
                 if (notes.isEmpty() && notes != null) {
                     model.addAttribute("noNotesFound", Boolean.TRUE);
@@ -1537,20 +1545,6 @@ public class RecruitmentZoneService {
         }
     }
 
-  /*  public void saveNoteToClient(Model model, Client client) {
-        log.info("<--  saveNoteToClient  client {} -->", client.printClient());
-        try {
-            Client savedClient = clientService.saveUpdatedClient(client);
-            if (savedClient != null) {
-                model.addAttribute("saveNoteToClientResponse", "Client Note Saved" + client.getClientID());
-                log.info("<--  saveNoteToClient  savedClient {} -->", savedClient.printClient());
-            } else throw new SaveClientException("Failed to save new client {}" + client.getName());
-
-        } catch (SaveClientException saveClientException) {
-            log.info("<--  saveNoteToClient  saveClientException {} -->", saveClientException.getMessage());
-            model.addAttribute("saveNoteToClientResponse", saveClientException.getMessage());
-        }
-    }*/
 
     public void addContactToClient(ContactPersonDTO contactPersonDTO, Model model) {
         log.info("<--  addContactToClient  contactPersonDTO {} -->", contactPersonDTO.printContactPersonDTO());

@@ -115,7 +115,7 @@ public class ClientController {
     public String showClient(@RequestParam("clientID") Long clientID, Model model) {
         try {
             recruitmentZoneService.findClientByID(clientID, model);
-            // recruitmentZoneService.findClientDocuments(model, clientID);
+            recruitmentZoneService.findClientNotes(clientID, model);
         } catch (Exception e) {
             log.info("<-- showClient -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);

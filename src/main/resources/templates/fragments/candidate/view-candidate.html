@@ -6,9 +6,152 @@
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
     </div>
 
-
-    <div class="container-fluid" th:fragment="candidateView(candidate)">
+    <div class="container-fluid" th:fragment="candidateView(candidate)"
+         th:object="${candidate}">
         <h2>Candidate Profile</h2>
+        <!--
+               <div class="row">
+                 <div class="col-6">
+                     <label>:</label>
+                 </div>
+                 <div class="col-6">
+                     <span th:text="*{___}"></span>
+                 </div>
+             </div>
+             -->
+        <div class="row">
+            <div class="col-6">
+                <label>Candidate ID:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.candidateID}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>First Name:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.first_name}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Last Name:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.last_name}"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <label>ID Number:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.id_number}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Email Address:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.email_address}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Phone Number:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.phone_number}"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <label>Province:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.current_province}"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <label>Current Role:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.current_role}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Employer:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.current_employer}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Seniority:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.seniority_level}"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <label>Relocation:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.relocation}"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <label>Education Level:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${candidate.printEducationLevel()}"></span>
+            </div>
+        </div>
+
+
+<br>
+
+
+        <div>
+            <form th:action="@{/Candidate/view-candidate-documents}" th:method="post">
+                <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
+
+                <button class="btn normal-button"
+                        hx-post="/Candidate/view-candidate-documents"
+                        hx-target="#right-page-column"
+                        hx-swap="innerHTML"
+                        hx-include="[candidateID='candidateID']">View Documents
+                </button>
+            </form>
+        </div>
+        <br>
+    </div>
+<!--    <div class="container-fluid" th:fragment="candidateView(candidate)">
+        <h2>Candidate Profile</h2>
+
         <div>
             <label>Candidate ID:</label>
             <span th:text="${candidate.candidateID}"></span>
@@ -78,7 +221,7 @@
 
         <div>
             <label>Total Applications:</label>
-            <!--  <span th:text="${candidate.cvFilePath}"></span>-->
+            &lt;!&ndash;  <span th:text="${candidate.cvFilePath}"></span>&ndash;&gt;
         </div>
 
 
@@ -95,10 +238,11 @@
             </form>
         </div>
         <br>
-    </div>
+    </div>-->
 
     <div class="container-fluid"  >
         <h2>Candidate Comments</h2>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${noteSaved})}"></div>
         <table class="table ">
             <thead>
             <tr>
@@ -123,7 +267,6 @@
         <form action="#" th:action="@{/Candidate/save-candidate-note}"
               th:method="post">
             <div class="form-group">
-                <div th:insert="~{fragments/layout/response-messages :: successMessage(${noteSaved})}"></div>
                 <!-- Hidden input field to include the candidateID in the POST request -->
                 <input type="hidden" name="candidateID" th:field="${candidate.candidateID}"
                        th:value="${candidate.candidateID}"/>

@@ -8,27 +8,27 @@
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findClientByIDResponse})}"></div>
 
         <!-- th:unless="${#lists.isEmpty(allSeedStarters)}"-->
-    <table class="table table-striped table-hover table-responsive">
+<!--    <table class="table table-striped table-hover table-responsive">
 
-        <!--       th:each="vApplication : *{vacancy.getApplications}">-->
+        &lt;!&ndash;       th:each="vApplication : *{vacancy.getApplications}">&ndash;&gt;
         <thead>
-        <!-- Your table headers here -->
+        &lt;!&ndash; Your table headers here &ndash;&gt;
         <tr>
             <th>Client ID</th>
             <th>Industry</th>
             <th>Created Date</th>
             <th>No. Contact People</th>
-            <!--
+            &lt;!&ndash;
                <th>Current Role</th>
                <th>Seniority</th>
                <th>Education Level</th>
-               <th>Relocation</th>-->
+               <th>Relocation</th>&ndash;&gt;
             <th>Update Vacancy</th>
-            <!-- Add more columns as needed -->
+            &lt;!&ndash; Add more columns as needed &ndash;&gt;
         </tr>
         </thead>
         <tbody>
-        <!--<tr th:each="candidate : ${foundVacancy.candidate}">-->
+        &lt;!&ndash;<tr th:each="candidate : ${foundVacancy.candidate}">&ndash;&gt;
         <tr th:each="foundClient : ${client}">
             <td th:text="*{foundClient.clientID}"></td>
             <td th:text="${foundClient.industry}"></td>
@@ -36,9 +36,9 @@
             <td th:text="${foundClient.getContactPeopleCount}"></td>
             <td>
                 <form action="#" th:action="@{/Client/view-client-contacts}" th:method="post">
-                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
                     <input type="hidden" name="clientID" th:value="*{foundClient.clientID}"/>
-                    <!-- Submit button to trigger the form submission -->
+                    &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
                     <button class="btn normal-button"
                             hx-post="/Client/view-client-contacts"
                             hx-target="#right-page-column"
@@ -51,7 +51,77 @@
 
         </tr>
         </tbody>
-    </table>
+    </table>-->
+    <div class="container-fluid"  th:object="${client}">
+
+
+        <!--
+
+            // industry, clientName , contactPeopleCount , created
+
+        -->
+        <!--
+        <div class="row">
+          <div class="col-6">
+              <label>:</label>
+          </div>
+          <div class="col-6">
+              <span th:text="*{___}"></span>
+          </div>
+      </div>
+      -->
+        <div class="row">
+            <div class="col-6">
+                <label>Client:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{name}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Industry:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{industry.getPrintableIndustryName()}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Relationship established:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{created}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Contact People:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{getContactPeopleCount}"></span>
+            </div>
+        </div>
+
+<br>
+        <form action="#" th:action="@{/Client/view-client-contacts}" th:method="post">
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" name="clientID" th:value="*{clientID}"/>
+            <!-- Submit button to trigger the form submission -->
+            <button class="btn normal-button"
+                    hx-post="/Client/view-client-contacts"
+                    hx-target="#right-page-column"
+                    hx-swap="innerHTML"
+                    hx-include="[clientID='clientID']">View Contacts
+            </button>
+        </form>
+
+        <br>
+    </div>
+<!--    <div th:insert="~{fragments/clients/view-client-notes :: clientNotes(${existingNotes})}"></div>-->
 </div>
 
 

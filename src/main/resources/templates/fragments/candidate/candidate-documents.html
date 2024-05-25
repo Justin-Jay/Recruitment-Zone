@@ -28,7 +28,7 @@
                th:if="*{#fields.hasErrors('documentAttachment')}"
                th:errors="*{documentAttachment}"
             ></p>
-
+            <br>
             <input th:type="file" name="documentAttachment" id="documentAttachment"
                    th:field="*{documentAttachment}"
                    class="form-control "/>
@@ -42,7 +42,7 @@
                 <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.CandidateDocumentType).values()}"
                         th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
             </select>
-
+            <br>
 
             <br>
 

@@ -8,7 +8,9 @@ import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,7 +41,7 @@ public class Client implements Serializable {
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<ClientNote> notes;
+    private List<ClientNote> notes;
 
     @OneToMany(mappedBy = "client",
             cascade = {
@@ -111,11 +113,11 @@ public class Client implements Serializable {
         this.vacancies = vacancies;
     }
 
-    public Set<ClientNote> getNotes() {
+    public List<ClientNote> getNotes() {
         return notes;
     }
 
-    public void setNotes(Set<ClientNote> notes) {
+    public void setNotes(List<ClientNote> notes) {
         this.notes = notes;
     }
 
@@ -155,7 +157,7 @@ public class Client implements Serializable {
 
     public void addNote(ClientNoteDTO noteDTO){
         if (notes ==null){
-            notes = new HashSet<>();
+            notes = new ArrayList<>();
         }
         ClientNote newNote = new ClientNote(noteDTO.getComment());
         newNote.setClient(this);

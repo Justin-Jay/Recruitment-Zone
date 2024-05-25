@@ -230,8 +230,7 @@ public class Candidate implements Serializable {
         }
         CandidateNote newNote = new CandidateNote(noteDTO.getComment());
         newNote.setCandidate(this);
-        LocalDateTime dt = LocalDateTime.now();
-        newNote.setDateCaptured(dt);
+        newNote.setDateCaptured(noteDTO.getDateCaptured());
         newNote.setCandidate(this);
         notes.add(newNote);
 

@@ -5,70 +5,96 @@
     <form action="#" th:action="@{/Vacancy/save-updated-vacancy}" th:object="${vacancy}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="vacancyID" th:field="*{vacancyID}"/>
-        <div class="md-10">
-            <label for="job_title">Job Title: </label>
-            <input type="text" th:field="*{job_title}" class="form-control mb-4 w-25" id="job_title"
-            />
+        <div class="form-group">
+            <div class="row">
+                <label for="job_title">Job Title: </label>
+                <input type="text" th:field="*{job_title}" class="form-control" id="job_title"
+                />
+            </div>
+            <div class="row">
+                <label for="job_description">Job Description: </label>
+                <textarea  th:field="*{job_description}" class="form-control"  id="job_description" ></textarea>
+            </div>
 
-            <label for="job_description">Job Description: </label>
-            <input type="text" th:field="*{job_description}" class="form-control mb-4 w-25" id="job_description"
-            />
-
-            <label for="seniority_level">Seniority Level: </label>
-            <input type="text" th:field="*{seniority_level}" class="form-control mb-4 w-25" id="seniority_level"
-            />
-            <label for="requirements">Requirements: </label>
-            <input type="text" th:field="*{requirements}" class="form-control mb-4 w-25" id="requirements"
-            />
-
-            <label for="location">Location: </label>
-            <input type="text" th:field="*{location}" class="form-control mb-4 w-25" id="location"
-            />
+            <div class="row">
+                <label for="seniority_level">Seniority Level: </label>
+                <input type="text" th:field="*{seniority_level}" class="form-control" id="seniority_level"
+                />
+            </div>
 
 
-            <label for="industry">Select Industry:
-            </label>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="industry" th:field="*{industry}">
-                <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
-                        th:value="${type}" th:text="${type}"></option>
-            </select>
-            <br>
+            <div class="row">
+                <label for="requirementsField">Requirements: </label>
+                <textarea id="requirementsField" th:field="*{requirements}" class="form-control " name="summerData"></textarea>
+            </div>
 
-            <label for="publish_date">Publish Date: </label>
-            <input type="date" th:value="*{publish_date}" readonly class="form-control mb-4 w-25" id="publish_date"
-                   placeholder="Publish Date"/>
+            <!--             <textarea  th:field="*{__}" class="form-control "   id="___" rows="4"></textarea> -->
 
-            <label for="expirationDate">Expiration Date: </label>
-            <input type="date" th:value="*{end_date}" class="form-control mb-4 w-25" id="expirationDate"
-                   placeholder="Expiration Date:"/>
+            <div class="row">
+                <label for="location">Location: </label>
+                <input type="text" th:field="*{location}" class="form-control" id="location"
+                />
+            </div>
 
-            <label for="status">Select Status:
-            </label>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="status" th:field="*{status}">
-                <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.VacancyStatus).values()}"
-                        th:value="${statusVal}" th:text="${statusVal}"></option>
-            </select>
 
-            <br>
-            <label for="jobType">Select Job Type:
-            </label>
-            <select class="form-select-sm" aria-label=".form-select-sm"  id="jobType" th:field="*{jobType}">
-                <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
-                        th:value="${type}" th:text="${type}"></option>
-            </select>
-            <br><br>
-            <label for="empType">Select Employment Type:
-            </label>
-            <select class="form-select-sm" aria-label=".form-select-sm"  id="empType" th:field="*{empType}">
-                <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
-                        th:value="${type}" th:text="${type}"></option>
-            </select>
+            <div class="row">
+                <label for="industry">Select Industry:
+                </label>
+                <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
+                    <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
+            </div>
 
-            <br><br>
+            <div class="row">
+                <label for="publish_date">Publish Date: </label>
+                <input type="date" th:value="*{publish_date}" class="form-control" id="publish_date"
+                       placeholder="Publish Date"/>
+            </div>
+
+            <div class="row">
+                <label for="expirationDate">Expiration Date: </label>
+                <input type="date" th:value="*{end_date}" class="form-control " id="expirationDate"
+                       placeholder="Expiration Date:"/>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="status">Select Status:
+                    </label>
+                    <select class="form-select" aria-label=".form-select" id="status" th:field="*{status}">
+                        <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.VacancyStatus).values()}"
+                                th:value="${statusVal}" th:text="${statusVal}"></option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="jobType">Select Job Type:
+                    </label>
+                    <select class="form-select" aria-label=".form-select"  id="jobType" th:field="*{jobType}">
+                        <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
+                                th:value="${type}" th:text="${type}"></option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label for="empType">Select Employment Type:
+                    </label>
+                    <select class="form-select" aria-label=".form-select"  id="empType" th:field="*{empType}">
+                        <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
+                                th:value="${type}" th:text="${type}"></option>
+                    </select>
+                </div>
+
+            </div>
+
+
+
         </div>
-      <!--  <button type="submit" class="btn">Save Updated Vacancy</button>-->
-
-        <button class="btn normal-button"
+        <br><br>
+        <button class="btn btn-secondary"
                 hx-post="/Vacancy/save-updated-vacancy"
                 hx-target="#body-container"
                 hx-swap="innerHTML"> Save Updated Vacancy

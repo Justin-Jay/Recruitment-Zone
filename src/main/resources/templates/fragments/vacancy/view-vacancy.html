@@ -3,10 +3,99 @@
     <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findVacancyResponse})}"></div>
     <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveVacancyResponse})}"></div>
 
-    <table class="table table-striped table-responsive">
+    <div class="container-fluid"  th:object="${vacancy}">
 
+        <!--
+          <div class="row">
+            <div class="col-6">
+                <label>:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{___}"></span>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-6">
+                <label>Client:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{clientName}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Vacancy:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{job_title}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Total applications:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{applicationCount}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Location:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{location}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Publish Date:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{publish_date}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Status:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{status}"></span>
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <form action="#" th:action="@{/Vacancy/update-vacancy}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="vacancyID" th:value="*{vacancyID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                    <button class="btn btn-secondary"
+                            hx-post="/Vacancy/update-vacancy"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML"
+                            hx-include="[vacancyID='vacancyID']">Update Vacancy
+                    </button>
+                </form>
+            </div>
+            <div class="col-6">
+                <div th:insert="~{fragments/vacancy/vacancy-status :: vacancyStatus(${vacancy})}"></div>
+            </div>
+        </div>
+
+
+
+     <!--   <div>
+            <label> </label>
+            <span th:text="*{___}"></span>
+        </div>-->
+
+    </div>
+
+<!--    <table class="table table-striped table-responsive">
         <thead>
-
         <tr>
             <th>Vacancy ID</th>
             <th>Client</th>
@@ -29,9 +118,9 @@
 
             <td>
                 <form action="#" th:action="@{/Vacancy/update-vacancy}" th:method="post">
-                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
                     <input type="hidden" name="vacancyID" th:value="*{foundVacancy.vacancyID}"/>
-                    <!-- Submit button to trigger the form submission -->
+                    &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
                     <button class="btn normal-button"
                             hx-post="/Vacancy/update-vacancy"
                             hx-target="#main-page-section"
@@ -44,7 +133,7 @@
 
         </tr>
         </tbody>
-    </table>
+    </table>-->
 
 <!--    <div class="container-fluid" id="vacancy-file-section">
 

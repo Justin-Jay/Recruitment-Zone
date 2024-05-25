@@ -42,6 +42,7 @@ public class VacancyDTO implements Serializable {
     private Long employeeID;
     private Long vacancyID;
     private long applicationCount;
+    private String clientName;
 
     public VacancyDTO() {
     }

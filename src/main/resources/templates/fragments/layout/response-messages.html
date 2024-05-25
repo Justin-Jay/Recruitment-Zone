@@ -1,29 +1,24 @@
 <div class="container-fluid" th:fragment="successMessage(successMessage)">
     <div th:if="${successMessage}" class="alert alert-success -dismissible fade show" role="alert" id="successAlert">
-        <span th:text="${successMessage}"></span>
-        <button class="btn-close rounded-circle" data-bs-dismiss="alert" type="button">
-            <svg class="bi" width="10" height="10">
-                <use xlink:href="#x-lg"></use>
-            </svg>
-        </button>
+        <a type="button" data-bs-dismiss="alert" th:text="${successMessage}" >
+        </a>
     </div>
 </div>
 
-
 <div class="container-fluid" th:fragment="failureMessage(failureMessage)">
-    <div th:if="${failureMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <span th:text="${failureMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-        </button>
+    <div th:if="${failureMessage}" class="alert alert-success -dismissible fade show" role="alert" id="failureAlert">
+        <a type="button" data-bs-dismiss="alert" th:text="${failureMessage}" >
+        </a>
     </div>
 </div>
 
 <div class="container-fluid" th:fragment="genericMessage(genericMessage)">
-    <div th:if="${genericMessage}" class="alert alert-info alert-dismissible fade show" role="alert">
-        <span th:text="${genericMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-        </button>
+    <div th:if="${genericMessage}" class="alert alert-success -dismissible fade show" role="alert" id="genericAlert">
+        <a type="button" data-bs-dismiss="alert" th:text="${genericMessage}" >
+        </a>
     </div>
 </div>
+
+
 
 
