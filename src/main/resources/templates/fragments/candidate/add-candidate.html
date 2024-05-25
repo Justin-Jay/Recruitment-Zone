@@ -16,7 +16,7 @@
             <label for="vacancyID">Select a Vacancy:</label>
 
 
-            <select class="form-select-sm" aria-label=".form-select-sm" name="vacancyID" id="vacancyID">
+            <select class="form-select" aria-label=".form-select" name="vacancyID" id="vacancyID">
                 <option th:each="v : ${vacancyList}" th:value="${v.vacancyID}" th:text="${v.job_title}"></option>
             </select>
 
@@ -88,7 +88,7 @@
                 <label for="currentProvince">Current Location:
                 </label>
 
-                <select class="form-select-sm" aria-label=".form-select-sm" id="currentProvince"
+                <select class="form-select" aria-label=".form-select" id="currentProvince"
                         th:field="${newApplicationDTO.current_province}">
                     <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
                             th:value="${province}" th:text="${province.getPrintableProvinceName()}"></option>
@@ -142,7 +142,7 @@
                 <label for="EduLevel">Highest Education Level:
                 </label>
 
-                <select class="form-select-sm" aria-label=".form-select-sm" id="EduLevel"
+                <select class="form-select" aria-label=".form-select" id="EduLevel"
                         th:field="${newApplicationDTO.education_level}">
                     <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
                             th:value="${statusVal}" th:text="${statusVal.getPrintableEduLevel()}"></option>

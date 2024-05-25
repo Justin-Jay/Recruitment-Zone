@@ -60,7 +60,23 @@ public class VacancyController {
         //  vacancyDTO , clients , findAllClientsResponse  , employeeList loadEmployeesResponse , internalServerError
         return "fragments/vacancy/add-vacancy";
     }
+    @PostMapping("/save-vacancy")
+    public String saveVacancy(@Valid @ModelAttribute("vacancyDTO") VacancyDTO vacancy,
+                              BindingResult bindingResult, Model model) {
+        if (bindingResult.hasFieldErrors()) {
+            recruitmentZoneService.reloadCreateVacancy(model);
+            return "fragments/vacancy/add-vacancy";
+        }
+        try {
+            recruitmentZoneService.saveNewVacancy(vacancy, model);
+        } catch (Exception e) {
+            log.error("<-- saveVacancy -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
 
+        // saveVacancyResponse , internalServerError
+        return "fragments/vacancy/view-vacancy";
+    }
     @PostMapping("/view-vacancy")
     public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
@@ -85,24 +101,6 @@ public class VacancyController {
         return "fragments/vacancy/view-home-vacancy";
     }
 
-    @PostMapping("/save-vacancy")
-    public String saveVacancy(@Valid @ModelAttribute("vacancyDTO") VacancyDTO vacancy,
-                              BindingResult bindingResult, Model model) {
-        if (bindingResult.hasFieldErrors()) {
-            recruitmentZoneService.findAllClients(model);
-            recruitmentZoneService.findAllEmployees(model);
-            return "fragments/vacancy/add-vacancy";
-        }
-        try {
-            recruitmentZoneService.saveNewVacancy(vacancy, model);
-        } catch (Exception e) {
-            log.error("<-- saveVacancy -->  Exception \n {}", e.getMessage());
-            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-        }
-
-        // saveVacancyResponse , internalServerError
-        return "fragments/vacancy/view-vacancy";
-    }
 
     @PostMapping("/update-vacancy")
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {

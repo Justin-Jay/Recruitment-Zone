@@ -95,21 +95,23 @@
 
                 <!--    CENTER  PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid " id="main-page-section">
-                        <!--RESPONSE TEMPLATE-->
-                        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${applicationOutcome})}"></div>
-                        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createCandidateApplicationResponse})}"></div>
+
+                    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                        <div class="container-fluid " id="main-page-section">
+                            <!--RESPONSE TEMPLATE-->
+                            <div th:insert="~{fragments/layout/response-messages :: genericMessage(${applicationOutcome})}"></div>
+                            <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createCandidateApplicationResponse})}"></div>
+                        </div>
                     </div>
-                </div>
 
 
-                <!--RIGHT PAGE LIST-->
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid" id="right-page-column">
-
+                    <!--RIGHT PAGE LIST-->
+                    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                        <div class="container-fluid" id="right-page-column" >
+                        </div>
                     </div>
-                </div>
+
+
             </div>
 
 

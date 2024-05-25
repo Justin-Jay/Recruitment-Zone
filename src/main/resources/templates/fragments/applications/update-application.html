@@ -19,7 +19,7 @@
 
             <label for="status">Select Status:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm"  id="status" th:field="${vacancyApplicationDTO.status}">
+            <select class="form-select" aria-label=".form-select"  id="status" th:field="${vacancyApplicationDTO.status}">
                 <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.ApplicationStatus).values()}"
                         th:value="${statusVal}" th:text="${statusVal.getPrintableStatus()}"></option>
 

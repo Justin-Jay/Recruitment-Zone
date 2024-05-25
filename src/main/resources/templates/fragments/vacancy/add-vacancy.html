@@ -12,16 +12,26 @@
 
             <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
             <label for="clientID">Select Client
-                <select class="form-select-sm" aria-label=".form-select-sm" name="clientID">
+                <select class="form-select" aria-label=".form-select" name="clientID">
                     <option th:each="client : ${clientList}" th:text="${client.name}" th:value="${client.clientID}"
                             th:selected="${client.clientID == client.clientID}"></option>
                 </select>
                 <input type="hidden" id="clientID" name="clientID" th:value="${vacancyDTO.clientID}"/>
             </label>
 
+
+         <!--   <div class="row">
+                <label for="industry">Select Industry:
+                </label>
+                <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
+                    <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                </select>
+            </div>-->
+
             <br> <br>
             <label for="employeeID">Select Employee
-                <select class="form-select-sm" aria-label=".form-select-sm" name="employeeID">
+                <select class="form-select" aria-label=".form-select" name="employeeID">
                     <option th:each="employee : ${employeeList}" th:text="${employee.username}"
                             th:value="${employee.employeeID}"
                             th:selected="${employee.employeeID == employee.employeeID}"></option>
@@ -89,7 +99,7 @@
             <br>
             <label for="industry">Select Industry:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="industry" th:field="*{industry}">
+            <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
                         th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>
             </select>
@@ -113,7 +123,7 @@
             <br>
             <label for="jobType">Select Job Type:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="jobType" th:field="*{jobType}">
+            <select class="form-select" aria-label=".form-select" id="jobType" th:field="*{jobType}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
                         th:value="${type}" th:text="${type}"></option>
             </select>
@@ -121,7 +131,7 @@
             <br> <br>
             <label for="empType">Select Employment Type:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="empType" th:field="*{empType}">
+            <select class="form-select" aria-label=".form-select" id="empType" th:field="*{empType}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
                         th:value="${type}" th:text="${type}"></option>
             </select>

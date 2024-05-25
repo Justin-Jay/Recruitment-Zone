@@ -63,7 +63,7 @@
 
 
                       <label for="role">Select Role:</label>
-                            <select class="form-select-sm" aria-label=".form-select-sm" id="role" th:field="*{role}">
+                            <select class="form-select" aria-label=".form-select" id="role" th:field="*{role}">
                                 <option th:each="role : ${authorities}" th:value="${role}" th:text="${role.getRoleName()}"></option>
                             </select>
 

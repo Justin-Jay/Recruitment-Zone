@@ -702,6 +702,11 @@ public class RecruitmentZoneService {
         model.addAttribute("vacancyDTO", new VacancyDTO());
     }
 
+    public void reloadCreateVacancy(Model model) {
+        findAllClients(model);
+        findAllEmployees(model);
+    }
+
     public void updateVacancy(VacancyDTO vacancy, Model model) {
         log.info("<--  updateVacancy vacancy {} -->", vacancy.printVacancy());
         // Retrieve the existing Vacancy from the database
@@ -753,9 +758,9 @@ public class RecruitmentZoneService {
 
 
                 // Save the updated Vacancy
-
-                vacancyService.save(existingVacancy);
-                model.addAttribute("vacancy", existingVacancy);
+                Vacancy updatedVacancy = vacancyService.save(existingVacancy);
+                VacancyDTO vacancyDTO = convertVacancy(updatedVacancy);
+                model.addAttribute("vacancy", vacancyDTO);
                 log.info("<--  existingVacancy Saved -->");
                 model.addAttribute("saveVacancyResponse", "Vacancy : " + existingVacancy.getJob_title() + " Updated");
             } else throw new VacancyException("No Existing Vacancy Found");
@@ -813,8 +818,9 @@ public class RecruitmentZoneService {
             }
 
             Vacancy saved = vacancyService.save(newVacancy);
-            findVacancy(newVacancy.getVacancyID(), model);
-            model.addAttribute("vacancy", saved);
+           // findVacancy(newVacancy.getVacancyID(), model);
+            VacancyDTO vacancyDTO = convertVacancy(saved);
+            model.addAttribute("vacancy", vacancyDTO);
             model.addAttribute("saveVacancyResponse", newVacancy.getJob_title() + " vacancy saved");
         } catch (VacancyException vacancyException) {
             log.error("<-- saveVacancy  vacancyException: {} --> ", vacancyException.getFailureReason());
@@ -826,7 +832,7 @@ public class RecruitmentZoneService {
         log.info("<--  findVacancy vacancyID  {} -->", vacancyID);
         try {
             Vacancy vacancy = vacancyService.findById(vacancyID);
-            VacancyDTO vacancyDTO = new VacancyDTO();
+         /*   VacancyDTO vacancyDTO = new VacancyDTO();
             vacancyDTO.setJob_title(vacancy.getJob_title());
             vacancyDTO.setJob_description(vacancy.getJob_description());
             vacancyDTO.setSeniority_level(vacancy.getSeniority_level());
@@ -843,6 +849,9 @@ public class RecruitmentZoneService {
             vacancyDTO.setEmployeeID(vacancy.getTheEmpID());
             vacancyDTO.setApplicationCount(vacancy.getApplicationsSize());
             vacancyDTO.setClientName(vacancy.getClient().getName());
+            */
+            VacancyDTO vacancyDTO = convertVacancy(vacancy);
+
             // clientName , vacancyName = jobTitle
             model.addAttribute("vacancy", vacancyDTO);
 
@@ -856,12 +865,34 @@ public class RecruitmentZoneService {
         }
     }
 
+    public VacancyDTO convertVacancy(Vacancy vacancy){
+        VacancyDTO vacancyDTO = new VacancyDTO();
+        vacancyDTO.setJob_title(vacancy.getJob_title());
+        vacancyDTO.setJob_description(vacancy.getJob_description());
+        vacancyDTO.setSeniority_level(vacancy.getSeniority_level());
+        vacancyDTO.setRequirements(vacancy.getRequirements());
+        vacancyDTO.setLocation(vacancy.getLocation());
+        vacancyDTO.setIndustry(vacancy.getIndustry());
+        vacancyDTO.setPublish_date(vacancy.getPublish_date());
+        vacancyDTO.setEnd_date(vacancy.getEnd_date());
+        vacancyDTO.setStatus(vacancy.getStatus());
+        vacancyDTO.setJobType(vacancy.getJobType());
+        vacancyDTO.setEmpType(vacancy.getEmpType());
+        vacancyDTO.setClientID(vacancy.getTheClientID());
+        vacancyDTO.setVacancyID(vacancy.getVacancyID());
+        vacancyDTO.setEmployeeID(vacancy.getTheEmpID());
+        vacancyDTO.setApplicationCount(vacancy.getApplicationsSize());
+        vacancyDTO.setClientName(vacancy.getClient().getName());
+        return vacancyDTO;
+    }
+
     public void findVacancySubmissions(Long vacancyID, Model model) {
         log.info("<--  findVacancyById vacancyID  {} -->", vacancyID);
         try {
             Vacancy vacancy = vacancyService.findById(vacancyID);
-            Set<Application> vacancyApplicationList = vacancy.getApplications();
-            model.addAttribute("vacancy", vacancy);
+            VacancyDTO vacancyDTO = convertVacancy(vacancy);
+            model.addAttribute("vacancy", vacancyDTO);
+            List<Application> vacancyApplicationList = vacancy.getApplications();
             log.info("Vacancy Application Size {}", vacancyApplicationList.size());
 
             model.addAttribute("vacancyApplications", vacancyApplicationList);

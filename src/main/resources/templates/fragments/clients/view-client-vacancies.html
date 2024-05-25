@@ -30,7 +30,7 @@
 
                     <label for="documentType">Document Type:
                     </label>
-                    <select class="form-select-sm" aria-label=".form-select-sm"  id="documentType" th:field="${clientFileDTO.documentType}">
+                    <select class="form-select" aria-label=".form-select"  id="documentType" th:field="${clientFileDTO.documentType}">
                         <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.ClientDocumentType).values()}"
                                 th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
                     </select>

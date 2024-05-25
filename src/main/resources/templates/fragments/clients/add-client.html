@@ -24,7 +24,7 @@
                th:if="${#fields.hasErrors('industry')}"
                th:errors="*{industry}"
             ></p>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="industry"
+            <select class="form-select" aria-label=".form-select" id="industry"
                     th:field="*{industry}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
                         th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>

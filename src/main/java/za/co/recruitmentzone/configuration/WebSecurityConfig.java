@@ -1,11 +1,5 @@
 package za.co.recruitmentzone.configuration;
 
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,27 +8,13 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.context.DelegatingSecurityContextRepository;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
-import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 import za.co.recruitmentzone.employee.entity.EmployeeDetailsService;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 
 @Configuration
@@ -53,7 +33,6 @@ public class WebSecurityConfig {
         httpSecurity.authorizeHttpRequests(configurer ->
                         configurer
                                 .requestMatchers(myPaths).permitAll()
-                                //.requestMatchers("/Client/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form ->
@@ -61,13 +40,7 @@ public class WebSecurityConfig {
                                 .loginProcessingUrl("/authenticateTheUser")
                                 .permitAll())
                 .logout(LogoutConfigurer::permitAll);
-               /* httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
-                httpSecuritySessionManagementConfigurer.
-                        sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        //.expiredUrl("/sessionExpired")
-                        .invalidSessionUrl("/invalidSession")
-                        .sessionFixation().migrateSession()
-                );*/
+
         return httpSecurity.build();
     }
 

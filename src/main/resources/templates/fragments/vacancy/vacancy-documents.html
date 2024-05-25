@@ -38,7 +38,7 @@
                th:errors="${clientFileDTO.documentType}"
             ></p>
 
-            <select class="form-select-sm" aria-label=".form-select-sm" id="candidateDocumentType" th:field="*{documentType}">
+            <select class="form-select" aria-label=".form-select" id="candidateDocumentType" th:field="*{documentType}">
                 <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.ClientDocumentType).values()}"
                         th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
             </select>

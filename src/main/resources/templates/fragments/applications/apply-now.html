@@ -110,7 +110,7 @@
 
         <label for="EduLevel">Highest Education Level:
         </label>
-        <select class="form-select-sm" aria-label=".form-select-sm" id="EduLevel"
+        <select class="form-select" aria-label=".form-select" id="EduLevel"
                 th:field="${newApplicationDTO.education_level}">
             <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
                     th:value="${statusVal}" th:text="${statusVal.getPrintableEduLevel()}"></option>

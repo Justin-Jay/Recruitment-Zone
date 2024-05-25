@@ -18,7 +18,7 @@
             <input type="text" th:field="*{name}" class="form-control mb-4 w-25" id="name" placeholder="Name"/>
             <label for="industry" >Select Industry:
             </label>
-            <select class="form-select-sm m-2" aria-label=".form-select-sm" id="industry" th:field="*{industry}">
+            <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
                 <option  value="1" th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
                         th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>
             </select>

@@ -1,6 +1,7 @@
 package za.co.recruitmentzone.vacancy.entity;
 
 import jakarta.persistence.*;
+import org.w3c.dom.stylesheets.LinkStyle;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.employee.entity.Employee;
@@ -12,10 +13,7 @@ import za.co.recruitmentzone.util.enums.VacancyStatus;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -65,7 +63,7 @@ public class Vacancy implements Serializable {
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<Application> applications;
+    private List<Application> applications;
 
     public Vacancy() {
     }
@@ -225,31 +223,18 @@ public class Vacancy implements Serializable {
         this.employee = employee;
     }
 
-/*    public Set<Application> getApplications() {
-        // Your existing code to fetch and filter the set of Application objects
-        Set<Application> applicationList = applications;
-
-        // Create a TreeSet with a custom Comparator
-        TreeSet<Application> sortedApplications = new TreeSet<>(new ApplicationComparator());
-
-        // Add all applications to the sorted TreeSet
-        sortedApplications.addAll(applicationList);
-
-        // Return the sorted set
-        return sortedApplications;
-    }*/
-
-    public Set<Application> getApplications() {
-       return applications;
+    public List<Application> getApplications() {
+        return applications;
     }
 
-    public void setApplications(Set<Application> applications) {
+    public void setApplications(List<Application> applications) {
         this.applications = applications;
     }
 
     public void addApplication(Application application) {
         if (applications == null) {
-            applications = new HashSet<>();
+            applications = new ArrayList<>() {
+            };
         }
         applications.add(application);
         application.setVacancy(this);

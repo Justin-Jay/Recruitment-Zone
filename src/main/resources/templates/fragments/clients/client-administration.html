@@ -13,7 +13,6 @@
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
 
 
-
     <title>Recruitment Zone</title>
 </head>
 <body>
@@ -91,21 +90,25 @@
                 <!--    CENTER  PAGE COLUMN -->
 
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid" id="main-page-section">
-                        <!--RESPONSE MESSAGES -->
-                        <div th:insert="~{fragments/layout/response-messages :: successMessage(${addContactPersonResponse})}"></div>
-                        <div th:insert="~{fragments/layout/response-messages :: successMessage(${saveUpdatedContactResponse})}"></div>
+
+                    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                        <div class="container-fluid" id="main-page-section">
+                            <!--RESPONSE MESSAGES -->
+                            <div th:insert="~{fragments/layout/response-messages :: successMessage(${addContactPersonResponse})}"></div>
+                            <div th:insert="~{fragments/layout/response-messages :: successMessage(${saveUpdatedContactResponse})}"></div>
+                        </div>
                     </div>
-                </div>
 
-                <!--RIGHT PAGE COLUMN -->
+                    <!--RIGHT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid " id="right-page-column">
+                    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                        <div class="container-fluid " id="right-page-column">
 
+                        </div>
                     </div>
-                </div>
+
+
+
             </div>
 
 
@@ -115,7 +118,6 @@
     </div>
 
 
-
 </div>
 
 
@@ -123,7 +125,6 @@
 <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
 
 <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
-
 
 
 </body>

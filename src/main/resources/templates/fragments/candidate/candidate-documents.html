@@ -37,7 +37,7 @@
             <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('documentType')}"
                th:errors="*{documentType}"
             ></p>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="candidateDocumentType"
+            <select class="form-select" aria-label=".form-select" id="candidateDocumentType"
                     th:field="*{documentType}">
                 <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.CandidateDocumentType).values()}"
                         th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
