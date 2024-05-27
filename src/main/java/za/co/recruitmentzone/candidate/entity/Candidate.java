@@ -8,7 +8,9 @@ import za.co.recruitmentzone.util.enums.Province;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,18 +36,18 @@ public class Candidate implements Serializable {
     private LocalDateTime created;
     @OneToMany(mappedBy = "candidate",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private Set<Application> applications;
+    private List<Application> applications;
     @OneToMany(mappedBy = "candidate",
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<CandidateNote> notes;
+    private List<CandidateNote> notes;
 
     @OneToMany(mappedBy = "candidate",
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<CandidateFile> documents;
+    private List<CandidateFile> documents;
 
     public Candidate() {
         // received
@@ -77,13 +79,10 @@ public class Candidate implements Serializable {
         this.created = created;
     }
 
-    public Set<CandidateFile> getDocuments() {
+    public List<CandidateFile> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(Set<CandidateFile> documents) {
-        this.documents = documents;
-    }
 
     public Long getCandidateID() {
         return candidateID;
@@ -181,25 +180,18 @@ public class Candidate implements Serializable {
         this.relocation = relocation;
     }
 
-    public Set<Application> getApplications() {
+    public List<Application> getApplications() {
         return applications;
     }
 
-    public void setApplications(Set<Application> applications) {
-        this.applications = applications;
-    }
 
-    public Set<CandidateNote> getNotes() {
+    public List<CandidateNote> getNotes() {
         return notes;
-    }
-
-    public void setNotes(Set<CandidateNote> notes) {
-        this.notes = notes;
     }
 
     public void AddApplication(Application application) {
         if (applications == null) {
-            applications = new HashSet<>() {
+            applications = new ArrayList<>() {
             };
         }
         applications.add(application);
@@ -209,24 +201,17 @@ public class Candidate implements Serializable {
     //AddDocument
     public void AddDocument(CandidateFile document) {
         if (documents == null) {
-            documents = new HashSet<>() {
+            documents = new ArrayList<>() {
             };
         }
         documents.add(document);
         document.setCandidate(this);
     }
 
-    public void addNote(CandidateNote note) {
-        if (notes == null) {
-            notes = new HashSet<>();
-        }
-        notes.add(note);
-        note.setCandidate(this);
-    }
 
     public void addNote(CandidateNoteDTO noteDTO) {
         if (notes == null) {
-            notes = new HashSet<>();
+            notes = new ArrayList<>();
         }
         CandidateNote newNote = new CandidateNote(noteDTO.getComment());
         newNote.setCandidate(this);

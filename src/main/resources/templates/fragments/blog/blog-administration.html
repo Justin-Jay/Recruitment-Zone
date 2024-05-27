@@ -11,6 +11,8 @@
           th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+
+
     <title>Recruitment Zone</title>
 </head>
 <body>
@@ -68,7 +70,7 @@
 
                         <div class="my-card custom-border dropdown dropend" th:each="blog : ${blogList}">
 
-                            <p th:text="*{'User: ' + blog.blog_title}" th:value="${blog}"></p>
+                            <p th:text="*{'Blog Title: ' + blog.blog_title}" th:value="${blog}"></p>
                             <p th:text="*{'Status: ' + blog.status}"
                                th:value="${blog}"></p>
 
@@ -118,8 +120,6 @@
 <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
 
 <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
-
-
 
 </body>
 </html>

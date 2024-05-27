@@ -5,10 +5,18 @@
                 <!--MESSAGE AREA-->
                 <div class="row-cols-8">
                     <div th:insert="~{fragments/layout/response-messages :: successMessage(${applicationOutcome})}"></div>
+                    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${invalidFileException})}"></div>
+                    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+
                 </div>
             </section>
         </article>
 
-        <a th:href="@{/home}">Show Active Vacancies</a>
+
+        <button class="btn btn-secondary" >
+            <a th:href="@{/home}">Show Active Vacancies</a>
+        </button>
+
     </main>
 </div>

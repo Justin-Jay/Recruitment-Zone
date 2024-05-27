@@ -156,7 +156,6 @@ public class CandidateController {
     }
 
 
-
     @PostMapping("/add-candidate")
     public String showAddCandidateForm(Model model) {
         try {
@@ -179,7 +178,7 @@ public class CandidateController {
             log.info(bindingResult.toString());
             log.info(bindingResult.getAllErrors().toString());
             recruitmentZoneService.getAllVacancies(model);
-            model.addAttribute("bindingResult",INTERNAL_SERVER_ERROR);
+            model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
             //  vacancyList , loadVacanciesResponse , newApplicationDTO , internalServerError , fileUploadError
             return "fragments/candidate/add-candidate";
         }
@@ -190,9 +189,6 @@ public class CandidateController {
                     try {
                         // applicationOutcome , createCandidateApplicationResponse
                         recruitmentZoneService.createCandidateApplication(newApplicationDTO, model);
-
-                        // candidateList , findAllCandidatesResponse
-                        recruitmentZoneService.findAllCandidates(model);
 
                     } catch (CandidateException candidateException) {
                         log.error("<-- candidateException -->   \n {}", candidateException.getMessage());
@@ -219,8 +215,8 @@ public class CandidateController {
             recruitmentZoneService.getAllVacancies(model);
             return "fragments/candidate/add-candidate";
         }
-
-        return "fragments/candidate/candidate-administration";
+        return "fragments/candidate/view-candidate";
+        /*        return "fragments/candidate/candidate-administration";*/
     }
 
 

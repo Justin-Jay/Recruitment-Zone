@@ -162,8 +162,7 @@ public class RecruitmentZoneService {
             boolean validFile = validateFile(newApplicationDTO.getDocumentAttachment());
             if (validFile) {
                 log.info("<--  saveSubmissionForm validFile {} -->", validFile);
-
-                createCandidateApplication(newApplicationDTO, model);
+                submitCandidateApplication(newApplicationDTO, model);
             }
         } catch (FileUploadException fileUploadException) {
             model.addAttribute("invalidFileException",
@@ -225,7 +224,7 @@ public class RecruitmentZoneService {
             candidateNoteDTO.setCandidateID(candidateID);
             log.info("CandidateID: {}", candidateID);
             model.addAttribute("candidate", candidate);
-            Set<CandidateNote> notes = candidate.getNotes();
+            List<CandidateNote> notes = candidate.getNotes();
             log.info("Candidate notes ");
             for (CandidateNote note : notes) {
                 log.info("note: {}", note.printCandidateNote());
@@ -247,7 +246,7 @@ public class RecruitmentZoneService {
 
             log.info("CandidateID: {}", candidateID);
             model.addAttribute("candidate", candidate);
-            Set<CandidateNote> notes = candidate.getNotes();
+            List<CandidateNote> notes = candidate.getNotes();
             model.addAttribute("existingNotes", notes);
         } catch (CandidateNotFoundException candidateNotFoundException) {
             model.addAttribute("addCandidateNoteResponse", candidateNotFoundException.getMessage());
@@ -292,10 +291,9 @@ public class RecruitmentZoneService {
 
             Candidate candidate = candidateService.getcandidateByID(candidateID);
             log.info("<--  findCandidateNotes candidate != null {} -->", candidate.printCandidate());
-            Set<CandidateNote> notes = candidate.getNotes();
+            List<CandidateNote> notes = candidate.getNotes();
             // sort the set according to date
             model.addAttribute("candidate", candidate);
-
             model.addAttribute("existingNotes", notes);
 
         } catch (CandidateNotFoundException candidateNotFoundException) {
@@ -356,7 +354,7 @@ public class RecruitmentZoneService {
         }
     }
 
-    public void createCandidateApplication(NewApplicationDTO newApplicationDTO, Model model) {
+    public void submitCandidateApplication(NewApplicationDTO newApplicationDTO, Model model) {
         log.info("<-- createCandidateApplication  newApplicationDTO: {} --> ", newApplicationDTO.printNewApplicationDTO());
         try {
             Application application = createApplication(newApplicationDTO);
@@ -365,8 +363,33 @@ public class RecruitmentZoneService {
                 // Application submitted successfully. Agent will be in touch
                 model.addAttribute("applicationOutcome", outcome
                 );
+                log.info("<-- createCandidateApplication  application != null : {} --> ", outcome);
+            }
+        } catch (CandidateException e) {
+            log.info("<-- createCandidateApplication  CandidateException: {} --> ", e.getMessage());
+            model.addAttribute("createCandidateApplicationResponse", "Failed to create application... Please try again.");
+        }
+    }
+
+    public void createCandidateApplication(NewApplicationDTO newApplicationDTO, Model model) {
+        log.info("<-- createCandidateApplication  newApplicationDTO: {} --> ", newApplicationDTO.printNewApplicationDTO());
+        try {
+            Application application = createApplication(newApplicationDTO);
+            if (application != null) {
+                String outcome = "Candidate created successfully.";
+                // Application submitted successfully. Agent will be in touch
+                model.addAttribute("creationOutcome", outcome
+                );
                 // reload candidate
-                // findCandidateNotes(application.getCandidate().getCandidateID(),model);
+                findCandidateNotes(application.getCandidate().getCandidateID(), model);
+
+                Candidate candidate = application.getCandidate();
+                model.addAttribute("candidate", candidate);
+                model.addAttribute("existingNotes", candidate.getNotes());
+                CandidateNoteDTO candidateNoteDTO = new CandidateNoteDTO();
+                candidateNoteDTO.setCandidateID(candidate.getCandidateID());
+                model.addAttribute("candidateNoteDTO", candidateNoteDTO);
+
                 log.info("<-- createCandidateApplication  application != null : {} --> ", outcome);
             }
         } catch (CandidateException e) {
@@ -475,6 +498,7 @@ public class RecruitmentZoneService {
             model.addAttribute("findVacancyDocumentsResponse", clientNotFoundException.getMessage());
         }
     }
+
     public void reloadVacancyDocuments(Model model, Long vacancyID) {
         log.info("<-- findVacancyDocuments  {} --> ", vacancyID);
         try {
@@ -818,7 +842,7 @@ public class RecruitmentZoneService {
             }
 
             Vacancy saved = vacancyService.save(newVacancy);
-           // findVacancy(newVacancy.getVacancyID(), model);
+            // findVacancy(newVacancy.getVacancyID(), model);
             VacancyDTO vacancyDTO = convertVacancy(saved);
             model.addAttribute("vacancy", vacancyDTO);
             model.addAttribute("saveVacancyResponse", newVacancy.getJob_title() + " vacancy saved");
@@ -855,7 +879,7 @@ public class RecruitmentZoneService {
             // clientName , vacancyName = jobTitle
             model.addAttribute("vacancy", vacancyDTO);
 
-            model.addAttribute("clientFileDTO",new ClientFileDTO());
+            model.addAttribute("clientFileDTO", new ClientFileDTO());
 
             log.info("<--  findVacancy vacancy != null  {} -->", vacancy.printVacancy());
         } catch (VacancyException vacancyException) {
@@ -865,7 +889,7 @@ public class RecruitmentZoneService {
         }
     }
 
-    public VacancyDTO convertVacancy(Vacancy vacancy){
+    public VacancyDTO convertVacancy(Vacancy vacancy) {
         VacancyDTO vacancyDTO = new VacancyDTO();
         vacancyDTO.setJob_title(vacancy.getJob_title());
         vacancyDTO.setJob_description(vacancy.getJob_description());
@@ -1024,6 +1048,7 @@ public class RecruitmentZoneService {
         }
     }
 
+
     public void saveNewBlog(BlogDTO blogDTO, Principal principal, Model model) {
         log.info("Saving new blog for principal : {}", principal.getName());
         try {
@@ -1032,6 +1057,7 @@ public class RecruitmentZoneService {
             if (employee != null) {
                 log.info("<--  saveNewBlog employee!=null {} -->", employee.printEmployee());
                 newBlog.setEmployee(employee);
+                employee.addBlog(newBlog);
                 newBlog.setBlog_title(blogDTO.getBlog_title());
                 newBlog.setBlog_description(blogDTO.getBlog_description());
                 newBlog.setBody(blogDTO.getBody());
@@ -1437,7 +1463,7 @@ public class RecruitmentZoneService {
         log.info("<--  findContactPersonByClientID clientID {} -->", clientID);
         try {
             Client client = clientService.findClientByID(clientID);
-            Set<ContactPerson> contactPersonList = client.getContactPeople();
+            List<ContactPerson> contactPersonList = client.getContactPeople();
             if (contactPersonList != null) {
                 model.addAttribute("clientID", client.getClientID());
                 model.addAttribute("contactPersonList", contactPersonList);

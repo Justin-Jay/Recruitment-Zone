@@ -50,30 +50,16 @@ public class Employee implements Principal, Serializable {
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    private Set<Blog> blogs;
+    private List<Blog> blogs;
 
     @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER,
                 cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
                 })
-    private Set<Vacancy> vacancies;
+    private List<Vacancy> vacancies;
 
 
     public Employee() {
-    }
-
-    public Employee(String username, String password, String email, String first_name, String last_name, String contact_number, boolean isEnabled, Timestamp created, List<Authority> authorities, Set<Blog> blogs, Set<Vacancy> vacancies) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.contact_number = contact_number;
-        this.isEnabled = isEnabled;
-        this.created = created;
-        this.authorities = authorities;
-        this.blogs = blogs;
-        this.vacancies = vacancies;
     }
 
     public Employee(Long employeeID) {
@@ -104,21 +90,15 @@ public class Employee implements Principal, Serializable {
         this.authorities = authorities;
     }
 
-    public Set<Blog> getBlogs() {
+    public List<Blog> getBlogs() {
         return blogs;
     }
 
-    public void setBlogs(Set<Blog> blogs) {
-        this.blogs = blogs;
-    }
-
-    public Set<Vacancy> getVacancies() {
+    public List<Vacancy> getVacancies() {
         return vacancies;
     }
 
-    public void setVacancies(Set<Vacancy> vacancies) {
-        this.vacancies = vacancies;
-    }
+
 
     public String getUsername() {
         return username;
@@ -189,7 +169,7 @@ public class Employee implements Principal, Serializable {
 
     public void addBlog(Blog blog){
         if (blogs ==null){
-            blogs = new HashSet<>();
+            blogs = new ArrayList<>();
         }
         blogs.add(blog);
         blog.setEmployee(this);
@@ -197,7 +177,7 @@ public class Employee implements Principal, Serializable {
 
     public void addVacancy(Vacancy vacancy){
         if (vacancies ==null){
-            vacancies = new HashSet<>();
+            vacancies = new ArrayList<>();
         }
         vacancies.add(vacancy);
         vacancy.setEmployee(this);

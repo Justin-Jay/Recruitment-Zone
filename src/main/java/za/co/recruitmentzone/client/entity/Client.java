@@ -30,12 +30,12 @@ public class Client implements Serializable {
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<ContactPerson> contactPeople;
+    private List<ContactPerson> contactPeople;
     @OneToMany(mappedBy = "client",
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<Vacancy> vacancies;
+    private List<Vacancy> vacancies;
 
     @OneToMany(mappedBy = "client",
             cascade = {
@@ -47,7 +47,7 @@ public class Client implements Serializable {
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<ClientFile> documents;
+    private List<ClientFile> documents;
 
     public Client() {
     }
@@ -90,10 +90,17 @@ public class Client implements Serializable {
         this.industry = industry;
     }
 
-    public Set<ContactPerson> getContactPeople() {
+    public List<ContactPerson> getContactPeople() {
         return contactPeople;
     }
 
+    public List<Vacancy> getVacancies() {
+        return vacancies;
+    }
+
+    public List<ClientFile> getDocuments() {
+        return documents;
+    }
 
     public int getContactPeopleCount() {
         if (contactPeople!=null)
@@ -101,37 +108,15 @@ public class Client implements Serializable {
         else return 0;
     }
 
-    public void setContactPeople(Set<ContactPerson> contactPeople) {
-        this.contactPeople = contactPeople;
-    }
-
-    public Set<Vacancy> getVacancies() {
-        return vacancies;
-    }
-
-    public void setVacancies(Set<Vacancy> vacancies) {
-        this.vacancies = vacancies;
-    }
 
     public List<ClientNote> getNotes() {
         return notes;
     }
 
-    public void setNotes(List<ClientNote> notes) {
-        this.notes = notes;
-    }
-
-    public Set<ClientFile> getDocuments() {
-        return documents;
-    }
-
-    public void setDocuments(Set<ClientFile> documents) {
-        this.documents = documents;
-    }
 
     public void addContactPerson(ContactPerson contactPerson) {
         if (contactPeople == null) {
-            contactPeople = new HashSet<>();
+            contactPeople = new ArrayList<>();
         }
         contactPeople.add(contactPerson);
         contactPerson.setClient(this);
@@ -139,7 +124,7 @@ public class Client implements Serializable {
 
     public void addVacancy(Vacancy vacancy) {
         if (vacancies == null) {
-            vacancies = new HashSet<>();
+            vacancies = new ArrayList<>();
         }
         vacancies.add(vacancy);
         vacancy.setClient(this);
@@ -148,7 +133,7 @@ public class Client implements Serializable {
 
     public void AddDocument(ClientFile document){
         if (documents ==null){
-            documents = new HashSet<>() {
+            documents = new ArrayList<>() {
             };
         }
         documents.add(document);

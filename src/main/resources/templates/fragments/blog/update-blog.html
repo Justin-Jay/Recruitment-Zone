@@ -6,7 +6,7 @@
     </div>
 
 
-    <form action="#" th:action="@{/Blog/save-updated-blog}" th:object="${blog}" th:method="POST">
+    <form id="blogForm" action="#" th:action="@{/Blog/save-updated-blog}" th:object="${blog}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="blogID" th:field="*{blogID}"/>
         <div class="md-10">
@@ -18,9 +18,9 @@
             <input type="text" th:field="*{blog_description}" class="form-control mb-4 w-25" id="description"
                    placeholder="Blog Title"/>
 
-            <label for="body">Body: </label>
-            <textarea class="form-control" th:field="*{body}" id="body" placeholder="Blog Body"></textarea>
-
+            <label>Body:
+                <textarea class="form-control" th:field="*{body}" id="blogBody"> </textarea>
+            </label>
 
             <label for="publish_date">Publish Date: </label>
             <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date"
@@ -33,14 +33,19 @@
 
         </div>
 
-        <!--    <button type="submit" class="btn">Save Updated Blog</button>-->
-
         <button class="btn normal-button"
                 hx-post="/Blog/save-updated-blog"
                 hx-target="#main-page-section"
-                hx-swap="innerHTML"> Save Updated Blog
+                > Save Updated Blog
         </button>
 
     </form>
 
 </div>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#blogBody'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>

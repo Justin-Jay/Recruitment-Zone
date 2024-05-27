@@ -39,13 +39,13 @@
             </div>
 
             <div class="form-group">
-                <label for="body">
+                <label for="blogBody">
                     Body:
                 </label>
                 <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('body')}"
                    th:errors="*{body}"
                 ></p>
-                <textarea class="form-control  mb-4 text-black-50" th:field="*{body}" id="body"
+                <textarea class="form-control  mb-4 text-black-50" th:field="*{body}" id="blogBody"
                 ></textarea>
             </div>
 

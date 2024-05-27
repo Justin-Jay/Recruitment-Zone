@@ -2,7 +2,7 @@
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addCandidateNoteResponse})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveCandidateResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${creationOutcome})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
     </div>
 

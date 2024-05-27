@@ -33,7 +33,7 @@ public class BlogController {
         try {
             recruitmentZoneService.getActiveBlogs(model);
         } catch (Exception e) {
-            log.error("<-- blogs -->  Exception \n {}",e.getMessage());
+            log.error("<-- blogs -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blogs , activeBlogResponse , internalServerError
@@ -46,7 +46,7 @@ public class BlogController {
             recruitmentZoneService.getBlogs(model);
 
         } catch (Exception e) {
-            log.error("<-- blogAdministration -->  Exception \n {}",e.getMessage());
+            log.error("<-- blogAdministration -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blogList , getBlogsResponse , internalServerError
@@ -58,12 +58,13 @@ public class BlogController {
         try {
             model.addAttribute("blogDTO", new BlogDTO());
         } catch (Exception e) {
-            log.error("<-- showCreateBlogForm -->  Exception \n {}",e.getMessage());
+            log.error("<-- showCreateBlogForm -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blogDTO , internalServerError
         return "fragments/blog/add-blog";
     }
+
     @PostMapping("/save-blog")
     public String saveBlog(@Valid @ModelAttribute("blogDTO") BlogDTO blogDTO, BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasFieldErrors()) {
@@ -73,7 +74,7 @@ public class BlogController {
         try {
             recruitmentZoneService.saveNewBlog(blogDTO, principal, model);
         } catch (Exception e) {
-            log.error("<-- saveExistingBlog -->  Exception \n {}",e.getMessage());
+            log.error("<-- saveExistingBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   blog , findBlogResponse , internalServerError ,  saveNewBlogResponse
@@ -85,7 +86,7 @@ public class BlogController {
         try {
             recruitmentZoneService.findBlogById(blogID, model);
         } catch (Exception e) {
-            log.error("<-- showBlog -->  Exception \n {}",e.getMessage());
+            log.error("<-- showBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   blog , findBlogResponse , internalServerError
@@ -97,7 +98,7 @@ public class BlogController {
         try {
             recruitmentZoneService.findBlogById(blogID, model);
         } catch (Exception e) {
-            log.error("<-- showBlog -->  Exception \n {}",e.getMessage());
+            log.error("<-- showBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   blog , findBlogResponse , internalServerError
@@ -105,13 +106,12 @@ public class BlogController {
     }
 
 
-
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
         try {
             recruitmentZoneService.findBlogById(blogID, model);
         } catch (Exception e) {
-            log.error("<-- updateBlog -->  Exception \n {}",e.getMessage());
+            log.error("<-- updateBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", e.getMessage());
         }
         //   blog , findBlogResponse , internalServerError
@@ -119,21 +119,21 @@ public class BlogController {
     }
 
     @PostMapping("/save-updated-blog")
-    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") Blog blog, BindingResult bindingResult, Model model) {
+    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") Blog blog,
+                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "fragments/blog/update-blog";
         }
         try {
-            recruitmentZoneService.saveUpdatedBlog(blog,model);
+            log.info("<--- saveUpdatedBlog BODY: ---> \n {} ", blog.getBody());
+            recruitmentZoneService.saveUpdatedBlog(blog, model);
         } catch (Exception e) {
-            log.error("<-- saveUpdatedBlog -->  Exception \n {}",e.getMessage());
+            log.error("<-- saveUpdatedBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blog , findBlogResponse , internalServerError, updateBlogResponse
         return "fragments/blog/view-blog";
     }
-
-
 
 
 }
