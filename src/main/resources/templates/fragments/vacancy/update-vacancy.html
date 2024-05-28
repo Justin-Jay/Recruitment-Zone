@@ -25,7 +25,7 @@
 
             <div class="row">
                 <label for="requirementsField">Requirements: </label>
-                <textarea id="requirementsField" th:field="*{requirements}" class="form-control " name="summerData"></textarea>
+                <textarea id="requirementsField" th:field="*{requirements}" class="form-control " ></textarea>
             </div>
 
             <!--             <textarea  th:field="*{__}" class="form-control "   id="___" rows="4"></textarea> -->
@@ -97,9 +97,49 @@
         <button class="btn btn-secondary"
                 hx-post="/Vacancy/save-updated-vacancy"
                 hx-target="#main-page-section"
-                hx-swap="innerHTML"> Save Updated Vacancy
+                hx-swap="innerHTML"
+                id="submit"> Save Updated Vacancy
         </button>
     </form>
 
 </div>
 
+<script>
+    let requirementsEditor;
+    let descrptionEditor;
+
+    ClassicEditor
+        .create(document.querySelector('#requirementsField'))
+        .then(newEditor => {
+            requirementsEditor = newEditor;
+            console.log(requirementsEditor.getData)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+62570499147
+    ClassicEditor
+        .create(document.querySelector('#job_description'))
+        .then(newEditor => {
+            descrptionEditor = newEditor;
+            console.log(descrptionEditor.getData);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    document.querySelector('#submit').addEventListener('click', () => {
+
+        const requirementsData = requirementsEditor.getData();
+        const descriptionData = descrptionEditor.getData();
+
+        console.log(requirementsData);
+        console.log(descriptionData);
+
+        document.querySelector('#requirementsField').value = requirementsData;
+        document.querySelector('#job_description').value = descriptionData;
+
+
+    });
+
+</script>

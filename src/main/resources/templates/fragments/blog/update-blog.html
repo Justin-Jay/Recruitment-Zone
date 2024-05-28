@@ -14,38 +14,63 @@
             <input type="text" th:field="*{blog_title}" class="form-control mb-4 w-25" id="title"
                    placeholder="Blog Title"/>
 
-            <label for="description">Blog Description: </label>
-            <input type="text" th:field="*{blog_description}" class="form-control mb-4 w-25" id="description"
-                   placeholder="Blog Title"/>
+            <label for="description">Blog Description:
+            </label>
+            <textarea class="form-control" th:field="*{blog_description}" id="description"> </textarea>
 
             <label>Body:
                 <textarea class="form-control" th:field="*{body}" id="blogBody"> </textarea>
             </label>
 
-            <label for="publish_date">Publish Date: </label>
-            <input type="date" th:field="*{publish_date}" class="form-control mb-4 w-25" id="publish_date"
-                   placeholder="Publish Date"/>
+            <div class="row">
+                <div class="col-6">
+                    <label for="publish_date">Publish Date: </label>
+                    <input type="date" th:field="*{publish_date}" class="form-control" id="publish_date"
+                           placeholder="Publish Date"/>
+                </div>
+                <div class="col-6">
+                    <label for="expirationDate">Expiration Date: </label>
+                    <input type="date" th:field="*{end_date}" class="form-control" id="expirationDate"
+                           placeholder="Expiration Date:"/>
+                </div>
+            </div>
 
-
-            <label for="expirationDate">Expiration Date: </label>
-            <input type="date" th:field="*{end_date}" class="form-control mb-4 w-25" id="expirationDate"
-                   placeholder="Expiration Date:"/>
 
         </div>
-
+        <br>
         <button class="btn normal-button"
                 hx-post="/Blog/save-updated-blog"
                 hx-target="#main-page-section"
-                > Save Updated Blog
+                id="submit"> Save Updated Blog
         </button>
 
     </form>
 
 </div>
+
 <script>
+    let editor;
+
     ClassicEditor
         .create(document.querySelector('#blogBody'))
+        .then(newEditor => {
+            editor = newEditor;
+            //console.log(editor.getData)
+
+        })
         .catch(error => {
             console.error(error);
         });
+
+    document.querySelector('#submit').addEventListener('click', () => {
+
+        const editorData = editor.getData();
+
+        //console.log(editorData)
+
+        document.querySelector('#blogBody').value = editorData;
+
+
+    });
+
 </script>

@@ -18,7 +18,8 @@
                 </section>
 
                 <!-- Blog Body/Content -->
-                <section class="blog-content" th:text="*{blog.body}">
+                <section class="blog-content" th:utext="*{blog.body}">
+
                     <!-- Main content of your blog post -->
                     <!-- Add more content as needed, e.g., images, lists, etc. -->
                 </section>

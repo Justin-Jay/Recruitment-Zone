@@ -1,13 +1,11 @@
 package za.co.recruitmentzone.service;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotEmpty;
 import org.apache.tika.Tika;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import org.jsoup.Jsoup.*;
 import za.co.recruitmentzone.application.dto.ApplicationDTO;
 import za.co.recruitmentzone.application.exception.ApplicationsNotFoundException;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
@@ -1007,7 +1006,7 @@ public class RecruitmentZoneService {
     public void getActiveBlogs(Model model) {
         log.info("<--  getActiveBlogs -->");
         try {
-            List<Blog> blogResponse = blogService.getActiveBlogs(BlogStatus.ACTIVE);
+            List<Blog> blogResponse = blogService.getActiveBlogs(ACTIVE);
             if (!blogResponse.isEmpty()) {
                 log.info("<--  getActiveBlogs blogResponse {} -->", blogResponse.size());
                 model.addAttribute("blogs", blogResponse);
@@ -1091,6 +1090,10 @@ public class RecruitmentZoneService {
         try {
 
             Blog optionalBlog = blogService.findById(updatedBlog.getBlogID());
+
+            log.info("<--- old Body: \n {} ", optionalBlog.getBody());
+
+            log.info("<--- new Body: \n {} ", updatedBlog.getBody());
 
             if (optionalBlog != null) {
 
@@ -1732,7 +1735,30 @@ public class RecruitmentZoneService {
         model.addAttribute("vacancyStatusDTO", status);
     }
 
+    public boolean cleanData(Blog blog) {
+        log.info("<--- cleanData input Description: ---> \n {} ", blog.getBlog_description());
+        log.info("<--- cleanData input Body: ---> \n {} ", blog.getBody());
+        blog.setBlog_description(Jsoup.clean(blog.getBlog_description(), Safelist.relaxed()));
+        blog.setBody(Jsoup.clean(blog.getBody(), Safelist.relaxed()));
+        boolean result = Jsoup.isValid(blog.getBody(), Safelist.relaxed())
+                && Jsoup.isValid(blog.getBlog_description(), Safelist.relaxed());
+        log.info("<--- cleanData output Description: ---> \n {} ", blog.getBlog_description());
+        log.info("<--- cleanData output Body: ---> \n {} ", blog.getBody());
+        return result;
 
+    }
+
+    public boolean cleanData(VacancyDTO vacancy) {
+        log.info("<--- cleanData input Description: ---> \n {} ", vacancy.getJob_description());
+        log.info("<--- cleanData input Requirements: ---> \n {} ", vacancy.getRequirements());
+        vacancy.setJob_description(Jsoup.clean(vacancy.getJob_description(), Safelist.relaxed()));
+        vacancy.setRequirements(Jsoup.clean(vacancy.getRequirements(), Safelist.relaxed()));
+        boolean result = Jsoup.isValid(vacancy.getJob_description(), Safelist.relaxed())
+                && Jsoup.isValid(vacancy.getRequirements(), Safelist.relaxed());
+        log.info("<--- cleanData output Description: ---> \n {} ", vacancy.getJob_description());
+        log.info("<--- cleanData output Requirements: ---> \n {} ", vacancy.getRequirements());
+        return result;
+    }
     // EVENTS
 
 /*    public boolean saveSubmissionEvent(Candidate candidate, Long vacancyID) {

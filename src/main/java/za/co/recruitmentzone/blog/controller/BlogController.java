@@ -126,7 +126,15 @@ public class BlogController {
         }
         try {
             log.info("<--- saveUpdatedBlog BODY: ---> \n {} ", blog.getBody());
-            recruitmentZoneService.saveUpdatedBlog(blog, model);
+            boolean cleanInput ;
+            cleanInput = recruitmentZoneService.cleanData(blog);
+            if (cleanInput){
+                recruitmentZoneService.saveUpdatedBlog(blog, model);
+            }
+            else {
+                model.addAttribute("dirtyData","Failed to sanitize input");
+                return "fragments/blog/update-blog";
+            }
         } catch (Exception e) {
             log.error("<-- saveUpdatedBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);

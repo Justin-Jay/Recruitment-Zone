@@ -121,7 +121,19 @@ public class VacancyController {
             return "fragments/vacancy/update-vacancy";
         }
         try {
-            recruitmentZoneService.updateVacancy(vacancy, model);
+
+            log.info("<--- saveUpdatedVacancy description: ---> \n {} ", vacancy.getJob_description());
+            boolean cleanInput ;
+            cleanInput = recruitmentZoneService.cleanData(vacancy);
+            if (cleanInput){
+                recruitmentZoneService.updateVacancy(vacancy, model);
+            }
+            else {
+                model.addAttribute("dirtyData","Failed to sanitize input");
+                return "fragments/vacancy/update-vacancy";
+            }
+
+
         } catch (Exception e) {
             log.error("<-- saveUpdatedVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
