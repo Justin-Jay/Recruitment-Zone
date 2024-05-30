@@ -5,9 +5,8 @@
 
 
         <!--FILE UPLOAD ERRORS-->
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${saveDocumentResponse})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${createCandidateFileResponse})}"></div>
-
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${invalidFileUpload})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createCandidateFileResponse})}"></div>
 
 
     </div>
@@ -50,9 +49,9 @@
                     hx-post="/Candidate/upload-candidate-document"
                     hx-target="#right-page-column"
                     hx-swap="innerHTML"
-                    hx-include="[candidateFileDTO='candidateFileDTO']">Add New Document
+                    hx-include="[candidateFileDTO='candidateFileDTO']">
+                Add New Document <p  class='htmx-indicator spinner'></p>
             </button>
-
 
         </div>
 

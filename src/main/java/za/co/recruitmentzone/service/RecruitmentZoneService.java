@@ -1165,6 +1165,19 @@ public class RecruitmentZoneService {
     }
 
     public CandidateFile createCandidateFile(CandidateFileDTO fileDTO) {
+
+     /*
+
+       SIM DELAY
+
+       try {
+            // Sleep for 5000 milliseconds (5 seconds)
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            System.out.println("Thread was interrupted.");
+        }*/
+
+
         log.info("<--  createCandidateFile  {} -->", fileDTO.printCandidateFileDTO());
         CandidateFile file = new CandidateFile();
 

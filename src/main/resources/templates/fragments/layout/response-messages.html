@@ -6,14 +6,14 @@
 </div>
 
 <div class="container-fluid" th:fragment="failureMessage(failureMessage)">
-    <div th:if="${failureMessage}" class="alert alert-success -dismissible fade show" role="alert" id="failureAlert">
+    <div th:if="${failureMessage}" class="alert alert-danger -dismissible fade show" role="alert" id="failureAlert">
         <a type="button" data-bs-dismiss="alert" th:text="${failureMessage}" >
         </a>
     </div>
 </div>
 
 <div class="container-fluid" th:fragment="genericMessage(genericMessage)">
-    <div th:if="${genericMessage}" class="alert alert-success -dismissible fade show" role="alert" id="genericAlert">
+    <div th:if="${genericMessage}" class="alert alert-info -dismissible fade show" role="alert" id="genericAlert">
         <a type="button" data-bs-dismiss="alert" th:text="${genericMessage}" >
         </a>
     </div>
