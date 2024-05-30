@@ -40,15 +40,6 @@
             </label>
 
 
-         <!--   <div class="row">
-                <label for="industry">Select Industry:
-                </label>
-                <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
-                    <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
-                            th:value="${type}" th:text="${type}"></option>
-                </select>
-            </div>-->
-
             <br> <br>
             <label for="employeeID">Select Employee
                 <select class="form-select" aria-label=".form-select" name="employeeID">
@@ -99,13 +90,13 @@
             <input type="text" th:field="*{location}" id="location" placeholder="Enter The Job Location"
                    class="form-control">
             <br>
-            <label for="industry">Select Industry:
+        <!--    <label for="industry">Select Industry:
             </label>
             <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
                         th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>
             </select>
-
+-->
             <br> <br>
             <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('publish_date')}"
                th:errors="${vacancyDTO.publish_date}"

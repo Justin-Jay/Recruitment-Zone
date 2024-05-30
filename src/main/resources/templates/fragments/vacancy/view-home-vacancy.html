@@ -9,7 +9,9 @@
         <div class="col-8">
             <div class="blog-post">
                 <h2 class="blog-post-title" th:text="${vacancy.job_title}"></h2>
-                <p>Agent <a href="#">Author</a></p>
+             <!--   <p class="fw-light" th:text="${'Author: ' + vacancy.employee.name.substring(0,vacancy.employee.name.indexOf('@'))}">
+                    Author:</p>-->
+                <p  th:text="${'Author: ' + employeeName}"></p>
                 <p class="blog-post-meta" th:text="${'Publish Date: '+vacancy.publish_date}"></p>
                 <p class="blog-post-meta" th:text="${'End Date: '+vacancy.end_date}"></p>
                 <!--  -->

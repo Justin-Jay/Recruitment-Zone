@@ -37,13 +37,15 @@ public class Application implements Serializable {
     @JoinColumn(name="vacancyID")
     private Vacancy vacancy;
 
+    public Application() {
+        this.created = LocalDateTime.now();
+        this.status=ApplicationStatus.PENDING;
+    }
+
     public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
 
     public void setDate_received(LocalDateTime date_received) {
         this.date_received = date_received;

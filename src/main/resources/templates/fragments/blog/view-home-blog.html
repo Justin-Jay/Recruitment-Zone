@@ -41,10 +41,10 @@
             </article>
 
         </main>
-
+        <a th:if="${not #authorization.expression('isAuthenticated')}" class="btn btn-secondary"  th:href="@{/Blog/blogs}">Back to blog page</a>
+        <a  th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary" th:href="@{/Blog/blog-administration}">Blog Admin</a>
     </div>
     <br/>
-    <a th:if="${not #authorization.expression('isAuthenticated')}" class="btn" th:href="@{/Blog/blogs}">Back to blog page</a>
-    <a  th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary" th:href="@{/Blog/blog-administration}">Blog Admin</a>
+
 
 </div>

@@ -399,7 +399,7 @@ public class RecruitmentZoneService {
 
     public Application createApplication(NewApplicationDTO newApplicationDTO) {
         log.info("<-- createApplication newApplicationDTO {} --> ", newApplicationDTO.printNewApplicationDTO());
-        Application application = new Application();
+
         Candidate candidate = new Candidate();
         candidate.setFirst_name(newApplicationDTO.getFirst_name());
         candidate.setLast_name(newApplicationDTO.getLast_name());
@@ -430,12 +430,7 @@ public class RecruitmentZoneService {
         } catch (SaveFileException e) {
             log.error("Failed to create file \n {}", e.getMessage());
         }
-
-
-        application.setCreated(LocalDateTime.now());
-
-        application.setStatus(ApplicationStatus.PENDING);
-
+        Application application = new Application();
         // link application with vacancy
         Vacancy v = vacancyService.findById(newApplicationDTO.getVacancyID());
         v.addApplication(application);
@@ -781,6 +776,7 @@ public class RecruitmentZoneService {
                 Vacancy updatedVacancy = vacancyService.save(existingVacancy);
                 VacancyDTO vacancyDTO = convertVacancy(updatedVacancy);
                 model.addAttribute("vacancy", vacancyDTO);
+                model.addAttribute("employeeName", updatedVacancy.getEmployee().getFirst_name());
                 log.info("<--  existingVacancy Saved -->");
                 model.addAttribute("saveVacancyResponse", "Vacancy : " + existingVacancy.getJob_title() + " Updated");
             } else throw new VacancyException("No Existing Vacancy Found");
@@ -801,7 +797,7 @@ public class RecruitmentZoneService {
             newVacancy.setSeniority_level(vacancy.getSeniority_level());
             newVacancy.setRequirements(vacancy.getRequirements());
             newVacancy.setLocation(vacancy.getLocation());
-            newVacancy.setIndustry(vacancy.getIndustry());
+
             newVacancy.setPublish_date(vacancy.getPublish_date());
             newVacancy.setEnd_date(vacancy.getEnd_date());
             newVacancy.setJobType(vacancy.getJobType());
@@ -819,7 +815,7 @@ public class RecruitmentZoneService {
                 op.addVacancy(newVacancy);
             } else throw new VacancyException("Failed to set employee to vacancy");
 
-
+            newVacancy.setIndustry(client.getIndustry());
             newVacancy.setCreated(LocalDateTime.now());
 
             LocalDate today = LocalDate.now();
@@ -839,6 +835,7 @@ public class RecruitmentZoneService {
             // findVacancy(newVacancy.getVacancyID(), model);
             VacancyDTO vacancyDTO = convertVacancy(saved);
             model.addAttribute("vacancy", vacancyDTO);
+            model.addAttribute("employeeName", saved.getEmployee().getFirst_name());
             model.addAttribute("saveVacancyResponse", newVacancy.getJob_title() + " vacancy saved");
         } catch (VacancyException vacancyException) {
             log.error("<-- saveVacancy  vacancyException: {} --> ", vacancyException.getFailureReason());
@@ -850,29 +847,12 @@ public class RecruitmentZoneService {
         log.info("<--  findVacancy vacancyID  {} -->", vacancyID);
         try {
             Vacancy vacancy = vacancyService.findById(vacancyID);
-         /*   VacancyDTO vacancyDTO = new VacancyDTO();
-            vacancyDTO.setJob_title(vacancy.getJob_title());
-            vacancyDTO.setJob_description(vacancy.getJob_description());
-            vacancyDTO.setSeniority_level(vacancy.getSeniority_level());
-            vacancyDTO.setRequirements(vacancy.getRequirements());
-            vacancyDTO.setLocation(vacancy.getLocation());
-            vacancyDTO.setIndustry(vacancy.getIndustry());
-            vacancyDTO.setPublish_date(vacancy.getPublish_date());
-            vacancyDTO.setEnd_date(vacancy.getEnd_date());
-            vacancyDTO.setStatus(vacancy.getStatus());
-            vacancyDTO.setJobType(vacancy.getJobType());
-            vacancyDTO.setEmpType(vacancy.getEmpType());
-            vacancyDTO.setClientID(vacancy.getTheClientID());
-            vacancyDTO.setVacancyID(vacancyID);
-            vacancyDTO.setEmployeeID(vacancy.getTheEmpID());
-            vacancyDTO.setApplicationCount(vacancy.getApplicationsSize());
-            vacancyDTO.setClientName(vacancy.getClient().getName());
-            */
+
             VacancyDTO vacancyDTO = convertVacancy(vacancy);
 
             // clientName , vacancyName = jobTitle
             model.addAttribute("vacancy", vacancyDTO);
-
+            model.addAttribute("employeeName", vacancy.getEmployee().getFirst_name());
             model.addAttribute("clientFileDTO", new ClientFileDTO());
 
             log.info("<--  findVacancy vacancy != null  {} -->", vacancy.printVacancy());
