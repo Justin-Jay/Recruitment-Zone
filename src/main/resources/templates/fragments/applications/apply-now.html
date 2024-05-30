@@ -14,8 +14,7 @@
     <form class="form-group" action="#" th:action="@{/Application/save-application}" th:object="${newApplicationDTO}"
           th:method="POST" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
 
-        <p th:text="${vacancyName} ? ${'Application for ' + vacancyName + ' role'} : 'Application for'"></p>
-
+        <p th:text="${newApplicationDTO.vacancyName} ? ${'Application for ' + newApplicationDTO.vacancyName} : 'Application for open vacancy'"></p>
 
         <input type="hidden" name="vacancyID" th:value="${newApplicationDTO.vacancyID}"/>
 
@@ -71,7 +70,7 @@
 
         <label for="currentProvince">Current Location:
         </label>
-        <select class="form-select-sm m-1" aria-label=".form-select" id="currentProvince"
+        <select class="form-select" aria-label=".form-select" id="currentProvince"
                 th:field="${newApplicationDTO.current_province}">
             <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
                     th:value="${province}" th:text="${province.getPrintableProvinceName()}"></option>

@@ -6,6 +6,7 @@ import za.co.recruitmentzone.blog.dto.BlogDTO;
 import za.co.recruitmentzone.employee.entity.Employee;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,9 +23,9 @@ public class Blog implements Serializable {
     @Column(name = "body", length = 65535)
     private String body;
     @Column(name="publish_date")
-    private String publish_date;
+    private LocalDate publish_date;
     @Column(name="end_date")
-    private String end_date;
+    private LocalDate end_date;
     @Column(name="created")
     private LocalDateTime created;
     @ManyToOne(fetch = FetchType.EAGER,
@@ -37,15 +38,6 @@ public class Blog implements Serializable {
     public Blog() {
     }
 
-    public Blog(String blog_title, String blog_description, String body,String publish_date,String end_date) {
-        this.blog_title = blog_title;
-        this.blog_description = blog_description;
-        this.body = body;
-        this.publish_date=publish_date;
-        this.end_date=end_date;
-    }
-
-
     public LocalDateTime getCreated() {
         return created;
     }
@@ -57,13 +49,6 @@ public class Blog implements Serializable {
     public Blog(BlogDTO blogDTO) {
     }
 
-    public String getPublish_date() {
-        return publish_date;
-    }
-
-    public void setPublish_date(String publish_date) {
-        this.publish_date = publish_date;
-    }
 
     public BlogStatus getStatus() {
         return status;
@@ -105,11 +90,19 @@ public class Blog implements Serializable {
         this.body = body;
     }
 
-    public String getEnd_date() {
+    public LocalDate getPublish_date() {
+        return publish_date;
+    }
+
+    public void setPublish_date(LocalDate publish_date) {
+        this.publish_date = publish_date;
+    }
+
+    public LocalDate getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(String end_date) {
+    public void setEnd_date(LocalDate end_date) {
         this.end_date = end_date;
     }
 

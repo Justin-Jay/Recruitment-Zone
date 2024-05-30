@@ -21,7 +21,7 @@ public class CandidateNote implements Note, Serializable {
             })
     @JoinColumn(name = "candidateID")
     private Candidate candidate;
-    @Column(name = "date_captured")
+    @Column(name = "created")
     private LocalDateTime dateCaptured;
     @Column(name = "comment", length = 65535)
     private String comment;

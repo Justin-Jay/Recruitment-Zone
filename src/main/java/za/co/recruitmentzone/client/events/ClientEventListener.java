@@ -26,7 +26,7 @@ public class ClientEventListener {
 
     // ClientFileUploadEvent
     @EventListener
-    public void onClientFileUploadEvent(ClientFileUploadEvent event) {
+    public void onClientGoogleFileEvent(ClientGoogleFileEvent event) {
         log.info("<--  onClientFileUploadEvent event {} -->", event.getFileID());
         try {
             String fileResponse = storageService.uploadFile(event);

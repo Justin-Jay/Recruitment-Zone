@@ -12,6 +12,7 @@ import za.co.recruitmentzone.client.repository.ClientRepository;
 import za.co.recruitmentzone.client.repository.ContactPersonRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,7 @@ public class ClientService {
 
     public Client addContactToClient(ContactPersonDTO contactPersonDTO) {
         Optional<Client> oc = clientRepository.findById(contactPersonDTO.getClientID());
+
         ContactPerson contactPerson = new ContactPerson(contactPersonDTO.getFirst_name(),
                 contactPersonDTO.getLast_name(), contactPersonDTO.getEmail_address(),
                 contactPersonDTO.getLand_line(), contactPersonDTO.getCell_phone(), contactPersonDTO.getDesignation());

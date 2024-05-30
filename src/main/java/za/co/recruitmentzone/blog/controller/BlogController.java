@@ -72,13 +72,24 @@ public class BlogController {
             return "fragments/blog/add-blog";
         }
         try {
-            recruitmentZoneService.saveNewBlog(blogDTO, principal, model);
+            log.info("<--- saveUpdatedBlog BODY: ---> \n {} ", blogDTO.getBody());
+            boolean cleanInput ;
+            cleanInput = recruitmentZoneService.cleanData(blogDTO);
+            if (cleanInput){
+                recruitmentZoneService.saveNewBlog(blogDTO, principal, model);
+            }
+            else {
+                model.addAttribute("dirtyData","Failed to sanitize input");
+                return "fragments/blog/update-blog";
+            }
+
         } catch (Exception e) {
             log.error("<-- saveExistingBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   blog , findBlogResponse , internalServerError ,  saveNewBlogResponse
-        return "fragments/blog/view-blog";
+        //return "fragments/blog/view-blog";
+        return "fragments/blog/view-home-blog";
     }
 
     @PostMapping("/view-blog")
@@ -125,7 +136,7 @@ public class BlogController {
             return "fragments/blog/update-blog";
         }
         try {
-            log.info("<--- saveUpdatedBlog BODY: ---> \n {} ", blog.getBody());
+            log.info("<--- saveUpdatedBlog BODY: ---> \n {} ", blog.printBlog());
             boolean cleanInput ;
             cleanInput = recruitmentZoneService.cleanData(blog);
             if (cleanInput){
@@ -140,7 +151,8 @@ public class BlogController {
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blog , findBlogResponse , internalServerError, updateBlogResponse
-        return "fragments/blog/view-blog";
+       // return "fragments/blog/view-blog";
+        return "fragments/blog/view-home-blog";
     }
 
 

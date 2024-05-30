@@ -5,11 +5,13 @@
                 <!-- Hidden input field to include the vacancyID in the POST request -->
                 <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
                 <!-- Submit button to trigger the form submission -->
-                <button class="btn normal-button"
+          <!--      <button class="btn normal-button"
                         hx-post="/Blog/update-blog"
                         hx-target="#main-page-section"
                         hx-swap="innerHTML show:top"
                         hx-include="[blogID='blogID']">Update Blog
+                </button>-->
+                <button class="btn normal-button" >Update Blog
                 </button>
             </form>
         </a>

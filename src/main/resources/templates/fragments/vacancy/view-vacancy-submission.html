@@ -11,6 +11,7 @@
     <table class="table table-hover table-responsive-sm" >
         <thead >
         <tr>
+            <th>Date Received</th>
             <th>Candidate Name</th>
             <th>Candidate Last Name</th>
             <th>View Candidate</th>
@@ -19,6 +20,7 @@
         </thead>
         <tbody>
         <tr th:each="vApplication : ${vacancyApplications}" >
+             <td th:text="${#temporals.format(vApplication.created, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${vApplication.candidate.first_name}"></td>
             <td th:text="${vApplication.candidate.last_name}"></td>
             <td>

@@ -1,4 +1,25 @@
-<div class="container-fluid main-page-section">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en"> <!--  data-bs-theme="dark" -->
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <!-- include summernote css/js -->
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+
+</head>
+<body>
+
+<!-- TOP Navbar -->
+<div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+
+<div class="container-fluid main-page-section" id="vacancy-update-section">
 
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
@@ -11,24 +32,6 @@
                 <input type="text" th:field="*{job_title}" class="form-control" id="job_title"
                 />
             </div>
-            <div class="row">
-                <label for="job_description">Job Description: </label>
-                <textarea  th:field="*{job_description}" class="form-control"  id="job_description" ></textarea>
-            </div>
-
-            <div class="row">
-                <label for="seniority_level">Seniority Level: </label>
-                <input type="text" th:field="*{seniority_level}" class="form-control" id="seniority_level"
-                />
-            </div>
-
-
-            <div class="row">
-                <label for="requirementsField">Requirements: </label>
-                <textarea id="requirementsField" th:field="*{requirements}" class="form-control " ></textarea>
-            </div>
-
-            <!--             <textarea  th:field="*{__}" class="form-control "   id="___" rows="4"></textarea> -->
 
             <div class="row">
                 <label for="location">Location: </label>
@@ -36,6 +39,11 @@
                 />
             </div>
 
+            <div class="row">
+                <label for="seniority_level">Seniority Level: </label>
+                <input type="text" th:field="*{seniority_level}" class="form-control" id="seniority_level"
+                />
+            </div>
 
             <div class="row">
                 <label for="industry">Select Industry:
@@ -90,13 +98,23 @@
 
             </div>
 
+            <div class="container-fluid">
+                <label for="job_description">Job Description: </label>
+                <textarea  th:field="*{job_description}" class="form-control"  id="job_description" ></textarea>
+            </div>
+            <hr/>
+            <div class="container-fluid">
+                <label for="requirementsField">Requirements: </label>
+                <textarea id="requirementsField" th:field="*{requirements}" class="form-control" ></textarea>
+                <!--             <textarea  th:field="*{__}" class="form-control "   id="___" rows="4"></textarea> -->
 
+            </div>
 
         </div>
         <br><br>
         <button class="btn btn-secondary"
                 hx-post="/Vacancy/save-updated-vacancy"
-                hx-target="#main-page-section"
+                hx-target="#vacancy-update-section"
                 hx-swap="innerHTML"
                 id="submit"> Save Updated Vacancy
         </button>
@@ -104,9 +122,14 @@
 
 </div>
 
+<!--BOTTOM Navbar-->
+
+<div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+
+<div th:replace="~{fragments/layout/scripts :: scripts}"></div>
 <script>
-    let requirementsEditor;
-    let descrptionEditor;
+    var requirementsEditor;
+    var descrptionEditor;
 
     ClassicEditor
         .create(document.querySelector('#requirementsField'))
@@ -143,3 +166,5 @@
     });
 
 </script>
+</body>
+</html>

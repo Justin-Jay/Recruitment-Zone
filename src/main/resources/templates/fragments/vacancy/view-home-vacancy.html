@@ -3,6 +3,7 @@
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findVacancyResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveVacancyResponse})}"></div>
     </div>
     <div class="row">
         <div class="col-8">
@@ -24,23 +25,22 @@
 
                 </section>
 
+                <a  th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary" th:href="@{/Vacancy/vacancy-administration}">Vacancy Admin</a>
 
-                <a>
-                    <form th:action="@{/Application/apply-now}" th:method="post">
-                        <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
+                <form th:if="${not #authorization.expression('isAuthenticated')}" th:action="@{/Application/apply-now}" th:method="post">
+                    <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
 
-                        <button class="btn btn-primary"
-                                hx-post="/Application/apply-now"
-                                hx-target="#main-page-section"
-                                hx-swap="outtaHTML"
-                                hx-include="[vacancyID='vacancyID']">Apply Now
-                        </button>
-                    </form>
-                </a>
+                    <button class="btn btn-primary"
+                            hx-post="/Application/apply-now"
+                            hx-target="#main-page-section"
+                            hx-swap="outtaHTML"
+                            hx-include="[vacancyID='vacancyID']">Apply Now
+                    </button>
+                </form>
 
             </div>
             <br/>
-            <a class="btn btn-secondary" th:href="@{/home}">Back to vacancies</a>
+            <a  th:if="${not #authorization.expression('isAuthenticated')}" class="btn btn-secondary" th:href="@{/home}">Back to vacancies</a>
         </div>
 
         <div class="col-4">

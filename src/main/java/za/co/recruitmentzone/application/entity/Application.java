@@ -1,12 +1,14 @@
 package za.co.recruitmentzone.application.entity;
 
 import jakarta.persistence.*;
+import org.checkerframework.checker.units.qual.C;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.candidate.entity.Candidate;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -16,11 +18,15 @@ public class Application implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "applicationID")
     private Long applicationID;
+    @Column(name="created")
+    private LocalDateTime created;
     @Column(name="date_received")
-    private String date_received;
-
+    private LocalDateTime date_received;
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
+    @Column(name = "submission_date")
+    private LocalDateTime submission_date;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "candidateID")
     private Candidate candidate;
@@ -31,7 +37,25 @@ public class Application implements Serializable {
     @JoinColumn(name="vacancyID")
     private Vacancy vacancy;
 
+    public LocalDateTime getCreated() {
+        return created;
+    }
 
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public void setDate_received(LocalDateTime date_received) {
+        this.date_received = date_received;
+    }
+
+    public LocalDateTime getSubmission_date() {
+        return submission_date;
+    }
+
+    public void setSubmission_date(LocalDateTime submission_date) {
+        this.submission_date = submission_date;
+    }
 
     public Long getApplicationID() {
         return applicationID;
@@ -41,12 +65,8 @@ public class Application implements Serializable {
         this.applicationID = applicationID;
     }
 
-    public String getDate_received() {
+    public LocalDateTime getDate_received() {
         return date_received;
-    }
-
-    public void setDate_received(String date_received) {
-        this.date_received = date_received;
     }
 
     public ApplicationStatus getStatus() {

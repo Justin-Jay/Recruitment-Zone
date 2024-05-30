@@ -17,9 +17,7 @@
 
         <!-- Display vacancy application -->
         <tr th:each="note : ${existingNotes}">
-            <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
-
-            <!--      <td th:text="${#temporals.format(note.dateCaptured, 'yyyy-MM-dd')}" ></td>-->
+            <td th:text="${#temporals.format(note.dateCaptured, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="*{note.comment}"></td>
             <!-- <td th:text="*{note.dateCaptured}"></td>
              <td th:text="*{note.comment}"></td>-->

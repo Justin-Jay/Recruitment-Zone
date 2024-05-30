@@ -3,6 +3,7 @@ package za.co.recruitmentzone.vacancy.entity;
 import jakarta.persistence.*;
 import org.w3c.dom.stylesheets.LinkStyle;
 import za.co.recruitmentzone.application.entity.Application;
+import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.util.enums.EmpType;
@@ -46,6 +47,8 @@ public class Vacancy implements Serializable {
     private EmpType empType;
     @Column(name = "created")
     private LocalDateTime created;
+    @Column(name = "vacancyRef")
+    private String vacancyRef;
     @ManyToOne(
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
@@ -67,7 +70,6 @@ public class Vacancy implements Serializable {
 
     public Vacancy() {
     }
-
 
     public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType) {
         this.job_title = job_title;
@@ -223,8 +225,26 @@ public class Vacancy implements Serializable {
         this.employee = employee;
     }
 
+    public String getVacancyRef() {
+        return vacancyRef;
+    }
+
+    public void setVacancyRef(String vacancyRef) {
+        this.vacancyRef = vacancyRef;
+    }
+
     public List<Application> getApplications() {
-        return applications;
+        if (this.applications!=null){
+            List<Application> sortedApplications = new ArrayList<>(this.applications);
+            Collections.sort(sortedApplications, new Comparator<Application>() {
+                @Override
+                public int compare(Application item1, Application item2) {
+                    return item2.getDate_received().compareTo(item1.getDate_received());
+                }
+            });
+            return sortedApplications;
+        }
+        else return new ArrayList<>();
     }
 
     public void setApplications(List<Application> applications) {
@@ -244,7 +264,6 @@ public class Vacancy implements Serializable {
             return 0;
         }else return applications.size();
     }
-
 
     public String printVacancy() {
         return "Vacancy{" +

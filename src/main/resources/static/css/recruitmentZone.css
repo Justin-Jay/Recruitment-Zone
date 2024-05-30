@@ -42,7 +42,16 @@ body {
     padding-bottom: 15px;
     /* margin: 0;*/
 }
-
+.vacancy-aug-section {
+    max-height: 75vh;
+    overflow: auto;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: grid;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    /* margin: 0;*/
+}
 
 
 

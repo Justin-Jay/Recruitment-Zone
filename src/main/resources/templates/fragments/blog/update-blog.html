@@ -1,4 +1,27 @@
-<div class="container-fluid main-page-section">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en"> <!--  data-bs-theme="dark" -->
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+
+
+    <title>Recruitment Zone</title>
+</head>
+<body>
+
+<!-- TOP Navbar -->
+
+<div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+
+<div class="container-fluid"  id="blog-update-section">
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
@@ -19,28 +42,31 @@
             <textarea class="form-control" th:field="*{blog_description}" id="description"> </textarea>
 
             <label>Body:
-                <textarea class="form-control" th:field="*{body}" id="blogBody"> </textarea>
+                <textarea class="form-control" th:field="*{body}"> </textarea>
             </label>
 
             <div class="row">
-                <div class="col-6">
+
+                <div class="row">
                     <label for="publish_date">Publish Date: </label>
-                    <input type="date" th:field="*{publish_date}" class="form-control" id="publish_date"
+                    <input type="date"   th:value="${blog.publish_date}" class="form-control" id="publish_date"
                            placeholder="Publish Date"/>
                 </div>
-                <div class="col-6">
+                <div class="row">
                     <label for="expirationDate">Expiration Date: </label>
-                    <input type="date" th:field="*{end_date}" class="form-control" id="expirationDate"
+                    <input type="date"   th:value="${blog.end_date}" class="form-control " id="expirationDate"
                            placeholder="Expiration Date:"/>
                 </div>
+
             </div>
 
 
         </div>
         <br>
-        <button class="btn normal-button"
+        <button class="btn btn-secondary"
                 hx-post="/Blog/save-updated-blog"
-                hx-target="#main-page-section"
+                hx-target="#blog-update-section"
+                hx-swap="innerHTML"
                 id="submit"> Save Updated Blog
         </button>
 
@@ -48,11 +74,16 @@
 
 </div>
 
+
+<!--BOTTOM Navbar-->
+<div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+
+<div th:replace="~{fragments/layout/scripts :: scripts}"></div>
 <script>
-    let editor;
+    var editor;
 
     ClassicEditor
-        .create(document.querySelector('#blogBody'))
+        .create(document.querySelector('#body'))
         .then(newEditor => {
             editor = newEditor;
             //console.log(editor.getData)
@@ -72,5 +103,6 @@
 
 
     });
-
 </script>
+</body>
+</html>

@@ -72,13 +72,24 @@
                     <!-- Hidden input field to include the vacancyID in the POST request -->
                     <input type="hidden" name="vacancyID" th:value="*{vacancyID}"/>
                     <!-- Submit button to trigger the form submission -->
-                    <button class="btn btn-secondary"
+                  <!--  <button class="btn btn-secondary"
                             hx-post="/Vacancy/update-vacancy"
                             hx-target="#main-page-section"
                             hx-swap="innerHTML"
                             hx-include="[vacancyID='vacancyID']">Update Vacancy
+                    </button>-->
+                    <button class="btn btn-secondary" >Update Vacancy
                     </button>
                 </form>
+
+
+             <!--   <form action="#" th:action="@{/Vacancy/add-vacancy}"  method="GET">
+                    <button class="btn normal-button">
+                        Create Vacancy
+                    </button>
+                </form>-->
+
+
             </div>
             <div class="col-6">
                 <div th:insert="~{fragments/vacancy/vacancy-status :: vacancyStatus(${vacancy})}"></div>

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "CONTACT_PERSON")
@@ -32,6 +33,8 @@ public class ContactPerson implements Serializable {
     @JoinColumn(name = "clientID")
     private Client client;
 
+    //private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     public ContactPerson() {
     }
 
@@ -43,6 +46,7 @@ public class ContactPerson implements Serializable {
         this.cell_phone = cell_phone;
         this.designation=designation;
         this.created = LocalDateTime.now();
+
     }
 
     public String getDesignation() {

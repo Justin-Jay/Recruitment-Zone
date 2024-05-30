@@ -11,10 +11,9 @@ import javax.security.auth.Subject;
 import java.io.Serializable;
 import java.security.Principal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Entity
 @Table(name = "USERS")
@@ -91,11 +90,31 @@ public class Employee implements Principal, Serializable {
     }
 
     public List<Blog> getBlogs() {
-        return blogs;
+     if(this.blogs!=null){
+         List<Blog> sortedBlogs = new ArrayList<>(this.blogs);
+         Collections.sort(sortedBlogs, new Comparator<Blog>() {
+             @Override
+             public int compare(Blog item1, Blog item2) {
+                 return item2.getCreated().compareTo(item1.getCreated());
+             }
+         });
+         return sortedBlogs;
+     }
+       return new ArrayList<>();
     }
 
     public List<Vacancy> getVacancies() {
-        return vacancies;
+       if (this.vacancies != null) {
+           List<Vacancy> sortedVacancies = new ArrayList<>(this.vacancies);
+           Collections.sort(sortedVacancies, new Comparator<Vacancy>() {
+               @Override
+               public int compare(Vacancy item1, Vacancy item2) {
+                   return item2.getCreated().compareTo(item1.getCreated());
+               }
+           });
+           return sortedVacancies;
+       }
+       return new ArrayList<>();
     }
 
 

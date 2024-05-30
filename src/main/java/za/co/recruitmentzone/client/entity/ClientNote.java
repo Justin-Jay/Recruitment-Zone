@@ -22,7 +22,7 @@ public class ClientNote implements Note, Serializable {
     @JoinColumn(name = "clientID")
     private Client client;
 
-    @Column(name = "date_captured")
+    @Column(name = "created")
     private LocalDateTime dateCaptured;
     @Column(name = "comment", length = 65535)
     private String comment;

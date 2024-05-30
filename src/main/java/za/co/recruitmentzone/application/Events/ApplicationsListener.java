@@ -47,7 +47,7 @@ public class ApplicationsListener {
         newCandidate = candidateService.save(newCandidate);
         log.info("newCandidate = {}",newCandidate);
         Application application = event.getApplication();
-        application.setDate_received(Timestamp.valueOf(LocalDateTime.now()).toString());
+        application.setDate_received(LocalDateTime.now());
         application.setStatus(PENDING);
         application.setCandidate(newCandidate);
         log.info("application = {}",application);

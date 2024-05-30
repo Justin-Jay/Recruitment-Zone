@@ -8,10 +8,7 @@ import za.co.recruitmentzone.util.enums.Province;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "CANDIDATE")
@@ -80,7 +77,17 @@ public class Candidate implements Serializable {
     }
 
     public List<CandidateFile> getDocuments() {
-        return documents;
+        if (this.documents != null) {
+            List<CandidateFile> sortedDocs = new ArrayList<>(this.documents);
+            Collections.sort(sortedDocs, new Comparator<CandidateFile>() {
+                @Override
+                public int compare(CandidateFile item1, CandidateFile item2) {
+                    return item2.getCreated().compareTo(item1.getCreated());
+                }
+            });
+            return sortedDocs;
+        }
+        else return new ArrayList<>();
     }
 
 
@@ -180,14 +187,37 @@ public class Candidate implements Serializable {
         this.relocation = relocation;
     }
 
+
     public List<Application> getApplications() {
-        return applications;
+        // sort by date received
+        if (this.applications != null) {
+            List<Application> sortedApplications = new ArrayList<>(this.applications);
+            Collections.sort(sortedApplications, new Comparator<Application>() {
+                @Override
+                public int compare(Application item1, Application item2) {
+                    return item2.getDate_received().compareTo(item1.getDate_received());
+                }
+            });
+            return sortedApplications;
+        } else return new ArrayList<>();
     }
 
 
     public List<CandidateNote> getNotes() {
-        return notes;
+        if (this.notes != null) {
+            List<CandidateNote> sortedNotes = new ArrayList<>(this.notes);
+            Collections.sort(sortedNotes, new Comparator<CandidateNote>() {
+                @Override
+                public int compare(CandidateNote item1, CandidateNote item2) {
+                    return item2.getDateCaptured().compareTo(item1.getDateCaptured());
+                }
+            });
+            return sortedNotes;
+        } else {
+            return new ArrayList<>();
+        }
     }
+
 
     public void AddApplication(Application application) {
         if (applications == null) {
@@ -210,15 +240,16 @@ public class Candidate implements Serializable {
 
 
     public void addNote(CandidateNoteDTO noteDTO) {
+ /*       if (noteDTO == null) {
+            throw new IllegalArgumentException("noteDTO cannot be null");
+        }*/
         if (notes == null) {
             notes = new ArrayList<>();
         }
         CandidateNote newNote = new CandidateNote(noteDTO.getComment());
         newNote.setCandidate(this);
         newNote.setDateCaptured(noteDTO.getDateCaptured());
-        newNote.setCandidate(this);
         notes.add(newNote);
-
     }
 
 

@@ -1,4 +1,26 @@
-<div class="container-fluid main-page-section">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en"> <!--  data-bs-theme="dark" -->
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <!-- include summernote css/js -->
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+
+</head>
+<body>
+
+<!-- TOP Navbar -->
+<div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+
+
+<div class="container-fluid main-page-section" id="vacancy-create-section">
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findAllClientsResponse})}"></div>
@@ -7,9 +29,7 @@
     </div>
 
     <form action="#" th:action="@{/Vacancy/save-vacancy}" th:object="${vacancyDTO}" method="POST">
-        <div class="form-group">
-
-
+        <div class="col-12 form-group">
             <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
             <label for="clientID">Select Client
                 <select class="form-select" aria-label=".form-select" name="clientID">
@@ -48,46 +68,28 @@
                 Job Title:
             </label>
             <input type="text" th:field="*{job_title}" id="job_title" placeholder="Enter The Job Title"
-                   class="form-control mb-4 w-25">
+                   class="form-control">
             <br>
 
             <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('job_description')}"
                th:errors="${vacancyDTO.job_description}"
             ></p>
-            <label for="job_description">
+            <label>
                 Job Description:
-
+                <textarea class="form-control" th:field="*{job_description}" id="jb_description"
+                ></textarea>
             </label>
-            <textarea class="form-control  mb-4 text-black-50" th:field="*{job_description}" id="job_description"
-            ></textarea>
 
-
-            <br>
-
-            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('seniority_level')}"
-               th:errors="${vacancyDTO.seniority_level}"
-            ></p>
-            <label for="seniorityLevel">
-                Seniority Level:
-
-            </label>
-            <input type="text" th:field="*{seniority_level}" id="seniorityLevel"
-                   placeholder="Enter The Seniority Level"
-                   class="form-control mb-4 w-25">
             <br>
 
             <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('requirements')}"
                th:errors="${vacancyDTO.requirements}"
             ></p>
-            <label for="requirements">Requirements:
-
+            <label >Requirements:
+                <textarea class="form-control " th:field="*{requirements}"
+                ></textarea>
             </label>
-
-            <textarea class="form-control  mb-4 text-black-50" th:field="*{requirements}" id="requirements"
-            ></textarea>
-
             <br>
-
             <p class="alert alert-danger alert-dismissible fade show" role="alert"
                th:if="${#fields.hasErrors('location')}"
                th:errors="${vacancyDTO.location}">Error!</p>
@@ -95,7 +97,7 @@
                 Job Location:
             </label>
             <input type="text" th:field="*{location}" id="location" placeholder="Enter The Job Location"
-                   class="form-control mb-4 w-25">
+                   class="form-control">
             <br>
             <label for="industry">Select Industry:
             </label>
@@ -111,7 +113,7 @@
             <label for="publish_date">
                 Publish Date:
             </label><input type="date" th:field="*{publish_date}" id="publish_date"
-                           placeholder="Enter The Date to be published" class="form-control mb-4 w-25">
+                           placeholder="Enter The Date to be published" class="form-control">
             <br>
             <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('end_date')}"
                th:errors="${vacancyDTO.end_date}"
@@ -119,7 +121,18 @@
             <label for="end_date">
                 End Date:
             </label><input type="date" th:field="*{end_date}" id="end_date" placeholder="Enter The Expiration Date"
-                           class="form-control mb-4 w-25">
+                           class="form-control">
+            <br>
+
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('seniority_level')}"
+               th:errors="${vacancyDTO.seniority_level}"
+            ></p>
+            <label for="seniorityLevel">
+                Seniority Level:
+            </label>
+            <input type="text" th:field="*{seniority_level}" id="seniorityLevel"
+                   placeholder="Enter The Seniority Level"
+                   class="form-control">
             <br>
             <label for="jobType">Select Job Type:
             </label>
@@ -139,12 +152,62 @@
 
             <button class="btn btn-secondary"
                     hx-post="/Vacancy/save-vacancy"
-                    hx-target="#main-page-section"
+                    hx-target="#vacancy-create-section"
                     hx-swap="innerHTML"
-                    hx-include="[vacancyDTO='vacancyDTO']">Save vacancy
+                    hx-include="[vacancyDTO='vacancyDTO']"
+                    id="submit">Save vacancy
             </button>
+            <a  th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary" th:href="@{/Vacancy/vacancy-administration}">Back to vacancy admin</a>
 
 
         </div>
     </form>
 </div>
+
+
+<!--BOTTOM Navbar-->
+
+<div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+
+<div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+<script>
+    var requirementsEditor;
+    var descrptionEditor;
+
+    ClassicEditor
+        .create(document.querySelector('#requirements'))
+        .then(newEditor => {
+            requirementsEditor = newEditor;
+            console.log(requirementsEditor.getData)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    ClassicEditor
+        .create(document.querySelector('#jb_description'))
+        .then(newEditor => {
+            descrptionEditor = newEditor;
+            console.log(descrptionEditor.getData);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    document.querySelector('#submit').addEventListener('click', () => {
+
+        const requirementsData = requirementsEditor.getData();
+        const descriptionData = descrptionEditor.getData();
+
+        console.log(requirementsData);
+        console.log(descriptionData);
+
+        document.querySelector('#requirements').value = requirementsData;
+        document.querySelector('#jb_description').value = descriptionData;
+
+
+    });
+
+</script>
+</body>
+</html>

@@ -2,16 +2,15 @@ package za.co.recruitmentzone.client.entity;
 
 import jakarta.persistence.*;
 import za.co.recruitmentzone.candidate.entity.CandidateFile;
+import za.co.recruitmentzone.candidate.entity.CandidateNote;
 import za.co.recruitmentzone.client.dto.ClientNoteDTO;
 import za.co.recruitmentzone.util.enums.Industry;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Entity
 @Table(name = "CLIENT")
@@ -20,11 +19,11 @@ public class Client implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "clientID")
     private Long clientID;
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
     @Enumerated(EnumType.STRING)
     private Industry industry;
-    @Column(name="created")
+    @Column(name = "created")
     private LocalDateTime created;
     @OneToMany(mappedBy = "client",
             cascade = {
@@ -91,28 +90,65 @@ public class Client implements Serializable {
     }
 
     public List<ContactPerson> getContactPeople() {
-        return contactPeople;
+        if (this.contactPeople != null) {
+            List<ContactPerson> sortedContacts = new ArrayList<>(this.contactPeople);
+            Collections.sort(sortedContacts, new Comparator<ContactPerson>() {
+                @Override
+                public int compare(ContactPerson item1, ContactPerson item2) {
+                    return item2.getCreated().compareTo(item1.getCreated());
+                }
+            });
+            return sortedContacts;
+        } else return new ArrayList<>();
     }
 
     public List<Vacancy> getVacancies() {
-        return vacancies;
+       if (this.vacancies!=null){
+           List<Vacancy> sortedVacancies = new ArrayList<>(this.vacancies);
+           Collections.sort(sortedVacancies, new Comparator<Vacancy>() {
+               @Override
+               public int compare(Vacancy item1, Vacancy item2) {
+                   return item2.getCreated().compareTo(item1.getCreated());
+               }
+           });
+           return sortedVacancies;
+       }
+       else return new ArrayList<>();
     }
 
     public List<ClientFile> getDocuments() {
-        return documents;
+        if (this.documents!=null){
+            List<ClientFile> sortedDocuments = new ArrayList<>(this.documents);
+            Collections.sort(sortedDocuments, new Comparator<ClientFile>() {
+                @Override
+                public int compare(ClientFile item1, ClientFile item2) {
+                    return item2.getCreated().compareTo(item1.getCreated());
+                }
+            });
+            return sortedDocuments;
+        }
+        else return new ArrayList<>();
     }
 
     public int getContactPeopleCount() {
-        if (contactPeople!=null)
+        if (contactPeople != null)
             return contactPeople.size();
         else return 0;
     }
 
-
     public List<ClientNote> getNotes() {
-        return notes;
+        if (this.notes!=null){
+            List<ClientNote> sortedNotes = new ArrayList<>(this.notes);
+            Collections.sort(sortedNotes, new Comparator<ClientNote>() {
+                @Override
+                public int compare(ClientNote item1, ClientNote item2) {
+                    return item2.getDateCaptured().compareTo(item1.getDateCaptured());
+                }
+            });
+            return sortedNotes;
+        }
+        else return new ArrayList<>();
     }
-
 
     public void addContactPerson(ContactPerson contactPerson) {
         if (contactPeople == null) {
@@ -131,8 +167,8 @@ public class Client implements Serializable {
     }
 
 
-    public void AddDocument(ClientFile document){
-        if (documents ==null){
+    public void AddDocument(ClientFile document) {
+        if (documents == null) {
             documents = new ArrayList<>() {
             };
         }
@@ -140,8 +176,8 @@ public class Client implements Serializable {
         document.setClient(this);
     }
 
-    public void addNote(ClientNoteDTO noteDTO){
-        if (notes ==null){
+    public void addNote(ClientNoteDTO noteDTO) {
+        if (notes == null) {
             notes = new ArrayList<>();
         }
         ClientNote newNote = new ClientNote(noteDTO.getComment());

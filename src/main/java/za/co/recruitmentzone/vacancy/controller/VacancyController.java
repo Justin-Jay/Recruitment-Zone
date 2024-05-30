@@ -49,7 +49,7 @@ public class VacancyController {
         return "fragments/vacancy/vacancy-administration";
     }
 
-    @PostMapping("/add-vacancy")
+    @GetMapping("/add-vacancy")
     public String showCreateVacancyForm(Model model) {
         try {
             recruitmentZoneService.addVacancy(model);
@@ -75,7 +75,7 @@ public class VacancyController {
         }
 
         // saveVacancyResponse , internalServerError
-        return "fragments/vacancy/view-vacancy";
+        return "fragments/vacancy/view-home-vacancy";
     }
     @PostMapping("/view-vacancy")
     public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
@@ -139,7 +139,8 @@ public class VacancyController {
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy ,  saveVacancyResponse
-        return "fragments/vacancy/view-vacancy";
+      //  return "fragments/vacancy/view-vacancy";
+        return "fragments/vacancy/view-home-vacancy";
     }
 
     @PostMapping("/view-vacancy-submission")

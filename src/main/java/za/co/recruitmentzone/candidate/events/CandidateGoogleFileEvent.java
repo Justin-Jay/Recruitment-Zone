@@ -4,8 +4,8 @@ import za.co.recruitmentzone.documents.Document;
 import za.co.recruitmentzone.documents.FileUploadEvent;
 
 
-public class CandidateFileUploadEvent extends FileUploadEvent {
-    public CandidateFileUploadEvent(Long fileID, Document document) {
+public class CandidateGoogleFileEvent extends FileUploadEvent {
+    public CandidateGoogleFileEvent(Long fileID, Document document) {
         super(fileID, document);
     }
 
