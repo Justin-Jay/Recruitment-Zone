@@ -1,6 +1,5 @@
 package za.co.recruitmentzone.vacancy.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import za.co.recruitmentzone.client.dto.ClientFileDTO;
 import za.co.recruitmentzone.client.entity.ClientFile;
 import za.co.recruitmentzone.documents.SaveFileException;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
-import za.co.recruitmentzone.util.enums.VacancyStatus;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
 import za.co.recruitmentzone.vacancy.dto.VacancyStatusDTO;
@@ -36,11 +34,11 @@ public class VacancyController {
     }
 
     @GetMapping("/vacancy-administration")
-    public String vacancies(Model model, HttpServletRequest request) {
-
+    public String vacancies(Model model) {
         try {
-            recruitmentZoneService.getAllVacancies(model);
-
+            int pageSize = 10;
+            //recruitmentZoneService.getAllVacancies(model);
+           recruitmentZoneService.getAllVacancies(model, 1,pageSize, "created", "asc");
         } catch (Exception e) {
             log.error("<-- vacancies -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -48,6 +46,20 @@ public class VacancyController {
         //  vacancyList , loadVacanciesResponse
         return "fragments/vacancy/vacancy-administration";
     }
+
+
+    @GetMapping("/paginatedVacancies/{pageNo}")
+    public String findPaginatedVacancies(@PathVariable(value = "pageNo") int pageNo,
+                                            @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 10;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.getAllVacancies(model, pageNo, pageSize, sortField, sortDirection);
+        return "fragments/vacancy/vacancy-administration :: vacancy-admin-list";
+    }
+
+
 
     @GetMapping("/add-vacancy")
     public String showCreateVacancyForm(Model model) {
@@ -60,6 +72,7 @@ public class VacancyController {
         //  vacancyDTO , clients , findAllClientsResponse  , employeeList loadEmployeesResponse , internalServerError
         return "fragments/vacancy/add-vacancy";
     }
+
     @PostMapping("/save-vacancy")
     public String saveVacancy(@Valid @ModelAttribute("vacancyDTO") VacancyDTO vacancy,
                               BindingResult bindingResult, Model model) {
@@ -77,6 +90,7 @@ public class VacancyController {
         // saveVacancyResponse , internalServerError
         return "fragments/vacancy/view-home-vacancy";
     }
+
     @PostMapping("/view-vacancy")
     public String showVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
@@ -123,13 +137,12 @@ public class VacancyController {
         try {
 
             log.info("<--- saveUpdatedVacancy description: ---> \n {} ", vacancy.getJob_description());
-            boolean cleanInput ;
+            boolean cleanInput;
             cleanInput = recruitmentZoneService.cleanData(vacancy);
-            if (cleanInput){
+            if (cleanInput) {
                 recruitmentZoneService.updateVacancy(vacancy, model);
-            }
-            else {
-                model.addAttribute("dirtyData","Failed to sanitize input");
+            } else {
+                model.addAttribute("dirtyData", "Failed to sanitize input");
                 return "fragments/vacancy/update-vacancy";
             }
 
@@ -139,14 +152,16 @@ public class VacancyController {
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy ,  saveVacancyResponse
-      //  return "fragments/vacancy/view-vacancy";
+        //  return "fragments/vacancy/view-vacancy";
         return "fragments/vacancy/view-home-vacancy";
     }
 
     @PostMapping("/view-vacancy-submission")
-    public String viewVacancySubmissions(@RequestParam("vacancyID") Long vacancyID, Model model) {
+    public String viewVacancySubmissions(@RequestParam("vacancyID") Long vacancyID,
+                                         Model model) {
         try {
-            recruitmentZoneService.findVacancySubmissions(vacancyID, model);
+            int pageSize = 5;
+            recruitmentZoneService.findVacancySubmissions(vacancyID, model, 1, pageSize, "date_received", "asc");
             model.addAttribute("applicationStatus", ApplicationStatus.values());
         } catch (Exception e) {
             log.error("<-- viewVacancySubmissions -->  Exception \n {}", e.getMessage());
@@ -154,6 +169,19 @@ public class VacancyController {
         }
         return "fragments/vacancy/view-vacancy-submission";
     }
+
+    @GetMapping("/paginatedSubmissions/{vacancyID}/{pageNo}")
+    public String findPaginatedSubmissions(@PathVariable("vacancyID") Long vacancyID, @PathVariable(value = "pageNo") int pageNo,
+                                            @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 5;
+        log.info("Page number vacancyID {}", vacancyID);
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findVacancySubmissions(vacancyID, model, pageNo, pageSize, sortField, sortDirection);
+        return "fragments/vacancy/view-vacancy-submission";
+    }
+
 
     @PostMapping("/search-vacancies")
     public String searchVacancies(@RequestParam(name = "title") String title, Model model) {
@@ -202,7 +230,8 @@ public class VacancyController {
     @PostMapping("/view-vacancy-documents")
     public String vacancyDocs(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
-            recruitmentZoneService.findVacancyDocuments(model, vacancyID);
+            int pageSize = 5;
+            recruitmentZoneService.findVacancyDocuments(model, vacancyID, 1, pageSize, "created", "asc");
         } catch (Exception e) {
             log.error("<-- vacancyDocs -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -212,8 +241,23 @@ public class VacancyController {
 
     }
 
+    @GetMapping("/paginatedVacancyDocuments/{vacancyID}/{pageNo}")
+    public String findPaginatedVacancyDocuments(@PathVariable(name = "vacancyID") long vacancyID,@PathVariable(name="pageNo") int pageNo,
+                                                @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 5;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findVacancyDocuments(model, vacancyID,pageNo, pageSize, sortField, sortDirection);
+        return "fragments/vacancy/vacancy-documents";
+    }
+
+
+
     @PostMapping("/upload-document")
-    public String saveDocument(@Valid @ModelAttribute("clientFileDTO") ClientFileDTO clientFileDTO,
+    public String saveDocument(@Valid @ModelAttribute("clientFileDTO") ClientFileDTO clientFileDTO,@RequestParam("pageNo") int pageNo,
+                               @RequestParam("sortField") String sortField,@RequestParam("sortDir") String sortDir,@RequestParam("clientID") long clientID,
+                               @RequestParam("vacancyID") long vacancyID,
                                BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
             log.error("<-- saveDocument  hasErrors --> ");
@@ -241,7 +285,11 @@ public class VacancyController {
                     if (file != null) {
                         log.info("saveDocument file is not null");
                         model.addAttribute("createClientFileResponse", "File Upload Successful");
-                        recruitmentZoneService.findVacancyDocuments(model, clientFileDTO.getVacancyID());
+                       // recruitmentZoneService.findVacancyDocuments(model, clientFileDTO.getVacancyID());
+                        log.info("Page number  {}", pageNo);
+                        log.info("sortField {}", sortField);
+                        log.info("sortDirection {}", sortDir);
+                        recruitmentZoneService.findVacancyDocuments(model, vacancyID,pageNo, 5, sortField, sortDir);
                     }
 
                 } catch (SaveFileException saveFileException) {
@@ -256,5 +304,11 @@ public class VacancyController {
         }
         return "fragments/vacancy/vacancy-documents";
     }
+
+
+
+
+
+
 
 }

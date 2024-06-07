@@ -8,7 +8,7 @@
         <li class="list-group-item" >
             <p th:text="${'Document Number: '+ documentIndex.index }"></p>
             <p th:text="${'Document Type: ' + document.convertDocType}"></p>
-            <a class="download-button btn btn-light btn-outline-dark"
+            <a class="download-button btn btn-light btn-outline-secondary"
                th:href="@{/Document/download-document/{fileID}(fileID=${document.fileID})}">
                 Download
             </a>

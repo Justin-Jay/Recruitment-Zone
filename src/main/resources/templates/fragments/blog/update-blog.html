@@ -21,56 +21,61 @@
 
 <div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
-<div class="container-fluid"  id="blog-update-section">
+<div class="container-fluid home-page-section" id="body-container">
+
+    <div class="row ">
+        <div class="container-fluid">
+            <h3 class="h3">Create Blog
+            </h3>
+            <hr>
+        </div>
+    </div>
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findBlogResponse})}"></div>
     </div>
 
+    <div class="row">
+        <div class="container-fluid" id="blog-update-section">
+            <div class="form-group">
+                <form id="blogForm" action="#" th:action="@{/Blog/save-updated-blog}" th:object="${blog}" th:method="POST">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="blogID" th:field="*{blogID}"/>
+                    <label for="title">Blog Title: </label>
+                    <input type="text" th:field="*{blog_title}" class="form-control mb-4 w-25" id="title"
+                           placeholder="Blog Title"/>
 
-    <form id="blogForm" action="#" th:action="@{/Blog/save-updated-blog}" th:object="${blog}" th:method="POST">
-        <!-- Hidden input field to include the vacancyID in the POST request -->
-        <input type="hidden" name="blogID" th:field="*{blogID}"/>
-        <div class="md-10">
-            <label for="title">Blog Title: </label>
-            <input type="text" th:field="*{blog_title}" class="form-control mb-4 w-25" id="title"
-                   placeholder="Blog Title"/>
+                    <label for="description">Blog Description:
+                    </label>
+                    <textarea class="form-control" th:field="*{blog_description}" id="description"> </textarea>
 
-            <label for="description">Blog Description:
-            </label>
-            <textarea class="form-control" th:field="*{blog_description}" id="description"> </textarea>
+                    <label>Body:
+                        <textarea class="form-control" th:field="*{body}"> </textarea>
+                    </label>
 
-            <label>Body:
-                <textarea class="form-control" th:field="*{body}"> </textarea>
-            </label>
+                    <br><br>
 
-            <div class="row">
+                    <div class="row-cols-4 align-items-center">
+                        <label for="publish_date">Publish Date:
+                            <input type="date" th:value="*{publish_date}" class="form-control" id="publish_date"
+                                   placeholder="Publish Date"/></label>
+                        <label for="expirationDate">Expiration Date:
+                            <input type="date" th:value="*{end_date}" class="form-control " id="expirationDate"
+                                   placeholder="Expiration Date:"/>
+                        </label>
+                    </div>
 
-                <div class="row">
-                    <label for="publish_date">Publish Date: </label>
-                    <input type="date"   th:value="${blog.publish_date}" class="form-control" id="publish_date"
-                           placeholder="Publish Date"/>
-                </div>
-                <div class="row">
-                    <label for="expirationDate">Expiration Date: </label>
-                    <input type="date"   th:value="${blog.end_date}" class="form-control " id="expirationDate"
-                           placeholder="Expiration Date:"/>
-                </div>
-
+                    <br>
+                    <button class="btn btn-secondary"
+                            hx-post="/Blog/save-updated-blog"
+                            hx-target="#blog-update-section"
+                            hx-swap="innerHTML"
+                            id="submit"> Save Updated Blog
+                    </button>
+                </form>
             </div>
-
-
-        </div>
-        <br>
-        <button class="btn btn-secondary"
-                hx-post="/Blog/save-updated-blog"
-                hx-target="#blog-update-section"
-                hx-swap="innerHTML"
-                id="submit"> Save Updated Blog
-        </button>
-
-    </form>
+        </div></div>
 
 </div>
 

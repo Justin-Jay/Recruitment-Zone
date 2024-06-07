@@ -17,7 +17,7 @@
 
 
             <select class="form-select" aria-label=".form-select" name="vacancyID" id="vacancyID">
-                <option th:each="v : ${vacancyList}" th:value="${v.vacancyID}" th:text="${v.job_title}"></option>
+                <option th:each="v : ${vacancyList}" th:value="${v.vacancyID}" th:text="${v.jobTitle}"></option>
             </select>
 
             <br>
@@ -187,10 +187,11 @@
                     hx-post="/Candidate/create-application"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"
-                    hx-include="[newApplicationDTO='newApplicationDTO']">
-                Submit Application <p  class='htmx-indicator spinner'></p>
+                    hx-include="[newApplicationDTO='newApplicationDTO']"
+                    hx-indicator="#spinner">
+                Submit Application
             </button>
-
+            <p class='htmx-indicator spinner' id="spinner"></p>
 
         </div>
     </form>

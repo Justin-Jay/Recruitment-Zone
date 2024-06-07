@@ -36,8 +36,9 @@ public class ClientController {
     @GetMapping("/client-administration")
     public String clientAdministration(Model model) {
         try {
-            recruitmentZoneService.findAllClients(model);
-           // throw new Exception("Client administration exception");
+            int pageSize = 10;
+            recruitmentZoneService.findAllClients(model,1,pageSize,"created","asc");
+
         } catch (Exception e) {
             log.info("<-- clientAdministration -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -46,6 +47,27 @@ public class ClientController {
         return "/fragments/clients/client-administration";
     }
 
+    @GetMapping("/paginatedClients/{pageNo}")
+    public String findPaginatedClients(@PathVariable(value = "pageNo") int pageNo,
+                                         @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 10;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findAllClients(model, pageNo, pageSize, sortField, sortDirection);
+        return "/fragments/clients/client-administration :: client-admin-list";
+    }
+
+    @GetMapping("/paginatedClientNotes/{clientID}/{pageNo}")
+    public String findPaginatedClientNotes(@PathVariable(value = "clientID") long clientID,@PathVariable(value = "pageNo") int pageNo,
+                                           @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 10;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findClientNotes(model,clientID,pageNo, pageSize, sortField, sortDirection);
+        return "fragments/clients/view-client :: clientNotes";
+    }
 
     @PostMapping("/add-client")
     public String showCreateClientForm(Model model) {
@@ -111,18 +133,19 @@ public class ClientController {
     }
 
 
-    @PostMapping("/view-client")
+/*    @PostMapping("/view-client")
     public String showClient(@RequestParam("clientID") Long clientID, Model model) {
         try {
             recruitmentZoneService.findClientByID(clientID, model);
-            recruitmentZoneService.findClientNotes(clientID, model);
+            recruitmentZoneService.findClientNotes(model,clientID); // PAGINATION?
+
         } catch (Exception e) {
             log.info("<-- showClient -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // client ,findClientByIDResponse   , internalServerError
         return "fragments/clients/view-client";
-    }
+    }*/
 
     @PostMapping("/view-client-contacts")
     public String showClientContacts(@RequestParam("clientID") Long clientID, Model model) {
@@ -211,34 +234,45 @@ public class ClientController {
     }
 
     // clientNote , existingNotes , findClientByIDResponse , internalServerError
-    @PostMapping("/view-client-notes")
+    @PostMapping("/view-client")
     public String showClientNotes(@RequestParam("clientID") Long clientID, Model model) {
         try {
-            recruitmentZoneService.findClientNotes(clientID, model);
+//            recruitmentZoneService.findClientNotes(model,clientID);
+            int pageSize = 10;
+            recruitmentZoneService.findClientNotes(model,clientID,1, pageSize, "dateCaptured", "desc");
         } catch (Exception e) {
             log.info("<-- showClientNotes -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // existingNotes , clientNoteDTO , findClientByIDResponse
-        return "fragments/clients/view-client-notes";
+        return "fragments/clients/view-client";
     }
 
+
+
+
     @PostMapping("/save-client-note")
-    public String saveClientNote(@Valid @ModelAttribute("clientNoteDTO") ClientNoteDTO clientNote,
+    public String saveClientNote(@RequestParam("currentPage") int pageNo,@RequestParam("sortField") String sortField,
+                                 @RequestParam("sortDir") String sortDirection,
+                                 @Valid @ModelAttribute("clientNoteDTO") ClientNoteDTO clientNote,
                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
             log.info("HAS ERRORS");
             recruitmentZoneService.reloadClientNotes(clientNote.getClientID(), model);
-            return "fragments/clients/view-client-notes";
+            return "fragments/clients/view-client";
         }
         try {
-            recruitmentZoneService.saveNewClientNote(clientNote, model);
+            log.info("Page number  {}", pageNo);
+            log.info("sortField {}", sortField);
+            log.info("sortDirection {}", sortDirection);
+           // recruitmentZoneService.findClientNotes(model,clientNote.getClientID());
+            recruitmentZoneService.saveNewClientNote(model,clientNote,pageNo,sortField,sortDirection);
         } catch (Exception e) {
             log.info("<-- saveClientNote -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // existingNotes , clientNoteDTO , findClientByIDResponse
-        return "fragments/clients/view-client-notes";
+        return "fragments/clients/view-client :: clientNotes";
     }
 
 
@@ -265,13 +299,12 @@ public class ClientController {
                     ClientFile file = recruitmentZoneService.createClientFile(clientFileDTO);
                     if (file != null) {
                         log.info("saveDocument file is not null");
-                        model.addAttribute("createCandidateFileResponse", "File Upload Successful");
-                        recruitmentZoneService.findCandidateDocuments(model, clientFileDTO.getClientID());
+                        model.addAttribute("createClientFileResponse", "File Upload Successful");
+                        recruitmentZoneService.findClientDocuments(model, clientFileDTO.getClientID());
                     }
 
                 } catch (SaveFileException saveFileException) {
                     log.error(saveFileException.getMessage());
-                    // model.addAttribute("createCandidateFileResponse", "File Upload Successful");
                     model.addAttribute("saveDocumentResponse", saveFileException.getMessage());
                 }
             }

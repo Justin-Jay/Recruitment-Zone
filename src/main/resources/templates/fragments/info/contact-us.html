@@ -17,13 +17,12 @@
 <!-- TOP Navbar -->
 <div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
-<div class="container-fluid pt-2 pe-2" id="body-container">
+<div class="container-fluid home-page-section" id="body-container">
 
 
     <div class="row ">
         <div class="container-fluid">
-            <h3>Contact Us
-
+            <h3 class="h3">Contact Us
             </h3>
             <hr>
         </div>
@@ -31,19 +30,18 @@
 
     <!--MESSAGE AREA-->
     <div class="row ">
-        <div class="container-fluid">
+        <div class="col-12">
             <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
             <div th:insert="~{fragments/layout/response-messages :: successMessage(${messageSent})}"></div>
         </div>
     </div>
 
-    <div class="row" id="main-page-section">
-
+    <div class="row " id="main-page-section">
 
         <div class="col-xxl-6 col-xl-5 col-lg-4 col-md-6 ">
             <h5 class="h5 ">Contact Us</h5>
         </div>
-        <div class="col-xxl-6 col-xl-5 col-lg-4 col-md-6 ">
+        <div class="col-xxl-6 col-xl-5 col-lg-4 col-md-6">
 
             <form action="#" th:action="@{/Communication/send-message}"
                   th:object="${contactMessage}" method="POST">
@@ -57,19 +55,18 @@
                     <textarea class="form-control" th:field="${contactMessage.messageBody}"
                               id="messageBody"></textarea>
 
-
                     <br>
-                    <button class="btn normal-button">
+                    <button class="btn normal-button"
+                            hx-indicator="#spinner">
                         Submit
                     </button>
+                    <p class='htmx-indicator spinner' id="spinner"></p>
+
                 </div>
             </form>
         </div>
 
-
     </div>
-
-
 </div>
 
 <!--PAGE FOOTER-->

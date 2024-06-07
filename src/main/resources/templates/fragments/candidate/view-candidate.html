@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section" >
+<div class="container-fluid main-page-section" th:fragment="candidateFragment">
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addCandidateNoteResponse})}"></div>
@@ -132,14 +132,14 @@
         </div>
 
 
-<br>
+        <br>
 
 
         <div>
             <form th:action="@{/Candidate/view-candidate-documents}" th:method="post">
                 <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
 
-                <button class="btn normal-button"
+                <button class="btn btn-outline-secondary"
                         hx-post="/Candidate/view-candidate-documents"
                         hx-target="#right-page-column"
                         hx-swap="innerHTML"
@@ -150,30 +150,50 @@
         <br>
     </div>
 
-    <div class="container-fluid"  >
+    <div class="container-fluid">
         <h2>Candidate Comments</h2>
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${noteSaved})}"></div>
-        <table class="table ">
-            <thead>
-            <tr>
-                <th>Date Captured</th>
-                <th>Comment</th>
-            </tr>
-            </thead>
-            <tbody>
 
-            <tr th:each="note : ${existingNotes}">
-                <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
-                <td th:text="*{note.comment}"></td>
-                <!-- <td th:text="*{note.dateCaptured}"></td>
-                 <td th:text="*{note.comment}"></td>-->
-            </tr>
-            </tbody>
-        </table>
+        <div class="container-fluid">
+            <table class="table ">
+                <thead>
+                <tr>
+                    <th>
+                        <a class="aRef"
+                           th:if="${currentPage != i}"
+                           th:href="@{'/Candidate/paginatedCandidateNotes/' + ${candidate.candidateID} + '/'  + ${currentPage}+ '?sortField=dateCaptured&sortDir=' + ${reverseSortDir}}"
+                           onclick="loadHTMXFragment(this.href, 'main-page-section'); return false;"
+                        >Date Created
+                        </a>
+                    </th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="note : ${existingNotes}">
+                    <td th:text="${#temporals.format(note.dateCaptured, note.dateCaptured.isBefore(#temporals.createNow()) ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd')}"></td>
+                    <td th:text="*{note.comment}"></td>
+                    <!-- <td th:text="*{note.dateCaptured}"></td>
+                     <td th:text="*{note.comment}"></td>-->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a class="btn btn-secondary"
+                           th:if="${currentPage != i}"
+                           th:href="@{'/Candidate/paginatedCandidateNotes/' + ${candidate.candidateID} + '/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                           onclick="loadHTMXFragment(this.href, 'main-page-section'); return false;" th:text="${i}">
+                        </a>  <span th:unless="${currentPage != i}">[[${i}]]</span>
+					</span>
+        </div>
 
     </div>
 
-    <div class="container-fluid"  th:object="${candidateNoteDTO}">
+    <div class="container-fluid" th:object="${candidateNoteDTO}">
         <form action="#" th:action="@{/Candidate/save-candidate-note}"
               th:method="post">
             <div class="form-group">
@@ -190,7 +210,7 @@
                           id="comment"></textarea>
             </div>
 
-            <button class=" btn normal-button"
+            <button class=" btn btn-outline-secondary"
                     hx-post="/Candidate/save-candidate-note"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"
@@ -198,5 +218,6 @@
             </button>
         </form>
     </div>
+
 </div>
 

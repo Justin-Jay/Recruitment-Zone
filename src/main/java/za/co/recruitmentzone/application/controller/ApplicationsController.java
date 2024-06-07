@@ -35,15 +35,25 @@ public class ApplicationsController {
     @GetMapping("/applications-administration")
     public String applications(Model model) {
         try {
-
-            recruitmentZoneService.findAllApplications(model);
-
+            int pageSize = 10;
+            recruitmentZoneService.findAllApplications(model,1, pageSize, "created", "desc");
         } catch (Exception e) {
             log.error("<-- applications -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // applicationsList , findAllApplicationsResponse , internalServerError
         return "fragments/applications/application-administration";
+    }
+
+    @GetMapping("/paginatedApplications/{pageNo}")
+    public String findPaginatedApplications(@PathVariable(value = "pageNo") int pageNo,
+                                     @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 10;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findAllApplications(model,pageNo, pageSize, sortField, sortDirection);
+        return "fragments/applications/application-administration :: applications-admin-table";
     }
 
 
@@ -67,10 +77,10 @@ public class ApplicationsController {
 
             recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
 
-            List<ObjectError> errors = bindingResult.getAllErrors();
+         /*   List<ObjectError> errors = bindingResult.getAllErrors();
             for (ObjectError error : errors) {
                 System.out.println(error.getDefaultMessage());
-            }
+            }*/
             //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , bindingResult
             return "fragments/applications/apply-now";
         }
@@ -150,5 +160,7 @@ public class ApplicationsController {
         //applicationsList ,findAllApplicationsResponse
         return "fragments/applications/update-application";
     }
+
+
 
 }

@@ -3,6 +3,7 @@
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findBlogResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${savedBlogResponse})}"></div>
     </div>
 
     <div class="col-12">

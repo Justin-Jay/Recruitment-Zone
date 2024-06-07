@@ -7,7 +7,7 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy"
-                        hx-target="#main-page-section"
+                        hx-target="#main-page-column"
                         hx-swap="innerHTML show:top"
                         hx-include="[vacancyID='vacancyID']"> View Vacancy
                 </button>
@@ -22,9 +22,9 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy-submission"
-                        hx-target="#main-page-section"
+                        hx-target="#main-page-column"
                         hx-swap="innerHTML show:top"
-                        hx-include="[vacancyID='vacancyID']" > View Submissions <!-- hx-href="#main-page-section" -->
+                        hx-include="[vacancyID='vacancyID']" > View Submissions
                 </button>
             </form>
         </a>
@@ -38,7 +38,7 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy-documents"
-                        hx-target="#main-page-section"
+                        hx-target="#main-page-column"
                         hx-swap="innerHTML show:top"
                         hx-include="[vacancyID='vacancyID']" > View Documents <!-- hx-href="#main-page-section" -->
                 </button>

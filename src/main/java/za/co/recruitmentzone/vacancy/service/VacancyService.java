@@ -2,7 +2,12 @@ package za.co.recruitmentzone.vacancy.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.util.enums.VacancyStatus;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
@@ -58,13 +63,9 @@ public class VacancyService {
     }
 
 
-/*    public Page<Product> findProductsWithPagination(int offset,int pageSize){
-        Page<Product> products = repository.findAll(PageRequest.of(offset, pageSize));
-        return  products;
+    public Page<Vacancy> findPaginatedVacancies(int pageNo, int pageSize, String sortField, String sortDirection){
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize, sort);
+        return vacancyRepository.findAll(pageable);
     }
-
-    public Page<Product> findProductsWithPaginationAndSorting(int offset,int pageSize,String field){
-        Page<Product> products = repository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field)));
-        return  products;
-    }*/
 }

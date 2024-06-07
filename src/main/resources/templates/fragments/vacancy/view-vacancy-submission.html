@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section" >
+<div class="container-fluid main-page-section" th:fragment="applicationListFragment">
 
     <div class="row">
         <div class="container">
@@ -7,59 +7,87 @@
         </div>
     </div>
 
+    <div class="container-fluid">
+        <table class="table table-hover table-responsive-sm" id="sort-table">
+            <thead>
+            <tr>
+                <th>
+                    <a class="aRef"
+                       th:if="${currentPage != i}"
+                       th:href="@{'/Vacancy/paginatedSubmissions/' + ${currentPage}+ '?sortField=created&sortDir=' + ${reverseSortDir}}"
+                       onclick="loadHTMXFragment(this.href, 'main-page-column'); return false;"
+                    >Date Received
+                    </a>
+                </th>
+                <th>
+                    Candidate Name
+                </th>
+                <th>
+                    Candidate Last Name
+                </th>
+                <th>View Candidate</th>
+                <th>View Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="vApplication : ${vacancyApplications}">
+                <td th:text="${#temporals.format(vApplication.date_received, 'yyyy-MM-dd')}"></td>
+                <td th:text="${vApplication.candidate.first_name}"></td>
+                <td th:text="${vApplication.candidate.last_name}"></td>
+                <td>
+                    <form action="#" th:action="@{/Candidate/view-candidate}" th:method="post">
+                        <!-- Hidden input field to include the vacancyID in the POST request -->
+                        <input type="hidden" name="candidateID" th:value="*{vApplication.candidate.candidateID}"/>
+                        <!-- Submit button to trigger the form submission -->
+                        <!-- hx-target="#vacancy-applications-list"-->
+                        <button class="btn normal-button"
+                                hx-post="/Candidate/view-candidate"
+                                hx-target="#main-page-column"
+                                hx-swap="innerHTML"
+                                hx-push-url="true">
+                            View Candidate
+                        </button>
 
-    <table class="table table-hover table-responsive-sm" >
-        <thead >
-        <tr>
-            <th>Date Received</th>
-            <th>Candidate Name</th>
-            <th>Candidate Last Name</th>
-            <th>View Candidate</th>
-            <th>View Notes</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="vApplication : ${vacancyApplications}" >
-             <td th:text="${#temporals.format(vApplication.date_received, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${vApplication.candidate.first_name}"></td>
-            <td th:text="${vApplication.candidate.last_name}"></td>
-            <td>
-                <form action="#" th:action="@{/Candidate/view-candidate}" th:method="post">
-                    <!-- Hidden input field to include the vacancyID in the POST request -->
-                    <input type="hidden" name="candidateID" th:value="*{vApplication.candidate.candidateID}"/>
-                    <!-- Submit button to trigger the form submission -->
-                    <button class="btn normal-button"
-                            hx-post="/Candidate/view-candidate"
-                            hx-target="#main-page-section"
-                            hx-swap="innerHTML"
-                            hx-include="[candidateID='candidateID']">View Candidate
-                    </button>
-                </form>
+                    </form>
+                </td>
+                <td>
+                    <form action="#" th:action="@{/Candidate/view-candidate-notes}" th:method="post">
+                        <!-- Hidden input field to include the brandVal in the POST request -->
 
-            </td>
+                        <input type="hidden" name="candidateID"
+                               th:value="${vApplication.candidate.candidateID}"/>
 
-            <td>
+                        <!-- Submit button to trigger the form submission -->
+                        <button class='btn normal-button'
+                                hx-post="/Candidate/view-candidate-notes"
+                                hx-target="#right-page-column"
+                                hx-swap='innerHTML'>
+                            <!--hx-include="[candidateID='candidateID']"-->
+                            View Notes
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-                <form action="#" th:action="@{/Candidate/view-candidate-notes}" th:method="post">
-                    <!-- Hidden input field to include the brandVal in the POST request -->
+    <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a class="btn btn-secondary"
+                           th:if="${currentPage != i}"
+                           th:href="@{'/Vacancy/paginatedSubmissions/' + ${vacancyID} + '/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                           onclick="loadHTMXFragment(this.href, 'main-page-column'); return false;" th:text="${i}">
+                        </a>  <span th:unless="${currentPage != i}">[[${i}]]</span>
+					</span>
+    </div>
 
-                    <input type="hidden" name="candidateID"
-                           th:value="${vApplication.candidate.candidateID}"/>
-
-                    <!-- Submit button to trigger the form submission -->
-                    <button class='btn normal-button'
-                            hx-post="/Candidate/view-candidate-notes"
-                            hx-target="#right-page-column"
-                            hx-swap='innerHTML'
-                            hx-include="[candidateID='candidateID']">
-                        View Notes
-                    </button>
-
-                </form>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<!--
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+-->
 
 </div>
+
+
+

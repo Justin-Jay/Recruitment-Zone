@@ -14,8 +14,6 @@
     <title>Recruitment Zone</title>
 
 
-
-
 </head>
 <body>
 
@@ -23,7 +21,7 @@
 <div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
 
-<div class="container-fluid pt-2 pe-2" id="body-container">
+<div class="container-fluid home-page-section" id="body-container">
 
 
     <!--MAIN PAGE SECTION -->
@@ -53,62 +51,128 @@
         <!--PAGE CONTENT -->
 
 
-        <div class="container-fluid main-page-section">
+        <div class="container-fluid">
 
             <div class="row">
 
                 <!--LEFT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid left-page-frame" id="left-page-column">
-                      <!--  <form class="container d-none d-md-block" action="#" th:action="@{/Vacancy/add-vacancy}" th:method="post">
-                            <button class="btn btn-outline-secondary"
-                                    hx-post="/Vacancy/add-vacancy"
-                                    hx-target="#main-page-section"
-                                    hx-swap="innerHTML">Create Vacancy
-                            </button>
-                        </form>-->
-                        <form action="#" th:action="@{/Vacancy/add-vacancy}"  method="GET">
-                            <button class="btn normal-button">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 left-page-frame">
+                    <div class="container-fluid " id="left-page-column" th:fragment="vacancy-admin-list">
+                        <!--  <form class="container d-none d-md-block" action="#" th:action="@{/Vacancy/add-vacancy}" th:method="post">
+                              <button class="btn btn-outline-secondary"
+                                      hx-post="/Vacancy/add-vacancy"
+                                      hx-target="#main-page-section"
+                                      hx-swap="innerHTML">Create Vacancy
+                              </button>
+                          </form>-->
+                        <form class="container d-none d-md-block" action="#" th:action="@{/Vacancy/add-vacancy}"
+                              method="GET">
+                            <button class="btn btn-outline-secondary">
                                 Create Vacancy
                             </button>
                         </form>
 
-
                         <br/>
 
+                        <!--CARD VIEW-->
+                        <!--                        <div class="my-card custom-border dropdown dropend" th:each="vacancy : ${vacancyList}">
 
-                        <div class="container ">
-                            <div class="my-card custom-border dropdown dropend" th:each="vacancy : ${vacancyList}">
-
-                                <p th:text="*{'Vacancy Name: ' + vacancy.job_title}" th:value="${vacancy}"></p>
-                                <p th:text="*{'Total applicants submitted: ' + vacancy.getApplicationsSize}"
-                                   th:value="${vacancy}"></p>
+                                                    <p th:text="*{'Vacancy Name: ' + vacancy.jobTitle}" th:value="${vacancy}"></p>
+                                                    <p th:text="*{'Total applicants submitted: ' + vacancy.getApplicationsSize}"
+                                                       th:value="${vacancy}"></p>
 
 
-                                <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    Manage Vacancy
-                                </button>
+                                                    <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
+                                                            data-bs-toggle="dropdown"
+                                                            aria-expanded="false">
+                                                        Manage Vacancy
+                                                    </button>
 
-                                <div id="vacancy-admin-list"
-                                     th:insert="~{fragments/vacancy/vacancy-list :: listOptions(${vacancy})}">
-                                    Vacancy List
-                                </div>
-                                <br/>
-                            </div>
+                                                    <div id="vacancy-admin-list"
+                                                         th:insert="~{fragments/vacancy/vacancy-list :: listOptions(${vacancy})}">
+                                                        Vacancy List
+                                                    </div>
+
+                                                    <br/>
+                                                </div>-->
+
+                        <!--TABLE VIEW-->
+                        <table class="table table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <a class="aRef"
+                                       th:if="${currentPage != i}"
+                                       th:href="@{'/Vacancy/paginatedVacancies/' + ${currentPage}+ '?sortField=created&sortDir=' + ${reverseSortDir}}"
+                                       onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                    >Date Created
+                                    </a>
+                                </th>
+                                <th>Client</th>
+                                <th>
+                                    <a class="aRef"
+                                       th:if="${currentPage != i}"
+                                       th:href="@{'/Vacancy/paginatedVacancies/' + ${currentPage}+ '?sortField=jobTitle&sortDir=' + ${reverseSortDir}}"
+                                       onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                    >Vacancy Name
+                                    </a></th>
+                                <th>Applications</th>
+                                <th>Manage</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr th:each="vacancy : ${vacancyList}">
+                                <!--                                <td th:text="*{vacancy.created}"></td>-->
+                                <td th:text="${#temporals.format(vacancy.created, 'dd-MM-yyyy HH:mm')}"></td>
+                                <td th:text="*{vacancy.client.name}"></td>
+                                <td th:text="*{vacancy.jobTitle}"></td>
+                                <td th:text="*{vacancy.getApplicationsSize}"></td>
+                                <td>
+
+                                    <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        Manage Vacancy
+                                    </button>
+
+                                    <div id="vacancy-admin-list"
+                                         th:insert="~{fragments/vacancy/vacancy-list :: listOptions(${vacancy})}">
+                                        Vacancy List
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+					        	<a class="btn btn-secondary"
+                                   th:if="${currentPage != i}"
+                                   th:href="@{'/Vacancy/paginatedVacancies/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                                   onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                   th:text="${i}">
+                                </a>
+                                <span th:unless="${currentPage != i}">[[${i}]]</span>
+					    </span>
+
+
                         </div>
-
                     </div>
                 </div>
 
 
                 <!--MAIN  PAGE SECTION -->
                 <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid" id="main-page-section">
+
+                    <div class="container-fluid " id="main-page-column">
                         <!--RESPONSE TEMPLATE-->
+
                     </div>
+
                 </div>
 
 

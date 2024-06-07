@@ -49,9 +49,12 @@
                     hx-post="/Candidate/upload-candidate-document"
                     hx-target="#right-page-column"
                     hx-swap="innerHTML"
-                    hx-include="[candidateFileDTO='candidateFileDTO']">
-                Add New Document <p  class='htmx-indicator spinner'></p>
+                    hx-include="[candidateFileDTO='candidateFileDTO']"
+                    hx-indicator="#spinner">
+                Add New Document
             </button>
+            <p class='htmx-indicator spinner' id="spinner"></p>
+
 
         </div>
 
@@ -61,8 +64,10 @@
 
     <hr/>
 
-    <p>Existing Documents</p>
-    <div th:replace="~{fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})}"></div>
+
+<!--    <div th:replace="~{fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})}"></div>-->
+    <div th:replace="~{fragments/documents/candidate-document-fragment :: existingDocuments(${existingDocuments},${candidate})}"></div>
+
 
 
 </div>

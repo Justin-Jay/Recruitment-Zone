@@ -28,8 +28,8 @@
         <input type="hidden" name="vacancyID" th:field="*{vacancyID}"/>
         <div class="form-group">
             <div class="row">
-                <label for="job_title">Job Title: </label>
-                <input type="text" th:field="*{job_title}" class="form-control" id="job_title"
+                <label for="jobTitle">Job Title: </label>
+                <input type="text" th:field="*{jobTitle}" class="form-control" id="jobTitle"
                 />
             </div>
 
@@ -111,7 +111,7 @@
             </div>
 
         </div>
-        <br><br>
+
         <button class="btn btn-secondary"
                 hx-post="/Vacancy/save-updated-vacancy"
                 hx-target="#vacancy-update-section"
@@ -156,8 +156,8 @@
         const requirementsData = requirementsEditor.getData();
         const descriptionData = descrptionEditor.getData();
 
-        console.log(requirementsData);
-        console.log(descriptionData);
+        //console.log(requirementsData);
+        //console.log(descriptionData);
 
         document.querySelector('#requirementsField').value = requirementsData;
         document.querySelector('#job_description').value = descriptionData;

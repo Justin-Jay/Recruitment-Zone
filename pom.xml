@@ -217,6 +217,13 @@
             <version>1.17.2</version>
         </dependency>
 
+    <!--    &lt;!&ndash; https://mvnrepository.com/artifact/io.github.wimdeblauwe/htmx-spring-boot-thymeleaf &ndash;&gt;
+        <dependency>
+            <groupId>io.github.wimdeblauwe</groupId>
+            <artifactId>htmx-spring-boot-thymeleaf</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+-->
 
         <!-- SESSION MANAGEMENT -->
   <!--      <dependency>

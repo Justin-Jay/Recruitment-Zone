@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Data
 public class VacancyDTO implements Serializable {
     @NotEmpty(message = "Please enter job title")
-    private String job_title;
+    private String jobTitle;
     @NotEmpty(message = "Please enter job description")
     private String job_description;
     @NotEmpty(message = "Please select seniority level")
@@ -51,8 +51,8 @@ public class VacancyDTO implements Serializable {
         this.vacancyID=vacancyID;
     }
 
-    public VacancyDTO(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID, Long vacancyID) {
-        this.job_title = job_title;
+    public VacancyDTO(String jobTitle, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType, Long clientID, Long employeeID, Long vacancyID) {
+        this.jobTitle = jobTitle;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
         this.requirements = requirements;
@@ -72,7 +72,7 @@ public class VacancyDTO implements Serializable {
     public String printVacancy(){
         return "Vacancy{" +
                 "vacancyID=" + vacancyID +
-                ", job_title='" + job_title + '\'' +
+                ", job_title='" + jobTitle + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +

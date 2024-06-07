@@ -5,12 +5,11 @@
                 <!-- Hidden input field to include the id in the POST request -->
                 <input type="hidden" name="clientID" th:value="${client.clientID}"/>
                 <!-- Submit button to trigger the form submission -->
-
+<!-- hx-post="/Client/view-client"-->
                 <button class="btn normal-button"
                         hx-post="/Client/view-client"
                         hx-target="#main-page-section"
-                        hx-swap="innerHTML show:top"
-                        hx-include="[clientID='clientID']"> View Client
+                        hx-swap="innerHTML show:top" > View Client
                 </button>
             </form>
         </a>
@@ -46,21 +45,21 @@
             </form>
         </a>
     </li>-->
-    <li class="list-group-item" >
+<!--    <li class="list-group-item" >
         <a class="list-group-item list-group-item-action">
-            <form th:action="@{/Client/view-client-notes}" th:method="post">
-                <!-- Hidden input field to include the id in the POST request -->
+            <form th:action="@{/Client/view-client}" th:method="post">
+                &lt;!&ndash; Hidden input field to include the id in the POST request &ndash;&gt;
                 <input type="hidden" name="clientID" th:value="*{client.clientID}"/>
-                <!-- Submit button to trigger the form submission -->
+                &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
                 <button class="btn normal-button"
-                        hx-post="/Client/view-client-notes"
+                        hx-post="/Client/view-client"
                         hx-target="#main-page-section"
                         hx-swap="innerHTML show:top"
                         hx-include="[clientID='clientID']"> View client notes
                 </button>
             </form>
         </a>
-    </li>
+    </li>-->
     <li class="list-group-item" >
         <a class="list-group-item list-group-item-action">
             <form th:action="@{/Client/view-client-vacancies}" th:method="post">
