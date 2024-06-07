@@ -1,11 +1,12 @@
 package za.co.recruitmentzone.communication.entity;
 
+
 import org.springframework.beans.factory.annotation.Value;
 
 public class AdminContactMessage {
 
-
-    private final String eventToEmail = "admin.agent@kiunga.co.za";
+    @Value("${event.to.email}")
+    String eventToEmail;
 
     private final String name = "AdminContactMessage";
 

@@ -1,17 +1,12 @@
 package za.co.recruitmentzone.vacancy.exception;
 
-public class VacancyException extends RuntimeException {
-    private String failureReason;
+import za.co.recruitmentzone.exception.RzoneException;
+
+public class VacancyException extends RzoneException {
 
     public VacancyException(String failureReason) {
-        this.failureReason = failureReason;
+        super(failureReason);
     }
 
-    public String getFailureReason() {
-        return failureReason;
-    }
 
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
-    }
 }

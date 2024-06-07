@@ -1,5 +1,6 @@
 package za.co.recruitmentzone.candidate.controller;
 
+
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
@@ -16,9 +17,6 @@ import za.co.recruitmentzone.candidate.exception.CandidateException;
 import za.co.recruitmentzone.candidate.entity.CandidateFile;
 import za.co.recruitmentzone.documents.SaveFileException;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
-import za.co.recruitmentzone.vacancy.exception.VacancyException;
-
-import java.security.Principal;
 import java.util.List;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
@@ -37,7 +35,9 @@ public class CandidateController {
     @GetMapping("/candidate-administration")
     public String candidateAdministration(Model model) {
         try {
-            recruitmentZoneService.findAllCandidates(model);
+            int pageSize = 10;
+            //recruitmentZoneService.findAllCandidates(model);
+            recruitmentZoneService.findAllCandidates(model,1, pageSize, "created", "asc");
         } catch (Exception e) {
             log.error("<-- candidateAdministration -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -45,12 +45,22 @@ public class CandidateController {
         //   candidateList , findAllCandidatesResponse , internalServerError
         return "fragments/candidate/candidate-administration";
     }
-
+    @GetMapping("/paginatedCandidates/{pageNo}")
+    public String findPaginatedCandidates(@PathVariable(value = "pageNo") int pageNo,
+                                           @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 10;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findAllCandidates(model,pageNo, pageSize, sortField, sortDirection);
+        return "fragments/candidate/candidate-administration :: candidate-admin-list";
+    }
 
     @PostMapping("/view-candidate")
     public String viewCandidate(Model model, @RequestParam("candidateID") Long candidateID) {
         try {
-            recruitmentZoneService.addCandidateNote(candidateID, model);
+            int pageSize = 5;
+            recruitmentZoneService.addCandidateNote(model,candidateID,pageSize);
         } catch (Exception e) {
             log.error("<-- viewCandidate -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -92,11 +102,27 @@ public class CandidateController {
         return "fragments/candidate/candidate-note-fragment";
     }
 
+    @GetMapping("/paginatedCandidateNotes/{candidateID}/{pageNo}")
+    public String findPaginatedCandidatesNotes(@PathVariable(value = "candidateID") long candidateID,@PathVariable(value = "pageNo") int pageNo,
+                                               @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 5;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findCandidateNotes(model,candidateID,pageNo, pageSize, sortField, sortDirection);
+        CandidateNoteDTO candidateNoteDTO = new CandidateNoteDTO();
+        candidateNoteDTO.setCandidateID(candidateID);
+        model.addAttribute("candidateNoteDTO", candidateNoteDTO);
+        return "fragments/candidate/view-candidate";
+    }
+
 
     @PostMapping("/view-candidate-documents")
     public String candidateDocs(@RequestParam("candidateID") Long candidateID, Model model) {
         try {
-            recruitmentZoneService.findCandidateDocuments(model, candidateID);
+            int pageSize = 5;
+//            recruitmentZoneService.findCandidateDocuments(model, candidateID);
+            recruitmentZoneService.findCandidateDocuments(model,candidateID,1, pageSize, "created", "asc");
         } catch (Exception e) {
             log.error("<-- candidateDocs -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -104,7 +130,17 @@ public class CandidateController {
 
         // candidate, candidateFileDTO , existingDocuments,  internalServerError , findCandidateDocumentsResponse
         return "fragments/candidate/candidate-documents";
+    }
 
+    @GetMapping("/paginatedCandidateDocuments/{candidateID}/{pageNo}")
+    public String paginatedCandidateDocuments(@PathVariable(name = "candidateID") long candidateID,@PathVariable(name="pageNo") int pageNo,
+                                                @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 5;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findCandidateDocuments(model, candidateID,pageNo, pageSize, sortField, sortDirection);
+        return "fragments/candidate/candidate-documents";
     }
 
     @PostMapping("/upload-candidate-document")

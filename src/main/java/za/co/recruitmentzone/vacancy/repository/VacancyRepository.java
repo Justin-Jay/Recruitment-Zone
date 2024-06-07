@@ -14,7 +14,7 @@ import java.util.List;
 public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     // You can add custom query methods here if needed
 
-    @Query("SELECT v FROM Vacancy v WHERE LOWER(v.job_title) LIKE LOWER(CONCAT('%', :title, '%'))")
+    @Query("SELECT v FROM Vacancy v WHERE LOWER(v.jobTitle) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<Vacancy> findVacanciesByJobTitle(@Param("title") String title);
 
     List<Vacancy> findVacanciesByStatus(VacancyStatus status);

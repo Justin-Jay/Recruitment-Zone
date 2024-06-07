@@ -36,7 +36,7 @@ public class VacancyRowMapper implements RowMapper<Vacancy> {
 
         Vacancy vacancy = new Vacancy();
         vacancy.setVacancyID(rs.getLong(vacancyID));
-        vacancy.setJob_title(rs.getString(job_title));
+        vacancy.setJobTitle(rs.getString(job_title));
         vacancy.setJob_description(rs.getString(job_description));
         vacancy.setSeniority_level(rs.getString(seniority_level));
         vacancy.setRequirements(rs.getString(requirements));

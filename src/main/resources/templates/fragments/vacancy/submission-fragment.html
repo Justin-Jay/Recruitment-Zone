@@ -22,7 +22,7 @@
         <tbody>
         <!-- Use th:fragment to define the vacancy card template -->
         <tr th:each="candidate : ${Vapplication.candidate}">
-            <td th:text="*{vacancy.job_title}"></td>
+            <td th:text="*{vacancy.jobTitle}"></td>
             <td th:text="${candidate.last_name}"></td>
             <td th:text="${candidate.id_number}"></td>
             <td th:text="${candidate.email_address}"></td>

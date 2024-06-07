@@ -1,5 +1,6 @@
 package za.co.recruitmentzone.configuration;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import za.co.recruitmentzone.employee.entity.EmployeeDetailsService;
 
 
@@ -30,6 +32,8 @@ public class WebSecurityConfig {
                 "/Application/apply-now","/Application/save-application","/Employee/register/verifyEmail",
                 "/Document/searchDocuments","/Document/searchFileContents","/Vacancy/view-home-vacancy","/actuator/prometheus"};
 
+        //var entryPoint = new HxRefreshHeaderAuthenticationEntryPoint();
+        //var requestMatcher = new RequestHeaderRequestMatcher("HX-Request");
 
         httpSecurity.authorizeHttpRequests(configurer ->
                         configurer
@@ -41,6 +45,9 @@ public class WebSecurityConfig {
                                 .loginProcessingUrl("/authenticateTheUser")
                                 .permitAll())
                 .logout(LogoutConfigurer::permitAll);
+                //.exceptionHandling(exception ->
+                       // exception.defaultAuthenticationEntryPointFor(entryPoint,
+                        //        requestMatcher));
 
         return httpSecurity.build();
     }

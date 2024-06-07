@@ -20,7 +20,7 @@
         </thead>
         <tbody>
         <tr th:each="vacancy : ${vacancies}">
-            <td th:text="${vacancy.job_title}"></td>
+            <td th:text="${vacancy.jobTitle}"></td>
             <td th:text="${vacancy.job_description}"></td>
             <td th:text="${vacancy.seniority_level}"></td>
             <td th:text="${vacancy.requirements}"></td>
@@ -36,7 +36,15 @@
                     <!-- Hidden input field to include the vacancyID in the POST request -->
                     <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
                     <!-- Submit button to trigger the form submission -->
-                    <button type="submit" class="btn normal-button">Submit Application</button>
+                    <button type="submit" class="btn normal-button"
+                            hx-indicator="#spinner"
+                    >Submit Application</button>
+
+
+                    <p class='htmx-indicator spinner' id="spinner"></p>
+
+
+
                 </form>
             </td>
         </tr>

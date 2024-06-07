@@ -16,8 +16,8 @@ public class ClientEventPublisher {
     }
 
 
-    public boolean publishClientGoogleFileEvent(Long fileID, Document document) {
-        ClientGoogleFileEvent clientFileUploadEvent = new ClientGoogleFileEvent(fileID,document);
+    public boolean publishClientGoogleFileEvent(Long fileID, String clientName,Document document) {
+        ClientGoogleFileEvent clientFileUploadEvent = new ClientGoogleFileEvent(fileID,clientName,document);
         log.info("Executing publishClientFileUploadEvent");
         try {
             eventPublisher.publishEvent(clientFileUploadEvent);

@@ -12,153 +12,56 @@
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
-<body>
+<body >
 <!-- TOP Navbar -->
 <div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
-<!--
+<div class="container-fluid home-page-section" id="body-container">
 
-    <div class="row-12 ">
-        <div class="container-fluid">
-            <h3>
-                Welcome to Recruitment Zone
-            </h3>
-            <hr>
+    <!--SEARCH AREA-->
+    <div class="row">
+
+        <div class="col-12">
+            <!-- Check if a condition is true -->
+            <div th:if="${searchVacancyByTitleResponse}">
+                <div th:insert="~{fragments/layout/response-messages :: failureMessage(${searchVacancyByTitleResponse})}"></div>
+            </div>
+            <!-- If the condition is false, render this instead -->
+            <div th:else>
+                <div th:replace="~{fragments/layout/search-fragment :: search}">Search</div>
+            </div>
         </div>
+
     </div>
 
--->
-<div class="container-fluid pt-2 pe-2" id="body-container">
+    <br>
+    <!--MESSAGE AREA-->
+    <div class="row">
+        <div class="container-fluid">
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadVacanciesResponse})}"></div>
+        </div>
+    </div>
 
     <!--MAIN PAGE  -->
 
     <div class="row">
-        <!--SEARCH AREA-->
-        <div class="container-fluid">
-            <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 ">
-
-                <!-- Check if a condition is true -->
-                <div th:if="${searchVacancyByTitleResponse}">
-                    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${searchVacancyByTitleResponse})}"></div>
-                </div>
-                <!-- If the condition is false, render this instead -->
-                <div th:else>
-                    <div th:replace="~{fragments/layout/search-fragment :: search}">Search</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="container-fluid">
-
-            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
-            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadVacanciesResponse})}"></div>
-
-        </div>
-    </div>
-    <div class="row-12 ">
-
-        <!-- PAGE HEADING -->
-
-
-        <!--SEARCH AREA-->
-
-
-        <br/>
-
-        <!--MESSAGE AREA-->
 
 
         <!--PAGE CONTENT -->
 
-
-<!--        <div class="container-fluid" id="main-page-section">
-
-            <div class="row  row-cols-md-2 row-cols-lg-4 g-4">
-                  <div class="col">
-                      <div class="card" th:each="vacancy: ${vacancies}">
-                          <div class="card-body"  th:insert="~{fragments/vacancy/card-fragment :: vacancyCard(${vacancy})}">
-                          </div>
-                      </div>
-                  </div>
-            </div>
-
-        </div>-->
-
-
-
         <div class="container-fluid" id="main-page-section">
-            <!--    -->
-            <div class="row-12" >
 
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 home-page-section">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 ">
 
-                    <!-- Each card goes inside a col -->
-                    <div class="col px-2" th:each="vacancy: ${vacancies}">
-                        <div class="card">
-                            <div th:replace="~{fragments/vacancy/card-fragment}">
-                            </div>
+                <!-- Each card goes inside a col -->
+                <div class="col px-2" th:each="vacancy: ${vacancies}">
+                    <div class="card">
+                        <div th:replace="~{fragments/vacancy/card-fragment}">
                         </div>
                     </div>
-
-
-
-                    <!--<div class="col px-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col px-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col px-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col px-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col px-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="card-link">Card link</a>
-                                <a href="#" class="card-link">Another link</a>
-                            </div>
-                        </div>
-                    </div>-->
                 </div>
+
             </div>
 
         </div>

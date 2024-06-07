@@ -2,11 +2,11 @@ package za.co.recruitmentzone.exception;
 
 public class RzoneException extends RuntimeException {
 
-    public RzoneException(String message) {
-        super(message);
+    public RzoneException(String failureReason) {
+        super(failureReason);
     }
 
-    public RzoneException(String message, Throwable cause) {
-        super(message, cause);
+    public RzoneException(String failureReason, Throwable cause) {
+        super(failureReason, cause);
     }
 }

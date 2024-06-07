@@ -1,13 +1,11 @@
 package za.co.recruitmentzone.application.entity;
 
 import jakarta.persistence.*;
-import org.checkerframework.checker.units.qual.C;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.candidate.entity.Candidate;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -38,7 +36,7 @@ public class Application implements Serializable {
     private Vacancy vacancy;
 
     public Application() {
-        this.created = LocalDateTime.now();
+        this.date_received = LocalDateTime.now();
         this.status=ApplicationStatus.PENDING;
     }
 
@@ -99,10 +97,9 @@ public class Application implements Serializable {
         return "Application{" +
                 "applicationID=" + applicationID +
                 ", date_received='" + date_received + '\'' +
-
                 ", status=" + status +
                 ", candidate=" + candidate.getCandidateID() +
-                ", vacancy=" + vacancy.getJob_title() +
+                ", vacancy=" + vacancy.getJobTitle() +
                 '}';
     }
 

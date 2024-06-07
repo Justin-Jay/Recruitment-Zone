@@ -2,11 +2,19 @@ package za.co.recruitmentzone.client.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.client.entity.ClientFile;
 import za.co.recruitmentzone.client.repository.ClientFileRepository;
 import za.co.recruitmentzone.documents.DocumentService;
 import za.co.recruitmentzone.documents.FileNotFoundException;
+import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,4 +61,10 @@ public class ClientFileService implements DocumentService {
     }
 
 
+
+    public Page<ClientFile> findPaginatedVacancyDocs(int pageNo, int pageSize, String sortField, String sortDirection,Vacancy vacancy){
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize, sort);
+        return clientFileRepository.findAllByVacancy(pageable,vacancy);
+    }
 }

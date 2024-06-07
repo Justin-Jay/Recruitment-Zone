@@ -21,7 +21,7 @@
 
 <div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
-<div class="container-fluid pt-2 pe-2" id="body-container">
+<div class="container-fluid home-page-section" id="body-container">
 
     <!--MAIN PAGE SECTION -->
 
@@ -49,15 +49,14 @@
 
         <!--PAGE CONTENT -->
 
-        <div class="container-fluid main-page-section" id="page-content">
+        <div class="container-fluid" id="page-content">
 
 
             <div class="row">
                 <!--LEFT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid left-page-frame" id="left-page-column">
-                        <br/>
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 left-page-frame">
+                    <div class="container-fluid" id="left-page-column" th:fragment="blog-admin-table" >
                         <form class="container d-none d-md-block" action="#" th:action="@{/Blog/add-blog}"
                               th:method="post">
                           <!--  <button class="btn btn-outline-secondary"
@@ -68,9 +67,10 @@
                             <button class="btn btn-outline-secondary" >Create Blog
                             </button>
                         </form>
-                        <hr/>
 
-                        <div class="my-card custom-border dropdown dropend" th:each="blog : ${blogList}">
+                        <br/>
+<!--LIST VIEW -->
+<!--                        <div class="my-card custom-border dropdown dropend" th:each="blog : ${blogList}">
 
                             <p th:text="*{'Blog Title: ' + blog.blog_title}" th:value="${blog}"></p>
                             <p th:text="*{'Status: ' + blog.status}"
@@ -86,10 +86,64 @@
                                  th:insert="~{fragments/blog/view-blog-list :: listOptions(${blog})}">Blog
                                 List
                             </div>
+
                             <br/>
 
-                        </div>
+                        </div>-->
 
+                        <!-- TABLE VIEW -->
+                        <table class="table table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <a class="aRef"
+                                       th:if="${currentPage != i}"
+                                       th:href="@{'/Blog/paginatedBlogs/' + ${currentPage}+ '?sortField=created&sortDir=' + ${reverseSortDir}}"
+                                       onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                    >Date Created
+                                    </a>
+                                </th>
+                                <th>Title</th>
+                                <th>Manage</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr th:each="blog : ${blogList}">
+                                <!--                                <td th:text="*{vacancy.created}"></td>-->
+                                <td th:text="${#temporals.format(blog.created, 'dd-MM-yyyy HH:mm')}"></td>
+                                <td th:text="*{blog.blog_title}"></td>
+                                <td>
+
+                                    <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        Manage Blog
+                                    </button>
+
+                                    <div id="blog-admin-list"
+                                         th:insert="~{fragments/blog/view-blog-list :: listOptions(${blog})}">Blog
+                                        List
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+					        	<a class="btn btn-secondary"
+                                   th:if="${currentPage != i}"
+                                   th:href="@{'/Blog/paginatedBlogs/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                                   onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                   th:text="${i}">
+                                </a>
+                                <span th:unless="${currentPage != i}">[[${i}]]</span>
+					    </span>
+
+                        </div>
                     </div>
                 </div>
 
@@ -118,6 +172,7 @@
 
 
 </div>
+
 <!--BOTTOM Navbar-->
 <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
 

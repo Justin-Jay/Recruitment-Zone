@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import za.co.recruitmentzone.blog.dto.BlogStatusDTO;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
+import za.co.recruitmentzone.vacancy.dto.VacancyStatusDTO;
 
 import java.security.Principal;
 
@@ -43,8 +45,8 @@ public class BlogController {
     @GetMapping("/blog-administration")
     public String blogAdministration(Model model) {
         try {
-            recruitmentZoneService.getBlogs(model);
-
+            int pageSize = 5;
+            recruitmentZoneService.getBlogs(model,1, pageSize, "created", "asc");
         } catch (Exception e) {
             log.error("<-- blogAdministration -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -52,7 +54,16 @@ public class BlogController {
         // blogList , getBlogsResponse , internalServerError
         return "/fragments/blog/blog-administration";
     }
-
+    @GetMapping("/paginatedBlogs/{pageNo}")
+    public String findPaginatedBlogs(@PathVariable(value = "pageNo") int pageNo,
+                                           @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 5;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.getBlogs(model,pageNo, pageSize, sortField, sortDirection);
+        return "fragments/blog/blog-administration :: blog-admin-table";
+    }
     @PostMapping("/add-blog")
     public String showCreateBlogForm(Model model) {
         try {
@@ -153,6 +164,36 @@ public class BlogController {
         // blog , findBlogResponse , internalServerError, updateBlogResponse
        // return "fragments/blog/view-blog";
         return "fragments/blog/view-home-blog";
+    }
+
+
+    @PostMapping("/update-blog-status")
+    public String updateBlogStatus(@RequestParam("blogID") Long blogID, Model model) {
+        try {
+            recruitmentZoneService.findBlogStatus(blogID, model);
+        } catch (Exception e) {
+            log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
+        // vacancy , findVacancyResponse
+        return "fragments/blog/update-blog-status";
+    }
+
+    @PostMapping("/save-updated-blog-status")
+    public String saveUpdatedStatus(@Valid @ModelAttribute("blogStatusDTO") BlogStatusDTO blogStatusDTO, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasFieldErrors()) {
+
+            return "fragments/vacancy/update-vacancy-status";
+        }
+        try {
+            recruitmentZoneService.saveNewBlogStatus(blogStatusDTO, model);
+            recruitmentZoneService.findBlogStatus(blogStatusDTO.getBlogID(), model);
+        } catch (Exception e) {
+            log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
+        // vacancy , findVacancyResponse
+        return "fragments/blog/update-blog-status";
     }
 
 

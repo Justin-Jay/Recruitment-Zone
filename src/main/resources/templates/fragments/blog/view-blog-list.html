@@ -1,34 +1,49 @@
 <ul class="dropdown-menu" th:fragment="listOptions(blog)">
-    <li class="list-group-item" >
+    <li class="list-group-item">
         <a class="list-group-item list-group-item-action">
             <form th:action="@{/Blog/update-blog}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
                 <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
                 <!-- Submit button to trigger the form submission -->
-          <!--      <button class="btn normal-button"
-                        hx-post="/Blog/update-blog"
-                        hx-target="#main-page-section"
-                        hx-swap="innerHTML show:top"
-                        hx-include="[blogID='blogID']">Update Blog
-                </button>-->
-                <button class="btn normal-button" >Update Blog
+                <!--      <button class="btn normal-button"
+                              hx-post="/Blog/update-blog"
+                              hx-target="#main-page-section"
+                              hx-swap="innerHTML show:top"
+                              hx-include="[blogID='blogID']">Update Blog
+                      </button>-->
+                <button class="btn normal-button">Update Blog
                 </button>
             </form>
         </a>
     </li>
-<!--    <li class="list-group-item" >
+
+    <li class="list-group-item">
         <a class="list-group-item list-group-item-action">
-            <form action="#" th:action="@{/Blog/view-blog}" th:method="post">
-                &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+            <form action="#" th:action="@{/Blog/update-blog-status}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
                 <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
-                &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
+                <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
-                        hx-post="/Blog/view-blog"
+                        hx-post="/Blog/update-blog-status"
                         hx-target="#main-page-section"
-                        hx-swap="innerHTML show:top"
-                        hx-include="[vacancyID='vacancyID']">View Blog
+                        hx-swap="innerHTML show:top">Update Blog Status
                 </button>
             </form>
         </a>
-    </li>-->
- </ul>
+    </li>
+    <!--    <li class="list-group-item" >
+            <a class="list-group-item list-group-item-action">
+                <form action="#" th:action="@{/Blog/view-blog}" th:method="post">
+                    &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+                    <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
+                    &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
+                    <button class="btn normal-button"
+                            hx-post="/Blog/view-blog"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML show:top"
+                            hx-include="[vacancyID='vacancyID']">View Blog
+                    </button>
+                </form>
+            </a>
+        </li>-->
+</ul>

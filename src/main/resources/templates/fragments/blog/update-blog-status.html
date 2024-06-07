@@ -1,0 +1,36 @@
+<div class="container-fluid main-page-section">
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewBlogStatusResponse})}"></div>
+
+    </div>
+
+
+    <form class="form-control-sm" action="#" th:action="@{/Blog/save-updated-blog-status}"  th:method="POST">
+
+        <input type="hidden" th:field="${blogStatusDTO.blogID}"/>
+
+        <p th:text="*{'Current Status: ' + blogStatusDTO.status}" th:value="${blogStatusDTO}"></p>
+        <div >
+            <label for="status">Select Status:
+            </label>
+            <select class="form-select" aria-label=".form-select"  id="status" th:field="${blogStatusDTO.status}">
+                <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.BlogStatus).values()}"
+                        th:value="${statusVal}" th:text="${statusVal}"></option>
+            </select>
+            <br>
+            <br>
+            <button class="btn btn-primary"
+                    hx-post="/Blog/save-updated-blog-status"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML" >Save Updated Blog Status
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

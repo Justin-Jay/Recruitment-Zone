@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section">
+<div class="container-fluid main-page-section" id="vacancy-documents-page">
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
@@ -13,16 +13,19 @@
     <form action="#" th:action="@{/Vacancy/upload-document}" th:object="${clientFileDTO}"
           th:method="post" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
 
-        <!-- Hidden input field to include the vacancyID in the POST request -->
-     <!--   <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}" th:field="*{vacancyID}" />
-        <input type="hidden" name="clientID"  th:value="${vacancy.client.clientID}" th:field="*{clientID}" />
--->
-        <input type="hidden" name="vacancyID" th:value="${clientFileDTO.vacancyID}" />
+        <input type="hidden" name="vacancyID" th:value="${clientFileDTO.vacancyID}"/>
 
-        <input type="hidden" name="clientID" th:value="${clientFileDTO.clientID}" />
+        <input type="hidden" name="clientID" th:value="${clientFileDTO.clientID}"/>
+
+        <input type="hidden" name="pageNo" th:value="${currentPage}"/>
+
+        <input type="hidden" name="sortField" th:value="${sortField}"/>
+
+        <input type="hidden" name="sortDir" th:value="${sortDir}"/>
 
         <div class="form-group">
-
+            <h5 th:text="${'Client Name: '+ vacancy.client.name}"></h5>
+            <hr>
             <label for="documentAttachment">Attach Document:</label>
             <p class="alert alert-danger alert-dismissible fade show"
                th:if="*{#fields.hasErrors('fileMultipart')}"
@@ -42,16 +45,17 @@
                 <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.ClientDocumentType).values()}"
                         th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
             </select>
-            <br> <br>
+            <br>
 
             <button class="btn btn-secondary"
                     hx-post="/Vacancy/upload-document"
-                    hx-target="#main-page-section"
+                    hx-target="#main-page-column"
                     hx-swap="innerHTML"
-                    hx-include="[clientFileDTO='clientFileDTO']">
-                Add New Document <p  class='htmx-indicator spinner'></p>
+                    hx-include="[clientFileDTO='clientFileDTO']"
+                    hx-indicator="#spinner">
+                Add New Document
             </button>
-
+            <p class='htmx-indicator spinner' id="spinner"></p>
 
         </div>
 
@@ -62,6 +66,6 @@
     <hr/>
 
 
-    <div th:replace="~{fragments/documents/document-fragment :: existingDocuments(${existingDocuments})}"></div>
+    <div th:replace="~{fragments/documents/vacancy-document-fragment :: existingDocuments(${existingDocuments})}"></div>
 
 </div>

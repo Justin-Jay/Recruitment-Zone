@@ -1,9 +1,7 @@
 package za.co.recruitmentzone.vacancy.entity;
 
 import jakarta.persistence.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 import za.co.recruitmentzone.application.entity.Application;
-import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.util.enums.EmpType;
@@ -15,7 +13,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "VACANCY")
@@ -24,7 +21,7 @@ public class Vacancy implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vacancyID;
     @Column(name = "job_title")
-    private String job_title;
+    private String jobTitle;
     @Column(name = "job_description", length = 65535)
     private String job_description;
     @Column(name = "seniority_level")
@@ -71,8 +68,8 @@ public class Vacancy implements Serializable {
     public Vacancy() {
     }
 
-    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType) {
-        this.job_title = job_title;
+    public Vacancy(String jobTitle, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType) {
+        this.jobTitle = jobTitle;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
         this.requirements = requirements;
@@ -135,12 +132,12 @@ public class Vacancy implements Serializable {
         this.vacancyID = vacancyID;
     }
 
-    public String getJob_title() {
-        return job_title;
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setJob_title(String job_title) {
-        this.job_title = job_title;
+    public void setJobTitle(String job_title) {
+        this.jobTitle = job_title;
     }
 
     public String getJob_description() {
@@ -268,7 +265,7 @@ public class Vacancy implements Serializable {
     public String printVacancy() {
         return "Vacancy{" +
                 "vacancyID=" + vacancyID +
-                ", job_title='" + job_title + '\'' +
+                ", job_title='" + jobTitle + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +

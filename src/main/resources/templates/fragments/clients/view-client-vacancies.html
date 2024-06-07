@@ -4,7 +4,7 @@
 
     <div id="client-vacancies" th:each="vacancy : ${clientVacancyList}">
 
-        <h5 th:text="*{vacancy.job_title}"></h5>
+        <h5 th:text="*{vacancy.jobTitle}"></h5>
         <p th:text="*{'Vacancy ID: ' + vacancy.vacancyID}"></p>
         <p th:text="*{'Client: ' + vacancy.client.name}"></p>
         <p th:text="*{'Employee: ' + vacancy.employee.first_name}"></p>

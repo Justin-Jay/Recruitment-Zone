@@ -6,6 +6,104 @@
 
     <script type="text/javascript" th:src="@{/ckeditor5/ckeditor.js}"></script>
 
+    <script>
+        document.body.addEventListener("htmx:configRequest", function (evt) {
+            evt.detail.headers["accept"] = "text/html-partial";
+
+            if (evt.detail.verb !== "get") {
+                const csrfHeaderName = document
+                    .querySelector("meta[name='_csrf_header']")
+                    .getAttribute("content");
+                evt.detail.headers[csrfHeaderName] = document
+                    .querySelector("meta[name='_csrf']")
+                    .getAttribute("content");
+            }
+        });
+
+        function loadHTMXFragment(url,targetId) {
+            let myDiv = document.getElementById(targetId);
+            if (!myDiv) return;
+
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    myDiv.innerHTML = data;
+                    htmx.process(myDiv);
+                })
+                .catch(error => console.error('Error loading fragment:', error));
+            return false;
+        }
+
+
+        function loadCandidateFrag(url, pageNo, targetId) {
+            let myDiv = document.getElementById(targetId);
+            if (!myDiv) return;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pageNo: pageNo })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    myDiv.innerHTML = data;
+                    htmx.process(myDiv);
+                })
+                .catch(error => console.error('Error loading fragment:', error));
+
+            return false;
+        }
+
+        htmx.defineExtension('path-params', {
+            onEvent: function(name, evt) {
+                if (name === "htmx:configRequest") {
+                    evt.detail.path = evt.detail.path.replace(/{{([A-Za-z0-9_]+)}}/g, function (_, param) {
+                        let val = evt.detail.parameters[param];
+                        delete evt.detail.parameters[param];
+                        return val;
+                    })
+                }
+            }
+        });
+    </script>
+
+
+<!--
+    <script>
+        document.body.addEventListener('htmx:beforeOnLoad', function(evt) {
+            if (evt.detail.xhr.status === 401) {
+                window.location.reload();
+            }
+        });
+    </script>
+-->
+
+
+
+ <!--   <script th:inline="javascript">
+
+
+        // Function to load and replace content using fetch API
+        function loadThymeleafFragment(url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    //console.log("Fetched HTML:", html); // Debugging statement
+
+                    document.querySelector('#main-page-column').innerHTML = html;
+
+                })
+                .catch(error => console.error('Error loading fragment:', error));
+            return false;
+        }
+
+    </script>-->
+
+
 </div>
+
 
 
