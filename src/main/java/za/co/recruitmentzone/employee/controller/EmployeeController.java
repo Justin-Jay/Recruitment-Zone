@@ -7,12 +7,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.employee.dto.EmployeeDTO;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
+import za.co.recruitmentzone.util.enums.ROLE;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
@@ -20,7 +24,7 @@ import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER
 @RequestMapping("/Employee")
 public class EmployeeController {
 
-    private  final RecruitmentZoneService recruitmentZoneService;
+    private final RecruitmentZoneService recruitmentZoneService;
 
     private final Logger log = LoggerFactory.getLogger(EmployeeController.class);
 
@@ -34,7 +38,7 @@ public class EmployeeController {
         try {
             recruitmentZoneService.findAllEmployees(model);
         } catch (Exception e) {
-            log.info("<-- employees -->  Exception \n {}",e.getMessage());
+            log.info("<-- employees -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // employeeList , loadEmployeesResponse , internalServerError
@@ -48,7 +52,7 @@ public class EmployeeController {
             log.info("Looking for {}", employeeID);
             recruitmentZoneService.findEmployeeByID(employeeID, model);
         } catch (Exception e) {
-            log.info("<-- showEmployee -->  Exception \n {}",e.getMessage());
+            log.info("<-- showEmployee -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // employee , findEmployeeByIDResponse , internalServerError
@@ -60,8 +64,9 @@ public class EmployeeController {
     public String showCreateEmployeeForm(Model model, Principal principal) {
         try {
             recruitmentZoneService.loadAuthorities(principal, model);
+
         } catch (Exception e) {
-            log.info("<-- showCreateEmployeeForm -->  Exception \n {}",e.getMessage());
+            log.info("<-- showCreateEmployeeForm -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // employeeDTO , authorities , loadAuthoritiesResponse , internalServerError
@@ -72,23 +77,28 @@ public class EmployeeController {
     @PostMapping("/save-employee")
     public String saveEmployee(@Valid @ModelAttribute("employeeDTO") EmployeeDTO employeeDTO, BindingResult bindingResult,
                                Model model,
-                               final HttpServletRequest request,Principal principal) {
-        if (bindingResult.hasErrors()) {
-            recruitmentZoneService.loadAuthorities(principal, model);
-            model.addAttribute("bindingResult", "Employee BINDING FAILED");
+                               final HttpServletRequest request, Principal principal) {
+        if (bindingResult.hasFieldErrors()) {
+            List<ObjectError> allErrors = bindingResult.getAllErrors();
+            for (ObjectError error : allErrors) {
+                System.out.println("Error: " + error.getDefaultMessage());
+            }
+            recruitmentZoneService.reloadAuthorities(principal, model);
+
+            model.addAttribute("BindingResult", bindingResult);
+
             return "fragments/employee/add-employee";
         }
         try {
             recruitmentZoneService.saveNewEmployee(employeeDTO, request, model, principal);
 
         } catch (Exception e) {
-            log.info("<-- saveEmployee -->  Exception \n {}",e.getMessage());
-            recruitmentZoneService.loadAuthorities(principal, model);
+            log.info("<-- saveEmployee -->  Exception \n {}", e.getMessage());
+            recruitmentZoneService.reloadAuthorities(principal, model);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
             return "fragments/employee/add-employee";
         }
-        // saveNewEmployeeResponse  , employeeDTO , employeeList
-       // return "fragments/employee/employee-admin";
+
         return "fragments/employee/add-employee";
     }
 
@@ -98,26 +108,27 @@ public class EmployeeController {
         try {
             recruitmentZoneService.findEmployeeByID(employeeID, model);
         } catch (Exception e) {
-            log.info("<-- updateEmployee -->  Exception \n {}",e.getMessage());
+            log.info("<-- updateEmployee -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
 
         }
         return "fragments/employee/update-employee";
     }
+
     //   save-updated-employee //
     @PostMapping("/save-updated-employee")
-    public String saveUpdatedEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, Model model,Principal principal) {
+    public String saveUpdatedEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, Model model, Principal principal) {
         if (bindingResult.hasErrors()) {
             recruitmentZoneService.findAllEmployees(model);
             return "fragments/employee/update-employee";
         }
         try {
-            recruitmentZoneService.saveExistingEmployee(principal,employee, model);
+            recruitmentZoneService.saveExistingEmployee(principal, employee, model);
         } catch (Exception e) {
-            log.info("<-- saveUpdatedEmployee -->  Exception \n {}",e.getMessage());
+            log.info("<-- saveUpdatedEmployee -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
-         // saveExistingEmployeeResponse
+        // saveExistingEmployeeResponse
         return "fragments/employee/view-employee";
     }
 
@@ -127,22 +138,22 @@ public class EmployeeController {
         try {
             recruitmentZoneService.findEmployeeByID(employeeID, model);
         } catch (Exception e) {
-            log.info("<-- updateEmployee -->  Exception \n {}",e.getMessage());
+            log.info("<-- updateEmployee -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         return "fragments/employee/activate-employee";
     }
 
     @PostMapping("/enable-employee")
-    public String enableEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, Model model,Principal principal) {
+    public String enableEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, Model model, Principal principal) {
         if (bindingResult.hasErrors()) {
             recruitmentZoneService.findAllEmployees(model);
             return "fragments/employee/activate-employee";
         }
         try {
-            recruitmentZoneService.enableEmployee(principal,employee, model);
+            recruitmentZoneService.enableEmployee(principal, employee, model);
         } catch (Exception e) {
-            log.info("<-- activateEmployee -->  Exception \n {}",e.getMessage());
+            log.info("<-- activateEmployee -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // enableEmployeeResponse
@@ -152,12 +163,12 @@ public class EmployeeController {
 // activate-employee
 
     @GetMapping("/register/verifyEmail")
-    public String verifyEmail(@RequestParam("token") String token,Model model) {
+    public String verifyEmail(@RequestParam("token") String token, Model model) {
         try {
-            log.info("<--- verifyEmail {} --->",token);
-            recruitmentZoneService.employeeVerification(token,model);
+            log.info("<--- verifyEmail {} --->", token);
+            recruitmentZoneService.employeeVerification(token, model);
         } catch (Exception e) {
-            log.info("<-- verifyEmail -->  Exception \n {}",e.getMessage());
+            log.info("<-- verifyEmail -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
             return "log-in";
         }

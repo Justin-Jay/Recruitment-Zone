@@ -2,44 +2,67 @@ package za.co.recruitmentzone.application.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.util.enums.EducationLevel;
 import za.co.recruitmentzone.util.enums.Province;
 
 import java.io.Serializable;
-//    @NotEmpty(message = "Please enter job title")
-//   @FutureOrPresent(message = "Date cannot be in the past")
-//  @Future(message = "Date must be in the future")
 
+@Data
 public class NewApplicationDTO implements Serializable {
-    private Long vacancyID;
-    private Long clientID;
-    private String vacancyName;
     @NotEmpty(message = "First Name Is Mandatory")
+    @Size(min = 5, max = 50,message = "Min 2, Max 50")
     private String first_name;
+
     @NotEmpty(message = "Last Name Is Mandatory")
+    @Size(min = 5, max = 50,message = "Min 2, Max 50")
     private String last_name;
+
     @NotEmpty(message = "ID Number is mandatory")
     private String id_number;
-    @NotEmpty(message = " ")
+
+    @NotEmpty(message = "Please enter email address")
     private String email_address;
-    @Size(min = 10, max = 10)
+
+    @Size(min = 10, max = 10, message = "Please enter valid phone number")
     private String phone_number;
+
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Make selection")
     private Province current_province;
-    @NotEmpty(message = " ")
+
+    @NotEmpty(message = "Enter your current role")
     private String current_role;
 
+    @NotEmpty(message = "Enter your current employers name")
     private String current_employer;
-    @NotEmpty(message = " ")
+
+    @NotEmpty(message = "Enter your current seniority level")
     private String seniority_level;
+
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Make selection")
     private EducationLevel education_level;
+
     private Boolean relocation;
+
+    @NotNull(message = "PLease attach a file")
     @Transient
     private MultipartFile documentAttachment;
 
+    private Long vacancyID;
+
+    private Long clientID;
+
+    private String vacancyName;
+
     public NewApplicationDTO() {
+    }
+
+    public NewApplicationDTO(Long vacancyID, String vacancyName) {
+        this.vacancyID = vacancyID;
+        this.vacancyName = vacancyName;
     }
 
     public NewApplicationDTO(Long vacancyID, String vacancyName, String first_name, String last_name,
@@ -57,126 +80,6 @@ public class NewApplicationDTO implements Serializable {
         this.seniority_level = seniority_level;
         this.education_level = education_level;
         this.relocation = relocation;
-        this.documentAttachment = documentAttachment;
-    }
-
-    public Long getclientID() {
-        return clientID;
-    }
-
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
-    }
-
-    public String getVacancyName() {
-        return vacancyName;
-    }
-
-    public void setVacancyName(String vacancyName) {
-        this.vacancyName = vacancyName;
-    }
-
-    public Long getVacancyID() {
-        return vacancyID;
-    }
-
-    public void setVacancyID(Long vacancyID) {
-        this.vacancyID = vacancyID;
-    }
-
-    public String getFirst_name() {
-        return first_name;
-    }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    public String getId_number() {
-        return id_number;
-    }
-
-    public void setId_number(String id_number) {
-        this.id_number = id_number;
-    }
-
-    public String getEmail_address() {
-        return email_address;
-    }
-
-    public void setEmail_address(String email_address) {
-        this.email_address = email_address;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public Province getCurrent_province() {
-        return current_province;
-    }
-
-    public void setCurrent_province(Province current_province) {
-        this.current_province = current_province;
-    }
-
-    public String getCurrent_role() {
-        return current_role;
-    }
-
-    public void setCurrent_role(String current_role) {
-        this.current_role = current_role;
-    }
-
-    public String getCurrent_employer() {
-        return current_employer;
-    }
-
-    public void setCurrent_employer(String current_employer) {
-        this.current_employer = current_employer;
-    }
-
-    public String getSeniority_level() {
-        return seniority_level;
-    }
-
-    public void setSeniority_level(String seniority_level) {
-        this.seniority_level = seniority_level;
-    }
-
-    public EducationLevel getEducation_level() {
-        return education_level;
-    }
-
-    public void setEducation_level(EducationLevel education_level) {
-        this.education_level = education_level;
-    }
-
-    public Boolean getRelocation() {
-        return relocation;
-    }
-
-    public void setRelocation(Boolean relocation) {
-        this.relocation = relocation;
-    }
-
-    public MultipartFile getDocumentAttachment() {
-        return documentAttachment;
-    }
-
-    public void setDocumentAttachment(MultipartFile documentAttachment) {
         this.documentAttachment = documentAttachment;
     }
 

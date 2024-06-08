@@ -19,16 +19,16 @@ public class EmailEventPublisher {
     }
 
 
-    public boolean publishWebsiteQueryReceivedEvent(ContactMessage message) {
+    public void publishWebsiteQueryReceivedEvent(ContactMessage message) {
         WebsiteMessageEvent wc = new WebsiteMessageEvent(message);
         log.info("Executing publishWebsiteQueryReceivedEvent");
         try {
             eventPublisher.publishEvent(wc);
             log.info("EVENT publishWebsiteQueryReceivedEvent POSTED");
-            return true;
+
         } catch (Exception e) {
             log.info("Unable to post event");
-            return false;
+            
         }
     }
 

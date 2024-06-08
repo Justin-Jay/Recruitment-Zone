@@ -6,10 +6,14 @@ server:
 
 spring:
   #session:
-   # jdbc:
-    #  table-name: SPRING_SESSION
-     # initialize-schema: embedded
-      #save-mode: always
+  #  timeout: 15m
+    #cookie:
+      #http-only: true
+     # secure: true
+    #jdbc:
+      #table-name: SPRING_SESSION
+      #initialize-schema: embedded
+     # save-mode: always
       #schema: classpath:/static/sql/schema-mysql.sql
   thymeleaf:
     prefix: classpath:/templates/
@@ -78,18 +82,6 @@ upload:
 domain:
   co:
     za: ${DOMAIN}
-
-
-
-#logging:
-  #level:
-    #org.springframework.jdbc: off
-   # root: off
-   # za.co.recruitmentzone: info
-
- # file:
-  #  path: ${LOG_PATH}
-
 
 
 LOGS: ${LOG_PATH}

@@ -1,12 +1,112 @@
 <div class="container-fluid main-page-section">
 
-    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findVacancyResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findVacancyResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveVacancyResponse})}"></div>
+
+    <div class="container-fluid"  th:object="${vacancy}">
+
+        <!--
+          <div class="row">
+            <div class="col-6">
+                <label>:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{___}"></span>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-6">
+                <label>Client:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{clientName}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Vacancy:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{jobTitle}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Total applications:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{applicationCount}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Location:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{location}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Publish Date:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{publish_date}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label>Status:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{status}"></span>
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <form action="#" th:action="@{/Vacancy/update-vacancy}" th:method="post">
+                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    <input type="hidden" name="vacancyID" th:value="*{vacancyID}"/>
+                    <!-- Submit button to trigger the form submission -->
+                  <!--  <button class="btn btn-secondary"
+                            hx-post="/Vacancy/update-vacancy"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML"
+                            hx-include="[vacancyID='vacancyID']">Update Vacancy
+                    </button>-->
+                    <button class="btn btn-secondary" >Update Vacancy
+                    </button>
+                </form>
 
 
-    <table class="table table-striped table-responsive">
+             <!--   <form action="#" th:action="@{/Vacancy/add-vacancy}"  method="GET">
+                    <button class="btn normal-button">
+                        Create Vacancy
+                    </button>
+                </form>-->
 
+
+            </div>
+            <div class="col-6">
+                <div th:insert="~{fragments/vacancy/vacancy-status :: vacancyStatus(${vacancy})}"></div>
+            </div>
+        </div>
+
+
+
+     <!--   <div>
+            <label> </label>
+            <span th:text="*{___}"></span>
+        </div>-->
+
+    </div>
+
+<!--    <table class="table table-striped table-responsive">
         <thead>
-
         <tr>
             <th>Vacancy ID</th>
             <th>Client</th>
@@ -14,7 +114,6 @@
             <th>Location</th>
             <th>Publish Date</th>
             <th>Status</th>
-
             <th>Update Vacancy</th>
         </tr>
         </thead>
@@ -22,17 +121,17 @@
 
         <tr th:each="foundVacancy : ${vacancy}">
             <td th:text="*{foundVacancy.vacancyID}"></td>
-            <td th:text="${foundVacancy.client.name}"></td>
-            <td th:text="${foundVacancy.getApplicationsSize + ' total applications '}"></td>
+            <td th:text="${foundVacancy.clientID}"></td>
+            <td th:text="${foundVacancy.applicationCount}"></td>
             <td th:text="${foundVacancy.location}"></td>
             <td th:text="${foundVacancy.publish_date}"></td>
             <td th:text="${foundVacancy.status}"></td>
 
             <td>
                 <form action="#" th:action="@{/Vacancy/update-vacancy}" th:method="post">
-                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
                     <input type="hidden" name="vacancyID" th:value="*{foundVacancy.vacancyID}"/>
-                    <!-- Submit button to trigger the form submission -->
+                    &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
                     <button class="btn normal-button"
                             hx-post="/Vacancy/update-vacancy"
                             hx-target="#main-page-section"
@@ -40,11 +139,62 @@
                             hx-include="[vacancyID='vacancyID']">Update Vacancy
                     </button>
                 </form>
-
             </td>
 
 
         </tr>
         </tbody>
-    </table>
+    </table>-->
+
+<!--    <div class="container-fluid" id="vacancy-file-section">
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createClientFileResponse})}"></div>
+
+        <form action="#" th:action="@{/Vacancy/upload-document}" th:object="${clientFileDTO}"
+              th:method="post" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+
+            &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+            <input type="hidden" name="clientID" th:value="${foundVacancy.client.clientID}"/>
+
+            <input type="hidden" th:field="${clientFileDTO.vacancyID}" th:value="${foundVacancy.vacancyID}" />
+
+            <div class="form-group">
+
+                <label for="documentAttachment">Attach Document:</label>
+                <p class="alert alert-danger alert-dismissible fade show"
+                   th:if="*{#fields.hasErrors('documentAttachment')}"
+                   th:errors="${clientFileDTO.documentAttachment}"
+                ></p>
+                <input th:type="file" name="documentAttachment" id="documentAttachment"
+                       th:field="${clientFileDTO.documentAttachment}"
+                       class="form-control "/>
+
+
+                <label for="candidateDocumentType">Document Type:
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('documentType')}"
+                   th:errors="${clientFileDTO.documentType}"
+                ></p>
+                <select class="form-select" aria-label=".form-select" id="candidateDocumentType"
+                        th:field="${clientFileDTO.documentType}">
+                    <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.ClientDocumentType).values()}"
+                            th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
+                </select>
+
+                <br>
+
+                <button class="btn btn-secondary"
+                        hx-post="/Vacancy/upload-document"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML"
+                        hx-include="[clientFileDTO='clientFileDTO']">Add New Document
+                </button>
+
+
+            </div>
+
+
+        </form>
+    </div>-->
+
 </div>

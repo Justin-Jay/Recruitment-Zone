@@ -4,61 +4,108 @@
     <br>
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
-    <form action="#" th:action="@{/Client/save-client}" th:object="${clientDTO}" method="POST">
+    <form action="#" th:action="@{/Client/save-client}" th:object="${newClientDTO}" method="POST">
         <div class="form-group">
-            <label>
-                Client Name:<input type="text" th:field="*{name}" placeholder="First Name" class="form-control">
+
+            <label for="clientName">
+                Client Name:
             </label>
 
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('name')}"
+               th:errors="*{name}"
+            ></p>
+            <input  id="clientName" type="text" th:field="*{name}" placeholder="First Name" class="form-control">
+
+            <br>
             <label for="industry">Select Industry:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="industry"
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('industry')}"
+               th:errors="*{industry}"
+            ></p>
+            <select class="form-select" aria-label=".form-select" id="industry"
                     th:field="*{industry}">
                 <option th:each="type : ${T(za.co.recruitmentzone.util.enums.Industry).values()}"
-                        th:value="${type}" th:text="${type}"></option>
+                        th:value="${type}" th:text="${type.getPrintableIndustryName()}"></option>
             </select>
 
             <br>
-
+            <br>
 
             <div class="h5">Add Contact Person Client</div>
 
             <br>
-            <label>
-                First Name<input type="text" th:field="*{contactPerson_FirstName}"
-                                 placeholder="Contact Person First Name" class="form-control">
-            </label>
-            <label>
-                Last Name<input type="text" th:field="*{contactPerson_last_name}"
-                                placeholder="Last Name" class="form-control">
-            </label>
-            <label>
-                Designation<input type="text" th:field="*{contactPerson_designation}"
-                                  placeholder="Designation" class="form-control">
-            </label>
 
-            <label>
-                Email Address<input type="text" th:field="*{contactPerson_email_address}"
-                                    placeholder="Email Address" class="form-control">
-            </label>
 
-            <label>
-                Land Line<input type="text" th:field="*{contactPerson_land_line}"
-                                placeholder="Land Line" class="form-control">
+            <label for="contactPerson_FirstName">
+                First Name
             </label>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('contactPerson_FirstName')}"
+               th:errors="*{contactPerson_FirstName}"
+            ></p>
+            <input id="contactPerson_FirstName" type="text" th:field="*{contactPerson_FirstName}"
+                   placeholder="Contact Person First Name" class="form-control">
 
-            <label>
-                Cell Phone<input type="text" th:field="*{contactPerson_cell_phone}"
-                                 placeholder="Cell Phone Number" class="form-control">
+            <label for="contactPerson_LastName">
+                Last Name
             </label>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('contactPerson_FirstName')}"
+               th:errors="*{contactPerson_FirstName}"
+            ></p>
+            <input id="contactPerson_LastName" type="text" th:field="*{contactPerson_last_name}"
+                   placeholder="Last Name" class="form-control">
+
+            <label for="contactPersonDes">
+                Designation
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('contactPerson_designation')}"
+               th:errors="*{contactPerson_designation}"
+            ></p>
+            <input id="contactPersonDes" type="text" th:field="*{contactPerson_designation}"
+                   placeholder="Designation" class="form-control">
+
+            <label for="contactPersonEmail">
+                Email Address
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('contactPerson_email_address')}"
+               th:errors="*{contactPerson_email_address}"
+            ></p>
+            <input id="contactPersonEmail" type="text" th:field="*{contactPerson_email_address}"
+                   placeholder="Email Address" class="form-control">
+
+            <label for="contactPersonLandLine">
+                Land Line
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('contactPerson_land_line')}"
+               th:errors="*{contactPerson_land_line}"
+            ></p>
+            <input  id="contactPersonLandLine"  type="text" th:field="*{contactPerson_land_line}"
+                   placeholder="Land Line" class="form-control">
+
+
+            <label for="contactPersonCell">
+                Cell Phone
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="${#fields.hasErrors('contactPerson_cell_phone')}"
+               th:errors="*{contactPerson_cell_phone}"
+            ></p>
+            <input  id="contactPersonCell"  type="text" th:field="*{contactPerson_cell_phone}"
+                   placeholder="Cell Phone Number" class="form-control">
             <br/>
             <br>
             <br>
-            <button class="btn drop-down-button"
+            <button class="btn btn-secondary"
                     hx-post="/Client/save-client"
-                    hx-target="#body-container"
+                    hx-target="#main-page-section"
                     hx-swap="innerHTML"
-                    hx-include="[ClientDTO='ClientDTO']">Add Client
+                    hx-include="[newClientDTO='newClientDTO']">Add Client
             </button>
         </div>
     </form>

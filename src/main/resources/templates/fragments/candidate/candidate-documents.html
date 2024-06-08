@@ -1,47 +1,73 @@
-<div class="container-fluid right-page-frame" >
+<div class="container-fluid right-page-frame">
 
     <div class="row">
-        <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+
         <!--FILE UPLOAD ERRORS-->
-        <p th:if="${invalidFileUpload}" th:text="${invalidFileUpload}"></p>
-        <p th:if="${saveDocumentResponse}" th:text="${saveDocumentResponse}"></p>
-        <p th:if="${createCandidateFileResponse}" th:text="${createCandidateFileResponse}"></p>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${invalidFileUpload})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createCandidateFileResponse})}"></div>
+
 
     </div>
 
 
-
     <form action="#" th:action="@{/Candidate/upload-candidate-document}" th:object="${candidateFileDTO}"
           th:method="post" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+
+
+        <!-- Hidden input field to include the candidateID in the POST request -->
+        <input type="hidden" name="candidateID" th:field="${candidateFileDTO.candidateID}"
+               th:value="${candidate.candidateID}"/>
+
         <div class="form-group">
-            <!-- Hidden input field to include the candidateID in the POST request -->
-            <input type="hidden" name="candidateID" th:field="${candidateFileDTO.candidateID}"
-                   th:value="${candidate.candidateID}"/>
 
             <label for="documentAttachment">Attach Document:</label>
-            <input type="file" name="documentAttachment" id="documentAttachment"
-                   class="form-control "/>
+            <p class="alert alert-danger alert-dismissible fade show"
+               th:if="*{#fields.hasErrors('documentAttachment')}"
+               th:errors="*{documentAttachment}"
+            ></p>
             <br>
+            <input th:type="file" name="documentAttachment" id="documentAttachment"
+                   th:field="*{documentAttachment}"
+                   class="form-control "/>
             <label for="candidateDocumentType">Document Type:
             </label>
-            <select class="form-select-sm" aria-label=".form-select-sm" id="candidateDocumentType" th:field="${candidateFileDTO.documentType}">
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('documentType')}"
+               th:errors="*{documentType}"
+            ></p>
+            <select class="form-select" aria-label=".form-select" id="candidateDocumentType"
+                    th:field="*{documentType}">
                 <option th:each="docType : ${T(za.co.recruitmentzone.util.enums.CandidateDocumentType).values()}"
-                        th:value="${docType}" th:text="${docType}"></option>
+                        th:value="${docType}" th:text="${docType.getPrintableDocType()}"></option>
             </select>
             <br>
-            <button type="submit" class="btn normal-button"
+
+            <br>
+
+            <button class="btn normal-button"
                     hx-post="/Candidate/upload-candidate-document"
-                    hx-target="#right-page-section"
-                    hx-swap="innerHTML" >Add New Document
+                    hx-target="#right-page-column"
+                    hx-swap="innerHTML"
+                    hx-include="[candidateFileDTO='candidateFileDTO']"
+                    hx-indicator="#spinner">
+                Add New Document
             </button>
+            <p class='htmx-indicator spinner' id="spinner"></p>
+
+
         </div>
+
 
     </form>
 
+
     <hr/>
 
-    <p>Existing Documents</p>
-    <div th:replace="~{fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})}"></div>
+
+<!--    <div th:replace="~{fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})}"></div>-->
+    <div th:replace="~{fragments/documents/candidate-document-fragment :: existingDocuments(${existingDocuments},${candidate})}"></div>
+
 
 
 </div>

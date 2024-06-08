@@ -3,17 +3,22 @@ package za.co.recruitmentzone.client.dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.util.enums.ClientDocumentType;
 import java.io.Serializable;
 
 
+@Data
 public class ClientFileDTO implements Serializable {
     private Long clientID;
+    private Long vacancyID;
 
     @Enumerated(EnumType.STRING)
-    private ClientDocumentType documentType; // ClientDocumentType
+    private ClientDocumentType documentType;
     @Transient
+    @NotNull(message = "Please attach file")
     private MultipartFile fileMultipart;
 
     public ClientFileDTO() {
@@ -24,35 +29,10 @@ public class ClientFileDTO implements Serializable {
         this.fileMultipart = fileMultipart;
     }
 
-
-    public Long getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
-    }
-
-    public ClientDocumentType getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(ClientDocumentType documentType) {
-        this.documentType = documentType;
-    }
-
-    public MultipartFile getFileMultipart() {
-        return fileMultipart;
-    }
-
-    public void setFileMultipart(MultipartFile fileMultipart) {
-        this.fileMultipart = fileMultipart;
-    }
-
-
     public String printClientFileDTO() {
         return "ClientFileDTO{" +
                 "clientID=" + clientID +
+                ", vacancyID=" + vacancyID +
                 ", documentType=" + documentType +
                 ", fileMultipart is empty =" + fileMultipart.isEmpty() +
                 '}';

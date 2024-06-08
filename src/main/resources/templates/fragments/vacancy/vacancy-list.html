@@ -7,7 +7,7 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy"
-                        hx-target="#main-page-section"
+                        hx-target="#main-page-column"
                         hx-swap="innerHTML show:top"
                         hx-include="[vacancyID='vacancyID']"> View Vacancy
                 </button>
@@ -22,9 +22,25 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy-submission"
-                        hx-target="#main-page-section"
+                        hx-target="#main-page-column"
                         hx-swap="innerHTML show:top"
-                        hx-include="[vacancyID='vacancyID']" > View Submissions <!-- hx-href="#main-page-section" -->
+                        hx-include="[vacancyID='vacancyID']" > View Submissions
+                </button>
+            </form>
+        </a>
+    </li>
+
+    <li class="list-group-item" >
+        <a class="list-group-item list-group-item-action">
+            <form action="#" th:action="@{/Vacancy/view-vacancy-documents}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Vacancy/view-vacancy-documents"
+                        hx-target="#main-page-column"
+                        hx-swap="innerHTML show:top"
+                        hx-include="[vacancyID='vacancyID']" > View Documents <!-- hx-href="#main-page-section" -->
                 </button>
             </form>
         </a>

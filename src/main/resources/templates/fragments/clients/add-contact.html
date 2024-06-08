@@ -3,46 +3,101 @@
     <h4 class="h4">Add Contact Person</h4>
 
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+    <div class="form-group">
 
+    </div>
 
     <form action="#" th:action="@{/Client/save-new-contact}" th:object="${contactPersonDTO}" th:method="POST">
         <input type="hidden" name="clientID" th:value="${clientID}"/>
-        <label for="firstName">
-            First Name: <input type="text"  id="firstName" th:field="${contactPersonDTO.first_name}"
-                               placeholder="Contact Person First Name" class="form-control">
-        </label>
 
-        <br/>
-        <label>
-            Last Name<input type="text" th:field="${contactPersonDTO.last_name}"
-                            placeholder="Last Name" class="form-control">
-        </label>
-        <br/>
-        <label>
-            Email Address<input type="text" th:field="${contactPersonDTO.email_address}"
-                                placeholder="Email Address" class="form-control">
-        </label>
-        <br/>
-        <label>
-            Land Line<input type="text" th:field="${contactPersonDTO.land_line}"
-                            placeholder="Land Line" class="form-control">
-        </label>
-        <br/>
-        <label>
-            Cell Phone<input type="text" th:field="${contactPersonDTO.cell_phone}"
-                             placeholder="Cell Phone Number" class="form-control">
-        </label>
-        <br/>
-        <label>
-            Contact Person Designation<input type="text" th:field="${contactPersonDTO.designation}"
-                                             placeholder="Designation" class="form-control">
-        </label>
+        <div class="form-group">
+            <label for="firstName">
+                First Name:
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('first_name')}"
+               th:errors="*{first_name}"
+            >Error</p>
+            <input type="text"  id="firstName" th:field="*{first_name}"
+                   placeholder="Contact Person First Name" class="form-control">
+        </div>
+
+
+        <div class="form-group">
+            <label for="lastName">
+                Last Name
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('last_name')}"
+               th:errors="*{last_name}"
+            >Error</p>
+            <input id="lastName" type="text" th:field="*{last_name}"
+                   placeholder="Last Name" class="form-control">
+         </div>
+
+
+
+        <div class="form-group">
+
+            <label for="email">
+                Email Address:
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('email_address')}"
+               th:errors="*{email_address}"
+            >Error</p>
+            <input id="email" type="text" th:field="*{email_address}"
+                   placeholder="Email Address" class="form-control">
+        </div>
+
+
+
+        <div class="form-group">
+
+            <label for="landLine">
+                Land Line:
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('land_line')}"
+               th:errors="*{land_line}"
+            >Error</p>
+            <input id="landLine" type="text" th:field="*{land_line}"
+                   placeholder="Land Line" class="form-control">
+        </div>
+
+
+
+
+        <div class="form-group">
+            <label for="cellNum">
+                Cell Phone:
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('cell_phone')}"
+               th:errors="*{cell_phone}"
+            >Error</p>
+            <input id="cellNum" type="text" th:field="*{cell_phone}"
+                   placeholder="Cell Phone Number" class="form-control">
+        </div>
+
+
+
+
+        <div class="form-group">
+            <label for="designation">
+                Contact Person Designation:
+            </label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('designation')}"
+               th:errors="*{designation}"
+            >Error</p>
+
+            <input id="designation" type="text" th:field="*{designation}"
+                   placeholder="Designation" class="form-control">
+        </div>
+
+
         <br/> <br/>
 
         <button class="btn drop-down-button"
                 hx-post="/Client/save-new-contact"
                 hx-target="#right-page-column"
-                hx-swap="innerHTML"> Add To Client
+                hx-swap="innerHTML"
+                hx-include="[contactPersonDTO='contactPersonDTO']"> Add To Client
         </button>
 
 
