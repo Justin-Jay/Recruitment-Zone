@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid main-page-section">
 
     <div class="row">
         <div class="container-fluid">
@@ -11,53 +11,72 @@
     </div>
 
     <form action="#" th:action="@{/Employee/save-employee}" th:object="${employeeDTO}" method="POST">
-        <label>
-            Employee Name:
-            <p th:class="error" th:if="${#fields.hasErrors('first_name')}"
-               th:errors="${employeeDTO.first_name}"
-            ></p>
-            <input type="text" th:field="*{first_name}" placeholder="First Name" class="form-control">
-        </label>
+        <p>Employee Capture</p>
+        <div class="form-group">
 
-        <label>
-            Last Name:
-            <p th:class="error" th:if="${#fields.hasErrors('last_name')}"
-               th:errors="${employeeDTO.last_name}"
-            ></p>
-            <input type="text" th:field="*{last_name}" placeholder="Last Name" class="form-control">
-        </label>
+            <div class="form-group">
+                <label for="first_name">
+                    First Name:
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('first_name')}"
+                   th:errors="*{first_name}"
+                ></p>
+                <input type="text" th:field="*{first_name}" id="first_name"
+                       placeholder="Enter Name"
+                       class="form-control">
+            </div>
 
-        <label>
-            Employee Password:
-            <p th:class="error" th:if="${#fields.hasErrors('password')}"
-               th:errors="${employeeDTO.password}"
-            ></p>
-            <input type="password" th:field="*{password}" placeholder="Password" class="form-control">
-        </label>
+            <div class="form-group">
+                <label for="last_name">Last Name: </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('last_name')}"
+                   th:errors="*{last_name}"
+                ></p>
+                <input type="text" id="last_name" class="form-control" th:field="*{last_name}"/>
 
-        <label>
-            Contact Number:
-            <p th:class="error" th:if="${#fields.hasErrors('contact_number')}"
-               th:errors="${employeeDTO.contact_number}"
-            ></p>
+            </div>
 
-            <input type="text" th:field="*{contact_number}" placeholder="Contact Number" class="form-control">
-        </label>
 
-        <!-- Show the list if it's not empty -->
-        <label for="role">Select Role:</label>
-        <select class="form-select-sm" aria-label=".form-select-sm" id="role" th:field="*{role}">
-            <option th:each="role : ${authorities}" th:value="${role}" th:text="${role.getRoleName()}"></option>
-        </select>
+            <div class="form-group">
+                <label for="password">
+                    Employee Password:
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('password')}"
+                   th:errors="*{password}"
+                ></p>
+                <input id="password" type="password" th:field="*{password}" placeholder="Password"
+                       class="form-control"/>
 
-        <hr/>
-        <button class="btn normal-button"
-                hx-post="/Employee/save-employee"
-                hx-target="#main-page-section"
-                hx-swap="innerHTML"
-                hx-include="[employeeDTO='employeeDTO']"> Add Employee
-        </button>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_number">
+                    Contact Number:
+
+                </label>
+                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('contact_number')}"
+                   th:errors="${employeeDTO.contact_number}"
+                ></p>
+                <input id="contact_number" type="text" th:field="*{contact_number}" placeholder="Contact Number"
+                       class="form-control">
+
+                            </div>
+
+
+                      <label for="role">Select Role:</label>
+                            <select class="form-select" aria-label=".form-select" id="role" th:field="*{role}">
+                                <option th:each="role : ${authorities}" th:value="${role}" th:text="${role.getRoleName()}"></option>
+                            </select>
+
+                <hr/>
+                <button class="btn btn-secondary"
+                        hx-post="/Employee/save-employee"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML"
+                        hx-include="[employeeDTO='employeeDTO']"> Add Employee
+                </button>
+
+            </div>
     </form>
 
-
 </div>
+

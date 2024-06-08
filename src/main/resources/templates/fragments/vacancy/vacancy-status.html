@@ -1,0 +1,16 @@
+<div class="form-group" th:fragment="vacancyStatus(vacancy)">
+
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+    <form action="#" th:action="@{/Vacancy/update-vacancy-status}" th:object="${vacancy}" method="POST">
+
+        <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
+
+        <button class="btn btn-secondary"
+                hx-post="/Vacancy/update-vacancy-status"
+                hx-target="#main-page-section"
+                hx-swap="innerHTML show:top"
+                hx-include="[vacancyID='vacancyID']"> Update Status
+        </button>
+    </form>
+</div>

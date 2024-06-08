@@ -1,0 +1,68 @@
+<div class="container-fluid" th:fragment="existingDocuments(existingDocuments)" id="vacancy-documents">
+    <p>Existing Documents</p>
+
+    <!--    <p th:if="${findCandidateDocumentsResponse}" th:text="${findCandidateDocumentsResponse}"></p>
+        -->
+    <p th:if="${findVacancyDocumentsResponse}" th:text="${findVacancyDocumentsResponse}"></p>
+
+    <!--LIST VIEW -->
+    <!-- <ol class="list-group" th:each="document, documentIndex : ${existingDocuments}">
+         <li class="list-group-item" >
+             <p th:text="${'Document Number: '+ documentIndex.index }"></p>
+             <p th:text="${'Document Type: ' + document.convertDocType}"></p>
+             <a class="download-button btn btn-light btn-outline-dark"
+                th:href="@{/Document/download-document/{fileID}(fileID=${document.fileID})}">
+                 Download
+             </a>
+         </li>
+     </ol>-->
+
+    <!--TABLE VIEW -->
+    <table class="table table-striped table-responsive">
+        <thead>
+        <tr>
+            <th>Index</th>
+            <th>
+                <a class="aRef"
+                   th:if="${currentPage != i}"
+                   th:href="@{'/Vacancy/paginatedVacancyDocuments/' + ${vacancy.vacancyID}+ '/' + ${currentPage}+ '?sortField=created&sortDir=' + ${reverseSortDir}}"
+                   onclick="loadHTMXFragment(this.href, 'main-page-column'); return false;"
+                >Date Created
+                </a>
+            </th>
+            <th>Document Type</th>
+            <th>Download</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="document, documentIndex : ${existingDocuments}">
+            <td th:text="*{documentIndex.index }"></td>
+            <td th:text="${#temporals.format(document.created, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="*{document.convertDocType}"></td>
+            <td>
+                <a class="download-button btn btn-light btn-outline-dark"
+                   th:href="@{/Document/download-document/{fileID}(fileID=*{document.fileID})}">
+                    Download
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+					        	<a class="btn btn-secondary"
+                                   th:if="${currentPage != i}"
+                                   th:href="@{'/Vacancy/paginatedVacancyDocuments/' + *{vacancy.vacancyID}+ '/'+ ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                                   onclick="loadHTMXFragment(this.href, 'main-page-column'); return false;"
+                                   th:text="${i}">
+                                </a>
+                                <span th:unless="${currentPage != i}">[[${i}]]</span>
+					    </span>
+    </div>
+
+
+</div>
+

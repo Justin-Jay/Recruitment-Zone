@@ -8,8 +8,7 @@ import za.co.recruitmentzone.util.enums.Province;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "CANDIDATE")
@@ -30,22 +29,22 @@ public class Candidate implements Serializable {
     @Enumerated(EnumType.STRING)
     private EducationLevel education_level;
     private Boolean relocation;
-    @Column(name="created")
+    @Column(name = "created")
     private LocalDateTime created;
     @OneToMany(mappedBy = "candidate",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private Set<Application> applications;
+    private List<Application> applications;
     @OneToMany(mappedBy = "candidate",
             cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<CandidateNote> notes;
+    private List<CandidateNote> notes;
 
     @OneToMany(mappedBy = "candidate",
             cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
+                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<CandidateFile> documents;
+    private List<CandidateFile> documents;
 
     public Candidate() {
         // received
@@ -77,13 +76,20 @@ public class Candidate implements Serializable {
         this.created = created;
     }
 
-    public Set<CandidateFile> getDocuments() {
-        return documents;
+    public List<CandidateFile> getDocuments() {
+        if (this.documents != null) {
+            List<CandidateFile> sortedDocs = new ArrayList<>(this.documents);
+            Collections.sort(sortedDocs, new Comparator<CandidateFile>() {
+                @Override
+                public int compare(CandidateFile item1, CandidateFile item2) {
+                    return item2.getCreated().compareTo(item1.getCreated());
+                }
+            });
+            return sortedDocs;
+        }
+        else return new ArrayList<>();
     }
 
-    public void setDocuments(Set<CandidateFile> documents) {
-        this.documents = documents;
-    }
 
     public Long getCandidateID() {
         return candidateID;
@@ -181,59 +187,69 @@ public class Candidate implements Serializable {
         this.relocation = relocation;
     }
 
-    public Set<Application> getApplications() {
-        return applications;
+
+    public List<Application> getApplications() {
+        // sort by date received
+        if (this.applications != null) {
+            List<Application> sortedApplications = new ArrayList<>(this.applications);
+            Collections.sort(sortedApplications, new Comparator<Application>() {
+                @Override
+                public int compare(Application item1, Application item2) {
+                    return item2.getDate_received().compareTo(item1.getDate_received());
+                }
+            });
+            return sortedApplications;
+        } else return new ArrayList<>();
     }
 
-    public void setApplications(Set<Application> applications) {
-        this.applications = applications;
+
+    public List<CandidateNote> getNotes() {
+        if (this.notes != null) {
+            List<CandidateNote> sortedNotes = new ArrayList<>(this.notes);
+            Collections.sort(sortedNotes, new Comparator<CandidateNote>() {
+                @Override
+                public int compare(CandidateNote item1, CandidateNote item2) {
+                    return item2.getDateCaptured().compareTo(item1.getDateCaptured());
+                }
+            });
+            return sortedNotes;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
-    public Set<CandidateNote> getNotes() {
-        return notes;
-    }
 
-    public void setNotes(Set<CandidateNote> notes) {
-        this.notes = notes;
-    }
-
-    public void AddApplication(Application application){
-        if (applications ==null){
-            applications = new HashSet<>() {
+    public void AddApplication(Application application) {
+        if (applications == null) {
+            applications = new ArrayList<>() {
             };
         }
         applications.add(application);
         application.setCandidate(this);
     }
-//AddDocument
-    public void AddDocument(CandidateFile document){
-        if (documents ==null){
-            documents = new HashSet<>() {
+
+    //AddDocument
+    public void AddDocument(CandidateFile document) {
+        if (documents == null) {
+            documents = new ArrayList<>() {
             };
         }
         documents.add(document);
         document.setCandidate(this);
     }
 
-    public void addNote(CandidateNote note){
-        if (notes ==null){
-            notes = new HashSet<>();
-        }
-        notes.add(note);
-        note.setCandidate(this);
-    }
 
-    public void addNote(CandidateNoteDTO noteDTO){
-        if (notes ==null){
-            notes = new HashSet<>();
+    public void addNote(CandidateNoteDTO noteDTO) {
+ /*       if (noteDTO == null) {
+            throw new IllegalArgumentException("noteDTO cannot be null");
+        }*/
+        if (notes == null) {
+            notes = new ArrayList<>();
         }
         CandidateNote newNote = new CandidateNote(noteDTO.getComment());
         newNote.setCandidate(this);
-        LocalDateTime dt = LocalDateTime.now();
-        newNote.setDateCaptured(dt);
-        newNote.setCandidate(this);
+        newNote.setDateCaptured(noteDTO.getDateCaptured());
         notes.add(newNote);
-
     }
 
 
@@ -244,4 +260,32 @@ public class Candidate implements Serializable {
                 '}';
     }
 
+
+    public String printEducationLevel() {
+        switch (education_level) {
+            case MATRIC_CERTIFICATE -> {
+                return "MATRIC CERTIFICATE";
+            }
+            case BACHELORS_DEGREE -> {
+                return "BACHELORS DEGREE";
+            }
+            case NATIONAL_CERTIFICATE -> {
+                return "NATIONAL CERTIFICATE";
+            }
+
+            case HONORS -> {
+                return "HONORS";
+            }
+
+            case NQF_LEVEL_5 -> {
+                return "NQF LEVEL 5";
+            }
+            case NQF_LEVEL_6 -> {
+                return "NQF LEVEL 6";
+            }
+            default -> {
+                return "UNKNOWN";
+            }
+        }
+    }
 }

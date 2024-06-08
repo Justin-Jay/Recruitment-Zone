@@ -16,106 +16,70 @@
 /* MAIN PAGE SECTION STYLES */
 
 body {
-/*           background-color: var(--bs-border-color);*/
-}
-
-.contact-us {
-    position: relative;
-    top: 50%;
-    width: 100lvh;
-    text-align: center;
-    font-size: 18px;
+    background-color: var(--bs-border-color);
+    border-radius: 10px;
+    display: grid;
+    padding-bottom: 50px;
 }
 
 
-.full-page-frame {
-    /*      <select class="form-select form-select-sm" aria-label=".form-select-sm"    */
+.home-page-section {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    display: grid;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  /*  margin-top: 5px;*/
 }
+
+.blog-main-page-section {
+    overflow: auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    display: grid;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 
 .main-page-section {
     max-height: 75vh;
     overflow: auto;
     border: 2px solid #ccc;
     border-radius: 10px;
-    display: grid;
-    padding-top: 15px;
+    background-color: var(--bs-tertiary-bg);
+    padding-top: 30px;
     padding-bottom: 15px;
-    /* margin: 0;*/
 }
-
-
-
-
-.home-page-section {
-    border: 1px solid #ccc;
-    background-color: var(--bs-border-color);
-    border-radius: 10px;
-    display: flex;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    margin-top: 5px;
-}
-
-.blog-main-page-section {
- /*   max-height: 75vh;*/
-    overflow: auto;
-    border: 2px solid #ccc;
-    background-color: var(--bs-border-color);
-    border-radius: 10px;
-    display: grid;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    /* margin: 0;*/
-}
-
-
-/*.main-page-section-contact{
+.create-vacancy-page-section {
+    max-height: 90vh;
     overflow: auto;
     border: 2px solid #ccc;
     border-radius: 10px;
-    display: grid;
-    padding-top: 15px;
+    background-color: var(--bs-tertiary-bg);
+    padding-top: 30px;
     padding-bottom: 15px;
-
-}*/
-
-
-
+}
 .left-page-frame {
     max-height: 75vh;
     overflow: auto;
-    padding: 25px;
-/*    border: 2px solid #ccc;
-    border-radius: 10px;*/
-
-
-    /*
-       min-height: 80vh;
-       max-height: 80vh;
-
-       border: 2px solid #ccc;
-
-
-       display: flex;
-       */
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: var(--bs-tertiary-bg);
+    padding-top: 30px;
+    padding-bottom: 15px;
 }
-
-
-
 
 
 .right-page-frame {
     max-height: 75vh;
-    padding: 10px;
     overflow: auto;
     border: 2px solid #ccc;
     border-radius: 10px;
-    /* border: 1px solid #ccc;  Optional: Add border for visual clarity */
-    /*    min-height: 80vh;
-        max-height: 80vh;
-        overflow: auto;
-        border: 2px solid #ccc;
-        border-radius: 10px;*/
+    margin: 2px;
+    background-color: var(--bs-tertiary-bg);
+    padding-top: 30px;
+    padding-bottom: 15px;
 }
 
 
@@ -202,4 +166,92 @@ body {
 
 
 
+.vacancy-card-body {
+    position: relative;
+    max-height: 4.5em; /* 2 lines with some overflow */
+    overflow: hidden;
+}
 
+.card-truncate-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.view-more-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: transparent;
+    border: none;
+    color: blue; /* Adjust styling as needed */
+    cursor: pointer;
+}
+
+
+.ErrorMessage {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.25rem;
+    margin-top: 0.5rem;
+}
+
+/*
+
+USER SPINNER
+<p  class='htmx-indicator spinner'></p>
+
+*/
+.spinner {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 4px solid #ccc;
+    border-radius: 50%;
+    border-top-color: #333;
+    animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/*
+
+.progress {
+    height: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+.progress-bar {
+    float: left;
+    width: 0%;
+    height: 100%;
+    font-size: 12px;
+    line-height: 20px;
+    color: #fff;
+    text-align: center;
+    background-color: #337ab7;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    -webkit-transition: width .6s ease;
+    -o-transition: width .6s ease;
+    transition: width .6s ease;
+}*/
+.aRef {
+    color: inherit; /* Use the text color of the parent element */
+    text-decoration: none; /* Remove underline */
+    background: none; /* Remove background color */
+    border: none; /* Remove border */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+    font: inherit; /* Inherit font from parent */
+}

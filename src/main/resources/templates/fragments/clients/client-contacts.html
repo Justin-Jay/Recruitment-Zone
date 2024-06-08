@@ -20,16 +20,17 @@
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
     <div class="container-fluid" th:each="contact : ${contactPersonList}">
+        <p class="text-black" th:text="${'Name : ' + contact.first_name +' ' +contact.last_name }"></p>
+        <p class="text-black" th:text="${'Cell Number : ' + contact.cell_phone}"></p>
+        <p class="text-black" th:text="${'Land Line : ' + contact.land_line}"></p>
+        <p class="text-black" th:text="${'Designation : ' + contact.designation}"></p>
+
+
         <button class="btn" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-            <p   th:text="${contact.first_name +' ' +contact.last_name }"></p>
+                aria-expanded="false">Manage Contact
         </button>
+
         <ul class="dropdown-menu dropdown-menu-lg-end">
-            <!--  <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li>
-                  <hr class="dropdown-divider">
-              </li>-->
             <li>
                 <a>
                     <form th:action="@{/Client/update-client-contact}" th:method="post">
@@ -46,9 +47,8 @@
                 </a>
             </li>
         </ul>
+        <hr>
     </div>
-
-
 
 
     <form th:action="@{/Client/add-contact}" th:method="POST">

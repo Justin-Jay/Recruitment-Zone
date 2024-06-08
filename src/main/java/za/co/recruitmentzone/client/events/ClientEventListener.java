@@ -4,10 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import za.co.recruitmentzone.client.service.ClientFileService;
 import za.co.recruitmentzone.client.entity.ClientFile;
 import za.co.recruitmentzone.storage.StorageService;
 
+@Component
 public class ClientEventListener {
 
     private final Logger log = LoggerFactory.getLogger(ClientEventListener.class);
@@ -24,10 +26,10 @@ public class ClientEventListener {
 
     // ClientFileUploadEvent
     @EventListener
-    public void onClientFileUploadEvent(ClientFileUploadEvent event) {
+    public void onClientGoogleFileEvent(ClientGoogleFileEvent event) {
         log.info("<--  onClientFileUploadEvent event {} -->", event.getFileID());
         try {
-            String fileResponse = storageService.uploadFile(event);
+            String fileResponse = storageService.uploadClientFile(event);
             if (!fileResponse.contains("File upload failed")) {
                 log.info("<--  uploadToGCloud fileResponse {} -->", fileResponse);
 

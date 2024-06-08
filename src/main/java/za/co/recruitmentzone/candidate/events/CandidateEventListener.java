@@ -29,7 +29,7 @@ public class CandidateEventListener {
     }
 
     @EventListener
-    public void onCandidateFileUploadEvent(CandidateFileUploadEvent event) {
+    public void onCandidateGoogleFileEvent(CandidateGoogleFileEvent event) {
         log.info("<--  FileUploadEvent event {} -->", event.getFileID());
         String message = "";
         try {
@@ -70,8 +70,6 @@ public class CandidateEventListener {
         if (!message.isEmpty()) {
             emailEventPublisher.publishFileUpload( new AdminContactMessage("CANDIDATE_FILE_UPLOAD",message));
         }
-
-
 
     }
 

@@ -14,13 +14,15 @@
     <form class="form-group" action="#" th:action="@{/Application/save-application}" th:object="${newApplicationDTO}"
           th:method="POST" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
 
-        <p th:text="${vacancyName} ? ${'Application for ' + vacancyName + ' role'} : 'Application for'"></p>
+        <p th:text="${newApplicationDTO.vacancyName} ? ${'Application for ' + newApplicationDTO.vacancyName} : 'Application for open vacancy'"></p>
 
+        <input type="hidden" name="vacancyID" th:value="${newApplicationDTO.vacancyID}"/>
 
-        <input type="hidden" name="vacancyID" th:value="${vacancyID}"/>
+        <input type="hidden" name="vacancyName" th:value="${newApplicationDTO.vacancyName}"/>
 
-        <input type="hidden" name="vacancyName" th:value="${vacancyName}"/>
-
+        <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('first_name')}"
+           th:errors="${newApplicationDTO.first_name}"
+        >Error</p>
         <label for="FirstName">
             First Name:
         </label>
@@ -28,6 +30,9 @@
         <input type="text" th:field="${newApplicationDTO.first_name}" id="FirstName" placeholder="Enter First Name"
                class="form-control mb-4 w-25"/>
 
+        <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('last_name')}"
+           th:errors="${newApplicationDTO.last_name}"
+        ></p>
         <label for="LastName">
             Last Name:
         </label>
@@ -37,31 +42,44 @@
         <label for="idNumber">
             ID Number:
         </label>
-
+        <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('id_number')}"
+           th:errors="${newApplicationDTO.id_number}"></p>
         <input type="text" th:field="${newApplicationDTO.id_number}" id="idNumber" placeholder="ID Number"
                class="form-control mb-4 w-25"/>
+
+        <p class="alert alert-danger alert-dismissible fade show" role="alert"
+           th:if="${#fields.hasErrors('email_address')}"
+           th:errors="${newApplicationDTO.email_address}">Error!</p>
+
         <label for="email">
             Email Address:
         </label>
-
         <input type="email" th:field="${newApplicationDTO.email_address}" id="email"
                placeholder="Enter Email Address"
                class="form-control mb-4 w-25"/>
-
+        <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('phone_number')}"
+           th:errors="${newApplicationDTO.phone_number}"
+        ></p>
         <label for="phoneNumber">
             Phone Number:
         </label>
-
         <input type="text" th:field="${newApplicationDTO.phone_number}" id="phoneNumber"
                placeholder="Enter Phone Number"
                class="form-control mb-4 w-25"/>
+
+
         <label for="currentProvince">Current Location:
         </label>
-        <select class="form-select-sm m-1" aria-label=".form-select"  id="currentProvince" th:field="${newApplicationDTO.current_province}">
+        <select class="form-select" aria-label=".form-select" id="currentProvince"
+                th:field="${newApplicationDTO.current_province}">
             <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
-                    th:value="${province}" th:text="${province}"></option>
+                    th:value="${province}" th:text="${province.getPrintableProvinceName()}"></option>
         </select>
-        <br>  <br>
+        <br> <br>
+
+        <p class="alert alert-danger alert-dismissible fade show" role="alert"
+           th:if="${#fields.hasErrors('current_role')}"
+           th:errors="${newApplicationDTO.current_role}">Error!</p>
         <label for="CurrentRole">
             Current Role:
         </label>
@@ -69,6 +87,9 @@
                placeholder="Enter Current Role"
                class="form-control mb-4 w-25"/>
 
+        <p class="alert alert-danger alert-dismissible fade show" role="alert"
+           th:if="${#fields.hasErrors('current_employer')}"
+           th:errors="${newApplicationDTO.current_employer}">current_employerError!</p>
         <label for="employer">
             Current Employer:
         </label>
@@ -76,6 +97,9 @@
                placeholder="Enter Current Employer"
                class="form-control mb-4 w-25"/>
 
+        <p class="alert alert-danger alert-dismissible fade show" role="alert"
+           th:if="${#fields.hasErrors('seniority_level')}"
+           th:errors="${newApplicationDTO.seniority_level}">seniority_levelError!</p>
         <label for="seniorityLevel">
             Seniority Level:
         </label>
@@ -85,9 +109,10 @@
 
         <label for="EduLevel">Highest Education Level:
         </label>
-        <select class="form-select-sm" aria-label=".form-select-sm" id="EduLevel" th:field="${newApplicationDTO.education_level}">
+        <select class="form-select" aria-label=".form-select" id="EduLevel"
+                th:field="${newApplicationDTO.education_level}">
             <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
-                    th:value="${statusVal}" th:text="${statusVal}"></option>
+                    th:value="${statusVal}" th:text="${statusVal.getPrintableEduLevel()}"></option>
         </select>
         <br/>
 
@@ -106,7 +131,9 @@
             <label class="form-check-label" for="relocationNo">No</label>
         </div>
         <br/> <br/>
-
+        <!--  <p class="alert alert-danger alert-dismissible fade show" role="alert"
+                   th:if="${#fields.hasErrors('seniority_level')}"
+                   th:errors="${newApplicationDTO.seniority_level}">seniority_levelError!</p>-->
         <label for="documentAttachment">
             Attach CV:
         </label>
@@ -115,11 +142,17 @@
                id="documentAttachment"
                class="form-control mb-4 w-25"/>
 
-        <button class="btn normal-button"
+        <button class="btn btn-secondary"
                 hx-post="/Application/save-application"
                 hx-target="#main-page-section"
                 hx-swap="innerHTML"
-                hx-include="[newApplicationDTO='newApplicationDTO']">Submit Application
+                hx-include="[newApplicationDTO='newApplicationDTO']"
+                hx-indicator="#spinner">
+            Submit Application
         </button>
+
+        <p class='htmx-indicator spinner' id="spinner"></p>
+
+
     </form>
 </div>

@@ -11,10 +11,9 @@ import javax.security.auth.Subject;
 import java.io.Serializable;
 import java.security.Principal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Entity
 @Table(name = "USERS")
@@ -50,30 +49,16 @@ public class Employee implements Principal, Serializable {
             cascade = {
                     CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
             })
-    private Set<Blog> blogs;
+    private List<Blog> blogs;
 
     @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER,
                 cascade = {
             CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
                 })
-    private Set<Vacancy> vacancies;
+    private List<Vacancy> vacancies;
 
 
     public Employee() {
-    }
-
-    public Employee(String username, String password, String email, String first_name, String last_name, String contact_number, boolean isEnabled, Timestamp created, List<Authority> authorities, Set<Blog> blogs, Set<Vacancy> vacancies) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.contact_number = contact_number;
-        this.isEnabled = isEnabled;
-        this.created = created;
-        this.authorities = authorities;
-        this.blogs = blogs;
-        this.vacancies = vacancies;
     }
 
     public Employee(Long employeeID) {
@@ -104,21 +89,35 @@ public class Employee implements Principal, Serializable {
         this.authorities = authorities;
     }
 
-    public Set<Blog> getBlogs() {
-        return blogs;
+    public List<Blog> getBlogs() {
+     if(this.blogs!=null){
+         List<Blog> sortedBlogs = new ArrayList<>(this.blogs);
+         Collections.sort(sortedBlogs, new Comparator<Blog>() {
+             @Override
+             public int compare(Blog item1, Blog item2) {
+                 return item2.getCreated().compareTo(item1.getCreated());
+             }
+         });
+         return sortedBlogs;
+     }
+       return new ArrayList<>();
     }
 
-    public void setBlogs(Set<Blog> blogs) {
-        this.blogs = blogs;
+    public List<Vacancy> getVacancies() {
+       if (this.vacancies != null) {
+           List<Vacancy> sortedVacancies = new ArrayList<>(this.vacancies);
+           Collections.sort(sortedVacancies, new Comparator<Vacancy>() {
+               @Override
+               public int compare(Vacancy item1, Vacancy item2) {
+                   return item2.getCreated().compareTo(item1.getCreated());
+               }
+           });
+           return sortedVacancies;
+       }
+       return new ArrayList<>();
     }
 
-    public Set<Vacancy> getVacancies() {
-        return vacancies;
-    }
 
-    public void setVacancies(Set<Vacancy> vacancies) {
-        this.vacancies = vacancies;
-    }
 
     public String getUsername() {
         return username;
@@ -189,7 +188,7 @@ public class Employee implements Principal, Serializable {
 
     public void addBlog(Blog blog){
         if (blogs ==null){
-            blogs = new HashSet<>();
+            blogs = new ArrayList<>();
         }
         blogs.add(blog);
         blog.setEmployee(this);
@@ -197,7 +196,7 @@ public class Employee implements Principal, Serializable {
 
     public void addVacancy(Vacancy vacancy){
         if (vacancies ==null){
-            vacancies = new HashSet<>();
+            vacancies = new ArrayList<>();
         }
         vacancies.add(vacancy);
         vacancy.setEmployee(this);

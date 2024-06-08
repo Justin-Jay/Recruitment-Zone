@@ -1,0 +1,78 @@
+<div class="container-fluid main-page-section" th:fragment="clientView(client)" >
+
+    <!--MESSAGE AREA-->
+
+    <div th:insert="~{fragments/layout/response-messages :: successMessage(${saveUpdatedClientResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findClientByIDResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: successMessage(${createClientFileResponse})}"></div>
+
+
+    <div class="container-fluid"  th:object="${client}">
+
+
+        <!--
+
+            // industry, clientName , contactPeopleCount , created
+
+        -->
+
+        <div class="row">
+            <div class="col-6">
+                <label>Client:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{name}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Industry:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{industry.getPrintableIndustryName()}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Relationship established:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{created}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Contact People:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{getContactPeopleCount}"></span>
+            </div>
+        </div>
+
+<br>
+        <form action="#" th:action="@{/Client/view-client-contacts}" th:method="post">
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" name="clientID" th:value="*{clientID}"/>
+            <!-- Submit button to trigger the form submission -->
+            <button class="btn normal-button"
+                    hx-post="/Client/view-client-contacts"
+                    hx-target="#right-page-column"
+                    hx-swap="innerHTML"
+                    hx-include="[clientID='clientID']">View Contacts
+            </button>
+        </form>
+
+        <br>
+    </div>
+
+<!--    <div th:insert="~{fragments/clients/view-client-notes :: clientNotes(${existingNotes})}"></div>-->
+</div>
+
+
+
+

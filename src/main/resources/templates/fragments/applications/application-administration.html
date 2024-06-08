@@ -11,6 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
 
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+
     <title>Recruitment Zone</title>
 </head>
 <body>
@@ -18,7 +19,7 @@
 
 <div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
-<div class="container-fluid pt-2 pe-2" id="body-container">
+<div class="container-fluid home-page-section" id="body-container">
 
 
     <!--MAIN PAGE  -->
@@ -29,8 +30,8 @@
 
         <div class="container-fluid">
             <h3> Applications Administration
-
             </h3>
+            <hr>
         </div>
 
         <!--MESSAGE AREA-->
@@ -44,41 +45,91 @@
 
         <!--PAGE CONTENT -->
 
-        <div class="container-fluid main-page-section">
+        <div class="container-fluid">
 
             <div class="row">
 
                 <!--LEFT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 left-page-frame">
 
-                    <div class="container-fluid left-page-frame" id="left-page-column">
+                    <div class="container-fluid " id="left-page-column" th:fragment="applications-admin-table">
                         <form class="container d-none d-md-block"  action="#">
                             <button class="btn btn-outline-secondary" type="button" disabled>Disabled button</button>
                         </form>
 
                         <br/>
 
-                        <div class="container ">
-                            <div class="my-card custom-border dropdown dropend" th:each="vapp : ${applicationsList}">
+                        <!--LIST VIEW-->
+                     <!--   <div class="my-card custom-border dropdown dropend" th:each="vapp : ${applicationsList}">
 
-                                <p th:text="*{'Vacancy Name: ' + vapp.vacancy.job_title}" th:value="${vapp}"></p>
-                                <p th:text="*{'Candidate: ' + vapp.candidate.first_name}"
-                                   th:value="${vapp}"></p>
+                            <p th:text="*{'Vacancy Name: ' + vapp.vacancy.jobTitle}" th:value="${vapp}"></p>
+                            <p th:text="*{'Candidate: ' + vapp.candidate.first_name}"
+                               th:value="${vapp}"></p>
 
-                                <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    Manage Application
-                                </button>
+                            <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Manage Application
+                            </button>
 
 
-                                <div id="applicant-admin-list" th:insert="~{fragments/applications/application-list  :: listOptions(${vapp})}">Applications List</div>
-                              <br/>
+                            <div id="applicant-admin-list" th:insert="~{fragments/applications/application-list  :: listOptions(${vapp})}">Applications List</div>
+                            <br/>
 
-                            </div>
                         </div>
+-->
 
+                        <!--TABLE VIEW -->
+                        <table class="table table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <a class="aRef"
+                                       th:if="${currentPage != i}"
+                                       th:href="@{'/Application/paginatedApplications/' + ${currentPage}+ '?sortField=created&sortDir=' + ${reverseSortDir}}"
+                                       onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                    >Date Created
+                                    </a>
+                                </th>
+                                <th>Vacancy</th>
+                                <th>Applicant</th>
+                                <th>Manage</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr  th:each="vapp : ${applicationsList}">
+                                <!--                                <td th:text="*{vacancy.created}"></td>-->
+                                <td th:text="${#temporals.format(vapp.created, 'dd-MM-yyyy HH:mm')}"></td>
+                                <td th:text="*{vapp.vacancy.jobTitle}"></td>
+                                <td th:text="*{vapp.candidate.first_name}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        Manage Application
+                                    </button>
+                                    <div id="applicant-admin-list" th:insert="~{fragments/applications/application-list  :: listOptions(${vapp})}">Applications List</div>
+
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+					        	<a class="btn btn-secondary"
+                                   th:if="${currentPage != i}"
+                                   th:href="@{'/Application/paginatedApplications/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                                   onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                   th:text="${i}">
+                                </a>
+                                <span th:unless="${currentPage != i}">[[${i}]]</span>
+					    </span>
+
+                        </div>
 
                     </div>
 

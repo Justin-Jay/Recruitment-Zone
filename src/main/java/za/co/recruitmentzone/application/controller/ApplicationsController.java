@@ -6,11 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import za.co.recruitmentzone.application.dto.ApplicationDTO;
 import za.co.recruitmentzone.application.dto.NewApplicationDTO;
 import za.co.recruitmentzone.util.enums.ApplicationStatus;
 import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
+
+import java.util.List;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
@@ -31,15 +35,25 @@ public class ApplicationsController {
     @GetMapping("/applications-administration")
     public String applications(Model model) {
         try {
-
-            recruitmentZoneService.findAllApplications(model);
-
+            int pageSize = 10;
+            recruitmentZoneService.findAllApplications(model,1, pageSize, "created", "desc");
         } catch (Exception e) {
             log.error("<-- applications -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // applicationsList , findAllApplicationsResponse , internalServerError
         return "fragments/applications/application-administration";
+    }
+
+    @GetMapping("/paginatedApplications/{pageNo}")
+    public String findPaginatedApplications(@PathVariable(value = "pageNo") int pageNo,
+                                     @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        int pageSize = 10;
+        log.info("Page number  {}", pageNo);
+        log.info("sortField {}", sortField);
+        log.info("sortDirection {}", sortDirection);
+        recruitmentZoneService.findAllApplications(model,pageNo, pageSize, sortField, sortDirection);
+        return "fragments/applications/application-administration :: applications-admin-table";
     }
 
 
@@ -58,32 +72,38 @@ public class ApplicationsController {
 
     @PostMapping("/save-application")
     public String saveSubmission(@Valid @ModelAttribute("newApplicationDTO") NewApplicationDTO newApplicationDTO,
-                                 BindingResult bindingResult, Model model
-    ) {
-        if (bindingResult.hasErrors()) {
+                                 BindingResult bindingResult, Model model ) {
+        if (bindingResult.hasFieldErrors()) {
 
             recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
-            model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
+
+         /*   List<ObjectError> errors = bindingResult.getAllErrors();
+            for (ObjectError error : errors) {
+                System.out.println(error.getDefaultMessage());
+            }*/
             //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , bindingResult
             return "fragments/applications/apply-now";
         }
-        try {
-            recruitmentZoneService.saveApplication(newApplicationDTO, model);
-            // applicationOutcome , createCandidateApplication , invalidFileException
-            if (model.getAttribute("invalidFileException") != null) {
-                log.info("<-- saveSubmission -->  invalidFileException Result : {}", model.getAttribute("invalidFileException"));
+
+        else {
+            try {
+                recruitmentZoneService.saveApplication(newApplicationDTO, model);
+                // applicationOutcome , createCandidateApplication , invalidFileException
+                if (model.getAttribute("invalidFileException") != null) {
+                    log.info("<-- saveSubmission -->  invalidFileException Result : {}", model.getAttribute("invalidFileException"));
+                    recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
+                    //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , invalidFileException
+                    return "fragments/applications/apply-now";
+                }
+
+            } catch (Exception e) {
+                log.error("<-- saveSubmission -->  Exception \n {}", e.getMessage());
+                model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
                 recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
-                //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , invalidFileException
+                // ContactMessage  =   emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
+
                 return "fragments/applications/apply-now";
             }
-
-        } catch (Exception e) {
-            log.error("<-- saveSubmission -->  Exception \n {}", e.getMessage());
-            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-            recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
-            // ContactMessage  =   emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
-
-            return "fragments/applications/apply-now";
         }
 
         // applicationOutcome
@@ -120,19 +140,17 @@ public class ApplicationsController {
 
     @PostMapping("/save-updated-application")
     public String saveUpdatedApplicationStatus(
-            @RequestParam("applicationID") Long applicationID,
-            @RequestParam("status") ApplicationStatus status,
-            @Valid @ModelAttribute("application") Application application,
+            @Valid @ModelAttribute("vacancyApplication") ApplicationDTO applicationDTO,
             BindingResult bindingResult, Model model) {
         log.info("save-updated-application start");
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
-            recruitmentZoneService.findApplicationByID(applicationID, model);
+            recruitmentZoneService.findApplicationByID(applicationDTO.getApplicationID(), model);
             return "fragments/applications/update-application";
         }
         try {
-            recruitmentZoneService.saveUpdatedApplicationStatus(model, applicationID, status);
-            recruitmentZoneService.findApplicationByID(applicationID, model);
+            recruitmentZoneService.saveUpdatedApplicationStatus(model, applicationDTO);
+            recruitmentZoneService.findApplicationByID(applicationDTO.getApplicationID(), model);
 
         } catch (Exception e) {
             log.error("<-- saveUpdatedApplicationStatus -->  Exception \n {}", e.getMessage());
@@ -142,5 +160,7 @@ public class ApplicationsController {
         //applicationsList ,findAllApplicationsResponse
         return "fragments/applications/update-application";
     }
+
+
 
 }

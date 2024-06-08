@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RecruitmentZoneApplication {
     private static final Logger log = LoggerFactory.getLogger(RecruitmentZoneApplication.class);
     public static void main(String[] args) {
-        log.info(" RecruitmentZoneApplication started ");
         SpringApplication.run(RecruitmentZoneApplication.class, args);
+        log.info(" RecruitmentZoneApplication started ... ");
     }
 
 }

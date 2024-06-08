@@ -110,11 +110,18 @@
         </dependency>
 
 
-        <dependency>
+     <!--   <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>htmx.org</artifactId>
             <version>1.9.9</version>
+        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.webjars.npm/htmx.org -->
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>htmx.org</artifactId>
+            <version>2.0.0-beta3</version>
         </dependency>
+
 
         <!-- DEV TOOLS FOR DEVELOPMENT SUPPORT-->
         <dependency>
@@ -203,8 +210,23 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
+        </dependency>
+
+    <!--    &lt;!&ndash; https://mvnrepository.com/artifact/io.github.wimdeblauwe/htmx-spring-boot-thymeleaf &ndash;&gt;
+        <dependency>
+            <groupId>io.github.wimdeblauwe</groupId>
+            <artifactId>htmx-spring-boot-thymeleaf</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+-->
+
         <!-- SESSION MANAGEMENT -->
-     <!--   <dependency>
+  <!--      <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-jdbc</artifactId>
         </dependency>-->

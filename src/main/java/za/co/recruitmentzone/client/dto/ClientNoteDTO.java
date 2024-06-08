@@ -1,11 +1,19 @@
 package za.co.recruitmentzone.client.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Data
 public class ClientNoteDTO implements Serializable {
     private Long clientID;
     private LocalDateTime dateCaptured;
+
+    @NotNull(message = "Please enter a note")
+    @NotBlank(message = "Note is blank")
     private String comment;
     private Long employeeID;
 
@@ -17,39 +25,6 @@ public class ClientNoteDTO implements Serializable {
         this.dateCaptured = dateCaptured;
         this.comment = comment;
     }
-
-    public Long getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(Long employeeID) {
-        this.employeeID = employeeID;
-    }
-
-    public Long getclientID() {
-        return clientID;
-    }
-
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
-    }
-
-    public LocalDateTime getDateCaptured() {
-        return dateCaptured;
-    }
-
-    public void setDateCaptured(LocalDateTime dateCaptured) {
-        this.dateCaptured = dateCaptured;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
 
     public String printClientNoteDTO() {
         return "ClientNoteDTO{" +

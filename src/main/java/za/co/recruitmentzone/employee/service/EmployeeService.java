@@ -66,6 +66,7 @@ public class EmployeeService {
 
             newEmp.setCreated(timestamp);
 
+
             String role = employeeDTO.getRole();
             ROLE chosenRole = getRole(role);
             log.info("role selected {}", chosenRole);

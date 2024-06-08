@@ -12,11 +12,7 @@ import za.co.recruitmentzone.util.enums.VacancyStatus;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Entity
 @Table(name = "VACANCY")
@@ -25,7 +21,7 @@ public class Vacancy implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vacancyID;
     @Column(name = "job_title")
-    private String job_title;
+    private String jobTitle;
     @Column(name = "job_description", length = 65535)
     private String job_description;
     @Column(name = "seniority_level")
@@ -48,6 +44,8 @@ public class Vacancy implements Serializable {
     private EmpType empType;
     @Column(name = "created")
     private LocalDateTime created;
+    @Column(name = "vacancyRef")
+    private String vacancyRef;
     @ManyToOne(
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
@@ -65,14 +63,13 @@ public class Vacancy implements Serializable {
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })
-    private Set<Application> applications;
+    private List<Application> applications;
 
     public Vacancy() {
     }
 
-
-    public Vacancy(String job_title, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType) {
-        this.job_title = job_title;
+    public Vacancy(String jobTitle, String job_description, String seniority_level, String requirements, String location, Industry industry, LocalDate publish_date, LocalDate end_date, VacancyStatus status, JobType jobType, EmpType empType) {
+        this.jobTitle = jobTitle;
         this.job_description = job_description;
         this.seniority_level = seniority_level;
         this.requirements = requirements;
@@ -135,12 +132,12 @@ public class Vacancy implements Serializable {
         this.vacancyID = vacancyID;
     }
 
-    public String getJob_title() {
-        return job_title;
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setJob_title(String job_title) {
-        this.job_title = job_title;
+    public void setJobTitle(String job_title) {
+        this.jobTitle = job_title;
     }
 
     public String getJob_description() {
@@ -225,31 +222,36 @@ public class Vacancy implements Serializable {
         this.employee = employee;
     }
 
-/*    public Set<Application> getApplications() {
-        // Your existing code to fetch and filter the set of Application objects
-        Set<Application> applicationList = applications;
-
-        // Create a TreeSet with a custom Comparator
-        TreeSet<Application> sortedApplications = new TreeSet<>(new ApplicationComparator());
-
-        // Add all applications to the sorted TreeSet
-        sortedApplications.addAll(applicationList);
-
-        // Return the sorted set
-        return sortedApplications;
-    }*/
-
-    public Set<Application> getApplications() {
-       return applications;
+    public String getVacancyRef() {
+        return vacancyRef;
     }
 
-    public void setApplications(Set<Application> applications) {
+    public void setVacancyRef(String vacancyRef) {
+        this.vacancyRef = vacancyRef;
+    }
+
+    public List<Application> getApplications() {
+        if (this.applications!=null){
+            List<Application> sortedApplications = new ArrayList<>(this.applications);
+            Collections.sort(sortedApplications, new Comparator<Application>() {
+                @Override
+                public int compare(Application item1, Application item2) {
+                    return item2.getDate_received().compareTo(item1.getDate_received());
+                }
+            });
+            return sortedApplications;
+        }
+        else return new ArrayList<>();
+    }
+
+    public void setApplications(List<Application> applications) {
         this.applications = applications;
     }
 
     public void addApplication(Application application) {
         if (applications == null) {
-            applications = new HashSet<>();
+            applications = new ArrayList<>() {
+            };
         }
         applications.add(application);
         application.setVacancy(this);
@@ -260,11 +262,10 @@ public class Vacancy implements Serializable {
         }else return applications.size();
     }
 
-
     public String printVacancy() {
         return "Vacancy{" +
                 "vacancyID=" + vacancyID +
-                ", job_title='" + job_title + '\'' +
+                ", job_title='" + jobTitle + '\'' +
                 ", seniority_level='" + seniority_level + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
