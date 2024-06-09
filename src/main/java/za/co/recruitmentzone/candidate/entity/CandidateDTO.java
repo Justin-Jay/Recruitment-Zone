@@ -8,6 +8,7 @@ import za.co.recruitmentzone.util.enums.Province;
 import java.io.Serializable;
 
 public class CandidateDTO implements Serializable  {
+
     private String first_name;
     private String last_name;
     private String id_number;

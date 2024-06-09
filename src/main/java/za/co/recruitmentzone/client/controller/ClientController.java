@@ -124,6 +124,7 @@ public class ClientController {
         try {
             recruitmentZoneService.saveNewClient(model, newClientDTO);
 
+
         } catch (Exception e) {
             log.info("<-- saveClient -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -131,21 +132,6 @@ public class ClientController {
         //  saveNewClientResponse saveNewClientResponse , clientsList , findAllClientsResponse
         return "fragments/clients/view-client";
     }
-
-
-/*    @PostMapping("/view-client")
-    public String showClient(@RequestParam("clientID") Long clientID, Model model) {
-        try {
-            recruitmentZoneService.findClientByID(clientID, model);
-            recruitmentZoneService.findClientNotes(model,clientID); // PAGINATION?
-
-        } catch (Exception e) {
-            log.info("<-- showClient -->  Exception \n {}", e.getMessage());
-            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-        }
-        // client ,findClientByIDResponse   , internalServerError
-        return "fragments/clients/view-client";
-    }*/
 
     @PostMapping("/view-client-contacts")
     public String showClientContacts(@RequestParam("clientID") Long clientID, Model model) {
@@ -225,6 +211,9 @@ public class ClientController {
         }
         try {
             recruitmentZoneService.saveUpdatedClient(client, model);
+            int pageSize = 10;
+            recruitmentZoneService.findClientNotes(model,client.getClientID(),1, pageSize, "dateCaptured", "desc");
+
         } catch (Exception e) {
             log.info("<-- saveUpdatedClient -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);

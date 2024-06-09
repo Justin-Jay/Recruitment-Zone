@@ -39,6 +39,8 @@
         <div class="container-fluid">
             <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
             <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadEmployeesResponse})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewEmployeeResponse})}"></div>
+
         </div>
 
         <!--PAGE CONTENT -->

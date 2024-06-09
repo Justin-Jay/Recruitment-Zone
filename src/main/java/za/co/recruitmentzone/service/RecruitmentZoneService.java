@@ -8,6 +8,7 @@ import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.exception.BlogNotFoundException;
 import za.co.recruitmentzone.blog.exception.BlogNotSavedException;
 import za.co.recruitmentzone.blog.service.BlogService;
+import za.co.recruitmentzone.candidate.entity.CandidateDTO;
 import za.co.recruitmentzone.candidate.entity.CandidateFile;
 import za.co.recruitmentzone.candidate.events.CandidateEventPublisher;
 import za.co.recruitmentzone.candidate.service.CandidateFileService;
@@ -239,6 +241,99 @@ public class RecruitmentZoneService {
 
     // CANDIDATES
 
+    public void findCandidate(long candidateID, Model model) {
+        try {
+            log.info("<--  findCandidate candidateID {} -->", candidateID);
+            Candidate candidate = candidateService.getcandidateByID(candidateID);
+
+       /* CandidateDTO candidateDTO = new CandidateDTO();
+        candidateDTO.setFirst_name(candidate.getFirst_name());
+        candidateDTO.setLast_name(candidate.getLast_name());
+        candidateDTO.setId_number(candidate.getId_number());
+        candidateDTO.setEmail_address(candidate.getEmail_address());
+        candidateDTO.setPhone_number(candidate.getPhone_number());
+        candidateDTO.setCurrent_province(candidate.getCurrent_province());
+        candidateDTO.setCurrent_role(candidate.getCurrent_role());
+        candidateDTO.setCurrent_employer(candidate.getCurrent_employer());
+        candidateDTO.setSeniority_level(candidate.getSeniority_level());
+        candidateDTO.setEducation_level(candidate.getEducation_level());
+        candidateDTO.setRelocation(candidate.getRelocation());
+*/
+            model.addAttribute("candidate", candidate);
+
+        } catch (CandidateNotFoundException candidateNotFoundException) {
+            log.info("<--  findCandidate candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
+            model.addAttribute("findCandidateResponse", candidateNotFoundException.getMessage());
+        }
+
+    }
+
+
+    public void saveUpdatedCandidate(Candidate candidate, Model model) {
+        log.info("<--  saveUpdatedCandidate candidate {} -->", candidate.printCandidate());
+
+        // CandidateNotFoundException
+        try {
+            Candidate existingCandidate = candidateService.getcandidateByID(candidate.getCandidateID());
+            if (existingCandidate != null) {
+                log.info("<--  saveUpdatedCandidate - existingCandidate {} -->", existingCandidate.printCandidate());
+
+                if (!candidate.getFirst_name().equalsIgnoreCase(existingCandidate.getFirst_name())) {
+                    existingCandidate.setFirst_name(candidate.getFirst_name());
+                }
+
+                if (!candidate.getLast_name().equalsIgnoreCase(existingCandidate.getLast_name())) {
+                    existingCandidate.setLast_name(candidate.getLast_name());
+                }
+
+                if (!candidate.getId_number().equalsIgnoreCase(existingCandidate.getId_number())) {
+                    existingCandidate.setLast_name(candidate.getLast_name());
+                }
+
+                if (!candidate.getEmail_address().equalsIgnoreCase(existingCandidate.getEmail_address())) {
+                    existingCandidate.setEmail_address(candidate.getEmail_address());
+                }
+
+                if (!candidate.getPhone_number().equalsIgnoreCase(existingCandidate.getPhone_number())) {
+                    existingCandidate.setPhone_number(candidate.getPhone_number());
+                }
+                if (candidate.getCurrent_province()!=existingCandidate.getCurrent_province()) {
+                    existingCandidate.setCurrent_province(candidate.getCurrent_province());
+                }
+
+                if (!candidate.getCurrent_role().equalsIgnoreCase(existingCandidate.getCurrent_role())) {
+                    existingCandidate.setLast_name(candidate.getLast_name());
+                }
+                if (!candidate.getCurrent_employer().equalsIgnoreCase(existingCandidate.getCurrent_employer())) {
+                    existingCandidate.setCurrent_employer(candidate.getCurrent_employer());
+                }
+
+                if (!candidate.getSeniority_level().equalsIgnoreCase(existingCandidate.getSeniority_level())) {
+                    existingCandidate.setSeniority_level(candidate.getSeniority_level());
+                }
+
+                if (candidate.getEducation_level()!=existingCandidate.getEducation_level()) {
+                    existingCandidate.setEducation_level(candidate.getEducation_level());
+                }
+
+                if (candidate.getRelocation()!=existingCandidate.getRelocation()) {
+                    existingCandidate.setRelocation(candidate.getRelocation());
+                }
+
+
+                candidateService.save(existingCandidate);
+
+                model.addAttribute("saveUpdatedCandidateResponse", "Candidate Updated "+candidate.getFirst_name());
+            }
+        } catch (CandidateNotFoundException candidateNotFoundException) {
+
+            log.info("<--  saveUpdatedCandidate candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
+            model.addAttribute("saveUpdatedCandidateResponse", candidateNotFoundException.getMessage());
+        }
+
+
+    }
+
     //  candidate ,existingNotes , candidateNoteDTO
     public void addCandidateNote(Model model, Long candidateID, int pageSize) {
         log.info("<--  addCandidateNote candidateID {} -->", candidateID);
@@ -303,6 +398,7 @@ public class RecruitmentZoneService {
                 if (savedCandidate != null) {
                     model.addAttribute("noteSaved", "Note Added");
                     int pageSize = 5;
+                    //
                     addCandidateNote(model, savedCandidate.getCandidateID(), pageSize);
                     log.info("<-- saveCandidateNote  savedCandidate {} -->", savedCandidate.printCandidate());
                 } else
@@ -521,7 +617,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("creationOutcome", outcome
                 );
                 // reload candidate
-                findCandidateNotes(application.getCandidate().getCandidateID(), model);
+          /*      findCandidateNotes(application.getCandidate().getCandidateID(), model);
 
                 Candidate candidate = application.getCandidate();
                 model.addAttribute("candidate", candidate);
@@ -529,7 +625,7 @@ public class RecruitmentZoneService {
                 CandidateNoteDTO candidateNoteDTO = new CandidateNoteDTO();
                 candidateNoteDTO.setCandidateID(candidate.getCandidateID());
                 model.addAttribute("candidateNoteDTO", candidateNoteDTO);
-
+*/
                 log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
             }
         } catch (CandidateException e) {
@@ -553,7 +649,7 @@ public class RecruitmentZoneService {
         candidate.setSeniority_level(newApplicationDTO.getSeniority_level());
         candidate.setEducation_level(newApplicationDTO.getEducation_level());
         candidate.setRelocation(newApplicationDTO.getRelocation());
-        candidate.setCreated(LocalDateTime.now());
+        //candidate.setCreated(LocalDateTime.now());
         log.info("New Candidate \n {}", candidate.printCandidate());
 
         // create candidate and save and link with document
@@ -644,15 +740,26 @@ public class RecruitmentZoneService {
         }
     }
 
-    public void reloadVacancyDocuments(Model model, Long vacancyID) {
-        log.info("<-- findVacancyDocuments  {} -->", vacancyID);
+    public void reloadVacancyDocuments(Model model, Long vacancyID, int pageNo, int pageSize, String sortField, String sortDirection) {
+        log.info("<-- findVacancyDocuments vacancyID = {} -->", vacancyID);
         try {
-            List<ClientFile> vacancyDocs = clientFileService.loadVacancyDocs(vacancyID);
             Vacancy v = vacancyService.findById(vacancyID);
-            model.addAttribute("vacancy", v);
-            model.addAttribute("existingDocuments", vacancyDocs);
+//            List<ClientFile> vacancyDocs = clientFileService.loadVacancyDocs(vacancyID);
+            Page<ClientFile> vacancyDocs = clientFileService.findPaginatedVacancyDocs(pageNo, pageSize, sortField,
+                    sortDirection, v);
 
-            log.info("<-- findVacancyDocuments vacancyDocs size {} -->", vacancyDocs.size());
+            model.addAttribute("vacancy", v);
+
+            model.addAttribute("existingDocuments", vacancyDocs);
+            model.addAttribute("totalPages", vacancyDocs.getTotalPages());
+            model.addAttribute("totalItems", vacancyDocs.getTotalElements());
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("sortField", sortField);
+            model.addAttribute("sortDir", sortDirection);
+            model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
+
+
+            log.info("<-- findVacancyDocuments getTotalPages {} -->", vacancyDocs.getTotalPages());
         } catch (ClientNotFoundException clientNotFoundException) {
             model.addAttribute("findVacancyDocumentsResponse", clientNotFoundException.getMessage());
         }
@@ -1058,6 +1165,7 @@ public class RecruitmentZoneService {
             log.info("<--  getAllVacancies vacancyApplicationList.getTotalPages {} -->", vacancyApplicationList.getTotalPages());
 
             model.addAttribute("vacancyList", vacancyApplicationList);
+
             model.addAttribute("totalPages", vacancyApplicationList.getTotalPages());
             model.addAttribute("totalItems", vacancyApplicationList.getTotalElements());
             model.addAttribute("currentPage", pageNo);
@@ -1071,37 +1179,7 @@ public class RecruitmentZoneService {
         }
     }
 
-    /*  public void reloadVacancySubmissions(Long vacancyID, Model model,int pageNo,int pageSize,String sortField,String sortDirection
-      ) {
-          log.info("<--  findVacancyById vacancyID  {} -->", vacancyID);
-          try {
-              Vacancy vacancy = vacancyService.findById(vacancyID);
-              VacancyDTO vacancyDTO = convertVacancy(vacancy);
-              //model.addAttribute("vacancy", vacancyDTO);
-  //            List<Application> vacancyApplicationList = vacancy.getApplications();
 
-              Page<Application> vacancyApplicationList = applicationService.findPaginatedApplications(pageNo,pageSize,sortField,
-                      sortDirection,vacancy);
-
-              //model.addAttribute("currentPage",pageNo);
-            //  model.addAttribute("totalPages",vacancyApplicationList.getTotalPages());
-              //model.addAttribute("totalItems",vacancyApplicationList.getTotalElements());
-              //model.addAttribute("sortField",sortField);
-              //model.addAttribute("sortDir",sortDirection);
-              //model.addAttribute("vacancyID",vacancyID);
-
-              //model.addAttribute("reverseSortDir",sortDirection.equals("asc")? "desc": "asc");
-
-              log.info("Vacancy Application Size {}", vacancyApplicationList.getTotalPages());
-              model.addAttribute("vacancyApplications", vacancyApplicationList);
-
-              log.info("<--  findVacancyById vacancy != null  {} -->", vacancy.printVacancy());
-          } catch (VacancyException vacancyException) {
-              log.info("<-- findVacancyById  vacancyException: {} -->", vacancyException.getFailureReason());
-              model.addAttribute("findVacancyResponse", vacancyException.getFailureReason());
-          }
-      }
-  */
     public void searchVacancyByTitle(String title, Model model) {
         log.info("<--  searchVacancyByTitle title {} -->", title);
         try {
@@ -1277,7 +1355,8 @@ public class RecruitmentZoneService {
             log.info("<--  findBlogById blogNotSavedException {} -->", blogNotFoundException.getMessage());
         }
     }
-/*    public void findBlogDTO(Long blogID, Model model) {
+
+    public void findBlogDTO(Long blogID, Model model) {
         log.info("<--  findBlogById blogID {} -->", blogID);
         try {
             Blog blog = blogService.findById(blogID);
@@ -1292,11 +1371,10 @@ public class RecruitmentZoneService {
             model.addAttribute("blog", blogDTO);
             log.info("<--  findBlogById optionalBlog.isPresent {} -->", blog.printBlog());
         } catch (BlogNotFoundException blogNotFoundException) {
-            log.info("<--  findBlogById blog is null  -->");
             model.addAttribute("findBlogResponse", blogNotFoundException.getMessage());
             log.info("<--  findBlogById blogNotSavedException {} -->", blogNotFoundException.getMessage());
         }
-    }*/
+    }
 
     public void saveNewBlog(BlogDTO blogDTO, Principal principal, Model model) {
         log.info("<-- saveNewBlog Saving new blog for principal : {} -->", principal.getName());
@@ -1334,46 +1412,49 @@ public class RecruitmentZoneService {
         }
     }
 
-    public void saveUpdatedBlog(Blog updatedBlog, Model model) {
-        log.info("<--  saveExistingBlog blog {} -->", updatedBlog.printBlog());
+    public void saveUpdatedBlog(BlogDTO blogDTO, Model model) {
+        log.info("<--  saveUpdatedBlog blogDTO {} -->", blogDTO.printBlogDTO());
         String returnMessage = "";
         try {
-            Blog optionalBlog = blogService.findById(updatedBlog.getBlogID());
-            log.info("<--  optionalBlog {} -->", optionalBlog.printBlog());
-            if (optionalBlog != null) {
+            Blog existingBlog = blogService.findById(blogDTO.getBlogID());
 
-                log.info("<--  saveExistingBlog optionalBlog.isPresent {} -->", optionalBlog.printBlog());
-                if (!updatedBlog.getBlog_title().equalsIgnoreCase(optionalBlog.getBlog_title())) {
-                    optionalBlog.setBlog_title(updatedBlog.getBlog_title());
+            if (existingBlog != null) {
+                log.info("<--  saveUpdatedBlog existingBlog {} -->", existingBlog.printBlog());
+
+                if (!blogDTO.getBlog_title().equalsIgnoreCase(existingBlog.getBlog_title())) {
+                    existingBlog.setBlog_title(blogDTO.getBlog_title());
                 }
                 // description
-                if (!updatedBlog.getBlog_description().equalsIgnoreCase(optionalBlog.getBlog_description())) {
-                    optionalBlog.setBlog_description(updatedBlog.getBlog_description());
+                if (!blogDTO.getBlog_description().equalsIgnoreCase(existingBlog.getBlog_description())) {
+                    existingBlog.setBlog_description(blogDTO.getBlog_description());
                 }
                 // body
-                if (!updatedBlog.getBody().equalsIgnoreCase(optionalBlog.getBody())) {
-                    optionalBlog.setBody(updatedBlog.getBody());
+                if (!blogDTO.getBody().equalsIgnoreCase(existingBlog.getBody())) {
+                    existingBlog.setBody(blogDTO.getBody());
                 }
                 // publish date
 
-                if (!Objects.equals(updatedBlog.getPublish_date(), optionalBlog.getPublish_date())) {
-                    optionalBlog.setPublish_date(updatedBlog.getPublish_date());
-
-                }
-                // expiration date
-                if (!Objects.equals(updatedBlog.getEnd_date(), optionalBlog.getEnd_date())) {
-                    optionalBlog.setEnd_date(updatedBlog.getEnd_date());
-                }
-
-                if (updatedBlog.getPublish_date() != null) {
-                    if (!updatedBlog.getPublish_date().isBefore(LocalDate.now())) {
+                if (blogDTO.getPublish_date() != null) {
+                    if (blogDTO.getPublish_date() != existingBlog.getPublish_date()) {
+                        existingBlog.setPublish_date(blogDTO.getPublish_date());
+                    }
+                  /*  if (!updatedBlog.getPublish_date().isBefore(LocalDate.now())) {
                         optionalBlog.setStatus(ACTIVE);
+                    }*/
+                }
+
+                // expiration date
+
+                if (blogDTO.getEnd_date() != null) {
+                    if (blogDTO.getEnd_date() != existingBlog.getEnd_date()) {
+                        existingBlog.setEnd_date(blogDTO.getEnd_date());
                     }
                 }
 
+
                 try {
                     //optionalBlog.setEmployee(updatedBlog.getEmployee());
-                    Blog savedBlog = blogService.save(optionalBlog);
+                    Blog savedBlog = blogService.save(existingBlog);
                     if (savedBlog != null) {
                         returnMessage = "Blog Updated";
 
@@ -1387,7 +1468,7 @@ public class RecruitmentZoneService {
                     log.info("<--  saveExistingBlog blogNotSavedException {} -->", blogNotSavedException.getMessage());
                     model.addAttribute("updateBlogResponse", blogNotSavedException.getMessage());
                 }
-            } else throw new BlogNotFoundException("Blog not found: blog ID: " + updatedBlog.getBlogID());
+            } else throw new BlogNotFoundException("Blog not found: blog ID: " + blogDTO.getBlogID());
         } catch (BlogNotFoundException blogNotFoundException) {
             log.error("blogNotSavedException {}", blogNotFoundException.getMessage());
             model.addAttribute("updateBlogResponse", blogNotFoundException.getMessage());
@@ -1720,6 +1801,10 @@ public class RecruitmentZoneService {
                 String saveNewClientResponse = "Client Saved: " + clientResponse.getClientID();
                 model.addAttribute("saveNewClientResponse", saveNewClientResponse);
                 model.addAttribute("client", clientResponse);
+
+                int pageSize = 10;
+                findClientNotes(model,clientResponse.getClientID(),1, pageSize, "dateCaptured", "desc");
+
 
             } else throw new SaveClientException("Failed to save new client {}" + newClientDTO.getName());
 

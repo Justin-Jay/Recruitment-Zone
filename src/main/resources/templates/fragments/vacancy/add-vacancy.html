@@ -175,12 +175,15 @@
                 </div>
                 <br>
 
-
-                <button class="btn btn-secondary"
+          <!--      <button class="btn btn-secondary"
                         hx-post="/Vacancy/save-vacancy"
                         hx-target="#vacancy-create-section"
                         hx-swap="innerHTML"
                         hx-include="[vacancyDTO='vacancyDTO']"
+                        id="submit">Save vacancy
+                </button>-->
+
+                <button class="btn btn-secondary"
                         id="submit">Save vacancy
                 </button>
                 <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary"

@@ -25,7 +25,7 @@
 
     <div class="row ">
         <div class="container-fluid">
-            <h3 class="h3">Create Blog
+            <h3 class="h3">Update Blog
             </h3>
             <hr>
         </div>
@@ -33,7 +33,9 @@
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${dirtyData})}"></div>
+
     </div>
 
     <div class="row">
@@ -56,21 +58,39 @@
 
                     <br><br>
 
-                    <div class="row-cols-4 align-items-center">
-                        <label for="publish_date">Publish Date:
-                            <input type="date" th:value="*{publish_date}" class="form-control" id="publish_date"
-                                   placeholder="Publish Date"/></label>
-                        <label for="expirationDate">Expiration Date:
-                            <input type="date" th:value="*{end_date}" class="form-control " id="expirationDate"
-                                   placeholder="Expiration Date:"/>
-                        </label>
-                    </div>
+
+                    <label for="publish_date">Publish Date: </label>
+                    <input type="date" th:name="publish_date" th:value="*{publish_date}" class="form-control" id="publish_date"
+                           placeholder="Publish Date"/>
+
+
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('publish_date')}"
+                       th:errors="*{publish_date}"
+                    ></p>
+
+
+                    <br><br>
+
+
+                    <label for="expirationDate">Expiration Date: </label>
+                    <input type="date" th:name="end_date"  th:value="*{end_date}" class="form-control " id="expirationDate"
+                           placeholder="Expiration Date:"/>
+
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('end_date')}"
+                       th:errors="*{end_date}"
+                    ></p>
+
 
                     <br>
-                    <button class="btn btn-secondary"
+                <!--    <button class="btn btn-secondary"
                             hx-post="/Blog/save-updated-blog"
                             hx-target="#blog-update-section"
                             hx-swap="innerHTML"
+                            id="submit"> Save Updated Blog
+                    </button>-->
+                    <button class="btn btn-secondary"
                             id="submit"> Save Updated Blog
                     </button>
                 </form>

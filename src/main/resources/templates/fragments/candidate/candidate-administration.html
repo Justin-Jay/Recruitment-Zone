@@ -36,6 +36,8 @@
         <div class="container-fluid">
             <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
             <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findAllCandidatesResponse})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: genericMessage(${creationOutcome})}"></div>
+
         </div>
 
 
