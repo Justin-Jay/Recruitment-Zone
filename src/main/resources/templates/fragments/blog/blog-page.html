@@ -76,7 +76,7 @@
                             <div class="card" style="margin-bottom: 15px;">
                                 <img class="img-fluid" src="https://picsum.photos/800/350" alt="img"/>
                                 <h5 class="card-header fw-medium m-0" th:text="${blog.blog_title}">TITLE HEADING</h5>
-                                <p class="fw-normal m-2 overflow-hidden" th:text="${blog.blog_description}">Description</p>
+                                <p class="fw-normal m-2 overflow-hidden" th:utext="${blog.blog_description}">Description</p>
                                 <p class="fw-light m-2" th:text="${'Author: ' + blog.employee.name.substring(0,blog.employee.name.indexOf('@')) + ' Publish Date: '+blog.publish_date}">
                                     Author:</p>
 

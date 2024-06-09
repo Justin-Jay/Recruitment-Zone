@@ -3,7 +3,7 @@ package za.co.recruitmentzone.client.dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.util.enums.ClientDocumentType;
@@ -17,8 +17,9 @@ public class ClientFileDTO implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private ClientDocumentType documentType;
+
     @Transient
-    @NotNull(message = "Please attach file")
+    @Null(message = "PLease attach a file")
     private MultipartFile fileMultipart;
 
     public ClientFileDTO() {

@@ -116,13 +116,15 @@
                         </div>
 
                         <br/>
-                        <button class="btn btn-secondary"
+                  <!--      <button class="btn btn-secondary"
                                 hx-post="/Blog/save-blog"
-                                hx-target="#blog-create-section"
+                                hx-target="#body-container"
                                 hx-swap="innerHTML"
                                 id="submit">Save Blog
+                        </button>-->
+                        <button class="btn btn-secondary"
+                                id="submit">Save Blog
                         </button>
-
                         <a  class="btn btn-secondary" th:href="@{/Blog/blog-administration}">Cancel</a>
                     </div>
                 </form>

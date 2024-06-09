@@ -46,7 +46,7 @@ public class Vacancy implements Serializable {
     private LocalDateTime created;
     @Column(name = "vacancyRef")
     private String vacancyRef;
-    @ManyToOne(
+    @ManyToOne(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
             })

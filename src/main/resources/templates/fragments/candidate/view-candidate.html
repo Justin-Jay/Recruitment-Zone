@@ -4,6 +4,10 @@
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addCandidateNoteResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${creationOutcome})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findCandidateResponse})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveExistingEmployeeResponse})}"></div>
+
     </div>
 
     <div class="container-fluid" th:fragment="candidateView(candidate)"

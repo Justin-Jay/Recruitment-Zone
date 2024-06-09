@@ -47,8 +47,8 @@ public class NewApplicationDTO implements Serializable {
 
     private Boolean relocation;
 
-    @NotNull(message = "PLease attach a file")
     @Transient
+    @NotNull(message = "PLease attach a file")
     private MultipartFile documentAttachment;
 
     private Long vacancyID;

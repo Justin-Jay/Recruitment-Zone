@@ -46,7 +46,7 @@ public class BlogController {
     public String blogAdministration(Model model) {
         try {
             int pageSize = 5;
-            recruitmentZoneService.getBlogs(model,1, pageSize, "created", "asc");
+            recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
         } catch (Exception e) {
             log.error("<-- blogAdministration -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -88,11 +88,13 @@ public class BlogController {
             cleanInput = recruitmentZoneService.cleanData(blogDTO);
             if (cleanInput){
                 recruitmentZoneService.saveNewBlog(blogDTO, principal, model);
+                int pageSize = 5;
+                recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
             }
             else {
                 model.addAttribute("dirtyData","Failed to sanitize input");
-                return "fragments/blog/update-blog";
-            }
+                return "fragments/blog/add-blog";
+            } //
 
         } catch (Exception e) {
             log.error("<-- saveExistingBlog -->  Exception \n {}", e.getMessage());
@@ -100,7 +102,8 @@ public class BlogController {
         }
         //   blog , findBlogResponse , internalServerError ,  saveNewBlogResponse
         //return "fragments/blog/view-blog";
-        return "fragments/blog/view-home-blog";
+    //    return "fragments/blog/view-home-blog";
+        return "/fragments/blog/blog-administration";
     }
 
     @PostMapping("/view-blog")
@@ -131,7 +134,7 @@ public class BlogController {
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
         try {
-            recruitmentZoneService.findBlogById(blogID, model);
+            recruitmentZoneService.findBlogDTO(blogID, model);
         } catch (Exception e) {
             log.error("<-- updateBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", e.getMessage());
@@ -141,17 +144,19 @@ public class BlogController {
     }
 
     @PostMapping("/save-updated-blog")
-    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") Blog blog,
+    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") BlogDTO blog,
                                   BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+
             return "fragments/blog/update-blog";
         }
         try {
-            log.info("<--- saveUpdatedBlog BODY: ---> \n {} ", blog.printBlog());
             boolean cleanInput ;
             cleanInput = recruitmentZoneService.cleanData(blog);
             if (cleanInput){
                 recruitmentZoneService.saveUpdatedBlog(blog, model);
+                int pageSize = 5;
+                recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
             }
             else {
                 model.addAttribute("dirtyData","Failed to sanitize input");
@@ -163,7 +168,7 @@ public class BlogController {
         }
         // blog , findBlogResponse , internalServerError, updateBlogResponse
        // return "fragments/blog/view-blog";
-        return "fragments/blog/view-home-blog";
+        return "/fragments/blog/blog-administration";
     }
 
 

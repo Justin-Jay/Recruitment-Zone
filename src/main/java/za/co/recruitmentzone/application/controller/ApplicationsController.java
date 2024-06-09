@@ -75,12 +75,9 @@ public class ApplicationsController {
                                  BindingResult bindingResult, Model model ) {
         if (bindingResult.hasFieldErrors()) {
 
-            recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
+            //recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
 
-         /*   List<ObjectError> errors = bindingResult.getAllErrors();
-            for (ObjectError error : errors) {
-                System.out.println(error.getDefaultMessage());
-            }*/
+
             //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , bindingResult
             return "fragments/applications/apply-now";
         }
@@ -106,7 +103,7 @@ public class ApplicationsController {
             }
         }
 
-        // applicationOutcome
+        //
         return "fragments/applications/application-submitted";
     }
 

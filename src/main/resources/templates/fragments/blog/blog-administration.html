@@ -44,6 +44,11 @@
             <div class="container-fluid">
                 <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
                 <div th:insert="~{fragments/layout/response-messages :: failureMessage(${getBlogsResponse})}"></div>
+                <div th:insert="~{fragments/layout/response-messages :: failureMessage(${dirtyData})}"></div>
+
+                <div th:insert="~{fragments/layout/response-messages :: genericMessage(${savedBlogResponse})}"></div>
+                <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewBlogResponse})}"></div>
+
             </div>
         </div>
 

@@ -1,0 +1,104 @@
+<div class="container-fluid main-page-section">
+
+    <div class="container-fluid"><h2>Update Employee</h2></div>
+
+
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findEmployeeByIDResponse})}"></div>
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+
+    <div class="container-fluid">
+        <form action="#" th:action="@{/Candidate/save-updated-candidate}" th:object="${candidate}" th:method="POST">
+            <!-- Hidden input field to include the vacancyID in the POST request -->
+            <input type="hidden" th:field="*{candidateID}" />
+            <div class="md-10">
+                <label for="first_name" >Candidate First Name: </label>
+                <input type="text" th:name="first_name" th:field="*{first_name}" class="form-control mb-4 w-25" id="first_name" placeholder="First Name"/>
+            </div>
+
+            <div class="md-10">
+                <label for="last_name" >Candidate Last Name: </label>
+                <input type="text"  th:name="last_name" th:field="*{last_name}" class="form-control mb-4 w-25" id="last_name" placeholder="Last Name"/>
+            </div>
+
+            <div class="md-10">
+                <label for="id_number" >ID Number: </label>
+                <input type="text" th:name="id_number"  th:field="*{id_number}" class="form-control mb-4 w-25" id="id_number" placeholder="Last Name"/>
+            </div>
+
+            <div class="md-10">
+                <label for="email_address" >Email Address: </label>
+                <input type="text" th:name="email_address"  th:field="*{email_address}" class="form-control mb-4 w-25" id="email_address" placeholder="Last Name"/>
+            </div>
+
+            <div class="md-10">
+                <label for="phone_number" >Phone Number: </label>
+                <input type="text" th:name="phone_number"  th:field="*{phone_number}" class="form-control mb-4 w-25" id="phone_number" placeholder="Last Name"/>
+            </div>
+
+
+            <div class="md-10">
+                <label for="current_province" >Current Province: </label>
+                <input type="text" th:name="current_province" th:field="*{current_province}" class="form-control mb-4 w-25" id="current_province" placeholder="Last Name"/>
+            </div>
+
+            <div class="md-10">
+                <label for="current_role" >Current Role: </label>
+                <input type="text"   th:name="current_role"  th:field="*{current_role}" class="form-control mb-4 w-25" id="current_role" placeholder="Last Name"/>
+            </div>
+
+
+            <div class="md-10">
+                <label for="current_employer" >Current Employer: </label>
+                <input type="text"  th:name="current_employer"  th:field="*{current_employer}" class="form-control mb-4 w-25" id="current_employer" placeholder="Last Name"/>
+            </div>
+
+
+            <div class="md-10">
+                <label for="seniority_level" >Seniority Level: </label>
+                <input type="text" th:name="seniority_level"  th:field="*{seniority_level}" class="form-control mb-4 w-25" id="seniority_level" placeholder="Last Name"/>
+            </div>
+
+
+
+            <div class="form-check form-check-inline">
+                <input type="radio" th:field="*{relocation}" id="relocationYes" value="true"
+                       class="form-check-input"/>
+                <label class="form-check-label" for="relocationYes">Yes</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input type="radio" th:field="*{relocation}" id="relocationNo" value="false"
+                       class="form-check-input"/>
+                <label class="form-check-label" for="relocationNo">No</label>
+            </div>
+
+
+            <label for="EduLevel">Highest Education Level:
+            </label>
+            <select class="form-select" aria-label=".form-select" id="EduLevel"
+                    th:field="*{education_level}">
+                <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
+                        th:value="${statusVal}" th:text="${statusVal.getPrintableEduLevel()}"></option>
+            </select>
+
+            <div class="md-10">
+                <label for="created" >Created: </label>
+                <input type="text" th:name="created" th:field="*{created}" class="form-control mb-4 w-25" id="created" placeholder="Last Name" readonly/>
+            </div>
+
+
+
+
+            <button class="btn normal-button"
+                    hx-post="/Candidate/save-updated-candidate"
+                    hx-target="#main-page-section"
+                    hx-swap="innerHTML" > Save Updated Candidate
+            </button>
+
+        </form>
+
+    </div>
+
+
+</div>

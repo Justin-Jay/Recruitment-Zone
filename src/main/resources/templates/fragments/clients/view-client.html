@@ -2,7 +2,8 @@
 
     <div class="row">
 
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findClientByIDResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findClientByIDResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewClientResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
     </div>
 
@@ -11,6 +12,8 @@
 
         <!--  display client   -->
         <div th:insert="~{fragments/clients/client-fragment :: clientView(${client})}"></div>
+
+
 
         <!-- Check if a condition is true -->
         <div th:if="${noNotesFound}">
