@@ -39,12 +39,12 @@ public class ApplicationService {
         return applicationRepository.findAll();
     }
 
-    public Application findApplicationByID(Long id) {
+    public Application findApplicationByID(Long id) throws ApplicationsNotFoundException {
         Optional<Application> application = applicationRepository.findById(id);
         return application.orElseThrow(() -> new ApplicationsNotFoundException("Application Not found " + id));
     }
 
-    public boolean saveUpdatedStatus(ApplicationDTO applicationDTO) {
+    public boolean saveUpdatedStatus(ApplicationDTO applicationDTO) throws ApplicationsNotFoundException {
         log.info("saveUpdatedStatus applicationDTO: {}", applicationDTO.printApplicationDTO());
         Optional<Application> optionalApplication = applicationRepository.findById(applicationDTO.getApplicationID());
         if (optionalApplication.isPresent()) {

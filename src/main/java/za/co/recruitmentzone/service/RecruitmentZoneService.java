@@ -1,5 +1,7 @@
 package za.co.recruitmentzone.service;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tika.Tika;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -203,14 +205,21 @@ public class RecruitmentZoneService {
         log.info("<-- findApplicationByID  applicationID: {} -->", applicationID);
         try {
             Application optionalApplication = applicationService.findApplicationByID(applicationID);
-            log.info("<-- findApplicationByID Loading application to update \n {} -->", optionalApplication.printApplication());
+            log.info("<-- findApplicationByID Loading application to view \n {} -->", optionalApplication.printApplication());
             ApplicationDTO applicationDTO = new ApplicationDTO();
+
             applicationDTO.setApplicationID(optionalApplication.getApplicationID());
+            applicationDTO.setCandidateName(optionalApplication.getCandidate().getFirst_name());
+            applicationDTO.setVacancyName(optionalApplication.getVacancy().getJobTitle());
+            applicationDTO.setCreated(optionalApplication.getCreated());
+            applicationDTO.setDate_received(optionalApplication.getDate_received());
+            applicationDTO.setSubmission_date(optionalApplication.getSubmission_date());
             applicationDTO.setStatus(optionalApplication.getStatus());
-            model.addAttribute("vacancyApplicationDTO", applicationDTO);
+
+            model.addAttribute("vacancyApplication", applicationDTO);
             log.info("<-- findApplicationByID DTO LOADED {} -->", applicationDTO.printApplicationDTO());
         } catch (ApplicationsNotFoundException applicationsNotFoundException) {
-            model.addAttribute(" ", applicationsNotFoundException.getMessage());
+            model.addAttribute("findApplicationByIDResponse", applicationsNotFoundException.getMessage());
             log.info("<-- findApplicationByID applicationsNotFoundException {} -->", applicationsNotFoundException.getMessage());
         }
     }
