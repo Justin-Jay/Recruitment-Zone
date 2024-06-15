@@ -5,21 +5,25 @@
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveApplicationStatusResponse})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveUpdatedApplicationStatus})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findApplicationByIDResponse})}"></div>
     </div>
 
 
     <!--  applicationID    -->
     <form class="form-control-sm" action="#" th:action="@{/Application/save-updated-application}" th:method="POST">
 
-        <input type="hidden" th:field="${vacancyApplicationDTO.applicationID}"/>
+        <input type="hidden" th:field="${vacancyApplication.applicationID}"/>
 
-        <p th:text="*{'Current Status: ' + vacancyApplicationDTO.status.getPrintableStatus()}" th:value="${vacancyApplicationDTO}"></p>
+        <p th:text="*{'Current Status: ' + vacancyApplication.status.getPrintableStatus()}" th:value="${vacancyApplication}"></p>
 
         <div th:if="${#strings.isEmpty(applicationsError)}">
 
             <label for="status">Select Status:
             </label>
-            <select class="form-select" aria-label=".form-select"  id="status" th:field="${vacancyApplicationDTO.status}">
+            <select class="form-select" aria-label=".form-select"  id="status" th:field="${vacancyApplication.status}">
                 <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.ApplicationStatus).values()}"
                         th:value="${statusVal}" th:text="${statusVal.getPrintableStatus()}"></option>
 
@@ -30,7 +34,7 @@
                     hx-post="/Application/save-updated-application"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"
-                    hx-include="[vacancyApplicationDTO='vacancyApplicationDTO']">Save Updated Application Status
+                    hx-include="[vacancyApplication='vacancyApplication']">Save Updated Application Status
             </button>
 
 

@@ -30,13 +30,14 @@ public class CandidateService {
         this.candidateRepository = candidateRepository;
         this.candidateNoteRepository = candidateNoteRepository;
     }
-
+    public void saveCandidateNote(CandidateNote candidateNote){
+        candidateNoteRepository.save(candidateNote);
+    }
     public List<Candidate> getCandidates() {
         return candidateRepository.findAll();
     }
 
     public Candidate save(Candidate candidate) {
-        log.info("About to Save candidate \n {}", candidate.printCandidate());
         return candidateRepository.save(candidate);
     }
 

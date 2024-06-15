@@ -1,5 +1,7 @@
 package za.co.recruitmentzone.service;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tika.Tika;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -22,7 +24,6 @@ import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.exception.BlogNotFoundException;
 import za.co.recruitmentzone.blog.exception.BlogNotSavedException;
 import za.co.recruitmentzone.blog.service.BlogService;
-import za.co.recruitmentzone.candidate.entity.CandidateDTO;
 import za.co.recruitmentzone.candidate.entity.CandidateFile;
 import za.co.recruitmentzone.candidate.events.CandidateEventPublisher;
 import za.co.recruitmentzone.candidate.service.CandidateFileService;
@@ -44,6 +45,7 @@ import za.co.recruitmentzone.client.entity.ClientNote;
 import za.co.recruitmentzone.client.entity.ContactPerson;
 import za.co.recruitmentzone.client.events.ClientEventPublisher;
 import za.co.recruitmentzone.client.exception.*;
+import za.co.recruitmentzone.client.repository.ClientNoteRepository;
 import za.co.recruitmentzone.client.service.ClientFileService;
 import za.co.recruitmentzone.client.service.ClientService;
 import za.co.recruitmentzone.client.service.ContactPersonService;
@@ -95,6 +97,7 @@ public class RecruitmentZoneService {
     private final ClientEventPublisher clientEventPublisher;
     private final TokenVerificationService tokenVerificationService;
     private final ContactPersonService contactPersonService;
+    private final ClientNoteRepository clientNoteRepository;
 
 
     @Value("${file.directory}")
@@ -104,7 +107,7 @@ public class RecruitmentZoneService {
     String Folder;
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
-                                  EmployeeService employeeService, ClientService clientService, BlogService blogService, CandidateFileService candidateFileService, PasswordEncoder passwordEncoder, CandidateEventPublisher candidateEventPublisher, ClientFileService clientFileService, ClientEventPublisher clientEventPublisher, TokenVerificationService tokenVerificationService, ContactPersonService contactPersonService) {
+                                  EmployeeService employeeService, ClientService clientService, BlogService blogService, CandidateFileService candidateFileService, PasswordEncoder passwordEncoder, CandidateEventPublisher candidateEventPublisher, ClientFileService clientFileService, ClientEventPublisher clientEventPublisher, TokenVerificationService tokenVerificationService, ContactPersonService contactPersonService, ClientNoteRepository clientNoteRepository) {
         this.applicationService = applicationService;
         this.vacancyService = vacancyService;
         this.candidateService = candidateService;
@@ -118,6 +121,7 @@ public class RecruitmentZoneService {
         this.clientEventPublisher = clientEventPublisher;
         this.tokenVerificationService = tokenVerificationService;
         this.contactPersonService = contactPersonService;
+        this.clientNoteRepository = clientNoteRepository;
     }
 
     // APPLICATIONS
@@ -203,14 +207,21 @@ public class RecruitmentZoneService {
         log.info("<-- findApplicationByID  applicationID: {} -->", applicationID);
         try {
             Application optionalApplication = applicationService.findApplicationByID(applicationID);
-            log.info("<-- findApplicationByID Loading application to update \n {} -->", optionalApplication.printApplication());
+            log.info("<-- findApplicationByID Loading application to view \n {} -->", optionalApplication.printApplication());
             ApplicationDTO applicationDTO = new ApplicationDTO();
+
             applicationDTO.setApplicationID(optionalApplication.getApplicationID());
+            applicationDTO.setCandidateName(optionalApplication.getCandidate().getFirst_name());
+            applicationDTO.setVacancyName(optionalApplication.getVacancy().getJobTitle());
+            applicationDTO.setCreated(optionalApplication.getCreated());
+            applicationDTO.setDate_received(optionalApplication.getDate_received());
+            applicationDTO.setSubmission_date(optionalApplication.getSubmission_date());
             applicationDTO.setStatus(optionalApplication.getStatus());
-            model.addAttribute("vacancyApplicationDTO", applicationDTO);
+
+            model.addAttribute("vacancyApplication", applicationDTO);
             log.info("<-- findApplicationByID DTO LOADED {} -->", applicationDTO.printApplicationDTO());
         } catch (ApplicationsNotFoundException applicationsNotFoundException) {
-            model.addAttribute(" ", applicationsNotFoundException.getMessage());
+            model.addAttribute("findApplicationByIDResponse", applicationsNotFoundException.getMessage());
             log.info("<-- findApplicationByID applicationsNotFoundException {} -->", applicationsNotFoundException.getMessage());
         }
     }
@@ -297,7 +308,7 @@ public class RecruitmentZoneService {
                 if (!candidate.getPhone_number().equalsIgnoreCase(existingCandidate.getPhone_number())) {
                     existingCandidate.setPhone_number(candidate.getPhone_number());
                 }
-                if (candidate.getCurrent_province()!=existingCandidate.getCurrent_province()) {
+                if (candidate.getCurrent_province() != existingCandidate.getCurrent_province()) {
                     existingCandidate.setCurrent_province(candidate.getCurrent_province());
                 }
 
@@ -312,18 +323,18 @@ public class RecruitmentZoneService {
                     existingCandidate.setSeniority_level(candidate.getSeniority_level());
                 }
 
-                if (candidate.getEducation_level()!=existingCandidate.getEducation_level()) {
+                if (candidate.getEducation_level() != existingCandidate.getEducation_level()) {
                     existingCandidate.setEducation_level(candidate.getEducation_level());
                 }
 
-                if (candidate.getRelocation()!=existingCandidate.getRelocation()) {
+                if (candidate.getRelocation() != existingCandidate.getRelocation()) {
                     existingCandidate.setRelocation(candidate.getRelocation());
                 }
 
 
                 candidateService.save(existingCandidate);
 
-                model.addAttribute("saveUpdatedCandidateResponse", "Candidate Updated "+candidate.getFirst_name());
+                model.addAttribute("saveUpdatedCandidateResponse", "Candidate Updated " + candidate.getFirst_name());
             }
         } catch (CandidateNotFoundException candidateNotFoundException) {
 
@@ -392,7 +403,8 @@ public class RecruitmentZoneService {
             Candidate candidate = candidateService.getcandidateByID(candidateID);
             log.info("<-- saveCandidateNote  candidate {} -->", candidate.printCandidate());
             //candidateNote.setDateCaptured(LocalDateTime.now());
-            candidate.addNote(candidateNote);
+            CandidateNote note = candidate.addNote(candidateNote);
+            candidateService.saveCandidateNote(note);
             try {
                 Candidate savedCandidate = candidateService.save(candidate);
                 if (savedCandidate != null) {
@@ -617,7 +629,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("creationOutcome", outcome
                 );
                 // reload candidate
-          /*      findCandidateNotes(application.getCandidate().getCandidateID(), model);
+                findCandidateNotes(application.getCandidate().getCandidateID(), model);
 
                 Candidate candidate = application.getCandidate();
                 model.addAttribute("candidate", candidate);
@@ -625,7 +637,6 @@ public class RecruitmentZoneService {
                 CandidateNoteDTO candidateNoteDTO = new CandidateNoteDTO();
                 candidateNoteDTO.setCandidateID(candidate.getCandidateID());
                 model.addAttribute("candidateNoteDTO", candidateNoteDTO);
-*/
                 log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
             }
         } catch (CandidateException e) {
@@ -633,7 +644,6 @@ public class RecruitmentZoneService {
             model.addAttribute("createCandidateApplicationResponse", "Failed to create application");
         }
     }
-
     public Application createApplication(NewApplicationDTO newApplicationDTO) {
         log.info("<-- createApplication newApplicationDTO {} -->", newApplicationDTO.printNewApplicationDTO());
 
@@ -671,19 +681,18 @@ public class RecruitmentZoneService {
         // link application with vacancy
         Vacancy v = vacancyService.findById(newApplicationDTO.getVacancyID());
         v.addApplication(application);
-
+        vacancyService.save(v);
         // link candidate with application
         candidate.AddApplication(application);
-
+        candidateService.save(candidate);
         log.info("About to Save New Application \n {}", application.printApplication());
 
         application = applicationService.save(application);
-
-
         if (application.getApplicationID() != null) {
             log.info("<-- createApplication application {} -->", application.printApplication());
 
-            // candidateEventPublisher.publishCandidateFileUploadedEvent();
+            candidateEventPublisher.publishCandidateGoogleFileEvent(file.getFileID(),file);
+
             return application;
         } else throw new CandidateException("Failed to create Candidate Application:");
     }
@@ -1047,12 +1056,14 @@ public class RecruitmentZoneService {
             if (client != null) {
                 //newVacancy.setClient(client);
                 client.addVacancy(newVacancy);
+                clientService.saveExistingClient(client);
             } else throw new VacancyException("Failed to set client to vacancy");
 
             Employee op = employeeService.getEmployeeByid(vacancy.getEmployeeID());
             if (op != null) {
                 // newVacancy.setEmployee(op);
                 op.addVacancy(newVacancy);
+                employeeService.save(op);
             } else throw new VacancyException("Failed to set employee to vacancy");
 
             newVacancy.setIndustry(client.getIndustry());
@@ -1398,7 +1409,7 @@ public class RecruitmentZoneService {
                     newBlog.setStatus(ACTIVE);
                 }
                 Blog blog = blogService.save(newBlog);
-
+                employeeService.save(employee);
                 model.addAttribute("saveNewBlogResponse", "New Blog created " + blog.getBlogID());
                 model.addAttribute("blog", blog);
                 log.info("<--  saveNewBlog newBlog {} -->", newBlog.printBlog());
@@ -1438,9 +1449,6 @@ public class RecruitmentZoneService {
                     if (blogDTO.getPublish_date() != existingBlog.getPublish_date()) {
                         existingBlog.setPublish_date(blogDTO.getPublish_date());
                     }
-                  /*  if (!updatedBlog.getPublish_date().isBefore(LocalDate.now())) {
-                        optionalBlog.setStatus(ACTIVE);
-                    }*/
                 }
 
                 // expiration date
@@ -1451,6 +1459,11 @@ public class RecruitmentZoneService {
                     }
                 }
 
+                if (existingBlog.getPublish_date().isEqual(LocalDate.now())) {
+                    existingBlog.setStatus(ACTIVE);
+                } else {
+                    existingBlog.setStatus(PENDING);
+                }
 
                 try {
                     //optionalBlog.setEmployee(updatedBlog.getEmployee());
@@ -1588,7 +1601,7 @@ public class RecruitmentZoneService {
         file.setDocumentLocation(storageLocation.toString());
 
         candidate.AddDocument(file);
-
+        candidateService.save(candidate);
         file = candidateFileService.saveCandidateFile(file);
 
 
@@ -1618,6 +1631,7 @@ public class RecruitmentZoneService {
         file.setClientDocumentType(fileDTO.getDocumentType());
         file.setCreated(LocalDateTime.now());
         log.info("New clientFile {}", file.printDocument());
+        vacancyService.save(vacancy);
         // Local file storage
 
         String docType = fileDTO.getDocumentType().toString();
@@ -1649,7 +1663,7 @@ public class RecruitmentZoneService {
 
 
         client.AddDocument(file);
-
+        clientService.saveExistingClient(client);
         ClientFile savedClientFile = clientFileService.saveClientFile(file);
 
         if (savedClientFile != null) {
@@ -1803,7 +1817,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("client", clientResponse);
 
                 int pageSize = 10;
-                findClientNotes(model,clientResponse.getClientID(),1, pageSize, "dateCaptured", "desc");
+                findClientNotes(model, clientResponse.getClientID(), 1, pageSize, "dateCaptured", "desc");
 
 
             } else throw new SaveClientException("Failed to save new client {}" + newClientDTO.getName());
@@ -1882,7 +1896,8 @@ public class RecruitmentZoneService {
             if (client != null) {
                 log.info("<--  saveNewClientNote client {} -->", client.printClient());
                 model.addAttribute("client", client);
-                client.addNote(clientNoteDTO);
+                ClientNote clientNote = client.addNote(clientNoteDTO);
+                clientService.saveClientNote(clientNote);
                 clientService.saveExistingClient(client);
                 model.addAttribute("saveNoteToClientResponse", "Note saved");
 

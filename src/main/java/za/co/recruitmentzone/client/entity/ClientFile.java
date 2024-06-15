@@ -36,17 +36,11 @@ public class ClientFile implements Document,Serializable {
     @Column(name="created")
     private LocalDateTime created;
 
-    @ManyToOne(
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @ManyToOne()
     @JoinColumn(name = "clientID")
     private Client client;
 
-    @OneToOne(
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToOne( )
     @JoinColumn(name = "vacancyID")
     private Vacancy vacancy;
 

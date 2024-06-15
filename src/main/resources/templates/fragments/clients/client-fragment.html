@@ -41,7 +41,8 @@
                 <label>Relationship established:</label>
             </div>
             <div class="col-6">
-                <span th:text="*{created}"></span>
+              <!--  <span th:text="*{created}"></span>-->
+                <span th:text="*{#temporals.format(created, 'dd-MM-yyyy HH:mm')}"></span>
             </div>
         </div>
 

@@ -28,10 +28,7 @@ public class Blog implements Serializable {
     private LocalDate end_date;
     @Column(name="created")
     private LocalDateTime created;
-    @ManyToOne(fetch = FetchType.EAGER,
-            cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeID")
     private Employee employee;
 

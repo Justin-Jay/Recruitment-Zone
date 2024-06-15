@@ -62,12 +62,15 @@
                                     hx-swap="innerHTML">Create Candidate
                             </button>
                         </form>-->
-                        <a      class="btn btn-outline-secondary"
+                   <!--     <a      class="btn btn-outline-secondary"
                                 hx-post="/Candidate/add-candidate"
                                 hx-target="#main-page-section"
                                 hx-swap="innerHTML" >Create Candidate
 
-                        </a>
+                        </a>-->
+<!--                        <a th:href="@{/order/details(id=3)}">-->
+                        <a class="btn btn-outline-secondary" th:href="@{/Candidate/add-candidate}">Create Candidate</a>
+
 
                         <br>
                         <!--LIST VIEW -->

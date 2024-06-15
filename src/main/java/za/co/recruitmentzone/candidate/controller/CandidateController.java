@@ -197,7 +197,7 @@ public class CandidateController {
     }
 
 
-    @PostMapping("/add-candidate")
+    @GetMapping("/add-candidate")
     public String showAddCandidateForm(Model model) {
         try {
             recruitmentZoneService.getAllVacancies(model);

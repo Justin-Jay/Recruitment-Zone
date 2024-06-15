@@ -25,18 +25,16 @@ public class Application implements Serializable {
     @Column(name = "submission_date")
     private LocalDateTime submission_date;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne( )
     @JoinColumn(name = "candidateID")
     private Candidate candidate;
 
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })
+    @ManyToOne( )
     @JoinColumn(name="vacancyID")
     private Vacancy vacancy;
 
     public Application() {
-        this.date_received = LocalDateTime.now();
+        this.created = LocalDateTime.now();
         this.status=ApplicationStatus.PENDING;
     }
 

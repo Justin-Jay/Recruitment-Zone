@@ -1,10 +1,9 @@
 package za.co.recruitmentzone.application.exception;
 
-import za.co.recruitmentzone.exception.RzoneException;
 
-public class ApplicationsNotFoundException extends RzoneException {
+public class ApplicationsNotFoundException extends ApplicationsException {
 
-    public ApplicationsNotFoundException(String message) {
-        super(message);
+    public ApplicationsNotFoundException(String failureMessage) {
+        super(failureMessage);
     }
 }

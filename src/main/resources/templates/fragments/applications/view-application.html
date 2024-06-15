@@ -1,36 +1,40 @@
-<div class="container-fluid main-page-section" th:fragment="applicationView(vacancyApplication)">
+<div class="container-fluid main-page-section" th:fragment="applicationView(vacancyApplication)"
+     th:object="${vacancyApplication}">
     <div class="row">
         <p th:if="${findApplicationByIDResponse}" th:text="${findApplicationByIDResponse}"></p>
         <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
     </div>
 
-    <table class="table ">
+  <!--  <table class="table ">
         <thead class="table-dark">
         <tr>
             <th>Application ID</th>
             <th>Date Received</th>
             <th>Submission Date</th>
             <th>Status</th>
-            <th>CandidateID</th>
-            <th>VacancyID</th>
-            <th>Update Application</th><!-- New column for the "View Job" link -->
+&lt;!&ndash;            <th>CandidateID</th>
+            <th>VacancyID</th>&ndash;&gt;
+            <th>Update Application</th>
         </tr>
         </thead>
         <tbody>
 
         <tr >
             <td th:text="*{vacancyApplication.applicationID}"></td>
+            <td th:text="${vacancyApplication.candidateName}"></td>
+            <td th:text="${vacancyApplication.vacancyName}"></td>
+            <td th:text="${vacancyApplication.created}"></td>
             <td th:text="${vacancyApplication.date_received}"></td>
             <td th:text="${vacancyApplication.submission_date}"></td>
-            <td th:text="${vacancyApplication.status}"></td>
+            <td th:text="${vacancyApplication.status}"></td>&lt;!&ndash;
             <td th:text="${vacancyApplication.candidateID}"></td>
-            <td th:text="${vacancyApplication.vacancyID}"></td>
+            <td th:text="${vacancyApplication.candidateName}"></td>&ndash;&gt;
             <td>
                 <form th:action="@{/Application/update-application}" th:method="post">
-                    <!-- Hidden input field to include the vacancyID in the POST request -->
+                    &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
                     <input type="hidden" name="applicationID" th:value="*{vacancyApplication.applicationID}"/>
-                    <!-- Submit button to trigger the form submission -->
-                    <!--<button type="submit" class="btn">Update Application</button>-->
+                    &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
+                    &lt;!&ndash;<button type="submit" class="btn">Update Application</button>&ndash;&gt;
                     <button class="btn normal-button"
                             hx-post="/Application/update-application"
                             hx-target="#main-page-section"
@@ -42,5 +46,97 @@
         </tr>
         </tbody>
     </table>
+-->
+
+
+
+
+    <div class="container-fluid">
+        <h2>Application</h2>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Application ID:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${vacancyApplication.applicationID}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Candidate Name:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${vacancyApplication.candidateName}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Vacancy Title:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${vacancyApplication.vacancyName}"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <label>Created:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${#temporals.format(vacancyApplication.created, 'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Date Received:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${#temporals.format(vacancyApplication.date_received, 'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Submission Date:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${vacancyApplication.submission_date} ? ${#temporals.format(vacancyApplication.submission_date, 'yyyy-MM-dd HH:mm')} :'No submission Date' "></span>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Status:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="${vacancyApplication.printStatus()}"></span>
+            </div>
+        </div>
+
+        <br>
+
+        <div>
+            <form th:action="@{/Application/update-application}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="applicationID" th:value="${vacancyApplication.applicationID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <!--<button type="submit" class="btn">Update Application</button>-->
+                <button class="btn normal-button"
+                        hx-post="/Application/update-application"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML"
+                        hx-include="[applicationID='applicationID']">Update Application
+                </button>
+            </form>
+        </div>
+        <br>
+    </div>
+
 
 </div>
