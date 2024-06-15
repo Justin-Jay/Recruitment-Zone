@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre AS builder
+FROM eclipse-temurin:21 AS builder
 
 WORKDIR /RecruitmentZone
 ARG JAR_FILE=target/*.jar
