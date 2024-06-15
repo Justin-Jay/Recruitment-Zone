@@ -31,19 +31,12 @@ public class Candidate implements Serializable {
     private Boolean relocation;
     @Column(name = "created")
     private LocalDateTime created;
-    @OneToMany(mappedBy = "candidate",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "candidate")
     private List<Application> applications;
-    @OneToMany(mappedBy = "candidate",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "candidate")
     private List<CandidateNote> notes;
 
-    @OneToMany(mappedBy = "candidate",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "candidate")
     private List<CandidateFile> documents;
 
     public Candidate() {
@@ -235,7 +228,7 @@ public class Candidate implements Serializable {
     }
 
 
-    public void addNote(CandidateNoteDTO noteDTO) {
+    public CandidateNote addNote(CandidateNoteDTO noteDTO) {
  /*       if (noteDTO == null) {
             throw new IllegalArgumentException("noteDTO cannot be null");
         }*/
@@ -246,8 +239,9 @@ public class Candidate implements Serializable {
         newNote.setCandidate(this);
         newNote.setDateCaptured(noteDTO.getDateCaptured());
         notes.add(newNote);
+       return newNote;
     }
-
+//
 
     public String printCandidate() {
         return "Candidate{" +

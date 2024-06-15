@@ -255,3 +255,15 @@ USER SPINNER
     margin: 0; /* Remove margin */
     font: inherit; /* Inherit font from parent */
 }
+
+
+.ck-editor__editable {
+    min-height: 500px;
+    min-width: 500px;
+    width: 100%; /* Make it responsive */
+    padding: 20px; /* Add padding for better appearance */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    border: 1px solid #ccc; /* Optional: add a border for clarity */
+    border-radius: 5px; /* Optional: add rounded corners */
+    background-color: #f9f9f9; /* Optional: light background for better readability */
+}

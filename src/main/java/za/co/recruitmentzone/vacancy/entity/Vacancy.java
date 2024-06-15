@@ -46,23 +46,15 @@ public class Vacancy implements Serializable {
     private LocalDateTime created;
     @Column(name = "vacancyRef")
     private String vacancyRef;
-    @ManyToOne(fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clientid")
     private Client client;
 
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-    })
+    @ManyToOne( )
     @JoinColumn(name = "employeeID")
     private Employee employee;
 
-    @OneToMany(mappedBy = "vacancy",fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "vacancy",fetch = FetchType.EAGER)
     private List<Application> applications;
 
     public Vacancy() {
@@ -273,5 +265,7 @@ public class Vacancy implements Serializable {
                 ", client=" + client.getName() +
                 '}';
     }
+
+
 
 }

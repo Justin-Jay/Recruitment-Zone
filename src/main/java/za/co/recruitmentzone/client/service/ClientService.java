@@ -33,11 +33,14 @@ public class ClientService {
 
     private final ClientNoteRepository clientNoteRepository;
 
+    private final ContactPersonRepository contactPersonRepository;
+
     private final Logger log = LoggerFactory.getLogger(ClientService.class);
 
-    public ClientService(ClientRepository clientRepository, ClientNoteRepository clientNoteRepository) {
+    public ClientService(ClientRepository clientRepository, ClientNoteRepository clientNoteRepository, ContactPersonRepository contactPersonRepository) {
         this.clientRepository = clientRepository;
         this.clientNoteRepository = clientNoteRepository;
+        this.contactPersonRepository = contactPersonRepository;
     }
 
     public Client saveNewClient(NewClientDTO newClientDTO) {
@@ -48,12 +51,18 @@ public class ClientService {
                 newClientDTO.getContactPerson_last_name(), newClientDTO.getContactPerson_email_address(),
                 newClientDTO.getContactPerson_land_line(), newClientDTO.getContactPerson_cell_phone(),
                 newClientDTO.getContactPerson_designation());
+        contactPersonRepository.save(contactPerson);
         client.addContactPerson(contactPerson);
-        return clientRepository.save(client);
+        client = clientRepository.save(client);
+        return client;
     }
 
     public Client saveExistingClient(Client client) {
         return clientRepository.save(client);
+    }
+
+    public void saveClientNote(ClientNote clientNote){
+        clientNoteRepository.save(clientNote);
     }
 
 
@@ -74,6 +83,7 @@ public class ClientService {
                 contactPersonDTO.getLand_line(), contactPersonDTO.getCell_phone(), contactPersonDTO.getDesignation());
         if (oc.isPresent()) {
             oc.get().addContactPerson(contactPerson);
+            contactPersonRepository.save(contactPerson);
         }
         return clientRepository.save(oc.get());
        

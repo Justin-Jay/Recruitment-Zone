@@ -27,9 +27,7 @@ public class ContactPerson implements Serializable {
     private String cell_phone;
     @Column(name="created")
     private LocalDateTime created;
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })
+    @ManyToOne( )
     @JoinColumn(name = "clientID")
     private Client client;
 

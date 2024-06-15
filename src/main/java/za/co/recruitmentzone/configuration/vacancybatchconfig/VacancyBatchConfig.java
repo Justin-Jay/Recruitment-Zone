@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -24,22 +25,19 @@ import za.co.recruitmentzone.vacancy.repository.VacancyRepository;
 
 
 @Configuration
+@EnableBatchProcessing
 public class VacancyBatchConfig {
     private final JobRepository jobRepository;
     private final VacancyRepository vacancyRepository;
      private final PlatformTransactionManager platformTransactionManager;
-    private final ClientService clientService;
-    private final EmployeeService employeeService;
     private final DataSource dataSource;
     private final Logger log = LoggerFactory.getLogger(VacancyBatchConfig.class);
 
     public VacancyBatchConfig(JobRepository jobRepository , VacancyRepository vacancyRepository,
-                              PlatformTransactionManager platformTransactionManager, ClientService clientService, EmployeeService employeeService, DataSource dataSource) {
+                              PlatformTransactionManager platformTransactionManager, DataSource dataSource) {
         this.jobRepository = jobRepository;
         this.vacancyRepository = vacancyRepository;
         this.platformTransactionManager = platformTransactionManager;
-        this.clientService = clientService;
-        this.employeeService = employeeService;
         this.dataSource = dataSource;
     }
 
@@ -68,8 +66,8 @@ public class VacancyBatchConfig {
     public JdbcCursorItemReader<Vacancy> reader(DataSource dataSource) {
         return new JdbcCursorItemReaderBuilder<Vacancy>()
                 .dataSource(dataSource)
-                .name("vacancy")
-                .sql("select * from vacancy")
+                .name("VACANCY")
+                .sql("SELECT * FROM VACANCY")
                 .rowMapper(new VacancyRowMapper())
                 .build();
 
@@ -77,7 +75,8 @@ public class VacancyBatchConfig {
 
     @Bean
     public VacancyProcessor vacancyProcessor() {
-        return new VacancyProcessor(clientService,employeeService);
+//        return new VacancyProcessor(clientService,employeeService);
+        return new VacancyProcessor();
     }
 
     @Bean
@@ -113,7 +112,6 @@ public class VacancyBatchConfig {
         return new JobBuilder("vacancyJob", jobRepository)
                 .start(step1(jobRepository))
                 .build();
-
     }
 
 
