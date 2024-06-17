@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.application.dto.ApplicationDTO;
 import za.co.recruitmentzone.application.exception.ApplicationsNotFoundException;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
+import za.co.recruitmentzone.blog.dto.BlogImageDTO;
 import za.co.recruitmentzone.blog.dto.BlogStatusDTO;
 import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.exception.BlogNotFoundException;
@@ -66,8 +67,10 @@ import za.co.recruitmentzone.vacancy.exception.VacancyException;
 import za.co.recruitmentzone.vacancy.service.VacancyService;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -105,6 +108,11 @@ public class RecruitmentZoneService {
 
     @Value("${upload.folder}")
     String Folder;
+
+    private final String BLOG_LOCAL_FULL_PATH = "/src/main/resources/static/images/";
+
+    private final String BLOG_VOLUME_FULL_PATH = "/home/justin/RecruitmentZoneApplication/BlogImages";
+
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
                                   EmployeeService employeeService, ClientService clientService, BlogService blogService, CandidateFileService candidateFileService, PasswordEncoder passwordEncoder, CandidateEventPublisher candidateEventPublisher, ClientFileService clientFileService, ClientEventPublisher clientEventPublisher, TokenVerificationService tokenVerificationService, ContactPersonService contactPersonService, ClientNoteRepository clientNoteRepository) {
@@ -644,6 +652,7 @@ public class RecruitmentZoneService {
             model.addAttribute("createCandidateApplicationResponse", "Failed to create application");
         }
     }
+
     public Application createApplication(NewApplicationDTO newApplicationDTO) {
         log.info("<-- createApplication newApplicationDTO {} -->", newApplicationDTO.printNewApplicationDTO());
 
@@ -691,7 +700,7 @@ public class RecruitmentZoneService {
         if (application.getApplicationID() != null) {
             log.info("<-- createApplication application {} -->", application.printApplication());
 
-            candidateEventPublisher.publishCandidateGoogleFileEvent(file.getFileID(),file);
+            candidateEventPublisher.publishCandidateGoogleFileEvent(file.getFileID(), file);
 
             return application;
         } else throw new CandidateException("Failed to create Candidate Application:");
@@ -1359,7 +1368,7 @@ public class RecruitmentZoneService {
         try {
             Blog blog = blogService.findById(blogID);
             model.addAttribute("blog", blog);
-            log.info("<--  findBlogById optionalBlog.isPresent {} -->", blog.printBlog());
+            log.info("<--  findBlogById blog {} -->", blog.printBlog());
         } catch (BlogNotFoundException blogNotFoundException) {
             log.info("<--  findBlogById blog is null  -->");
             model.addAttribute("findBlogResponse", blogNotFoundException.getMessage());
@@ -1367,25 +1376,6 @@ public class RecruitmentZoneService {
         }
     }
 
-    public void findBlogDTO(Long blogID, Model model) {
-        log.info("<--  findBlogById blogID {} -->", blogID);
-        try {
-            Blog blog = blogService.findById(blogID);
-            BlogDTO blogDTO = new BlogDTO();
-            blogDTO.setBlogID(blog.getBlogID());
-            blogDTO.setStatus(blog.getStatus());
-            blogDTO.setBlog_title(blog.getBlog_title());
-            blogDTO.setBlog_description(blog.getBlog_description());
-            blogDTO.setBody(blog.getBody());
-            blogDTO.setPublish_date(blog.getPublish_date());
-            blogDTO.setEnd_date(blog.getEnd_date());
-            model.addAttribute("blog", blogDTO);
-            log.info("<--  findBlogById optionalBlog.isPresent {} -->", blog.printBlog());
-        } catch (BlogNotFoundException blogNotFoundException) {
-            model.addAttribute("findBlogResponse", blogNotFoundException.getMessage());
-            log.info("<--  findBlogById blogNotSavedException {} -->", blogNotFoundException.getMessage());
-        }
-    }
 
     public void saveNewBlog(BlogDTO blogDTO, Principal principal, Model model) {
         log.info("<-- saveNewBlog Saving new blog for principal : {} -->", principal.getName());
@@ -1423,51 +1413,47 @@ public class RecruitmentZoneService {
         }
     }
 
-    public void saveUpdatedBlog(BlogDTO blogDTO, Model model) {
-        log.info("<--  saveUpdatedBlog blogDTO {} -->", blogDTO.printBlogDTO());
+
+    public void saveUpdatedBlog(Blog updatedBlog, Model model) {
+        log.info("<--  saveExistingBlog blog {} -->", updatedBlog.printBlog());
         String returnMessage = "";
         try {
-            Blog existingBlog = blogService.findById(blogDTO.getBlogID());
+            Blog optionalBlog = blogService.findById(updatedBlog.getBlogID());
+            log.info("<--  optionalBlog {} -->", optionalBlog.printBlog());
+            if (optionalBlog != null) {
 
-            if (existingBlog != null) {
-                log.info("<--  saveUpdatedBlog existingBlog {} -->", existingBlog.printBlog());
-
-                if (!blogDTO.getBlog_title().equalsIgnoreCase(existingBlog.getBlog_title())) {
-                    existingBlog.setBlog_title(blogDTO.getBlog_title());
+                log.info("<--  saveExistingBlog optionalBlog.isPresent {} -->", optionalBlog.printBlog());
+                if (!updatedBlog.getBlog_title().equalsIgnoreCase(optionalBlog.getBlog_title())) {
+                    optionalBlog.setBlog_title(updatedBlog.getBlog_title());
                 }
                 // description
-                if (!blogDTO.getBlog_description().equalsIgnoreCase(existingBlog.getBlog_description())) {
-                    existingBlog.setBlog_description(blogDTO.getBlog_description());
+                if (!updatedBlog.getBlog_description().equalsIgnoreCase(optionalBlog.getBlog_description())) {
+                    optionalBlog.setBlog_description(updatedBlog.getBlog_description());
                 }
                 // body
-                if (!blogDTO.getBody().equalsIgnoreCase(existingBlog.getBody())) {
-                    existingBlog.setBody(blogDTO.getBody());
+                if (!updatedBlog.getBody().equalsIgnoreCase(optionalBlog.getBody())) {
+                    optionalBlog.setBody(updatedBlog.getBody());
                 }
                 // publish date
 
-                if (blogDTO.getPublish_date() != null) {
-                    if (blogDTO.getPublish_date() != existingBlog.getPublish_date()) {
-                        existingBlog.setPublish_date(blogDTO.getPublish_date());
-                    }
-                }
+                if (!Objects.equals(updatedBlog.getPublish_date(), optionalBlog.getPublish_date())) {
+                    optionalBlog.setPublish_date(updatedBlog.getPublish_date());
 
+                }
                 // expiration date
-
-                if (blogDTO.getEnd_date() != null) {
-                    if (blogDTO.getEnd_date() != existingBlog.getEnd_date()) {
-                        existingBlog.setEnd_date(blogDTO.getEnd_date());
-                    }
+                if (!Objects.equals(updatedBlog.getEnd_date(), optionalBlog.getEnd_date())) {
+                    optionalBlog.setEnd_date(updatedBlog.getEnd_date());
                 }
 
-                if (existingBlog.getPublish_date().isEqual(LocalDate.now())) {
-                    existingBlog.setStatus(ACTIVE);
-                } else {
-                    existingBlog.setStatus(PENDING);
+                if (updatedBlog.getPublish_date() != null) {
+                    if (!updatedBlog.getPublish_date().isBefore(LocalDate.now())) {
+                        optionalBlog.setStatus(ACTIVE);
+                    }
                 }
 
                 try {
                     //optionalBlog.setEmployee(updatedBlog.getEmployee());
-                    Blog savedBlog = blogService.save(existingBlog);
+                    Blog savedBlog = blogService.save(optionalBlog);
                     if (savedBlog != null) {
                         returnMessage = "Blog Updated";
 
@@ -1481,13 +1467,118 @@ public class RecruitmentZoneService {
                     log.info("<--  saveExistingBlog blogNotSavedException {} -->", blogNotSavedException.getMessage());
                     model.addAttribute("updateBlogResponse", blogNotSavedException.getMessage());
                 }
-            } else throw new BlogNotFoundException("Blog not found: blog ID: " + blogDTO.getBlogID());
+            } else throw new BlogNotFoundException("Blog not found: blog ID: " + updatedBlog.getBlogID());
         } catch (BlogNotFoundException blogNotFoundException) {
             log.error("blogNotSavedException {}", blogNotFoundException.getMessage());
             model.addAttribute("updateBlogResponse", blogNotFoundException.getMessage());
         }
     }
 
+    public void saveBlogImage(BlogImageDTO blogImageDTO, Model model) {
+        log.info("<--  saveBlogImage blogImageDTO {} -->", blogImageDTO.printBlogImageDTO());
+        String returnMessage = "";
+
+        try {
+            Blog optionalBlog = blogService.findById(blogImageDTO.getBlogID());
+            log.info("<--  saveBlogImage existingBlog {} -->", optionalBlog.printBlog());
+            if (optionalBlog != null) {
+
+                if (blogImageDTO.getBlogImage() != null && !blogImageDTO.getBlogImage().isEmpty()) {
+
+                    switch (blogImageDTO.getBlogImageType()) {
+                        case HEADER -> {
+                            log.info("<-- saveBlogImage to data volume blogHeaderImage submitted for {}", optionalBlog.getBlog_title());
+//                            String blogHeaderPath = uploadBlogImage(blogImageDTO.getBlogImage(), optionalBlog.getBlogID(), blogImageDTO.getBlogImageType().toString());
+                            String blogHeaderPath = uploadBlogImage(blogImageDTO.getBlogImage());
+                            log.info("<-- saveBlogImage blogHeaderImage blogHeaderPath {}", blogHeaderPath);
+                            optionalBlog.setHeadImagePath(blogHeaderPath);
+
+                        }
+                        case CONTENT_IMAGE_ONE -> {
+                            log.info("<-- saveBlogImage to data volume CONTENT_IMAGE_ONE submitted for {}", optionalBlog.getBlog_title());
+//                            String blogContentOnePath = uploadBlogImage(blogImageDTO.getBlogImage(), optionalBlog.getBlogID(), blogImageDTO.getBlogImageType().toString());
+                            String blogContentOnePath = uploadBlogImage(blogImageDTO.getBlogImage());
+                            log.info("<-- saveBlogImage blogHeaderImage blogContentOnePath {}", blogContentOnePath);
+                            optionalBlog.setContentImageOnePath(blogContentOnePath);
+
+                        }
+                    }
+
+                    try {
+
+                        Blog savedBlog = blogService.save(optionalBlog);
+                        if (savedBlog != null) {
+                            returnMessage = "Blog Image Added";
+
+                            model.addAttribute("addImageResponse", returnMessage);
+                            log.info(" < --- saveBlogImage {} -->", savedBlog.printBlog());
+                            model.addAttribute("blog", savedBlog);
+                            log.info("<--  saveBlogImage returnMessage {} -->", returnMessage);
+                        } else throw new BlogNotSavedException("Failed to save blog image");
+
+                    } catch (BlogNotSavedException blogNotSavedException) {
+                        log.info("<--  saveExistingBlog blogNotSavedException {} -->", blogNotSavedException.getMessage());
+                        model.addAttribute("addImageResponse", blogNotSavedException.getMessage());
+                    }
+
+                } else {
+                    log.info("<-- NO IMAGE SUBMITTED ");
+                    returnMessage = "No images added";
+                    model.addAttribute("addImageResponse", returnMessage);
+                }
+
+            } else throw new BlogNotFoundException("Blog not found: blog ID: " + blogImageDTO.getBlogID());
+        } catch (BlogNotFoundException blogNotFoundException) {
+            log.error("blogNotSavedException {}", blogNotFoundException.getMessage());
+            model.addAttribute("addImageResponse", blogNotFoundException.getMessage());
+        }
+    }
+
+    private String uploadBlogImage(MultipartFile file) {
+        log.info("<-- saveBlogImage -->");
+        try {
+            Path currentRelativePath = Paths.get("");
+            String absolutePath = currentRelativePath.toAbsolutePath().toString();
+
+            String uploadDir = absolutePath + BLOG_LOCAL_FULL_PATH;
+
+
+            String fileName = file.getOriginalFilename();
+            Path uploadPath = Paths.get(uploadDir);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                log.info("<-- saveBlogImage image saved -->");
+            }
+
+            // volume storage
+            //    /RecruitmentZoneApplication/BlogImages/{blogID}/{imageType}/
+
+            //String volumeDirectory = "/home/justin/RecruitmentZoneApplication/" + "BlogImages/";
+
+            uploadPath = Paths.get(BLOG_VOLUME_FULL_PATH);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                log.info("<-- saveBlogImage image saved to data volume -->");
+            }
+
+            return fileName;
+        } catch (IOException e) {
+            log.info("<-- saveBlogImage \n", e);
+            return null;
+        }
+    }
 
     public void findBlogStatus(Long blogID, Model model) {
         log.info("<-- findBlogStatus blogID {} -->", blogID);

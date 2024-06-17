@@ -1,4 +1,5 @@
 <div class="container-fluid main-page-section">
+
     <div class="row">
 
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findBlogResponse})}"></div>
@@ -6,52 +7,105 @@
         <div th:insert="~{fragments/layout/response-messages :: successMessage(${saveNewBlogResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${savedBlogResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${updateBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addImageResponse})}"></div>
+
     </div>
 
-    <div class="container-fluid" th:each="foundBlog : ${blog}">
+ <!--   <table class="table" id="myTable">
+        <thead>
+        &lt;!&ndash;   <p th:text="*{foundBlog.blog_title}" >Blog Title</p>&ndash;&gt;
+        <tr >
+            <th>Blog ID</th>
+  &lt;!&ndash;          <th>Blog Creator</th>&ndash;&gt;
+            <th>Publish Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Update Blog</th>
+        </tr>
+        </thead>
+        <tbody>
+        &lt;!&ndash;<tr th:each="candidate : ${foundVacancy.candidate}">&ndash;&gt;
+        <tr th:each="foundBlog : ${blog}"  >
 
+            <td th:text="*{foundBlog.blogID}"></td>
+ &lt;!&ndash;           <td th:text="*{foundBlog.employee.name}"></td>&ndash;&gt;
+            <td th:text="*{foundBlog.publish_date}"></td>
+            <td th:text="*{foundBlog.end_date}"></td>
+            <td th:text="*{foundBlog.status}"></td>
+
+            <td>
+                <form action="#" th:action="@{/Blog/update-blog}" th:method="post">
+                    &lt;!&ndash; Hidden input field to include the vacancyID in the POST request &ndash;&gt;
+                    <input type="hidden" name="blogID" th:value="*{foundBlog.blogID}"/>
+                    &lt;!&ndash; Submit button to trigger the form submission &ndash;&gt;
+                    <button class="btn normal-button"
+                            hx-post="/Blog/update-blog"
+                            hx-target="#main-page-section"
+                            hx-swap="innerHTML"
+                            hx-include="[blogID='blogID']">Update Blog
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+-->
+    <div class="container-fluid"  th:object="${blog}">
 
         <div class="row">
             <div class="col-6">
                 <label>Blog ID:</label>
             </div>
             <div class="col-6">
-                <span th:text="*{foundBlog.blogID}"></span>
+                <span th:text="*{blogID}"></span>
             </div>
         </div>
-        <div class="row">
+<!--        <div class="row">
             <div class="col-6">
-                <label>Creator:</label>
+                <label>Employee Name:</label>
             </div>
             <div class="col-6">
-                <span th:text="*{foundBlog.employee.name}"></span>
+                <span th:text="*{blog.employee.name}"></span>
             </div>
-        </div>
-
+        </div>-->
         <div class="row">
             <div class="col-6">
                 <label>Publish Date:</label>
             </div>
             <div class="col-6">
-                <span th:text="*{foundBlog.publish_date}"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <label>End date:</label>
-            </div>
-            <div class="col-6">
-                <span th:text="*{foundBlog.end_date}"></span>
+                <span th:text="*{publish_date}"></span>
             </div>
         </div>
 
+
+        <div class="row">
+            <div class="col-6">
+                <label>End Date:</label>
+            </div>
+            <div class="col-6">
+                <span th:text="*{end_date}"></span>
+            </div>
+        </div>
         <div class="row">
             <div class="col-6">
                 <label>Status:</label>
             </div>
             <div class="col-6">
-                <span th:text="*{foundBlog.status}"></span>
+                <span th:text="*{status}"></span>
             </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Existing Images:</label>
+            </div>
+
+            <div class="col-3">
+                <span th:text="*{headImagePath}"></span>
+                <hr>
+                <span th:text="*{contentImageOnePath}"></span>
+            </div>
+
         </div>
 
         <br>
@@ -59,21 +113,20 @@
             <div class="col-6">
                 <form action="#" th:action="@{/Blog/update-blog}" th:method="post">
                     <!-- Hidden input field to include the vacancyID in the POST request -->
-                    <input type="hidden" name="blogID" th:value="*{foundBlog.blogID}"/>
+                    <input type="hidden" name="blogID" th:value="*{blogID}"/>
                     <!-- Submit button to trigger the form submission -->
-                    <!--  <button class="btn btn-secondary"
-                              hx-post="/Vacancy/update-vacancy"
-                              hx-target="#main-page-section"
-                              hx-swap="innerHTML"
-                              hx-include="[vacancyID='vacancyID']">Update Vacancy
-                      </button>-->
-                    <button class="btn btn-secondary">Update Blog
+                    <button class="btn normal-button" >Update Blog
                     </button>
                 </form>
 
-
+                <!--   <form action="#" th:action="@{/Vacancy/add-vacancy}"  method="GET">
+                <button class="btn normal-button">
+                    Create Vacancy
+                </button>
+            </form>-->
             </div>
 
         </div>
     </div>
+
 </div>
