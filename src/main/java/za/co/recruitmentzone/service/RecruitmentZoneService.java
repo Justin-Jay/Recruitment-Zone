@@ -109,8 +109,7 @@ public class RecruitmentZoneService {
     @Value("${upload.folder}")
     String Folder;
 
-    //     private final String BLOG_LOCAL_FULL_PATH = "/src/main/resources/static/images/";
-    private final String BLOG_LOCAL_FULL_PATH = "/blog-images/";
+   // private final String BLOG_LOCAL_FULL_PATH = "/blog-images/";
     private final String BLOG_VOLUME_FULL_PATH = "/home/jenkins/RecruitmentZoneApplication/BlogImages/";
 
 
@@ -1537,10 +1536,10 @@ public class RecruitmentZoneService {
     private String uploadBlogImage(MultipartFile file) {
         log.info("<-- saveBlogImage -->");
         try {
-            Path currentRelativePath = Paths.get("");
-            String absolutePath = currentRelativePath.toAbsolutePath().toString();
+            //Path currentRelativePath = Paths.get("");
+            //String absolutePath = currentRelativePath.toAbsolutePath().toString();
 
-            String uploadDir = absolutePath + BLOG_LOCAL_FULL_PATH;
+          /*  String uploadDir = absolutePath + BLOG_LOCAL_FULL_PATH;
 
 
             String fileName = file.getOriginalFilename();
@@ -1554,14 +1553,14 @@ public class RecruitmentZoneService {
                 Path filePath = uploadPath.resolve(fileName);
                 Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
                 log.info("<-- saveBlogImage image saved -->");
-            }
+            }*/
 
             // volume storage
             //    /RecruitmentZoneApplication/BlogImages/{blogID}/{imageType}/
 
             //String volumeDirectory = "/home/justin/RecruitmentZoneApplication/" + "BlogImages/";
-
-            uploadPath = Paths.get(BLOG_VOLUME_FULL_PATH);
+            String fileName = file.getOriginalFilename();
+            Path uploadPath = Paths.get(BLOG_VOLUME_FULL_PATH);
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
