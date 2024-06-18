@@ -3,10 +3,13 @@ package za.co.recruitmentzone.blog.controller;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import za.co.recruitmentzone.blog.dto.BlogImageDTO;
 import za.co.recruitmentzone.blog.dto.BlogStatusDTO;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.blog.entity.Blog;
@@ -14,6 +17,7 @@ import za.co.recruitmentzone.blog.dto.BlogDTO;
 import za.co.recruitmentzone.vacancy.dto.VacancyStatusDTO;
 
 import java.security.Principal;
+import java.util.List;
 
 import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
@@ -25,6 +29,11 @@ public class BlogController {
 
     private final Logger log = LoggerFactory.getLogger(BlogController.class);
 
+    @Value("${blog.image.path}")
+    private String BLOG_LOCAL_STORAGE;
+
+    //private final String BLOG_LOCAL_STORAGE = "/blog-images/";
+
     public BlogController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
     }
@@ -34,6 +43,7 @@ public class BlogController {
     public String blogs(Model model) {
         try {
             recruitmentZoneService.getActiveBlogs(model);
+            model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
         } catch (Exception e) {
             log.error("<-- blogs -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -88,12 +98,14 @@ public class BlogController {
             cleanInput = recruitmentZoneService.cleanData(blogDTO);
             if (cleanInput){
                 recruitmentZoneService.saveNewBlog(blogDTO, principal, model);
-                int pageSize = 5;
-                recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
+               // int pageSize = 5;
+              //  recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
+                model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
+                log.info("BLOG_VOLUME = {} ", BLOG_LOCAL_STORAGE);
             }
             else {
                 model.addAttribute("dirtyData","Failed to sanitize input");
-                return "fragments/blog/add-blog";
+                return "fragments/blog/update-blog";
             } //
 
         } catch (Exception e) {
@@ -101,15 +113,14 @@ public class BlogController {
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   blog , findBlogResponse , internalServerError ,  saveNewBlogResponse
-        //return "fragments/blog/view-blog";
-    //    return "fragments/blog/view-home-blog";
-        return "/fragments/blog/blog-administration";
+        return "fragments/blog/view-home-blog";
     }
 
     @PostMapping("/view-blog")
     public String viewBlog(@RequestParam("blogID") Long blogID, Model model) {
         try {
             recruitmentZoneService.findBlogById(blogID, model);
+            model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
         } catch (Exception e) {
             log.error("<-- showBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -122,6 +133,7 @@ public class BlogController {
     public String showBlog(@RequestParam("blogID") Long blogID, Model model) {
         try {
             recruitmentZoneService.findBlogById(blogID, model);
+            model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
         } catch (Exception e) {
             log.error("<-- showBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -134,7 +146,7 @@ public class BlogController {
     @PostMapping("/update-blog")
     public String updateBlog(@RequestParam("blogID") Long blogID, Model model) {
         try {
-            recruitmentZoneService.findBlogDTO(blogID, model);
+            recruitmentZoneService.findBlogById(blogID, model);
         } catch (Exception e) {
             log.error("<-- updateBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", e.getMessage());
@@ -144,23 +156,25 @@ public class BlogController {
     }
 
     @PostMapping("/save-updated-blog")
-    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") BlogDTO blog,
+    public String saveUpdatedBlog(@Valid @ModelAttribute("blog") Blog blog,
                                   BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
 
             return "fragments/blog/update-blog";
         }
         try {
-            boolean cleanInput ;
+            boolean cleanInput = false;
             cleanInput = recruitmentZoneService.cleanData(blog);
             if (cleanInput){
                 recruitmentZoneService.saveUpdatedBlog(blog, model);
-                int pageSize = 5;
-                recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
+              //  int pageSize = 5;
+               // recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
+                model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
+                log.info("BLOG_VOLUME = {} ", BLOG_LOCAL_STORAGE);
             }
             else {
                 model.addAttribute("dirtyData","Failed to sanitize input");
-                return "fragments/blog/update-blog";
+               // return "fragments/blog/update-blog";
             }
         } catch (Exception e) {
             log.error("<-- saveUpdatedBlog -->  Exception \n {}", e.getMessage());
@@ -168,9 +182,47 @@ public class BlogController {
         }
         // blog , findBlogResponse , internalServerError, updateBlogResponse
        // return "fragments/blog/view-blog";
-        return "/fragments/blog/blog-administration";
+       return "fragments/blog/view-home-blog";
     }
 
+    @PostMapping("/add-blog-image")
+    public String addBlogImage(@RequestParam("blogID") Long blogID, Model model) {
+        try {
+            // blogImageDTO
+            model.addAttribute("blogImageDTO", new BlogImageDTO(blogID));
+            log.info("addBlogImage LOADED FOR {} ", blogID);
+        } catch (Exception e) {
+            log.error("<-- addBlogImage -->  Exception \n {}", e.getMessage());
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
+        // vacancy , findVacancyResponse
+        return "fragments/blog/blog-image-upload";
+    }
+
+    @PostMapping("/save-blog-image")
+    public String saveBlogImage(@Valid @ModelAttribute("blogImageDTO") BlogImageDTO blogImageDTO,
+                                BindingResult bindingResult, Model model) {
+        if (bindingResult.hasFieldErrors()) {
+            log.info("HAS ERRORS");
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            for (FieldError fieldError : fieldErrors) {
+                log.error("FieldError: {}", fieldError.getField());
+                log.error("FieldError: {}", fieldError.getDefaultMessage());
+
+            }
+            return "fragments/blog/blog-image-upload";
+        }
+        try {
+            recruitmentZoneService.saveBlogImage(blogImageDTO, model);
+            recruitmentZoneService.findBlogById(blogImageDTO.getBlogID(), model);
+
+        } catch (Exception e) {
+            log.info("exception uploading image", e);
+        }
+
+        return "fragments/blog/view-blog";
+    }
 
     @PostMapping("/update-blog-status")
     public String updateBlogStatus(@RequestParam("blogID") Long blogID, Model model) {

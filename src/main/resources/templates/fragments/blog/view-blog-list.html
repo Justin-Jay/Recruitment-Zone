@@ -1,5 +1,5 @@
 <ul class="dropdown-menu" th:fragment="listOptions(blog)">
-    <li class="list-group-item" >
+    <li class="list-group-item">
         <a class="list-group-item list-group-item-action">
             <form action="#" th:action="@{/Blog/view-blog}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
@@ -8,8 +8,7 @@
                 <button class="btn normal-button"
                         hx-post="/Blog/view-blog"
                         hx-target="#main-page-section"
-                        hx-swap="innerHTML show:top"
-                        hx-include="[vacancyID='vacancyID']">View Blog Detail
+                        hx-swap="innerHTML show:top" >View Blog
                 </button>
             </form>
         </a>
@@ -24,8 +23,7 @@
                 <!--      <button class="btn normal-button"
                               hx-post="/Blog/update-blog"
                               hx-target="#main-page-section"
-                              hx-swap="innerHTML show:top"
-                              hx-include="[blogID='blogID']">Update Blog
+                              hx-swap="innerHTML show:top" >Update Blog
                       </button>-->
                 <button class="btn normal-button">Update Blog
                 </button>
@@ -48,4 +46,18 @@
         </a>
     </li>
 
+    <li class="list-group-item">
+        <a class="list-group-item list-group-item-action">
+            <form action="#" th:action="@{/Blog/add-blog-image}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Blog/add-blog-image"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top" >Add Image
+                </button>
+            </form>
+        </a>
+    </li>
 </ul>

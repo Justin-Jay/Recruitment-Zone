@@ -74,14 +74,26 @@
                             <!-- Display blog -->
 
                             <div class="card" style="margin-bottom: 15px;">
-                                <img class="img-fluid" src="https://picsum.photos/800/350" alt="img"/>
+
+                                <img th:if="${blog.headImagePath != null}" th:src="@{ ${BLOG_VOLUME} + ${blog.headImagePath}}" class="img-fluid" alt="Blog Image"  style="height: 550px;" />
+
+
+                                <img th:if="${blog.headImagePath == null}" class="img-fluid"
+                                     src="https://picsum.photos/800/350" alt="img"/>
+
+                                <!-- <img class="img-fluid" src="https://picsum.photos/800/350" alt="img"/>
+ -->
+
                                 <h5 class="card-header fw-medium m-0" th:text="${blog.blog_title}">TITLE HEADING</h5>
-                                <p class="fw-normal m-2 overflow-hidden" th:utext="${blog.blog_description}">Description</p>
-                                <p class="fw-light m-2" th:text="${'Author: ' + blog.employee.name.substring(0,blog.employee.name.indexOf('@')) + ' Publish Date: '+blog.publish_date}">
+                                <p class="fw-normal m-2 overflow-hidden" th:utext="${blog.blog_description}">
+                                    Description</p>
+                                <p class="fw-light m-2"
+                                   th:text="${'Author: ' + blog.employee.name.substring(0,blog.employee.name.indexOf('@')) + ' Publish Date: '+blog.publish_date}">
                                     Author:</p>
 
 
-                                <form class="card-footer" action="#" th:action="@{/Blog/view-home-blog}" th:method="post">
+                                <form class="card-footer" action="#" th:action="@{/Blog/view-home-blog}"
+                                      th:method="post">
                                     <!-- Hidden input field to include the vacancyID in the POST request -->
                                     <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
 
@@ -121,7 +133,7 @@
 
                             <h2>About Me</h2>
                             <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-                            </img>
+
                             <br/>
                             <div class="card">
 

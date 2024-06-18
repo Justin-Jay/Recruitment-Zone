@@ -27,7 +27,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
 
-        String[] myPaths = {"/css/**","/js/**","webjars/**","/ckeditor5/**","/home", "/Blog/blogs",
+        String[] myPaths = {"/css/**","/js/**","webjars/**","blog-images/**","/ckeditor5/**","/home", "/Blog/blogs",
                 "/Blog/view-home-blog","/aboutus","/Communication/send-message","/Communication/contact-us",
                 "/Application/apply-now","/Application/save-application","/Employee/register/verifyEmail",
                 "/Document/searchDocuments","/Document/searchFileContents","/Vacancy/view-home-vacancy","/actuator/prometheus"};
