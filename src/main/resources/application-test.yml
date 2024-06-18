@@ -97,4 +97,5 @@ google:
 blog:
   image:
     path: /blog-images/
-    volume: /home/jenkins/RecruitmentZoneApplication/BlogImages/
+    #    volume: /home/jenkins/RecruitmentZoneApplication/BlogImages/
+    volume: /RecruitmentZoneApplication/BlogImages/
