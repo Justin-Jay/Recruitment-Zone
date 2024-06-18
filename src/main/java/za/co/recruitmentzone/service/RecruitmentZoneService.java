@@ -109,9 +109,9 @@ public class RecruitmentZoneService {
     @Value("${upload.folder}")
     String Folder;
 
-    private final String BLOG_LOCAL_FULL_PATH = "/src/main/resources/static/images/";
-
-    private final String BLOG_VOLUME_FULL_PATH = "/home/jenkins/RecruitmentZoneApplication/BlogImages";
+    //     private final String BLOG_LOCAL_FULL_PATH = "/src/main/resources/static/images/";
+    private final String BLOG_LOCAL_FULL_PATH = "/blog-images/";
+    private final String BLOG_VOLUME_FULL_PATH = "/home/jenkins/RecruitmentZoneApplication/BlogImages/";
 
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,

@@ -5,16 +5,6 @@ server:
       enabled: true
 
 spring:
-  #session:
-  #  timeout: 15m
-    #cookie:
-      #http-only: true
-     # secure: true
-    #jdbc:
-      #table-name: SPRING_SESSION
-      #initialize-schema: embedded
-     # save-mode: always
-      #schema: classpath:/static/sql/schema-mysql.sql
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -58,6 +48,9 @@ spring:
   threads:
     virtual:
       enabled: true
+  #web:
+   # resources:
+    #  static-locations: file:/home/justin/RecruitmentZoneApplication/
 
 
 mail:

@@ -31,7 +31,10 @@ public class BlogController {
    /* @Value("${blog.image.path}")
     private String BLOG_LOCAL_STORAGE;*/
 
-    private final String BLOG_LOCAL_STORAGE = "/images/";
+    private final String BLOG_LOCAL_STORAGE = "/blog-images/";
+
+    //private final String BLOG_VOLUME_FULL_PATH = "file:/home/justin/RecruitmentZoneApplication/BlogImages/";
+
 
     public BlogController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
