@@ -17,8 +17,8 @@ spring:
     protocol: smtp
   servlet:
     multipart:
-    max-file-size: 25MB
-    max-request-size: 25MB
+      max-file-size: 25MB
+      max-request-size: 25MB
   batch:
     job:
       enabled: false
