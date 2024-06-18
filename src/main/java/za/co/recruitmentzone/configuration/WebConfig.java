@@ -12,9 +12,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/blog-images/**")
-                .addResourceLocations("file:./blog-images/")
+                //.addResourceLocations("file:./blog-images/")
+                .addResourceLocations("file:/home/jenkins/RecruitmentZoneApplication/BlogImages/")
                 .setCachePeriod(3600)
                 .resourceChain(true)
                 .addResolver(new EncodedResourceResolver());
     }
 }
+//
