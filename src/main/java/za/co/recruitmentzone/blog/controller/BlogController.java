@@ -3,6 +3,7 @@ package za.co.recruitmentzone.blog.controller;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,13 +29,10 @@ public class BlogController {
 
     private final Logger log = LoggerFactory.getLogger(BlogController.class);
 
-   /* @Value("${blog.image.path}")
-    private String BLOG_LOCAL_STORAGE;*/
+    @Value("${blog.image.path}")
+    private String BLOG_LOCAL_STORAGE;
 
-    private final String BLOG_LOCAL_STORAGE = "/blog-images/";
-
-    //private final String BLOG_VOLUME_FULL_PATH = "file:/home/justin/RecruitmentZoneApplication/BlogImages/";
-
+    //private final String BLOG_LOCAL_STORAGE = "/blog-images/";
 
     public BlogController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
