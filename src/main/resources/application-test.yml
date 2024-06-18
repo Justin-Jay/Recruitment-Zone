@@ -93,3 +93,8 @@ event:
 google:
   storage:
     pre: ${G_PRE_PATH}
+
+blog:
+  image:
+    path: /blog-images/
+    volume: /home/jenkins/RecruitmentZoneApplication/BlogImages/
