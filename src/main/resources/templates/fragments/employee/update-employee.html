@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section">
+<div class="container-fluid page-component">
 
     <div class="container-fluid"><h2>Update Employee</h2></div>
 
@@ -34,7 +34,7 @@
                 <input type="text" th:field="*{contact_number}" class="form-control mb-4 w-25" id="contact_number" placeholder="Contact Number"/>
             </div>
 
-            <button class="btn normal-button"
+            <button class="btn btn-primary"
                     hx-post="/Employee/save-updated-employee"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"

@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section" th:fragment="applicationView(vacancyApplication)"
+<div class="container-fluid page-component" th:fragment="applicationView(vacancyApplication)"
      th:object="${vacancyApplication}">
     <div class="row">
         <p th:if="${findApplicationByIDResponse}" th:text="${findApplicationByIDResponse}"></p>
@@ -127,7 +127,7 @@
                 <input type="hidden" name="applicationID" th:value="${vacancyApplication.applicationID}"/>
                 <!-- Submit button to trigger the form submission -->
                 <!--<button type="submit" class="btn">Update Application</button>-->
-                <button class="btn normal-button"
+                <button class="btn btn-primary"
                         hx-post="/Application/update-application"
                         hx-target="#main-page-section"
                         hx-swap="innerHTML"

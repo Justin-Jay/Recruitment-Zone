@@ -1,4 +1,4 @@
-<div class="container-fluid" th:fragment="clientNotes(existingNotes)" id="clientNotes">
+<div class="container-fluid page-component" th:fragment="clientNotes(existingNotes)" id="clientNotes">
 
     <div class="row">
 
@@ -24,7 +24,7 @@
         <div th:else>
             <!--     <table class="table table-hover sort-asc">   -->
             <div class="container-fluid">
-                <table class="table table-hover table-responsive">
+                <table class="table table-hover ">
                     <thead>
                     <tr>
                         <th>
@@ -88,7 +88,7 @@
                           id="comment"></textarea>
             </div>
 
-            <button class=" btn btn-outline-secondary"
+            <button class=" btn btn-primary"
                     hx-post="/Client/save-client-note"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"

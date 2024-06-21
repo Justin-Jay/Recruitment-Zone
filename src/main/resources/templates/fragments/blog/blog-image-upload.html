@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section">
+<div class="container-fluid page-component">
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
@@ -37,7 +37,7 @@
                         th:value="${type}" th:text="${type.getPrintableImageType()}"></option>
             </select>
         </div>
-
+        <hr/>
 
         <button class="btn btn-primary"
                 hx-post="/Blog/save-blog-image"
@@ -47,10 +47,5 @@
 
 
     </form>
-
-
-    <hr/>
-
-
 
 </div>

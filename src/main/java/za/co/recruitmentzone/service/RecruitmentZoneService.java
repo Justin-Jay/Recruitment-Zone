@@ -112,9 +112,6 @@ public class RecruitmentZoneService {
     @Value("${blog.image.volume}")
     private String BLOG_VOLUME_FULL_PATH;
 
-   // private final String BLOG_LOCAL_FULL_PATH = "/blog-images/";
-   // private final String BLOG_VOLUME_FULL_PATH = "/home/jenkins/RecruitmentZoneApplication/BlogImages/";
-
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
                                   EmployeeService employeeService, ClientService clientService, BlogService blogService, CandidateFileService candidateFileService, PasswordEncoder passwordEncoder, CandidateEventPublisher candidateEventPublisher, ClientFileService clientFileService, ClientEventPublisher clientEventPublisher, TokenVerificationService tokenVerificationService, ContactPersonService contactPersonService, ClientNoteRepository clientNoteRepository) {
@@ -744,6 +741,7 @@ public class RecruitmentZoneService {
             model.addAttribute("vacancy", v);
 
             model.addAttribute("existingDocuments", vacancyDocs);
+
             model.addAttribute("totalPages", vacancyDocs.getTotalPages());
             model.addAttribute("totalItems", vacancyDocs.getTotalElements());
             model.addAttribute("currentPage", pageNo);
@@ -1786,20 +1784,6 @@ public class RecruitmentZoneService {
         return null;
     }
 
-/*    public String getDocumentLocation(String term, Model model) {
-        log.info("<--  getDocumentLocation {} -->", term);
-        try {
-            String filesResponse = candidateFileService.getDocumentLocation(term);
-            if (filesResponse.isEmpty()) {
-                log.info("<--  getDocumentLocation filesResponse {} -->", filesResponse);
-                return filesResponse;
-            } else throw new FileContentException("Error trying to find term" + term);
-        } catch (FileContentException e) {
-            model.addAttribute("searchFileContentResponse", e.getMessage());
-            log.info("<--  getDocumentLocation FileContentException {} -->", e.getMessage());
-        }
-        return null;
-    }*/
 
     public void getFilesFromContent(SearchDocumentsDTO searchDocumentsDTO, Model model) {
         log.info("<--  getFilesFromContent -->");

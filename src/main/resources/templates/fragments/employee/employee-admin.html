@@ -18,7 +18,7 @@
 <div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
 
-<div class="container-fluid home-page-section" id="body-container">
+<div class="container-fluid" id="body-container">
 
     <!--MAIN PAGE SECTION -->
 
@@ -51,8 +51,8 @@
 
                 <!--LEFT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid left-page-frame" id="left-page-column">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 left-page-frame">
+                    <div class="container-fluid " id="left-page-column">
                         <form class="container d-none d-md-block" action="#" th:action="@{/Employee/add-employee}"
                               th:method="post">
 
@@ -109,7 +109,7 @@
 
                 <!--RIGHT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
                     <div class="container-fluid " id="right-page-column">
 
                     </div>

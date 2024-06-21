@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section" th:fragment="candidateFragment">
+<div class="container-fluid page-component" th:fragment="candidateFragment">
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addCandidateNoteResponse})}"></div>
@@ -146,7 +146,7 @@
             <form th:action="@{/Candidate/view-candidate-documents}" th:method="post">
                 <input type="hidden" name="candidateID" th:value="${candidate.candidateID}"/>
 
-                <button class="btn btn-outline-secondary"
+                <button class="btn btn-primary"
                         hx-post="/Candidate/view-candidate-documents"
                         hx-target="#right-page-column"
                         hx-swap="innerHTML"
@@ -217,7 +217,7 @@
                           id="comment"></textarea>
             </div>
 
-            <button class=" btn btn-outline-secondary"
+            <button class="btn btn-primary"
                     hx-post="/Candidate/save-candidate-note"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"

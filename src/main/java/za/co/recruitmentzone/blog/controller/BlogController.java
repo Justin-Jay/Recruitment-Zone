@@ -55,7 +55,7 @@ public class BlogController {
     @GetMapping("/blog-administration")
     public String blogAdministration(Model model) {
         try {
-            int pageSize = 5;
+            int pageSize = 10;
             recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
         } catch (Exception e) {
             log.error("<-- blogAdministration -->  Exception \n {}", e.getMessage());
@@ -67,7 +67,7 @@ public class BlogController {
     @GetMapping("/paginatedBlogs/{pageNo}")
     public String findPaginatedBlogs(@PathVariable(value = "pageNo") int pageNo,
                                            @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
-        int pageSize = 5;
+        int pageSize = 10;
         log.info("Page number  {}", pageNo);
         log.info("sortField {}", sortField);
         log.info("sortDirection {}", sortDirection);
