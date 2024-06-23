@@ -1329,17 +1329,22 @@ public class RecruitmentZoneService {
         log.info("<--  getActiveBlogs -->");
         try {
             List<Blog> blogResponse = blogService.getBlogsByStatus(ACTIVE);
-            List<Blog> existingBlogs = blogService.getBlogsByStatus(EXPIRED);
-            if (!blogResponse.isEmpty() && !existingBlogs.isEmpty()) {
+
+            if (!blogResponse.isEmpty()) {
                 log.info("<--  getActiveBlogs blogResponse {} -->", blogResponse.size());
                 model.addAttribute("blogs", blogResponse);
 
-                model.addAttribute("existingBlogs", existingBlogs);
+                List<Blog> existingBlogs = blogService.getBlogsByStatus(EXPIRED);
+                if (!existingBlogs.isEmpty()) {
+                    model.addAttribute("existingBlogs", existingBlogs);
+
+                }
+
 
             } else throw new BlogNotFoundException("No Active Blogs");
         } catch (BlogNotFoundException blogNotFoundException) {
             model.addAttribute("activeBlogResponse", blogNotFoundException.getMessage());
-            log.info("<--  getActiveBlogs blogNotFoundException {} -->", blogNotFoundException.getMessage());
+            log.info("<--  getActiveBlogs blogNotFoundException-->", blogNotFoundException);
         }
     }
 
