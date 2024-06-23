@@ -30,7 +30,7 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
-    public List<Blog> getActiveBlogs(BlogStatus status) {
+    public List<Blog> getBlogsByStatus(BlogStatus status) {
 
         return blogRepository.findBlogsByStatus(status);
     }

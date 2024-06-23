@@ -20,6 +20,7 @@ RUN mkdir -p /RecruitmentZoneApplication/Files/
 
 RUN mkdir -p /RecruitmentZoneApplication/BlogImages/
 
+RUN mkdir -p /RecruitmentZoneApplication/VacancyImages/
 
 # Entry point or command to start your application
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]

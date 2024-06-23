@@ -45,7 +45,7 @@
 
             <br>
 
-            <button class="btn normal-button"
+            <button class="btn btn-primary"
                     hx-post="/Candidate/upload-candidate-document"
                     hx-target="#right-page-column"
                     hx-swap="innerHTML"
@@ -62,10 +62,6 @@
     </form>
 
 
-    <hr/>
-
-
-<!--    <div th:replace="~{fragments/candidate/candidate-fragments :: existingDocuments(${existingDocuments})}"></div>-->
     <div th:replace="~{fragments/documents/candidate-document-fragment :: existingDocuments(${existingDocuments},${candidate})}"></div>
 
 

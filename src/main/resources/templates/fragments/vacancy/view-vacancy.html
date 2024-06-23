@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section">
+<div class="container-fluid home-page-section">
 
     <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findVacancyResponse})}"></div>
     <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveVacancyResponse})}"></div>
@@ -101,6 +101,7 @@
             </div>
             <div class="col-6">
                 <div th:insert="~{fragments/vacancy/vacancy-status :: vacancyStatus(${vacancy})}"></div>
+
             </div>
         </div>
 

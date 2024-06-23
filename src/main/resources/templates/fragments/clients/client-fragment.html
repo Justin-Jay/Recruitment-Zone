@@ -60,7 +60,7 @@
             <!-- Hidden input field to include the vacancyID in the POST request -->
             <input type="hidden" name="clientID" th:value="*{clientID}"/>
             <!-- Submit button to trigger the form submission -->
-            <button class="btn normal-button"
+            <button class="btn btn-primary"
                     hx-post="/Client/view-client-contacts"
                     hx-target="#right-page-column"
                     hx-swap="innerHTML"

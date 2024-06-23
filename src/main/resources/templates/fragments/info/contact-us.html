@@ -17,7 +17,7 @@
 <!-- TOP Navbar -->
 <div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
-<div class="container-fluid home-page-section" id="body-container">
+<div class="container-fluid main-page-section" id="body-container">
 
 
     <div class="row ">
@@ -41,7 +41,7 @@
         <div class="col-xxl-6 col-xl-5 col-lg-4 col-md-6 ">
             <h5 class="h5 ">Contact Us</h5>
         </div>
-        <div class="col-xxl-6 col-xl-5 col-lg-4 col-md-6">
+        <div class="col-xxl-6 col-xl-5 col-lg-4 col-md-6" style="padding: 10px;">
 
             <form action="#" th:action="@{/Communication/send-message}"
                   th:object="${contactMessage}" method="POST">
@@ -56,7 +56,7 @@
                               id="messageBody"></textarea>
 
                     <br>
-                    <button class="btn normal-button"
+                    <button class="btn btn-primary"
                             hx-indicator="#spinner">
                         Submit
                     </button>
@@ -64,8 +64,9 @@
 
                 </div>
             </form>
-        </div>
 
+        </div>
+        <hr>
     </div>
 </div>
 

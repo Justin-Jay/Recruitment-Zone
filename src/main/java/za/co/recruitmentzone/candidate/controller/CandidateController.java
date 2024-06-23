@@ -53,19 +53,19 @@ public class CandidateController {
     @GetMapping("/paginatedCandidates/{pageNo}")
     public String findPaginatedCandidates(@PathVariable(value = "pageNo") int pageNo,
                                           @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
-        int pageSize = 10;
+        int candidatePageSize = 10;
         log.info("Page number  {}", pageNo);
         log.info("sortField {}", sortField);
         log.info("sortDirection {}", sortDirection);
-        recruitmentZoneService.findAllCandidates(model, pageNo, pageSize, sortField, sortDirection);
+        recruitmentZoneService.findAllCandidates(model, pageNo, candidatePageSize, sortField, sortDirection);
         return "fragments/candidate/candidate-administration :: candidate-admin-list";
     }
 
     @PostMapping("/view-candidate")
     public String viewCandidate(Model model, @RequestParam("candidateID") Long candidateID) {
         try {
-            int pageSize = 5;
-            recruitmentZoneService.addCandidateNote(model, candidateID, pageSize);
+            int candidateNotePageSize = 5;
+            recruitmentZoneService.addCandidateNote(model, candidateID, candidateNotePageSize);
         } catch (Exception e) {
             log.error("<-- viewCandidate -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);

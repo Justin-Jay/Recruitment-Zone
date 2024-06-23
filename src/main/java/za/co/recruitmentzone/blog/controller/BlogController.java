@@ -32,7 +32,8 @@ public class BlogController {
     @Value("${blog.image.path}")
     private String BLOG_LOCAL_STORAGE;
 
-    //private final String BLOG_LOCAL_STORAGE = "/blog-images/";
+    private final int pageSize = 10;
+
 
     public BlogController(RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
@@ -43,6 +44,7 @@ public class BlogController {
     public String blogs(Model model) {
         try {
             recruitmentZoneService.getActiveBlogs(model);
+
             model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
         } catch (Exception e) {
             log.error("<-- blogs -->  Exception \n {}", e.getMessage());
@@ -55,8 +57,8 @@ public class BlogController {
     @GetMapping("/blog-administration")
     public String blogAdministration(Model model) {
         try {
-            int pageSize = 5;
-            recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
+           // int pageSize = 10;
+            recruitmentZoneService.getBlogs(model, 1, pageSize, "created", "desc");
         } catch (Exception e) {
             log.error("<-- blogAdministration -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
@@ -64,16 +66,16 @@ public class BlogController {
         // blogList , getBlogsResponse , internalServerError
         return "/fragments/blog/blog-administration";
     }
+
     @GetMapping("/paginatedBlogs/{pageNo}")
     public String findPaginatedBlogs(@PathVariable(value = "pageNo") int pageNo,
-                                           @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
-        int pageSize = 5;
-        log.info("Page number  {}", pageNo);
-        log.info("sortField {}", sortField);
-        log.info("sortDirection {}", sortDirection);
-        recruitmentZoneService.getBlogs(model,pageNo, pageSize, sortField, sortDirection);
+                                     @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
+        log.info("<--- findPaginatedBlogs: Page number  {} sortField {} sortDirection {} --->",
+                pageNo, sortField, sortDirection);
+        recruitmentZoneService.getBlogs(model, pageNo, pageSize, sortField, sortDirection);
         return "fragments/blog/blog-administration :: blog-admin-table";
     }
+
     @PostMapping("/add-blog")
     public String showCreateBlogForm(Model model) {
         try {
@@ -94,17 +96,15 @@ public class BlogController {
         }
         try {
             log.info("<--- saveUpdatedBlog BODY: ---> \n {} ", blogDTO.getBody());
-            boolean cleanInput ;
+            boolean cleanInput;
             cleanInput = recruitmentZoneService.cleanData(blogDTO);
-            if (cleanInput){
+            if (cleanInput) {
                 recruitmentZoneService.saveNewBlog(blogDTO, principal, model);
-               // int pageSize = 5;
-              //  recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
+                //  recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
                 model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
                 log.info("BLOG_VOLUME = {} ", BLOG_LOCAL_STORAGE);
-            }
-            else {
-                model.addAttribute("dirtyData","Failed to sanitize input");
+            } else {
+                model.addAttribute("dirtyData", "Failed to sanitize input");
                 return "fragments/blog/update-blog";
             } //
 
@@ -165,24 +165,23 @@ public class BlogController {
         try {
             boolean cleanInput = false;
             cleanInput = recruitmentZoneService.cleanData(blog);
-            if (cleanInput){
+            if (cleanInput) {
                 recruitmentZoneService.saveUpdatedBlog(blog, model);
-              //  int pageSize = 5;
-               // recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
+                //  int pageSize = 10;
+                // recruitmentZoneService.getBlogs(model,1, pageSize, "created", "desc");
                 model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
                 log.info("BLOG_VOLUME = {} ", BLOG_LOCAL_STORAGE);
-            }
-            else {
-                model.addAttribute("dirtyData","Failed to sanitize input");
-               // return "fragments/blog/update-blog";
+            } else {
+                model.addAttribute("dirtyData", "Failed to sanitize input");
+                // return "fragments/blog/update-blog";
             }
         } catch (Exception e) {
             log.error("<-- saveUpdatedBlog -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blog , findBlogResponse , internalServerError, updateBlogResponse
-       // return "fragments/blog/view-blog";
-       return "fragments/blog/view-home-blog";
+        // return "fragments/blog/view-blog";
+        return "fragments/blog/view-home-blog";
     }
 
     @PostMapping("/add-blog-image")
@@ -205,18 +204,21 @@ public class BlogController {
         if (bindingResult.hasFieldErrors()) {
             log.info("HAS ERRORS");
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            for (FieldError fieldError : fieldErrors) {
-                log.error("FieldError: {}", fieldError.getField());
-                log.error("FieldError: {}", fieldError.getDefaultMessage());
 
-            }
             return "fragments/blog/blog-image-upload";
         }
         try {
-            recruitmentZoneService.saveBlogImage(blogImageDTO, model);
-            recruitmentZoneService.findBlogById(blogImageDTO.getBlogID(), model);
 
+            boolean validImage = recruitmentZoneService.validateImage(blogImageDTO,model);
+
+            if (validImage) {
+                recruitmentZoneService.saveBlogImage(blogImageDTO,model);
+                recruitmentZoneService.findBlogById(blogImageDTO.getBlogID(), model);
+            }
+            else {
+                recruitmentZoneService.findBlogById(blogImageDTO.getBlogID(), model);
+                return "fragments/blog/blog-image-upload";
+            }
         } catch (Exception e) {
             log.info("exception uploading image", e);
         }

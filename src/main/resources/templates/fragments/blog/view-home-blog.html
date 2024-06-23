@@ -12,38 +12,57 @@
         <main>
             <article class="blog-post">
                 <!-- Blog Title -->
-                <header class="blog-title" th:text="*{blog.blog_title}">
-                    <!-- Customize metadata as needed -->
-                </header>
-<!--
-                <div class="col-4">
 
-                </div>-->
-              <!--  String containerDir = absolutePath + "/RecruitmentZoneApplication/BlogImages/";
-                -->
-                <img th:if="${blog.headImagePath != null}" th:src="@{ ${BLOG_VOLUME} + ${blog.headImagePath}}" class="shadow -p3 mb-5 bg-body-tertiary rounded"
-                     alt="blog image" style="width: 800px; height: 350px;"/>
 
-                <img th:if="${blog.headImagePath == null}" class="shadow -p3 mb-5 bg-body-tertiary rounded"
-                     src="https://picsum.photos/800/350" alt="img" style="width: 800px; height: 350px;"/>
+                <div class="row-cols-12">
+                    <header class="blog-title" th:text="*{blog.blog_title}">
+                        <!-- Customize metadata as needed -->
+                    </header>
+                </div>
 
                 <!-- Blog Description -->
-                <section class="blog-description" th:utext="*{blog.blog_description}">
-                </section>
+                <div class="row">
+                    <div class="col-12">
+                        <section class="blog-description" th:utext="*{blog.blog_description}">
+                        </section>
+                        <img th:if="${blog.headImagePath != null}" th:src="@{ ${BLOG_VOLUME} + ${blog.headImagePath}}"
+                             class="float-end shadow rounded"
+                             alt="blog image" style="width: 800px; height: 350px;"/>
+                    </div>
 
-                <!-- Blog Body/Content -->
-                <section class="blog-content" th:utext="*{blog.body}">
+                  <!--  <div class="row-cols-6">
+                        <img th:if="${blog.headImagePath != null}" th:src="@{ ${BLOG_VOLUME} + ${blog.headImagePath}}"
+                             class="float-end shadow rounded"
+                             alt="blog image" style="width: 800px; height: 350px;"/>
 
-                    <!-- Main content of your blog post -->
-                    <!-- Add more content as needed, e.g., images, lists, etc. -->
-                </section>
+                        <img th:if="${blog.headImagePath == null}" class="shadow -p3 mb-5 bg-body-tertiary rounded"
+                             src="https://picsum.photos/800/350" alt="img" style="width: 800px; height: 350px;"/>
 
-                <img th:if="${blog.contentImageOnePath != null}" th:src="@{ ${BLOG_VOLUME}  + ${blog.contentImageOnePath}}" class="shadow -p3 mb-5 bg-body-tertiary rounded"
-                     alt="blog image" style="width: 800px; height: 350px;"/>
+                    </div>-->
+                </div>
 
-                <img th:if="${blog.contentImageOnePath == null}" class="shadow -p3 mb-5 bg-body-tertiary rounded"
-                     src="https://picsum.photos/800/350" alt="img" style="width: 800px; height: 350px;"/>
 
+                <div class="row-cols-12">
+                    <!-- Blog Body/Content -->
+                    <section class="blog-content" th:utext="*{blog.body}">
+
+                        <!-- Main content of your blog post -->
+                        <!-- Add more content as needed, e.g., images, lists, etc. -->
+                    </section>
+                </div>
+
+
+                <div class="row-cols-12">
+                    <img th:if="${blog.contentImageOnePath != null}"
+                         th:src="@{ ${BLOG_VOLUME}  + ${blog.contentImageOnePath}}"
+                         class="shadow -p3 mb-5 bg-body-tertiary rounded"
+                         alt="blog image" style="width: 800px; height: 350px;"/>
+
+                    <img th:if="${blog.contentImageOnePath == null}" class="shadow -p3 mb-5 bg-body-tertiary rounded"
+                         src="https://picsum.photos/800/350" alt="img" style="width: 800px; height: 350px;"/>
+
+
+                </div>
 
                 <!-- Footer Section -->
                 <footer class="blog-footer">

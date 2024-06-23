@@ -1,6 +1,6 @@
-<div class="container-fluid main-page-section">
+<div class="container-fluid page-component">
 
-    <div class="container-fluid"><h2>Update Employee</h2></div>
+    <div class="container-fluid"><h2>Update Candidate</h2></div>
 
 
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findEmployeeByIDResponse})}"></div>
@@ -90,7 +90,7 @@
 
 
 
-            <button class="btn normal-button"
+            <button class="btn btn-primary"
                     hx-post="/Candidate/save-updated-candidate"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML" > Save Updated Candidate

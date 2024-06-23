@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section" th:fragment="applicationListFragment">
+<div class="container-fluid page-component" th:fragment="applicationListFragment">
 
     <div class="row">
         <div class="container">
@@ -8,7 +8,19 @@
     </div>
 
     <div class="container-fluid">
-        <table class="table table-hover table-responsive-sm" id="sort-table">
+        <h5 class="h5"  th:unless="${totalItems > 0}">No applications received yet</h5>
+        <table class="table table-hover table-responsive-sm" id="sort-table" th:if="${totalItems >= 1}">
+            <caption>
+                <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a class="btn btn-secondary"
+                           th:if="${currentPage != i}"
+                           th:href="@{'/Vacancy/paginatedSubmissions/' + ${vacancyID} + '/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                           onclick="loadHTMXFragment(this.href, 'main-page-column'); return false;" th:text="${i}">
+                        </a>  <span th:unless="${currentPage != i}">[[${i}]]</span>
+					</span>
+                </div>
+            </caption>
             <thead>
             <tr>
                 <th>
@@ -42,7 +54,7 @@
                         <!-- hx-target="#vacancy-applications-list"-->
                         <button class="btn normal-button"
                                 hx-post="/Candidate/view-candidate"
-                                hx-target="#main-page-column"
+                                hx-target="#main-page-section"
                                 hx-swap="innerHTML"
                                 hx-push-url="true">
                             View Candidate
@@ -72,15 +84,7 @@
         </table>
     </div>
 
-    <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
-					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
-						<a class="btn btn-secondary"
-                           th:if="${currentPage != i}"
-                           th:href="@{'/Vacancy/paginatedSubmissions/' + ${vacancyID} + '/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                           onclick="loadHTMXFragment(this.href, 'main-page-column'); return false;" th:text="${i}">
-                        </a>  <span th:unless="${currentPage != i}">[[${i}]]</span>
-					</span>
-    </div>
+
 
 <!--
     <meta name="_csrf" th:content="${_csrf.token}"/>
