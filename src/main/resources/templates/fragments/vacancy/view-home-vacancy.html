@@ -4,14 +4,27 @@
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findVacancyResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveVacancyResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addImageResponse})}"></div>
+
+
     </div>
     <div class="row">
-        <div class="col-8">
+
+        <div class="col-12">
             <div class="blog-post">
+
+                <img th:if="${vacancy.vacancyImageRef != null}"
+                     th:src="@{ ${VACANCY_IMAGE_VOL} + ${vacancy.vacancyImageRef}}"
+                     class="float-end shadow rounded" alt="Vacancy Image" style="height: 450px;"/>
+
+                <img th:if="${vacancy.vacancyImageRef == null}" src="https://picsum.photos/450/300"
+                     class="float-end shadow rounded" alt="Vacancy Image" style="height: 450px;"/>
+
                 <h2 class="blog-post-title" th:text="${vacancy.jobTitle}"></h2>
-             <!--   <p class="fw-light" th:text="${'Author: ' + vacancy.employee.name.substring(0,vacancy.employee.name.indexOf('@'))}">
-                    Author:</p>-->
-                <p  th:text="${'Author: ' + employeeName}"></p>
+
+                <!--   <p class="fw-light" th:text="${'Author: ' + vacancy.employee.name.substring(0,vacancy.employee.name.indexOf('@'))}">
+                       Author:</p>-->
+                <p th:text="${'Author: ' + employeeName}"></p>
                 <p class="blog-post-meta" th:text="${'Publish Date: '+vacancy.publish_date}"></p>
                 <p class="blog-post-meta" th:text="${'End Date: '+vacancy.end_date}"></p>
                 <!--  -->
@@ -27,9 +40,11 @@
 
                 </section>
 
-                <a  th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary" th:href="@{/Vacancy/vacancy-administration}">Vacancy Admin</a>
+                <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary"
+                   th:href="@{/Vacancy/vacancy-administration}">Vacancy Admin</a>
 
-                <form th:if="${not #authorization.expression('isAuthenticated')}" th:action="@{/Application/apply-now}" th:method="post">
+                <form th:if="${not #authorization.expression('isAuthenticated')}" th:action="@{/Application/apply-now}"
+                      th:method="post">
                     <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
 
                     <button class="btn btn-primary"
@@ -42,12 +57,22 @@
 
             </div>
             <br/>
-            <a  th:if="${not #authorization.expression('isAuthenticated')}" class="btn btn-secondary" th:href="@{/home}">Back to vacancies</a>
+            <a th:if="${not #authorization.expression('isAuthenticated')}" class="btn btn-secondary" th:href="@{/home}">Back
+                to vacancies</a>
         </div>
 
-        <div class="col-4">
-            <img src="https://picsum.photos/450/300" class="shadow -p3 mb-5 bg-body-tertiary rounded" alt="img">
-        </div>
+        <!--    <div class="col-12">
+
+                <img th:if="${vacancy.vacancyImageRef != null}"
+                     th:src="@{ ${VACANCY_IMAGE_VOL} + ${vacancy.vacancyImageRef}}"
+                     class="shadow rounded" alt="Vacancy Image" style="height: 450px;"/>
+
+                <img th:if="${vacancy.vacancyImageRef == null}" src="https://picsum.photos/450/300"
+                     class="shadow  rounded" alt="Vacancy Image" style="height: 450px;">
+
+            </div>-->
+
+
     </div>
 
 </div>

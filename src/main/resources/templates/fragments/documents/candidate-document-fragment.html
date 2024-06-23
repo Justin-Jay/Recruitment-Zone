@@ -1,5 +1,5 @@
 <div class="container-fluid" th:fragment="existingDocuments(existingDocuments,candidate)" id="candidate-documents">
-    <p>Existing Documents</p>
+    <p class="h3 text-center" th:if="${totalItems >= 1}">Existing Documents</p>
     <!--    <p th:if="${findCandidateDocumentsResponse}" th:text="${findCandidateDocumentsResponse}"></p>
         -->
     <p th:if="${findVacancyDocumentsResponse}" th:text="${findVacancyDocumentsResponse}"></p>
@@ -17,7 +17,20 @@
      </ol>-->
 
     <!--TABLE VIEW -->
-    <table class="table table-striped table-responsive">
+    <table class="table table-striped table-responsive" th:if="${totalItems >= 1}">
+        <caption>
+            <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+					        	<a class="btn btn-secondary"
+                                   th:if="${currentPage != i}"
+                                   th:href="@{'/Candidate/paginatedCandidateDocuments/' + ${candidate.candidateID}+ '/'+ ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                                   onclick="loadHTMXFragment(this.href, 'right-page-column'); return false;"
+                                   th:text="${i}">
+                                </a>
+                                <span th:unless="${currentPage != i}">[[${i}]]</span>
+					    </span>
+            </div>
+        </caption>
         <thead>
         <tr>
             <th>Index</th>
@@ -50,17 +63,7 @@
         </tbody>
     </table>
 
-    <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
-					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-					        	<a class="btn btn-secondary"
-                                   th:if="${currentPage != i}"
-                                   th:href="@{'/Candidate/paginatedCandidateDocuments/' + ${candidate.candidateID}+ '/'+ ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                                   onclick="loadHTMXFragment(this.href, 'right-page-column'); return false;"
-                                   th:text="${i}">
-                                </a>
-                                <span th:unless="${currentPage != i}">[[${i}]]</span>
-					    </span>
-    </div>
+
 
 
 </div>

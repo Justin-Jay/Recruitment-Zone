@@ -43,7 +43,7 @@
     <!--  BLOG  CENTER  PAGE COLUMN -->
 
     <div class="col-xxl-8 col-xl-8 col-lg-4 col-md-6 ">
-        <div class="container-fluid " id="main-page-column">
+        <div class="container-fluid " id="main-page-section">
             <!-- If-then-else -->
             <div th:if="${activeBlogResponse}">
                 <p>Error: <span th:text="${activeBlogResponse}"></span></p>
@@ -95,18 +95,32 @@
     <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
         <div class="container-fluid" id="right-page-column">
             <div class="card">
-                <h5>Blog Archive</h5>
-                <div class="img-fluid">
-                    <p>list of older blogs</p>
+                <div class="container-fluid">
+                    <h5>Blog Archive</h5>
+                    <ul th:each="oldBlog : ${existingBlogs}">
+                      <li  >
+                          <a>
+                              <form action="#" th:action="@{/Blog/view-home-blog}" th:method="post">
+                                  <!-- Hidden input field to include the vacancyID in the POST request -->
+                                  <input type="hidden" name="blogID" th:value="*{oldBlog.blogID}"/>
+                                  <!-- Submit button to trigger the form submission -->
+                                  <button class="btn normal-button"
+                                          hx-post="/Blog/view-home-blog"
+                                          hx-target="#page-content"
+                                          hx-swap="innerHTML" >[[${oldBlog.blog_title}]]
+                                  </button>
+                              </form>
+                          </a>
+                      </li>
+                  </ul>
                 </div>
-                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
             </div>
             <br/>
-            <div class="card">
-                <!-- imageOne = PATH -->
-                <!--                            <img th:if="${blog.imageOne}" class="img-fluid" th:src="${blog.imageOne}" alt="img"/>
+       <!--     <div class="card">
+                &lt;!&ndash; imageOne = PATH &ndash;&gt;
+                &lt;!&ndash;                            <img th:if="${blog.imageOne}" class="img-fluid" th:src="${blog.imageOne}" alt="img"/>
                  th:else
-                 -->
+                 &ndash;&gt;
                 <img class="img-fluid" src="https://picsum.photos/450/300" alt="img"/>
 
                 <h2>About Me</h2>
@@ -128,7 +142,7 @@
                     <p>Some text..</p>
                 </div>
                 <br/>
-            </div>
+            </div>-->
         </div>
 
     </div>

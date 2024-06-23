@@ -11,10 +11,13 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
+
+import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER_ERROR;
 
 
 @Controller
@@ -29,24 +32,23 @@ public class RecruitmentZoneWebController {
     @Autowired
     private Job vacancyJob;
 
+    @Value("${vacancy.image.path}")
+    private String VACANCY_IMAGE_LOCAL_STORAGE;
+
     private final Logger log = LoggerFactory.getLogger(RecruitmentZoneWebController.class);
 
     public RecruitmentZoneWebController( RecruitmentZoneService recruitmentZoneService) {
         this.recruitmentZoneService = recruitmentZoneService;
     }
 
-  /*  @GetMapping("/css/**")
-    public String redirectToHome() {
-        return "redirect:/home";
-    }
-*/
-
     @GetMapping(value = {"/", "/home"})
     public String home(Model model) {
         try {
             recruitmentZoneService.getActiveVacancies(model);
+            model.addAttribute("VACANCY_IMAGE_VOL", VACANCY_IMAGE_LOCAL_STORAGE);
         } catch (Exception e) {
-            model.addAttribute("internalServerError", e.getMessage());
+            log.info("Exception while loading home page", e);
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         return "home";
     }

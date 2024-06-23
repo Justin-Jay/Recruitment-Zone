@@ -61,11 +61,20 @@ import za.co.recruitmentzone.exception.NoResultsFoundException;
 import za.co.recruitmentzone.util.Constants;
 import za.co.recruitmentzone.util.enums.*;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
+import za.co.recruitmentzone.vacancy.dto.VacancyImageDTO;
 import za.co.recruitmentzone.vacancy.dto.VacancyStatusDTO;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 import za.co.recruitmentzone.vacancy.exception.VacancyException;
 import za.co.recruitmentzone.vacancy.service.VacancyService;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -78,8 +87,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static za.co.recruitmentzone.util.enums.BlogStatus.ACTIVE;
-import static za.co.recruitmentzone.util.enums.BlogStatus.PENDING;
+import static za.co.recruitmentzone.util.enums.BlogStatus.*;
 import static za.co.recruitmentzone.util.enums.CandidateDocumentType.CURRICULUM_VITAE;
 import static za.co.recruitmentzone.util.enums.ROLE.*;
 
@@ -111,6 +119,9 @@ public class RecruitmentZoneService {
 
     @Value("${blog.image.volume}")
     private String BLOG_VOLUME_FULL_PATH;
+
+    @Value("${vacancy.image.volume}")
+    private String VACANCY_VOLUME_FULL_PATH;
 
 
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
@@ -353,7 +364,7 @@ public class RecruitmentZoneService {
     }
 
     //  candidate ,existingNotes , candidateNoteDTO
-    public void addCandidateNote(Model model, Long candidateID, int pageSize) {
+    public void addCandidateNote(Model model, Long candidateID, int notePageSize) {
         log.info("<--  addCandidateNote candidateID {} -->", candidateID);
         try {
             Candidate candidate = candidateService.getcandidateByID(candidateID);
@@ -364,7 +375,7 @@ public class RecruitmentZoneService {
             model.addAttribute("candidate", candidate);
 
             // List<CandidateNote> notes = candidate.getNotes();
-            Page<CandidateNote> notes = candidateService.findPaginatedCandidateNotes(1, pageSize, "dateCaptured",
+            Page<CandidateNote> notes = candidateService.findPaginatedCandidateNotes(1, notePageSize, "dateCaptured",
                     "desc", candidate);
             log.info("<-- addCandidateNote notes.getTotalPages {} -->", notes.getTotalPages());
             log.info("<-- addCandidateNote notes.getTotalElements {} -->", notes.getTotalElements());
@@ -372,6 +383,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("existingNotes", notes);
                 model.addAttribute("totalPages", notes.getTotalPages());
                 model.addAttribute("totalItems", notes.getTotalElements());
+                log.info(" addCandidateNote totalItems = {} ", notes.getTotalElements());
                 model.addAttribute("currentPage", 1);
                 model.addAttribute("sortField", "dateCaptured");
                 model.addAttribute("sortDir", "desc");
@@ -596,6 +608,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("candidateList", responseList);
                 model.addAttribute("totalPages", responseList.getTotalPages());
                 model.addAttribute("totalItems", responseList.getTotalElements());
+
                 model.addAttribute("currentPage", pageNo);
                 model.addAttribute("sortField", sortField);
                 model.addAttribute("sortDir", sortDirection);
@@ -1141,6 +1154,7 @@ public class RecruitmentZoneService {
         vacancyDTO.setEmployeeID(vacancy.getTheEmpID());
         vacancyDTO.setApplicationCount(vacancy.getApplicationsSize());
         vacancyDTO.setClientName(vacancy.getClient().getName());
+        vacancyDTO.setVacancyImageRef(vacancy.getVacancyImageRef());
         return vacancyDTO;
     }
 
@@ -1314,10 +1328,14 @@ public class RecruitmentZoneService {
     public void getActiveBlogs(Model model) {
         log.info("<--  getActiveBlogs -->");
         try {
-            List<Blog> blogResponse = blogService.getActiveBlogs(ACTIVE);
-            if (!blogResponse.isEmpty()) {
+            List<Blog> blogResponse = blogService.getBlogsByStatus(ACTIVE);
+            List<Blog> existingBlogs = blogService.getBlogsByStatus(EXPIRED);
+            if (!blogResponse.isEmpty() && !existingBlogs.isEmpty()) {
                 log.info("<--  getActiveBlogs blogResponse {} -->", blogResponse.size());
                 model.addAttribute("blogs", blogResponse);
+
+                model.addAttribute("existingBlogs", existingBlogs);
+
             } else throw new BlogNotFoundException("No Active Blogs");
         } catch (BlogNotFoundException blogNotFoundException) {
             model.addAttribute("activeBlogResponse", blogNotFoundException.getMessage());
@@ -1534,6 +1552,60 @@ public class RecruitmentZoneService {
         }
     }
 
+    public void saveVacancyImage(VacancyImageDTO vacancyImageDTO, Model model) {
+        log.info("<--  saveVacancyImage vacancyImage vacancy ID: {} -->", vacancyImageDTO.getVacancyID());
+        String returnMessage = "";
+
+        try {
+            Vacancy optionalVacancy = vacancyService.findById(vacancyImageDTO.getVacancyID());
+            log.info("<--  saveVacancyImage existingBlog {} -->", optionalVacancy.printVacancy());
+            if (optionalVacancy != null) {
+
+                if (vacancyImageDTO.getVacancyImage() != null && !vacancyImageDTO.getVacancyImage().isEmpty()) {
+
+                    log.info("<-- saveVacancyImage submitted for {}", optionalVacancy.getVacancyID());
+                    String vacancyImagePath = uploadVacancyImage(vacancyImageDTO.getVacancyImage());
+                    log.info("<-- saveVacancyImage vacancyImage {}", vacancyImagePath);
+                    optionalVacancy.setVacancyImageRef(vacancyImagePath);
+
+
+                    try {
+
+                        Vacancy savedVacancy = vacancyService.save(optionalVacancy);
+                        if (savedVacancy != null) {
+                            returnMessage = "Vacancy Image Added";
+
+                            model.addAttribute("addImageResponse", returnMessage);
+
+                            VacancyDTO vacancyDTO = convertVacancy(savedVacancy);
+                            model.addAttribute("vacancy", vacancyDTO);
+                            model.addAttribute("employeeName", savedVacancy.getEmployee().getFirst_name());
+
+
+                            log.info(" < --- saveVacancyImage {} -->", savedVacancy.printVacancy());
+
+                            log.info("<--  saveVacancyImage returnMessage {} -->", returnMessage);
+                        } else throw new VacancyException("Failed to save blog image");
+
+                    } catch (VacancyException vacancyException) {
+                        log.info("<--  saveVacancyImage blogNotSavedException {} -->", vacancyException.getMessage());
+                        model.addAttribute("addImageResponse", vacancyException.getMessage());
+                    }
+
+                } else {
+                    log.info("<-- NO IMAGE SUBMITTED ");
+                    returnMessage = "No images added";
+                    model.addAttribute("addImageResponse", returnMessage);
+                }
+
+            } else throw new VacancyException("Vacancy not found: vacancy ID: " + vacancyImageDTO.getVacancyID());
+        } catch (VacancyException vacancyException) {
+            log.info("vacancyException", vacancyException);
+            model.addAttribute("addImageResponse", vacancyException.getMessage());
+        }
+    }
+
+
     private String uploadBlogImage(MultipartFile file) {
         log.info("<-- saveBlogImage -->");
         try {
@@ -1560,6 +1632,7 @@ public class RecruitmentZoneService {
             //    /RecruitmentZoneApplication/BlogImages/{blogID}/{imageType}/
 
             //String volumeDirectory = "/home/justin/RecruitmentZoneApplication/" + "BlogImages/";
+
             String fileName = file.getOriginalFilename();
             Path uploadPath = Paths.get(BLOG_VOLUME_FULL_PATH);
 
@@ -1567,8 +1640,10 @@ public class RecruitmentZoneService {
                 Files.createDirectories(uploadPath);
             }
 
-            try (InputStream inputStream = file.getInputStream()) {
-                Path filePath = uploadPath.resolve(fileName);
+            File optimizedImage = optimizeImage(file, "jpg");
+
+            try (InputStream inputStream = new FileInputStream(optimizedImage)) {
+                Path filePath = uploadPath.resolve(optimizedImage.getName());
                 Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
                 log.info("<-- saveBlogImage image saved to data volume -->");
             }
@@ -1578,6 +1653,90 @@ public class RecruitmentZoneService {
             log.info("<-- saveBlogImage \n", e);
             return null;
         }
+    }
+
+    private String uploadVacancyImage(MultipartFile file) {
+        log.info("<-- uploadVacancyImage -->");
+        try {
+            String fileName = file.getOriginalFilename();
+            Path uploadPath = Paths.get(VACANCY_VOLUME_FULL_PATH);
+            log.info("<-- uploadVacancyImage fileName {} -->",fileName);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            log.info("<-- uploadVacancyImage uploadPath {} -->",uploadPath);
+            //File optimizedImage = optimizeImage(file, "jpg");
+
+            try (InputStream inputStream = file.getInputStream()) {
+               // Path filePath = uploadPath.resolve(optimizedImage.getName());
+                Path filePath = uploadPath.resolve(fileName);
+                log.info("<-- uploadVacancyImage filePath {} -->",filePath);
+
+
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                log.info("<-- uploadVacancyImage image saved to data volume -->");
+            }
+
+
+
+            log.info("<-- uploadVacancyImage return fileName {} -->",fileName);
+            return fileName;
+        } catch (IOException e) {
+            log.info("<-- uploadVacancyImage \n", e);
+            return null;
+        }
+    }
+
+    public File optimizeImage(MultipartFile multipartFile, String format) {
+        long fileSize = multipartFile.getSize();
+        String readableSize = convertSize(fileSize);
+        log.info("<--- optimizeImage Input File Size  {} ---> ", readableSize);
+
+
+        // File inputFile = new File("input_image.jpg");
+
+        File outputFile = new File(multipartFile.getName());
+
+        try {
+
+            BufferedImage inputImage = ImageIO.read(multipartFile.getInputStream());
+
+
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(format);
+            ImageWriter writer = writers.next();
+
+
+            ImageOutputStream outputStream = ImageIO.createImageOutputStream(outputFile);
+
+
+            writer.setOutput(outputStream);
+
+            ImageWriteParam params = writer.getDefaultWriteParam();
+            params.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            params.setCompressionQuality(0.5f);
+
+            writer.write(null, new IIOImage(inputImage, null, null), params);
+
+            outputStream.close();
+            writer.dispose();
+
+        } catch (Exception e) {
+            log.info("failed to do image ");
+        }
+
+
+        fileSize = outputFile.length();
+        readableSize = convertSize(fileSize);
+
+        log.info("<--- optimizeImage Output File Size  {} ---> ", readableSize);
+        return outputFile;
+    }
+
+    public String convertSize(long size) {
+        if (size <= 0) return "0 B";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return String.format("%.1f %s", size / Math.pow(1024, digitGroups), units[digitGroups]);
     }
 
     public void findBlogStatus(Long blogID, Model model) {
@@ -1821,15 +1980,33 @@ public class RecruitmentZoneService {
     public boolean isValidContentType(MultipartFile file) {
         try {
             String detectedContentType = new Tika().detect(file.getInputStream());
-            return detectedContentType.equals("application/pdf") || detectedContentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            String[] validContentTypes = {
+                    "application/pdf",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            };
+            return Arrays.asList(validContentTypes).contains(detectedContentType);
         } catch (IOException e) {
-            //log.info(e.getMessage());
+            log.info("<--- isValidContentType ---> \n ", e);
             return false;
         }
     }
 
-    // STORAGE
+    public boolean isValidImage(MultipartFile file) {
+        try {
+            String detectedContentType = new Tika().detect(file.getInputStream());
+            String[] validContentTypes = {
+                    "image/png",
+                    "image/jpeg"
+            };
+            return Arrays.asList(validContentTypes).contains(detectedContentType);
+        } catch (IOException e) {
+            log.info("<--- isValidContentType ---> \n ", e);
+            return false;
+        }
+    }
 
+
+    // STORAGE
 
     public boolean publishCandidateGoogleFileEvent(Long fileID, Document document) {
         log.info("<-- publishCandidateFileUploadedEvent {} -->", document.printDocument());
@@ -2250,6 +2427,73 @@ public class RecruitmentZoneService {
         return result;
     }
 
+    public boolean validateImage(BlogImageDTO blogImageDTO, Model model) {
+        final long MAX_SIZE_MB = 5;
+        final long MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+        try {
+            if (blogImageDTO.getBlogImage().isEmpty()) {
+                log.info("<--  validateFile -- Please select an image to upload -->");
+                throw new FileUploadException("Please select an image to upload");
+            }
+            // Security check: Ensure the file name is not a path that could be exploited
+            else if (blogImageDTO.getBlogImage().getOriginalFilename().contains("..")) {
+                log.info("<--  validateFile -- Invalid image name -->");
+                throw new FileUploadException("Invalid image name");
+            } else if (blogImageDTO.getBlogImage().getSize() > MAX_SIZE_BYTES) {
+                log.info("<-- validateFile -- File size exceeds the maximum limit (" + MAX_SIZE_MB + "MB) -->");
+                throw new FileUploadException("Image size exceeds the maximum limit (" + MAX_SIZE_MB + "MB)");
+            }
+            // Security check: Ensure the file content is safe (detect content type)
+            else if (!isValidImage(blogImageDTO.getBlogImage())) {
+                log.info("<--  validateFile -- Invalid image type -->");
+                throw new FileUploadException("Invalid image type");
+            }
+
+            log.info("<--  Valid Image Received -->");
+            return true;
+
+        } catch (FileUploadException fileUploadException) {
+            log.info("<--- validateImage Exception ---> ", fileUploadException);
+            model.addAttribute("addImageResponse", fileUploadException.getMessage());
+            return false;
+        }
+
+    }
+
+    public boolean validateVacancyImage(VacancyImageDTO vacancyImageDTO, Model model) {
+        final long MAX_SIZE_MB = 5;
+        final long MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+        try {
+            if (vacancyImageDTO.getVacancyImage().isEmpty()) {
+                log.info("<--  validateFile -- Please select an image to upload -->");
+                throw new FileUploadException("Please select an image to upload");
+            }
+            // Security check: Ensure the file name is not a path that could be exploited
+            else if (vacancyImageDTO.getVacancyImage().getOriginalFilename().contains("..")) {
+                log.info("<--  validateFile -- Invalid image name -->");
+                throw new FileUploadException("Invalid image name");
+            } else if (vacancyImageDTO.getVacancyImage().getSize() > MAX_SIZE_BYTES) {
+                log.info("<-- validateFile -- File size exceeds the maximum limit (" + MAX_SIZE_MB + "MB) -->");
+                throw new FileUploadException("Image size exceeds the maximum limit (" + MAX_SIZE_MB + "MB)");
+            }
+            // Security check: Ensure the file content is safe (detect content type)
+            else if (!isValidImage(vacancyImageDTO.getVacancyImage())) {
+                log.info("<--  validateFile -- Invalid image type -->");
+                throw new FileUploadException("Invalid image type");
+            }
+
+            log.info("<--  Valid Image Received -->");
+            return true;
+
+        } catch (FileUploadException fileUploadException) {
+            log.info("<--- validateImage Exception ---> ", fileUploadException);
+            model.addAttribute("addImageResponse", fileUploadException.getMessage());
+            return false;
+        }
+
+    }
     // EVENTS
 
 /*    public boolean saveSubmissionEvent(Candidate candidate, Long vacancyID) {

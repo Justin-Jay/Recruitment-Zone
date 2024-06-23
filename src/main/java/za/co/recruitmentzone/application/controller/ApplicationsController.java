@@ -24,6 +24,7 @@ import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER
 public class ApplicationsController {
     private final RecruitmentZoneService recruitmentZoneService;
 
+    private final int pageSize = 10;
 
     private final Logger log = LoggerFactory.getLogger(ApplicationsController.class);
 
@@ -35,7 +36,6 @@ public class ApplicationsController {
     @GetMapping("/applications-administration")
     public String applications(Model model) {
         try {
-            int pageSize = 10;
             recruitmentZoneService.findAllApplications(model,1, pageSize, "created", "desc");
         } catch (Exception e) {
             log.error("<-- applications -->  Exception \n {}", e.getMessage());
@@ -48,7 +48,6 @@ public class ApplicationsController {
     @GetMapping("/paginatedApplications/{pageNo}")
     public String findPaginatedApplications(@PathVariable(value = "pageNo") int pageNo,
                                      @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
-        int pageSize = 10;
         log.info("Page number  {}", pageNo);
         log.info("sortField {}", sortField);
         log.info("sortDirection {}", sortDirection);

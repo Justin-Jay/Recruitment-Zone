@@ -72,9 +72,8 @@
                                 Employee Name:</p>
 
 
-                            <p th:text="*{employee.enabled == true ? 'Employee Status: Active':'Not Active'}"
-                               th:value="${employee}"></p>
-
+                            <p th:text="*{employee.enabled} ? 'Employee Status: Active':'Not Active'"
+                                ></p>
                             <!--     <p th:text="*{'Status: ' + employee.enabled}"
                                     th:value="${employee}"></p>-->
 

@@ -105,4 +105,7 @@ blog:
     path: /blog-images/
     volume: /home/justin/RecruitmentZoneApplication/BlogImages/
 
-#docker run --network host --name my-dev-database -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Khum0Ram0 -d mysql:8.3.0
+vacancy:
+  image:
+    path: /vacancy-images/
+    volume: /home/justin/RecruitmentZoneApplication/VacancyImages/

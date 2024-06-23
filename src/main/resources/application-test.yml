@@ -99,3 +99,8 @@ blog:
     path: /blog-images/
     #    volume: /home/jenkins/RecruitmentZoneApplication/BlogImages/
     volume: /RecruitmentZoneApplication/BlogImages/
+
+vacancy:
+  image:
+    path: /vacancy-images/
+    volume: /RecruitmentZoneApplication/VacancyImages/

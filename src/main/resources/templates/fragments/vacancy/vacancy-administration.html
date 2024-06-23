@@ -56,8 +56,8 @@
             <div class="row">
                 <!--LEFT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 left-page-frame">
-                    <div class="container-fluid " id="left-page-column" th:fragment="vacancy-admin-list">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 left-page-frame"  id="left-page-column" >
+                    <div class="container-fluid " th:fragment="vacancy-admin-list">
                         <!--  <form class="container d-none d-md-block" action="#" th:action="@{/Vacancy/add-vacancy}" th:method="post">
                               <button class="btn btn-outline-secondary"
                                       hx-post="/Vacancy/add-vacancy"
@@ -98,6 +98,19 @@
 
                         <!--TABLE VIEW-->
                         <table class="table table-striped">
+                            <caption>
+                                <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+        					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+					                	<a class="btn btn-secondary"
+                                           th:if="${currentPage != i}"
+                                           th:href="@{'/Vacancy/paginatedVacancies/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                                           onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                           th:text="${i}">
+                                        </a>
+                                        <span th:unless="${currentPage != i}">[[${i}]]</span>
+		        			        </span>
+                                </div>
+                            </caption>
                             <thead>
                             <tr>
                                 <th>
@@ -115,8 +128,16 @@
                                        th:href="@{'/Vacancy/paginatedVacancies/' + ${currentPage}+ '?sortField=jobTitle&sortDir=' + ${reverseSortDir}}"
                                        onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
                                     >Vacancy Name
-                                    </a></th>
-                                <th>Applications</th>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a class="aRef"
+                                       th:if="${currentPage != i}"
+                                       th:href="@{'/Vacancy/paginatedVacancies/' + ${currentPage}+ '?sortField=status&sortDir=' + ${reverseSortDir}}"
+                                       onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
+                                    >Status
+                                    </a>
+                                </th>
                                 <th>Manage</th>
                             </tr>
                             </thead>
@@ -127,7 +148,7 @@
                                 <td th:text="${#temporals.format(vacancy.created, 'dd-MM-yyyy HH:mm')}"></td>
                                 <td th:text="*{vacancy.client.name}"></td>
                                 <td th:text="*{vacancy.jobTitle}"></td>
-                                <td th:text="*{vacancy.getApplicationsSize}"></td>
+                                <td th:text="*{vacancy.status}"></td>
                                 <td>
 
                                     <button type="button" class="btn btn-sm dropdown-toggle drop-down-button"
@@ -147,19 +168,7 @@
                             </tbody>
                         </table>
 
-                        <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
-					        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-					        	<a class="btn btn-secondary"
-                                   th:if="${currentPage != i}"
-                                   th:href="@{'/Vacancy/paginatedVacancies/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                                   onclick="loadHTMXFragment(this.href, 'left-page-column'); return false;"
-                                   th:text="${i}">
-                                </a>
-                                <span th:unless="${currentPage != i}">[[${i}]]</span>
-					    </span>
 
-
-                        </div>
                     </div>
                 </div>
 
@@ -167,7 +176,7 @@
                 <!--MAIN  PAGE SECTION -->
                 <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
 
-                    <div class="container-fluid " id="main-page-column">
+                    <div class="container-fluid " id="main-page-section">
                         <!--RESPONSE TEMPLATE-->
 
                     </div>

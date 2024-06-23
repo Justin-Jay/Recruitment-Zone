@@ -44,17 +44,17 @@ public class Vacancy implements Serializable {
     private EmpType empType;
     @Column(name = "created")
     private LocalDateTime created;
-    @Column(name = "vacancyRef")
-    private String vacancyRef;
+    @Column(name = "vacancyImageRef")
+    private String vacancyImageRef;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clientid")
     private Client client;
 
-    @ManyToOne( )
+    @ManyToOne()
     @JoinColumn(name = "employeeID")
     private Employee employee;
 
-    @OneToMany(mappedBy = "vacancy",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "vacancy", fetch = FetchType.EAGER)
     private List<Application> applications;
 
     public Vacancy() {
@@ -84,7 +84,7 @@ public class Vacancy implements Serializable {
     }
 
     public void setTheClientID(Long id) {
-         client.setClientID(id);
+        client.setClientID(id);
     }
 
 
@@ -214,16 +214,16 @@ public class Vacancy implements Serializable {
         this.employee = employee;
     }
 
-    public String getVacancyRef() {
-        return vacancyRef;
+    public String getVacancyImageRef() {
+        return vacancyImageRef;
     }
 
-    public void setVacancyRef(String vacancyRef) {
-        this.vacancyRef = vacancyRef;
+    public void setVacancyImageRef(String vacancyImageRef) {
+        this.vacancyImageRef = vacancyImageRef;
     }
 
     public List<Application> getApplications() {
-        if (this.applications!=null){
+        if (this.applications != null) {
             List<Application> sortedApplications = new ArrayList<>(this.applications);
             Collections.sort(sortedApplications, new Comparator<Application>() {
                 @Override
@@ -232,8 +232,7 @@ public class Vacancy implements Serializable {
                 }
             });
             return sortedApplications;
-        }
-        else return new ArrayList<>();
+        } else return new ArrayList<>();
     }
 
     public void setApplications(List<Application> applications) {
@@ -248,10 +247,11 @@ public class Vacancy implements Serializable {
         applications.add(application);
         application.setVacancy(this);
     }
+
     public int getApplicationsSize() {
         if (applications == null) {
             return 0;
-        }else return applications.size();
+        } else return applications.size();
     }
 
     public String printVacancy() {
@@ -262,10 +262,31 @@ public class Vacancy implements Serializable {
                 ", publish_date='" + publish_date + '\'' +
                 ", end_date='" + end_date + '\'' +
                 ", status=" + status +
+                ", vacancyImageRef='" + vacancyImageRef + '\'' +
                 ", client=" + client.getName() +
                 '}';
     }
 
-
-
+/*    @Override
+    public String toString() {
+        return "Vacancy{" +
+                "vacancyID=" + vacancyID +
+                ", jobTitle='" + jobTitle + '\'' +
+                ", job_description='" + job_description + '\'' +
+                ", seniority_level='" + seniority_level + '\'' +
+                ", requirements='" + requirements + '\'' +
+                ", location='" + location + '\'' +
+                ", industry=" + industry +
+                ", publish_date=" + publish_date +
+                ", end_date=" + end_date +
+                ", status=" + status +
+                ", jobType=" + jobType +
+                ", empType=" + empType +
+                ", created=" + created +
+                ", vacancyImageRef='" + vacancyImageRef + '\'' +
+                ", client=" + client +
+                ", employee=" + employee +
+                ", applications=" + applications +
+                '}';
+    }*/
 }
