@@ -46,7 +46,7 @@
         <div class="container-fluid " id="main-page-section">
             <!-- If-then-else -->
             <div th:if="${activeBlogResponse}">
-                <p>Error: <span th:text="${activeBlogResponse}"></span></p>
+                <h2 class="h2" th:text="${activeBlogResponse}"></h2>
             </div>
             <div th:else th:each="blog: ${blogs}">
                 <!-- Display blog -->
@@ -94,8 +94,8 @@
 
     <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
         <div class="container-fluid" id="right-page-column">
-            <div class="card">
-                <div class="container-fluid">
+            <div class="card" th:if="${existingBlogs}">
+                <div class="container-fluid" >
                     <h5>Blog Archive</h5>
                     <ul th:each="oldBlog : ${existingBlogs}">
                       <li  >
