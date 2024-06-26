@@ -20,6 +20,7 @@ import za.co.recruitmentzone.service.RecruitmentZoneService;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
 import za.co.recruitmentzone.vacancy.dto.VacancyImageDTO;
 import za.co.recruitmentzone.vacancy.dto.VacancyStatusDTO;
+import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 
 import java.lang.reflect.Field;
@@ -49,7 +50,7 @@ public class VacancyController {
             //recruitmentZoneService.getAllVacancies(model);
             recruitmentZoneService.getAllVacancies(model, 1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.error("<-- vacancies -->  Exception \n {}", e.getMessage());
+            log.info("<-- vacancies -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //  vacancyList , loadVacanciesResponse
@@ -74,7 +75,7 @@ public class VacancyController {
         try {
             recruitmentZoneService.addVacancy(model);
         } catch (Exception e) {
-            log.error("<-- showCreateVacancyForm -->  Exception \n {}", e.getMessage());
+            log.info("<-- showCreateVacancyForm -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //  vacancyDTO , clients , findAllClientsResponse  , employeeList loadEmployeesResponse , internalServerError
@@ -94,7 +95,7 @@ public class VacancyController {
             // fix the vars passed, move this to recruitmentZoneService layer
             recruitmentZoneService.getAllVacancies(model, 1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.error("<-- saveVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // saveVacancyResponse , internalServerError
@@ -108,7 +109,7 @@ public class VacancyController {
             recruitmentZoneService.findVacancy(vacancyID, model);
             model.addAttribute("VACANCY_IMAGE_VOL", VACANCY_IMAGE_LOCAL_STORAGE);
         } catch (Exception e) {
-            log.error("<-- showVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- showVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy  , findVacancyResponse
@@ -121,7 +122,7 @@ public class VacancyController {
             recruitmentZoneService.findVacancy(vacancyID, model);
             model.addAttribute("VACANCY_IMAGE_VOL", VACANCY_IMAGE_LOCAL_STORAGE);
         } catch (Exception e) {
-            log.error("<-- showVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- showVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
 
@@ -132,10 +133,10 @@ public class VacancyController {
     @PostMapping("/update-vacancy")
     public String updateVacancy(@RequestParam("vacancyID") Long vacancyID, Model model) {
         try {
-            recruitmentZoneService.findVacancy(vacancyID, model);
+            recruitmentZoneService.findVacancyForUpdate(vacancyID, model);
             //model.addAttribute("vacancyStatusValues", VacancyStatus.values());
         } catch (Exception e) {
-            log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- updateVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse
@@ -143,15 +144,15 @@ public class VacancyController {
     }
 
     @PostMapping("/save-updated-vacancy")
-    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy") VacancyDTO vacancy, BindingResult bindingResult, Model model) {
+    public String saveUpdatedVacancy(@Valid @ModelAttribute("vacancy") Vacancy vacancy, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            log.info("Field errors \n {}", bindingResult.getFieldErrors());
+          /*  log.info("Field errors \n {}", bindingResult.getFieldErrors());
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             for (FieldError objectError : fieldErrors) {
 
                 log.info(objectError.getDefaultMessage(), objectError);
-            }
+            }*/
             return "fragments/vacancy/update-vacancy";
         }
         try {
@@ -168,7 +169,7 @@ public class VacancyController {
             }
 
         } catch (Exception e) {
-            log.error("<-- saveUpdatedVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveUpdatedVacancy -->  Exception \n", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy ,  saveVacancyResponse
@@ -184,7 +185,7 @@ public class VacancyController {
             recruitmentZoneService.findVacancySubmissions(vacancyID, model, 1, pageSize, "date_received", "desc");
             model.addAttribute("applicationStatus", ApplicationStatus.values());
         } catch (Exception e) {
-            log.error("<-- viewVacancySubmissions -->  Exception \n {}", e.getMessage());
+            log.info("<-- viewVacancySubmissions -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         return "fragments/vacancy/view-vacancy-submission";
@@ -223,7 +224,7 @@ public class VacancyController {
         try {
             recruitmentZoneService.findVacancyStatus(vacancyID, model);
         } catch (Exception e) {
-            log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- updateVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse
@@ -240,7 +241,7 @@ public class VacancyController {
             recruitmentZoneService.saveNewVacancyStatus(vacancyStatusDTO, model);
             recruitmentZoneService.findVacancyStatus(vacancyStatusDTO.getVacancyID(), model);
         } catch (Exception e) {
-            log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- updateVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse
@@ -253,7 +254,7 @@ public class VacancyController {
             int pageSize = 5;
             recruitmentZoneService.findVacancyDocuments(model, vacancyID, 1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.error("<-- vacancyDocs -->  Exception \n {}", e.getMessage());
+            log.info("<-- vacancyDocs -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // candidate, candidateFileDTO , existingDocuments,  internalServerError , findCandidateDocumentsResponse
@@ -278,11 +279,11 @@ public class VacancyController {
                                @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, @RequestParam("clientID") long clientID,
                                @RequestParam("vacancyID") long vacancyID, Model model) {
         if (bindingResult.hasFieldErrors()) {
-            log.error("<-- saveDocument  hasErrors --> ");
+            log.info("<-- saveDocument  hasErrors --> ");
         /*    List<ObjectError> objectErrors = bindingResult.getAllErrors();
 
             for (ObjectError objectError : objectErrors) {
-                log.error(objectError.getDefaultMessage(), objectError);
+                log.info(objectError.getDefaultMessage(), objectError);
             }*/
 
 //            recruitmentZoneService.reloadVacancyDocuments(model, clientFileDTO.getClientID());
@@ -297,7 +298,7 @@ public class VacancyController {
             try {
                 validFile = recruitmentZoneService.validateFile(clientFileDTO.getFileMultipart());
             } catch (FileUploadException fileUploadException) {
-                log.error("<-- fileUploadException  {} --> ", fileUploadException.getMessage());
+                log.info("<-- fileUploadException  {} --> ", fileUploadException.getMessage());
                 model.addAttribute("invalidFileUpload", fileUploadException.getMessage());
                 recruitmentZoneService.findVacancyDocuments(model, vacancyID, pageNo, 5, sortField, sortDirection);
             }
@@ -315,13 +316,13 @@ public class VacancyController {
                     }
 
                 } catch (SaveFileException saveFileException) {
-                    log.error(saveFileException.getMessage());
+                    log.info(saveFileException.getMessage());
                     // model.addAttribute("createCandidateFileResponse", "File Upload Successful");
                     model.addAttribute("saveDocumentResponse", saveFileException.getMessage());
                 }
             }
         } catch (Exception e) {
-            log.error("<-- saveDocument -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveDocument -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         return "fragments/vacancy/vacancy-documents";
@@ -334,7 +335,7 @@ public class VacancyController {
             model.addAttribute("vacancyImageDTO", new VacancyImageDTO(vacancyID));
             log.info("Adding Vacancy Image for {} ", vacancyID);
         } catch (Exception e) {
-            log.error("<-- addVacancyImage -->  Exception \n {}", e.getMessage());
+            log.info("<-- addVacancyImage -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse

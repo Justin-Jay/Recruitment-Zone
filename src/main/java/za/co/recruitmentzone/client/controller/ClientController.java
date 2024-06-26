@@ -269,7 +269,7 @@ public class ClientController {
     public String saveDocument(@Valid @ModelAttribute("clientFileDTO") ClientFileDTO clientFileDTO,
                                BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            log.error("<-- saveDocument  hasErrors --> ");
+            log.info("<-- saveDocument  hasErrors --> ");
             recruitmentZoneService.findClientDocuments(model, clientFileDTO.getClientID());
             model.addAttribute("bindingResult", INTERNAL_SERVER_ERROR);
 
@@ -280,7 +280,7 @@ public class ClientController {
             try {
                 validFile = recruitmentZoneService.validateFile(clientFileDTO.getFileMultipart());
             } catch (FileUploadException fileUploadException) {
-                log.error("<-- fileUploadException  {} --> ", fileUploadException.getMessage());
+                log.info("<-- fileUploadException  {} --> ", fileUploadException.getMessage());
                 model.addAttribute("invalidFileUpload", fileUploadException.getMessage());
             }
             if (validFile) {
@@ -293,12 +293,12 @@ public class ClientController {
                     }
 
                 } catch (SaveFileException saveFileException) {
-                    log.error(saveFileException.getMessage());
+                    log.info(saveFileException.getMessage());
                     model.addAttribute("saveDocumentResponse", saveFileException.getMessage());
                 }
             }
         } catch (Exception e) {
-            log.error("<-- saveDocument -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveDocument -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         return "fragments/clients/view-client";

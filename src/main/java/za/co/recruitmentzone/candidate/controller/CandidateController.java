@@ -43,7 +43,7 @@ public class CandidateController {
             //recruitmentZoneService.findAllCandidates(model);
             recruitmentZoneService.findAllCandidates(model, 1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.error("<-- candidateAdministration -->  Exception \n {}", e.getMessage());
+            log.info("<-- candidateAdministration -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   candidateList , findAllCandidatesResponse , internalServerError
@@ -67,7 +67,7 @@ public class CandidateController {
             int candidateNotePageSize = 5;
             recruitmentZoneService.addCandidateNote(model, candidateID, candidateNotePageSize);
         } catch (Exception e) {
-            log.error("<-- viewCandidate -->  Exception \n {}", e.getMessage());
+            log.info("<-- viewCandidate -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //  candidate ,existingNotes , candidateNoteDTO , addCandidateNoteResponse , internalServerError
@@ -78,7 +78,7 @@ public class CandidateController {
     public String saveNote(@Valid @ModelAttribute("candidateNoteDTO") CandidateNoteDTO candidateNoteDTO,
                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
-            log.error("HAS ERRORS");
+            log.info("HAS ERRORS");
             model.addAttribute("noteSaved", Boolean.FALSE);
             recruitmentZoneService.reloadCandidateNote(candidateNoteDTO.getCandidateID(), model);
             //  candidate ,existingNotes , candidateNoteDTO , addCandidateNoteResponse , internalServerError , noteSaved
@@ -87,7 +87,7 @@ public class CandidateController {
         try {
             recruitmentZoneService.saveCandidateNote(candidateNoteDTO, model);
         } catch (Exception e) {
-            log.error("<-- saveNote -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveNote -->  Exception \n {}", e.getMessage());
             recruitmentZoneService.reloadCandidateNote(candidateNoteDTO.getCandidateID(), model);
             model.addAttribute("internalServerError", e.getMessage());
         }
@@ -98,9 +98,10 @@ public class CandidateController {
     @PostMapping("/view-candidate-notes")
     public String candidateNotes(@RequestParam("candidateID") Long candidateID, Model model) {
         try {
-            recruitmentZoneService.findCandidateNotes(candidateID, model);
+            int candidateNotePageSize = 5;
+            recruitmentZoneService.findCandidateNotes(candidateID, model,candidateNotePageSize);
         } catch (Exception e) {
-            log.error("<-- candidateNotes -->  Exception \n {}", e.getMessage());
+            log.info("<-- candidateNotes -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", e.getMessage());
         }
         // candidate , existingNotes , findCandidateNotesResponse , internalServerError
@@ -122,6 +123,7 @@ public class CandidateController {
     }
 
 
+
     @PostMapping("/view-candidate-documents")
     public String candidateDocs(@RequestParam("candidateID") Long candidateID, Model model) {
         try {
@@ -129,7 +131,7 @@ public class CandidateController {
 //            recruitmentZoneService.findCandidateDocuments(model, candidateID);
             recruitmentZoneService.findCandidateDocuments(model, candidateID, 1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.error("<-- candidateDocs -->  Exception \n {}", e.getMessage());
+            log.info("<-- candidateDocs -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
 
@@ -156,7 +158,7 @@ public class CandidateController {
             List<ObjectError> errors = bindingResult.getAllErrors();
 
             for (ObjectError error : errors) {
-                log.error(" Error: " + error.getObjectName() + " " + error.getDefaultMessage());
+                log.info(" Error: " + error.getObjectName() + " " + error.getDefaultMessage());
             }
             recruitmentZoneService.reloadCandidateDocuments(model, candidateFileDTO.getCandidateID());
             model.addAttribute("message", "Binding Result Failed");
@@ -167,7 +169,7 @@ public class CandidateController {
             try {
                 validFile = recruitmentZoneService.validateFile(candidateFileDTO.getDocumentAttachment());
             } catch (FileUploadException fileUploadException) {
-                log.error("<-- fileUploadException  {} --> ", fileUploadException.getMessage());
+                log.info("<-- fileUploadException  {} --> ", fileUploadException.getMessage());
                 model.addAttribute("invalidFileUpload", fileUploadException.getMessage());
                 recruitmentZoneService.reloadCandidateDocuments(model, candidateFileDTO.getCandidateID());
             }
@@ -181,14 +183,14 @@ public class CandidateController {
                     }
 
                 } catch (SaveFileException saveFileException) {
-                    log.error(saveFileException.getMessage());
+                    log.info(saveFileException.getMessage());
                     model.addAttribute("saveDocumentResponse", saveFileException.getMessage());
                     recruitmentZoneService.reloadCandidateDocuments(model, candidateFileDTO.getCandidateID());
                 }
             }
 
         } catch (Exception e) {
-            log.error("<-- saveDocument -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveDocument -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
             recruitmentZoneService.reloadCandidateDocuments(model, candidateFileDTO.getCandidateID());
         }
@@ -203,7 +205,7 @@ public class CandidateController {
             recruitmentZoneService.getAllVacancies(model);
             model.addAttribute("newApplicationDTO", new NewApplicationDTO());
         } catch (Exception e) {
-            log.error("<-- showAddCandidateForm -->  Exception \n {}", e.getMessage());
+            log.info("<-- showAddCandidateForm -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //  vacancyList , loadVacanciesResponse , newApplicationDTO , internalServerError
@@ -233,7 +235,7 @@ public class CandidateController {
                         recruitmentZoneService.findAllCandidates(model, 1, pageSize, "created", "desc");
 
                     } catch (CandidateException candidateException) {
-                        log.error("<-- candidateException -->   \n {}", candidateException.getMessage());
+                        log.info("<-- candidateException -->   \n {}", candidateException.getMessage());
                         //candidateFormAttributes(model, candidateException.getMessage(), false);
                         model.addAttribute("createCandidateResponse", candidateException.getMessage());
                         model.addAttribute("newApplicationDTO", new NewApplicationDTO());
@@ -243,7 +245,7 @@ public class CandidateController {
                 }
 
             } catch (FileUploadException fileUploadException) {
-                log.error("<-- saveSubmission -->  FileUploadException \n {}", fileUploadException.getMessage());
+                log.info("<-- saveSubmission -->  FileUploadException \n {}", fileUploadException.getMessage());
                 model.addAttribute("fileUploadError", fileUploadException.getMessage());
                 model.addAttribute("newApplicationDTO", new NewApplicationDTO());
                 recruitmentZoneService.getAllVacancies(model);
@@ -251,7 +253,7 @@ public class CandidateController {
             }
             // fileUploadError
         } catch (Exception e) {
-            log.error("<-- saveSubmission -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveSubmission -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
             model.addAttribute("newApplicationDTO", new NewApplicationDTO());
             recruitmentZoneService.getAllVacancies(model);
@@ -268,7 +270,7 @@ public class CandidateController {
             recruitmentZoneService.findCandidate(candidateID, model);
             //model.addAttribute("vacancyStatusValues", VacancyStatus.values());
         } catch (Exception e) {
-            log.error("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- updateVacancy -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse
@@ -289,7 +291,7 @@ public class CandidateController {
             int pageSize = 5;
             recruitmentZoneService.addCandidateNote(model, candidate.getCandidateID(), pageSize);
         } catch (Exception e) {
-            log.error("<-- saveUpdatedCandidate -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveUpdatedCandidate -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // candidate ,  saveVacancyResponse

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <title>Vacancy Application Submission</title>
+</head>
+<body>
+<div>
+    <main>
+        <section>
+            <h5>Application For: <span th:text="${vacancyName}" ></span>
+            </h5>
+            <!-- // vacancyName , applicantName    -->
+            <p>Hello <span th:text="${applicantName}"></span></p>
+            <p>Thank you for submitting an application for the vacancy.</p>
+            <p>An agent will be in touch.</p>
+
+        </section>
+        <footer>Recruitment Zone</footer>
+    </main>
+</div>
+<span class="text-muted">&copy; Kiunga. [[${currentYear}]] All Rights Reserved.</span>
+
+</body>
+</html>

@@ -26,7 +26,7 @@
         </tbody>
     </table>
 
-    <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+    <div class="col-sm-1" th:if="${totalItems >= 1}" style="display: inline;">
 					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
 						<a class="btn btn-secondary"
                            th:if="${currentPage != i}"

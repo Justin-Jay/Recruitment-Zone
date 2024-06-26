@@ -6,6 +6,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import za.co.recruitmentzone.application.entity.Application;
+import za.co.recruitmentzone.communication.entity.AdminContactMessage;
+import za.co.recruitmentzone.communication.entity.ContactMessage;
+import za.co.recruitmentzone.communication.events.AdminMessageEvent;
+import za.co.recruitmentzone.communication.events.WebsiteMessageEvent;
 import za.co.recruitmentzone.documents.Document;
 
 @Component
@@ -23,14 +28,27 @@ public class CandidateEventPublisher {
         log.info("Executing publishCandidateFileUploadedEvent");
         try {
             eventPublisher.publishEvent(candidateFileUploadEvent);
-            log.info("EVENT publishCandidateFileUploadedEvent POSTED");
+            log.info("Event publishCandidateFileUploadedEvent published");
             return true;
         } catch (Exception e) {
-            log.error("Unable to post event");
+            log.info("<--- publishCandidateGoogleFileEvent exception ---> \n",e);
+            log.info("Unable to post event");
             return false;
         }
 
     }
 
 
+    public void publishCandidateAppliedEvent(Application application, AdminContactMessage adminContactMessage, ContactMessage contactMessage)  {
+        CandidateAppliedEvent candidateAppliedEvent = new CandidateAppliedEvent(application,adminContactMessage,contactMessage);
+        log.info("<--- Publishing publishCandidateAppliedEvent ---> ");
+        try {
+            eventPublisher.publishEvent(candidateAppliedEvent);
+            log.info("<--- Event publishCandidateAppliedEvent published ---> ");
+        } catch (Exception e) {
+            log.info("<--- Unable to publish event --->");
+            log.info("<--- publishCandidateAppliedEvent exception ---> \n",e);
+
+        }
+    }
 }
