@@ -19,8 +19,8 @@ public class NewApplicationDTO implements Serializable {
     @Size(min = 5, max = 50,message = "Min 2, Max 50")
     private String last_name;
 
-    @NotEmpty(message = "ID Number is mandatory")
     //@RSAIDNumber(message = "Invalid ID Number")
+    @NotEmpty(message = "ID Number is mandatory")
     private String id_number;
 
     @NotEmpty(message = "Please enter email address")
