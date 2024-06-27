@@ -20,7 +20,7 @@ public class NewApplicationDTO implements Serializable {
     private String last_name;
 
     @NotEmpty(message = "ID Number is mandatory")
-    @RSAIDNumber(message = "Invalid ID Number")
+    //@RSAIDNumber(message = "Invalid ID Number")
     private String id_number;
 
     @NotEmpty(message = "Please enter email address")
