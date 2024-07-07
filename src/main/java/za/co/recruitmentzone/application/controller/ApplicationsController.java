@@ -154,7 +154,8 @@ public class ApplicationsController {
         }
         // saveApplicationStatusResponse , saveApplicationStatusResponse
         //applicationsList ,findAllApplicationsResponse
-        return "fragments/applications/update-application";
+       // return "fragments/applications/update-application";
+        return "fragments/applications/view-application";
     }
 
 

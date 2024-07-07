@@ -1,8 +1,11 @@
 <div class="container-fluid page-component" th:fragment="applicationView(vacancyApplication)"
      th:object="${vacancyApplication}">
     <div class="row">
-        <p th:if="${findApplicationByIDResponse}" th:text="${findApplicationByIDResponse}"></p>
-        <p th:if="${internalServerError}" th:text="${internalServerError}"></p>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findApplicationByIDResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveApplicationStatusResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+
     </div>
 
   <!--  <table class="table ">
@@ -131,7 +134,7 @@
                         hx-post="/Application/update-application"
                         hx-target="#main-page-section"
                         hx-swap="innerHTML"
-                        hx-include="[applicationID='applicationID']">Update Application
+                        hx-include="[applicationID='applicationID']">Change Status
                 </button>
             </form>
         </div>
