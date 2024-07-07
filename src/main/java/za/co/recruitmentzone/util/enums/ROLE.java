@@ -4,7 +4,8 @@ public enum ROLE {
     ROLE_ADMIN,
     ROLE_MANAGER,
     ROLE_EMPLOYEE,
-    ROLE_GUEST;
+    ROLE_GUEST,
+    ROLE_PROMETHEUS;
 
     public String getRoleName() {
         return switch (this) {
@@ -24,6 +25,11 @@ public enum ROLE {
                 String theRole =ROLE_GUEST.toString();
                 yield theRole.substring("ROLE_".length());
             }
+            case ROLE_PROMETHEUS -> {
+                String theRole =ROLE_PROMETHEUS.toString();
+                yield theRole.substring("ROLE_".length());
+            }
+            // ROLE_PROMETHEUS
         };
     }
 
