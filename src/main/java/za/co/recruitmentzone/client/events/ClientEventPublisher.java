@@ -24,7 +24,7 @@ public class ClientEventPublisher {
             log.info("EVENT publishClientFileUploadEvent POSTED");
             return true;
         } catch (Exception e) {
-            log.error("Unable to post event");
+            log.info("Unable to post event");
             return false;
         }
     }

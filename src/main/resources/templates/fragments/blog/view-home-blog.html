@@ -18,6 +18,9 @@
                     <header class="blog-title" th:text="*{blog.blog_title}">
                         <!-- Customize metadata as needed -->
                     </header>
+                    <img th:if="${blog.headImagePath != null}" th:src="@{ ${BLOG_VOLUME} + ${blog.headImagePath}}"
+                         class="shadow rounded"
+                         alt="blog image" style="width: 800px; height: 350px;"/>
                 </div>
 
                 <!-- Blog Description -->
@@ -25,9 +28,6 @@
                     <div class="col-12">
                         <section class="blog-description" th:utext="*{blog.blog_description}">
                         </section>
-                        <img th:if="${blog.headImagePath != null}" th:src="@{ ${BLOG_VOLUME} + ${blog.headImagePath}}"
-                             class="float-end shadow rounded"
-                             alt="blog image" style="width: 800px; height: 350px;"/>
                     </div>
 
                   <!--  <div class="row-cols-6">

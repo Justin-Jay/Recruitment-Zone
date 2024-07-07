@@ -18,10 +18,10 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
 
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());
-            log.error("Error {}", status);
-            log.error("request getPathInfo {}", request.getPathInfo());
-            log.error("request getContextPath {}", request.getPathInfo());
-            log.error("Error with status code {} occurred", statusCode);
+            log.info("Error {}", status);
+            log.info("request getPathInfo {}", request.getPathInfo());
+            log.info("request getContextPath {}", request.getPathInfo());
+            log.info("Error with status code {} occurred", statusCode);
         }
         return "error";
     }

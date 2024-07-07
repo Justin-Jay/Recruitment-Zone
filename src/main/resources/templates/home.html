@@ -12,7 +12,7 @@
     <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
     <title>Recruitment Zone</title>
 </head>
-<body >
+<body>
 <!-- TOP Navbar -->
 <div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
@@ -22,11 +22,10 @@
     <div class="row">
 
         <div class="col-12">
-            <!-- Check if a condition is true -->
+
             <div th:if="${searchVacancyByTitleResponse}">
                 <div th:insert="~{fragments/layout/response-messages :: failureMessage(${searchVacancyByTitleResponse})}"></div>
             </div>
-            <!-- If the condition is false, render this instead -->
             <div th:else>
                 <div th:replace="~{fragments/layout/search-fragment :: search}">Search</div>
             </div>
@@ -69,11 +68,16 @@
     </div>
 
 
+
 </div>
 <!--PAGE FOOTER-->
+
 <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
 
 <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
 
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>

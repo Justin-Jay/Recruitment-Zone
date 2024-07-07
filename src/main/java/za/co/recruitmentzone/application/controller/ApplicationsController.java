@@ -38,7 +38,7 @@ public class ApplicationsController {
         try {
             recruitmentZoneService.findAllApplications(model,1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.error("<-- applications -->  Exception \n {}", e.getMessage());
+            log.info("<-- applications -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // applicationsList , findAllApplicationsResponse , internalServerError
@@ -93,7 +93,7 @@ public class ApplicationsController {
                 }
 
             } catch (Exception e) {
-                log.error("<-- saveSubmission -->  Exception \n {}", e.getMessage());
+                log.info("<-- saveSubmission -->  Exception \n {}", e.getMessage());
                 model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
                 recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
                 // ContactMessage  =   emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
@@ -113,7 +113,7 @@ public class ApplicationsController {
             recruitmentZoneService.findApplicationByID(applicationID, model);
 
         } catch (Exception e) {
-            log.error("<-- viewApplication -->  Exception \n {}", e.getMessage());
+            log.info("<-- viewApplication -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancyApplication , findApplicationByIDResponse , internalServerError
@@ -127,7 +127,7 @@ public class ApplicationsController {
             recruitmentZoneService.findApplicationByID(applicationID, model);
 
         } catch (Exception e) {
-            log.error("<-- updateApplication -->  Exception \n {}", e.getMessage());
+            log.info("<-- updateApplication -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //vacancyApplication  findApplicationByIDResponse , internalServerError
@@ -149,12 +149,13 @@ public class ApplicationsController {
             recruitmentZoneService.findApplicationByID(applicationDTO.getApplicationID(), model);
 
         } catch (Exception e) {
-            log.error("<-- saveUpdatedApplicationStatus -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveUpdatedApplicationStatus -->  Exception \n {}", e.getMessage());
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // saveApplicationStatusResponse , saveApplicationStatusResponse
         //applicationsList ,findAllApplicationsResponse
-        return "fragments/applications/update-application";
+       // return "fragments/applications/update-application";
+        return "fragments/applications/view-application";
     }
 
 

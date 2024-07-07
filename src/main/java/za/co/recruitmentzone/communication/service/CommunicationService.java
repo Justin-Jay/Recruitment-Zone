@@ -10,10 +10,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import za.co.recruitmentzone.application.entity.Application;
 import za.co.recruitmentzone.communication.entity.AdminContactMessage;
 import za.co.recruitmentzone.communication.entity.ContactMessage;
 import za.co.recruitmentzone.communication.events.RegistrationMessageEvent;
 import za.co.recruitmentzone.employee.entity.Employee;
+
+import java.time.LocalDate;
 
 
 @Slf4j
@@ -29,9 +32,9 @@ public class CommunicationService {
 
     private final JavaMailSenderImpl javaMailSender;
 
-    public CommunicationService(TemplateEngine templateEngine,JavaMailSenderImpl javaMailSender) {
+    public CommunicationService(TemplateEngine templateEngine, JavaMailSenderImpl javaMailSender) {
         this.templateEngine = templateEngine;
-        this.javaMailSender=javaMailSender;
+        this.javaMailSender = javaMailSender;
     }
 
     public void sendWebsiteQuery(ContactMessage message) {
@@ -39,7 +42,7 @@ public class CommunicationService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         //log.info("<- to - subject - userName - userEmail - userQuery - >");
-        log.info("< sendWebsiteQuery - {},{},{},{} - >", rzoneToAddress,message.getSubject(),message.getName(),message.getSubject());
+        log.info("< sendWebsiteQuery - {},{},{},{} - >", rzoneToAddress, message.getSubject(), message.getName(), message.getSubject());
         try {
             helper.setFrom(rzoneMailAddress);
             helper.setTo(rzoneToAddress);
@@ -57,9 +60,11 @@ public class CommunicationService {
             log.info("<---AUTO EMAIL RESPONSE SUCCESS MESSAGE SENT--->");
 
         } catch (MessagingException e) {
-            log.info("<---AUTO EMAIL RESPONSE FAILED--->");
-            log.info(e.getMessage());
+            log.info("<--- sendWebsiteQuery MessagingException ---> \n",e);
             // Handle exception (log or throw custom exception)
+        }
+        catch (Exception e) {
+            log.info("<--- sendWebsiteQuery Exception ---> \n",e);
         }
     }
 
@@ -68,7 +73,7 @@ public class CommunicationService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         //log.info("<- to - subject - userName - userEmail - userQuery - >");
-        log.info("< sendAutoResponse - {}, {}, {},{},{}>",to,subject,userName,userEmail,userQuery);
+        log.info("< sendAutoResponse - {}, {}, {},{},{}>", to, subject, userName, userEmail, userQuery);
         try {
             helper.setFrom(rzoneMailAddress);
             helper.setTo(to);
@@ -86,23 +91,24 @@ public class CommunicationService {
             log.info("<---AUTO EMAIL RESPONSE SUCCESS MESSAGE SENT--->");
 
         } catch (MessagingException e) {
-            log.info("<---AUTO EMAIL RESPONSE FAILED--->");
-            log.info(e.getMessage());
-            // Handle exception (log or throw custom exception)
+            log.info("<--- sendAutoResponse MessagingException ---> \n",e);
+        }
+        catch (Exception e) {
+            log.info("<--- sendAutoResponse Exception ---> \n",e);
         }
     }
 
     public boolean sendRegistrationEmail(RegistrationMessageEvent message) {
         log.info("<---SEND REGISTRATION EMAIL --->");
-        log.info(" RegistrationMessage {}",message);
+        log.info(" RegistrationMessage {}", message);
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         log.info("<- to - subject - userName - userEmail - userQuery - >");
-        log.info(" mimeMessage {}",mimeMessage);
+        log.info(" mimeMessage {}", mimeMessage);
         try {
             helper.setFrom(rzoneMailAddress);
-            log.info(" mimeMessage {}",mimeMessage);
-            log.info(" email we sending to {}",message.getEmployee().getEmail());
+            log.info(" mimeMessage {}", mimeMessage);
+            log.info(" email we sending to {}", message.getEmployee().getEmail());
             helper.setTo(message.getEmployee().getEmail());
             helper.setSubject("Recruitment Zone Registration");
 
@@ -118,29 +124,68 @@ public class CommunicationService {
 
             return true;
         } catch (MessagingException e) {
-            log.info("<---EMAIL RESPONSE FAILED--->");
-            log.info(e.getMessage());
-            // Handle exception (log or throw custom exception)
+            log.info("<--- sendRegistrationEmail MessagingException ---> \n",e);
+            return false;
+        }
+        catch (Exception e) {
+            log.info("<--- sendWebsiteQuery Exception ---> \n",e);
             return false;
         }
     }
 
     public void sendAdminNotification(AdminContactMessage message) {
-        log.info(" AdminContactMessage {}",message.printAdminContactMessage());
+        log.info("<--- sendAdminNotification message ---> \n {} ", message.printAdminContactMessage());
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         try {
             helper.setFrom(rzoneMailAddress);
-            helper.setTo(message.getEventToEmail());
+//            helper.setTo(message.getEventToEmail());
+            helper.setTo("admin.agent@kiunga.co.za");
             helper.setSubject(message.getSubject());
             helper.setText(message.getMessageBody());
             javaMailSender.send(mimeMessage);
+            log.info("<--- sendAdminNotification Message Sent successfully --->");
         } catch (MessagingException e) {
-            log.info(e.getMessage());
+            log.info("<--- sendAdminNotification MessagingException --->",e);
         }
+        catch (Exception e) {
+            log.info("<--- sendAdminNotification Exception ---> \n",e);
+
+        }
+
     }
 
 
+    public void sendApplicationAcknowledgement(Application application) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        log.info("<---  sendApplicationAcknowledgement application ---> \n {} ", application.printApplication());
+        try {
+            helper.setFrom(rzoneMailAddress);
+            helper.setTo(application.getCandidate().getEmail_address());
+            helper.setSubject("Application Received");
+
+            Context context = new Context();
+            context.setVariable("vacancyName", application.getVacancy().getJobTitle());
+            context.setVariable("applicantName", application.getCandidate().getFirst_name());
+            context.setVariable("currentYear", LocalDate.now().getYear());
+
+
+            String emailContent = templateEngine.process("emailTemplates/application-acknowledgment", context);
+            helper.setText(emailContent, true);
+
+            javaMailSender.send(mimeMessage);
+            log.info("<--- sendApplicationAcknowledgement sent --->");
+
+        }
+        catch (MessagingException e) {
+            log.info("<--- sendApplicationAcknowledgement MessagingException \n --->", e);
+        }
+        catch (Exception e) {
+            log.info("<--- sendApplicationAcknowledgement Exception ---> \n",e);
+
+        }
+    }
 
     /*
 

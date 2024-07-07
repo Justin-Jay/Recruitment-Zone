@@ -74,7 +74,7 @@ public class VacancyEventListener {
                 log.info("No vacancy found with ID {}.", event.getVacancy().getVacancyID());
             }
         } catch (Exception e) {
-            log.error("FAILED VACANCY ACTIVATION: {}", e.getMessage(), e);
+            log.info("FAILED VACANCY ACTIVATION: {}", e.getMessage(), e);
         }
     }
 
@@ -100,7 +100,7 @@ public class VacancyEventListener {
                 log.info("No vacancy found with ID {}.", event.getVacancy().getVacancyID());
             }
         } catch (Exception e) {
-            log.error("FAILED VACANCY ACTIVATION: {}", e.getMessage(), e);
+            log.info("FAILED VACANCY ACTIVATION: {}", e.getMessage(), e);
         }
     }
 
@@ -126,7 +126,7 @@ public class VacancyEventListener {
                 log.info("No vacancy found with ID {}.", event.getVacancy().getVacancyID());
             }
         } catch (Exception e) {
-            log.error("FAILED {}", e.getMessage());
+            log.info("FAILED {}", e.getMessage());
         }
     }
 

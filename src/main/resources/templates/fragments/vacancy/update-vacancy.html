@@ -31,25 +31,25 @@
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="vacancyID" th:field="*{vacancyID}"/>
         <div class="form-group">
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="jobTitle">Job Title: </label>
                 <input type="text" th:name="jobtitle" th:field="${vacancy.jobTitle}" class="form-control" id="jobTitle"
                 />
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="location">Location: </label>
                 <input type="text"   th:field="${vacancy.location}" class="form-control" id="location"
                 />
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="seniority_level">Seniority Level: </label>
                 <input type="text"  th:field="${vacancy.seniority_level}" class="form-control" id="seniority_level"
                 />
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="industry">Select Industry:
                 </label>
                 <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
@@ -58,16 +58,16 @@
                 </select>
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="publish_date">Publish Date: </label>
-                <input type="date"  th:field="${vacancy.publish_date}" class="form-control" id="publish_date"
+                <input type="date"   th:name="publish_date" th:value="*{publish_date}"  class="form-control" id="publish_date"
                        placeholder="Publish Date"/>
 
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="expirationDate">Expiration Date: </label>
-                <input type="date" th:field="${vacancy.end_date}" class="form-control " id="expirationDate"
+                <input type="date" th:name="end_date" th:value="*{end_date}"  class="form-control " id="expirationDate"
                        placeholder="Expiration Date:"/>
             </div>
 
