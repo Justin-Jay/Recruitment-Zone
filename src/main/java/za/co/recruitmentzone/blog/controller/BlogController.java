@@ -44,10 +44,9 @@ public class BlogController {
     public String blogs(Model model) {
         try {
             recruitmentZoneService.getActiveBlogs(model);
-
             model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
         } catch (Exception e) {
-            log.info("<-- blogs -->  Exception \n {}", e.getMessage());
+            log.error("<-- blogs -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blogs , activeBlogResponse , internalServerError
@@ -60,7 +59,7 @@ public class BlogController {
            // int pageSize = 10;
             recruitmentZoneService.getBlogs(model, 1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.info("<-- blogAdministration -->  Exception \n {}", e.getMessage());
+            log.error("<-- blogAdministration -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blogList , getBlogsResponse , internalServerError
@@ -81,7 +80,7 @@ public class BlogController {
         try {
             model.addAttribute("blogDTO", new BlogDTO());
         } catch (Exception e) {
-            log.info("<-- showCreateBlogForm -->  Exception \n {}", e.getMessage());
+            log.error("<-- showCreateBlogForm -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blogDTO , internalServerError
@@ -106,10 +105,10 @@ public class BlogController {
             } else {
                 model.addAttribute("dirtyData", "Failed to sanitize input");
                 return "fragments/blog/update-blog";
-            } //
+            }
 
         } catch (Exception e) {
-            log.info("<-- saveExistingBlog -->  Exception \n {}", e.getMessage());
+            log.error("<-- saveExistingBlog -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   blog , findBlogResponse , internalServerError ,  saveNewBlogResponse
@@ -135,7 +134,7 @@ public class BlogController {
             recruitmentZoneService.findBlogById(blogID, model);
             model.addAttribute("BLOG_VOLUME", BLOG_LOCAL_STORAGE);
         } catch (Exception e) {
-            log.info("<-- showBlog -->  Exception \n {}", e.getMessage());
+            log.error("<-- showBlog -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //   blog , findBlogResponse , internalServerError
@@ -148,7 +147,7 @@ public class BlogController {
         try {
             recruitmentZoneService.findBlogById(blogID, model);
         } catch (Exception e) {
-            log.info("<-- updateBlog -->  Exception \n {}", e.getMessage());
+            log.error("<-- updateBlog -->  Exception \n ", e);
             model.addAttribute("internalServerError", e.getMessage());
         }
         //   blog , findBlogResponse , internalServerError
@@ -176,7 +175,7 @@ public class BlogController {
                 // return "fragments/blog/update-blog";
             }
         } catch (Exception e) {
-            log.info("<-- saveUpdatedBlog -->  Exception \n {}", e.getMessage());
+            log.error("<-- saveUpdatedBlog -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // blog , findBlogResponse , internalServerError, updateBlogResponse
@@ -191,7 +190,7 @@ public class BlogController {
             model.addAttribute("blogImageDTO", new BlogImageDTO(blogID));
             log.info("addBlogImage LOADED FOR {} ", blogID);
         } catch (Exception e) {
-            log.info("<-- addBlogImage -->  Exception \n {}", e.getMessage());
+            log.error("<-- addBlogImage -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse
@@ -220,7 +219,7 @@ public class BlogController {
                 return "fragments/blog/blog-image-upload";
             }
         } catch (Exception e) {
-            log.info("exception uploading image", e);
+            log.error("exception uploading image \n", e);
         }
 
         return "fragments/blog/view-blog";
@@ -231,7 +230,7 @@ public class BlogController {
         try {
             recruitmentZoneService.findBlogStatus(blogID, model);
         } catch (Exception e) {
-            log.info("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- updateVacancy -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse
@@ -248,7 +247,7 @@ public class BlogController {
             recruitmentZoneService.saveNewBlogStatus(blogStatusDTO, model);
             recruitmentZoneService.findBlogStatus(blogStatusDTO.getBlogID(), model);
         } catch (Exception e) {
-            log.info("<-- updateVacancy -->  Exception \n {}", e.getMessage());
+            log.info("<-- updateVacancy -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancy , findVacancyResponse

@@ -59,7 +59,7 @@ public class StatusUpdater {
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
             executor.submit(this::processVacancies); 
         } catch (Exception e) {
-            log.debug("Failed to process vacancy updates ",e);
+            log.info("Failed to process vacancy updates ",e);
         }
 
     }
@@ -69,22 +69,20 @@ public class StatusUpdater {
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             executor.submit(this::processBlogs); 
         } catch (Exception e) {
-            log.debug("Failed to process blog updates: " + e);
+            log.info("Failed to process blog updates: " + e);
         }
     }
-
-
 
     // This method will be executed every 5 minutes
     //@Scheduled(cron = "0 */5 * * * *")
     public void processVacancies() {
         log.info("<--- Updater processVacancies --->");
-        log.debug("processVacancies on thread: " + Thread.currentThread());
+        log.info("processVacancies on thread: " + Thread.currentThread());
         List<Vacancy> vacancies =  vacancyService.getAllVacancies();
-        log.debug("<--- processVacancies total vacancies  {}  --->", vacancies.size());
+        log.info("<--- processVacancies total vacancies  {}  --->", vacancies.size());
         for (Vacancy vacancy : vacancies) {
 
-            log.debug(" vacancy in flight \n {}", vacancy.printVacancy());
+            log.info(" vacancy in flight \n {}", vacancy.printVacancy());
 
             LocalDate today = LocalDate.now();
             LocalDate vacancyPublishDate = vacancy.getPublish_date();
@@ -108,7 +106,7 @@ public class StatusUpdater {
                 }
             }
             else {
-                log.debug("vacancy status is EXPIRED... skipping {} ", vacancy.printVacancy() );
+                log.info("vacancy status is EXPIRED... skipping {} ", vacancy.printVacancy() );
             }
         }
     }
@@ -117,12 +115,12 @@ public class StatusUpdater {
     //@Scheduled(cron = "0 */5 * * * *")
     public void processBlogs() {
         log.info("<--- BlogUpdater processBlogs --->");
-        log.debug("processBlogs on thread: " + Thread.currentThread());
+        log.info("processBlogs on thread: " + Thread.currentThread());
         List<Blog> blogs =  blogService.getBlogs();
-        log.debug("<--- BlogUpdater total blogs  {}  --->", blogs.size());
+        log.info("<--- BlogUpdater total blogs  {}  --->", blogs.size());
         for (Blog blog : blogs) {
 
-            log.debug(" processBlogs in flight \n {}", blog.printBlog());
+            log.info(" processBlogs in flight \n {}", blog.printBlog());
 
             LocalDate today = LocalDate.now();
             LocalDate blogPublishDate = blog.getPublish_date();
@@ -147,12 +145,9 @@ public class StatusUpdater {
                 }
             }
             else {
-                log.debug("blog status is EXPIRED... skipping {} ", blog.printBlog() );
+                log.info("blog status is EXPIRED... skipping {} ", blog.printBlog() );
             }
         }
-
-
-
 
     }
 

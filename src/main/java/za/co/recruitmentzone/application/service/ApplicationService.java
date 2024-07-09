@@ -48,14 +48,9 @@ public class ApplicationService {
         log.info("saveUpdatedStatus applicationDTO: {}", applicationDTO.printApplicationDTO());
         Optional<Application> optionalApplication = applicationRepository.findById(applicationDTO.getApplicationID());
         if (optionalApplication.isPresent()) {
-            log.info("Found application");
             Application application = optionalApplication.get();
-            log.info("Application: {}", application.printApplication());
-            log.info("Old status {} ", application.getStatus());
-            log.info("New status {} ", applicationDTO.getStatus());
             application.setStatus(applicationDTO.getStatus());
             applicationRepository.save(application);
-            log.info("SAVED {} ", application.printApplication());
             return true;
         }
         else throw new ApplicationsNotFoundException("Application Not found " + applicationDTO.getApplicationID());
