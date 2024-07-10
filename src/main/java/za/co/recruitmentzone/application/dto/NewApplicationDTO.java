@@ -19,6 +19,7 @@ public class NewApplicationDTO implements Serializable {
     @Size(min = 5, max = 50,message = "Min 2, Max 50")
     private String last_name;
 
+    //@RSAIDNumber(message = "Invalid ID Number")
     @NotEmpty(message = "ID Number is mandatory")
     private String id_number;
 
@@ -47,8 +48,8 @@ public class NewApplicationDTO implements Serializable {
 
     private Boolean relocation;
 
-    @NotNull(message = "PLease attach a file")
     @Transient
+    @NotNull(message = "PLease attach a file")
     private MultipartFile documentAttachment;
 
     private Long vacancyID;

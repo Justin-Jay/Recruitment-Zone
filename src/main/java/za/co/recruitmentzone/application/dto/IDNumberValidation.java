@@ -1,22 +1,30 @@
-package za.co.recruitmentzone.util.enums;
+package za.co.recruitmentzone.application.dto;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
-public record IDNumber(String value) {
+public class IDNumberValidation implements ConstraintValidator<RSAIDNumber, String> {
+
+    private String id_Number;
+
     private static final int ID_NUMBER_LENGTH = 13;
+
     private static final String ID_NUMBER_REGEX = "\\d{13}";
 
-    public boolean isValid() {
-        if (value == null || !Pattern.matches(ID_NUMBER_REGEX, value)) {
-            throw new InvalidIDNumberException("Invalid ID number format: " + value);
+    @Override
+    public boolean isValid(String idNumber, ConstraintValidatorContext context) {
+        if (idNumber == null || !Pattern.matches(ID_NUMBER_REGEX, idNumber)) {
+            return false;
         }
 
-        if (!isValidDate(value.substring(0, 6)) || !isValidGenderSequence(value.substring(6, 10))
-                || !isValidCitizenship(value.charAt(10)) || !isValidCheckDigit(value)) {
-            throw new InvalidIDNumberException("Invalid ID number: " + value);
+        if (!isValidDate(idNumber.substring(0, 6)) || !isValidGenderSequence(idNumber.substring(6, 10))
+                || !isValidCitizenship(idNumber.charAt(10)) || !isValidCheckDigit(idNumber)) {
+            return false;
         }
 
         return true;
@@ -62,5 +70,4 @@ public record IDNumber(String value) {
     }
 }
 
-// Define the custom exception class
 

@@ -14,7 +14,7 @@
     <title>Recruitment Zone</title>
 
 </head>
-<body>
+<body >
 
 <!-- TOP Navbar -->
 <div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
@@ -23,29 +23,33 @@
 
     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
+    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${dirtyData})}"></div>
+
+
+
     <form action="#" th:action="@{/Vacancy/save-updated-vacancy}" th:object="${vacancy}" th:method="POST">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="vacancyID" th:field="*{vacancyID}"/>
         <div class="form-group">
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="jobTitle">Job Title: </label>
-                <input type="text" th:field="*{jobTitle}" class="form-control" id="jobTitle"
+                <input type="text" th:name="jobtitle" th:field="${vacancy.jobTitle}" class="form-control" id="jobTitle"
                 />
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="location">Location: </label>
-                <input type="text" th:field="*{location}" class="form-control" id="location"
+                <input type="text"   th:field="${vacancy.location}" class="form-control" id="location"
                 />
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="seniority_level">Seniority Level: </label>
-                <input type="text" th:field="*{seniority_level}" class="form-control" id="seniority_level"
+                <input type="text"  th:field="${vacancy.seniority_level}" class="form-control" id="seniority_level"
                 />
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="industry">Select Industry:
                 </label>
                 <select class="form-select" aria-label=".form-select" id="industry" th:field="*{industry}">
@@ -54,15 +58,16 @@
                 </select>
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="publish_date">Publish Date: </label>
-                <input type="date" th:value="*{publish_date}" class="form-control" id="publish_date"
+                <input type="date"   th:name="publish_date" th:value="*{publish_date}"  class="form-control" id="publish_date"
                        placeholder="Publish Date"/>
+
             </div>
 
-            <div class="row">
+            <div class="row-cols-4">
                 <label for="expirationDate">Expiration Date: </label>
-                <input type="date" th:value="*{end_date}" class="form-control " id="expirationDate"
+                <input type="date" th:name="end_date" th:value="*{end_date}"  class="form-control " id="expirationDate"
                        placeholder="Expiration Date:"/>
             </div>
 
@@ -71,7 +76,7 @@
                 <div class="col-md-4">
                     <label for="status">Select Status:
                     </label>
-                    <select class="form-select" aria-label=".form-select" id="status" th:field="*{status}">
+                    <select class="form-select" aria-label=".form-select" id="status" th:field="${vacancy.status}">
                         <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.VacancyStatus).values()}"
                                 th:value="${statusVal}" th:text="${statusVal}"></option>
                     </select>
@@ -80,7 +85,7 @@
                 <div class="col-md-4">
                     <label for="jobType">Select Job Type:
                     </label>
-                    <select class="form-select" aria-label=".form-select"  id="jobType" th:field="*{jobType}">
+                    <select class="form-select" aria-label=".form-select"  id="jobType" th:field="${vacancy.jobType}">
                         <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
                                 th:value="${type}" th:text="${type}"></option>
                     </select>
@@ -90,7 +95,7 @@
                 <div class="col-md-4">
                     <label for="empType">Select Employment Type:
                     </label>
-                    <select class="form-select" aria-label=".form-select"  id="empType" th:field="*{empType}">
+                    <select class="form-select" aria-label=".form-select"  id="empType" th:field="${vacancy.empType}">
                         <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
                                 th:value="${type}" th:text="${type}"></option>
                     </select>
@@ -100,14 +105,12 @@
 
             <div class="container-fluid">
                 <label for="job_description">Job Description: </label>
-                <textarea  th:field="*{job_description}" class="form-control"  id="job_description" ></textarea>
+                <textarea th:field="${vacancy.job_description}" class="form-control"  id="job_description" ></textarea>
             </div>
             <hr/>
             <div class="container-fluid">
                 <label for="requirementsField">Requirements: </label>
-                <textarea id="requirementsField" th:field="*{requirements}" class="form-control" ></textarea>
-                <!--             <textarea  th:field="*{__}" class="form-control "   id="___" rows="4"></textarea> -->
-
+                <textarea id="requirementsField" th:field="${vacancy.requirements}" class="form-control" ></textarea>
             </div>
 
         </div>
@@ -118,6 +121,9 @@
                 hx-swap="innerHTML"
                 id="submit"> Save Updated Vacancy
         </button>
+      <!--  <button class="btn btn-secondary"
+                id="submit"> Save Updated Vacancy
+        </button>-->
     </form>
 
 </div>
@@ -135,7 +141,7 @@
         .create(document.querySelector('#requirementsField'))
         .then(newEditor => {
             requirementsEditor = newEditor;
-            console.log(requirementsEditor.getData)
+         //   console.log(requirementsEditor.getData)
         })
         .catch(error => {
             console.error(error);
@@ -145,7 +151,7 @@
         .create(document.querySelector('#job_description'))
         .then(newEditor => {
             descrptionEditor = newEditor;
-            console.log(descrptionEditor.getData);
+           // console.log(descrptionEditor.getData);
         })
         .catch(error => {
             console.error(error);

@@ -43,6 +43,7 @@ public class VacancyDTO implements Serializable {
     private Long vacancyID;
     private long applicationCount;
     private String clientName;
+    private String vacancyImageRef;
 
     public VacancyDTO() {
     }
@@ -69,7 +70,7 @@ public class VacancyDTO implements Serializable {
     }
 
 
-    public String printVacancy(){
+ /*   public String printVacancy(){
         return "Vacancy{" +
                 "vacancyID=" + vacancyID +
                 ", job_title='" + jobTitle + '\'' +
@@ -79,6 +80,24 @@ public class VacancyDTO implements Serializable {
                 ", status=" + status +
                 '}';
     }
+*/
 
-
+    public String printVacancy() {
+        return "VacancyDTO{" +
+                "jobTitle='" + jobTitle + '\'' +
+                ", seniority_level='" + seniority_level + '\'' +
+                ", location='" + location + '\'' +
+                ", industry=" + industry +
+                ", publish_date=" + publish_date +
+                ", end_date=" + end_date +
+                ", status=" + status +
+                ", jobType=" + jobType +
+                ", empType=" + empType +
+                ", clientID=" + clientID +
+                ", employeeID=" + employeeID +
+                ", vacancyID=" + vacancyID +
+                ", clientName='" + clientName + '\'' +
+                ", vacancyImageRef='" + vacancyImageRef + '\'' +
+                '}';
+    }
 }

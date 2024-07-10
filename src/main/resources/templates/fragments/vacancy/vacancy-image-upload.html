@@ -1,0 +1,47 @@
+<div class="container-fluid page-component">
+
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${addImageResponse})}"></div>
+
+
+
+    </div>
+
+
+    <form id="blogForm" action="#" th:action="@{/Vacancy/save-vacancy-image}" th:object="${vacancyImageDTO}" th:method="POST"
+          enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+        <input type="hidden" th:name="vacancyID" th:value="${vacancyImageDTO.vacancyID}"/>
+        <br>
+
+
+        <!-- VACANCY IMAGES -->
+
+        <div class="col-md-4">
+
+            <label for="vacancyImage">
+                Upload Vacancy Image:
+            </label>
+            <input th:type="file" th:name="vacancyImage" th:field="*{vacancyImage}"
+                   id="vacancyImage"
+                   class="form-control  "/>
+
+        </div>
+
+        <br>
+
+
+        <hr/>
+
+        <button class="btn btn-primary"
+                hx-post="/Vacancy/save-vacancy-image"
+                hx-target="#main-page-section"
+                hx-swap="innerHTML" > Upload Image
+        </button>
+
+
+    </form>
+
+</div>

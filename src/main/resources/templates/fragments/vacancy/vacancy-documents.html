@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section" id="vacancy-documents-page">
+<div class="container-fluid page-component" id="vacancy-documents-page">
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
@@ -24,8 +24,8 @@
         <input type="hidden" name="sortDir" th:value="${sortDir}"/>
 
         <div class="form-group">
-            <h5 th:text="${'Client Name: '+ vacancy.client.name}"></h5>
-            <hr>
+<!--            <h5 th:text="${'Client Name: '+ vacancy.client.name}"></h5>-->
+
             <label for="documentAttachment">Attach Document:</label>
             <p class="alert alert-danger alert-dismissible fade show"
                th:if="*{#fields.hasErrors('fileMultipart')}"
@@ -49,7 +49,7 @@
 
             <button class="btn btn-secondary"
                     hx-post="/Vacancy/upload-document"
-                    hx-target="#main-page-column"
+                    hx-target="#main-page-section"
                     hx-swap="innerHTML"
                     hx-include="[clientFileDTO='clientFileDTO']"
                     hx-indicator="#spinner">

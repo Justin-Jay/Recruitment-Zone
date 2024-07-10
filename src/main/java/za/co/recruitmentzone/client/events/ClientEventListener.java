@@ -50,7 +50,7 @@ public class ClientEventListener {
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.info("<--  onClientGoogleFileEvent Exception --> \n", e);
         }
     }
 

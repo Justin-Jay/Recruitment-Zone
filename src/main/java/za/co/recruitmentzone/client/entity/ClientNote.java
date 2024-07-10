@@ -15,10 +15,7 @@ public class ClientNote implements Note, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "noteID")
     private Long noteID;
-    @ManyToOne(
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @ManyToOne( )
     @JoinColumn(name = "clientID")
     private Client client;
 

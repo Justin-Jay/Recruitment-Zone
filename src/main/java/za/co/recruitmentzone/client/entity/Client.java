@@ -25,27 +25,15 @@ public class Client implements Serializable {
     private Industry industry;
     @Column(name = "created")
     private LocalDateTime created;
-    @OneToMany(mappedBy = "client",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "client")
     private List<ContactPerson> contactPeople;
-    @OneToMany(mappedBy = "client",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "client")
     private List<Vacancy> vacancies;
 
-    @OneToMany(mappedBy = "client",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "client")
     private List<ClientNote> notes;
 
-    @OneToMany(mappedBy = "client",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "client")
     private List<ClientFile> documents;
 
     public Client() {
@@ -103,21 +91,20 @@ public class Client implements Serializable {
     }
 
     public List<Vacancy> getVacancies() {
-       if (this.vacancies!=null){
-           List<Vacancy> sortedVacancies = new ArrayList<>(this.vacancies);
-           Collections.sort(sortedVacancies, new Comparator<Vacancy>() {
-               @Override
-               public int compare(Vacancy item1, Vacancy item2) {
-                   return item2.getCreated().compareTo(item1.getCreated());
-               }
-           });
-           return sortedVacancies;
-       }
-       else return new ArrayList<>();
+        if (this.vacancies != null) {
+            List<Vacancy> sortedVacancies = new ArrayList<>(this.vacancies);
+            Collections.sort(sortedVacancies, new Comparator<Vacancy>() {
+                @Override
+                public int compare(Vacancy item1, Vacancy item2) {
+                    return item2.getCreated().compareTo(item1.getCreated());
+                }
+            });
+            return sortedVacancies;
+        } else return new ArrayList<>();
     }
 
     public List<ClientFile> getDocuments() {
-        if (this.documents!=null){
+        if (this.documents != null) {
             List<ClientFile> sortedDocuments = new ArrayList<>(this.documents);
             Collections.sort(sortedDocuments, new Comparator<ClientFile>() {
                 @Override
@@ -126,8 +113,7 @@ public class Client implements Serializable {
                 }
             });
             return sortedDocuments;
-        }
-        else return new ArrayList<>();
+        } else return new ArrayList<>();
     }
 
     public int getContactPeopleCount() {
@@ -137,7 +123,7 @@ public class Client implements Serializable {
     }
 
     public List<ClientNote> getNotes() {
-        if (this.notes!=null){
+        if (this.notes != null) {
             List<ClientNote> sortedNotes = new ArrayList<>(this.notes);
             Collections.sort(sortedNotes, new Comparator<ClientNote>() {
                 @Override
@@ -146,8 +132,7 @@ public class Client implements Serializable {
                 }
             });
             return sortedNotes;
-        }
-        else return new ArrayList<>();
+        } else return new ArrayList<>();
     }
 
     public void addContactPerson(ContactPerson contactPerson) {
@@ -176,7 +161,7 @@ public class Client implements Serializable {
         document.setClient(this);
     }
 
-    public void addNote(ClientNoteDTO noteDTO) {
+    public ClientNote addNote(ClientNoteDTO noteDTO) {
         if (notes == null) {
             notes = new ArrayList<>();
         }
@@ -186,7 +171,7 @@ public class Client implements Serializable {
         newNote.setDateCaptured(dt);
         newNote.setClient(this);
         notes.add(newNote);
-
+        return newNote;
     }
 
 

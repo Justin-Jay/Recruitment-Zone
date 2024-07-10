@@ -25,7 +25,7 @@
 
     <div class="row ">
         <div class="container-fluid">
-            <h3 class="h3">Create Blog
+            <h3 class="h3">Update Blog
             </h3>
             <hr>
         </div>
@@ -33,49 +33,72 @@
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findBlogResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${dirtyData})}"></div>
+
     </div>
 
     <div class="row">
         <div class="container-fluid" id="blog-update-section">
             <div class="form-group">
-                <form id="blogForm" action="#" th:action="@{/Blog/save-updated-blog}" th:object="${blog}" th:method="POST">
+                <form id="blogForm" action="#" th:action="@{/Blog/save-updated-blog}" th:object="${blog}"
+                      th:method="POST">
                     <!-- Hidden input field to include the vacancyID in the POST request -->
                     <input type="hidden" name="blogID" th:field="*{blogID}"/>
                     <label for="title">Blog Title: </label>
-                    <input type="text" th:field="*{blog_title}" class="form-control mb-4 w-25" id="title"
+                    <input type="text"  th:name="blog_title" th:field="*{blog_title}" class="form-control mb-4 w-25" id="title"
                            placeholder="Blog Title"/>
 
                     <label for="description">Blog Description:
                     </label>
-                    <textarea class="form-control" th:field="*{blog_description}" id="description"> </textarea>
+                    <textarea class="form-control" th:name="blog_description" th:field="*{blog_description}" id="description"> </textarea>
 
-                    <label>Body:
-                        <textarea class="form-control" th:field="*{body}"> </textarea>
+                    <label for="blogBody">Body:
+                        <textarea class="form-control"  id="blogBody" th:field="*{body}"> </textarea>
                     </label>
 
                     <br><br>
 
                     <div class="row-cols-4 align-items-center">
+                        <p class="alert alert-danger alert-dismissible fade show"
+                           th:if="${#fields.hasErrors('publish_date')}"
+                           th:errors="*{publish_date}"
+                        ></p>
                         <label for="publish_date">Publish Date:
-                            <input type="date" th:value="*{publish_date}" class="form-control" id="publish_date"
-                                   placeholder="Publish Date"/></label>
+                            <input type="date" th:name="publish_date" th:value="*{publish_date}" class="form-control"
+                                   id="publish_date"
+                                   placeholder="Publish Date"/>
+                        </label>
+
+
+
+                        <p class="alert alert-danger alert-dismissible fade show"
+                           th:if="${#fields.hasErrors('end_date')}"
+                           th:errors="*{end_date}"
+                        ></p>
                         <label for="expirationDate">Expiration Date:
-                            <input type="date" th:value="*{end_date}" class="form-control " id="expirationDate"
+                            <input type="date" th:name="end_date" th:value="*{end_date}"  class="form-control "
+                                   id="expirationDate"
                                    placeholder="Expiration Date:"/>
                         </label>
+
                     </div>
 
                     <br>
                     <button class="btn btn-secondary"
                             hx-post="/Blog/save-updated-blog"
-                            hx-target="#blog-update-section"
+                            hx-target="#body-container"
                             hx-swap="innerHTML"
                             id="submit"> Save Updated Blog
                     </button>
+                   <!--       <button class="btn btn-secondary"
+                                  id="submit"> Save Updated Blog
+                          </button>-->
+
                 </form>
             </div>
-        </div></div>
+        </div>
+    </div>
 
 </div>
 
@@ -88,7 +111,7 @@
     var editor;
 
     ClassicEditor
-        .create(document.querySelector('#body'))
+        .create(document.querySelector('#blogBody'))
         .then(newEditor => {
             editor = newEditor;
             //console.log(editor.getData)

@@ -28,10 +28,12 @@ public class Blog implements Serializable {
     private LocalDate end_date;
     @Column(name="created")
     private LocalDateTime created;
-    @ManyToOne(fetch = FetchType.EAGER,
-            cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-    })
+    @Column(name="blog_header_image_path")
+    private String headImagePath;
+    @Column(name="blog_image_path_1")
+    private String contentImageOnePath;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeID")
     private Employee employee;
 
@@ -49,6 +51,21 @@ public class Blog implements Serializable {
     public Blog(BlogDTO blogDTO) {
     }
 
+    public String getHeadImagePath() {
+        return headImagePath;
+    }
+
+    public void setHeadImagePath(String headImagePath) {
+        this.headImagePath = headImagePath;
+    }
+
+    public String getContentImageOnePath() {
+        return contentImageOnePath;
+    }
+
+    public void setContentImageOnePath(String contentImageOnePath) {
+        this.contentImageOnePath = contentImageOnePath;
+    }
 
     public BlogStatus getStatus() {
         return status;
@@ -119,13 +136,19 @@ public class Blog implements Serializable {
     }
 
 
+
     public String printBlog() {
         return "Blog{" +
                 "blogID=" + blogID +
                 ", blog_title='" + blog_title + '\'' +
+                ", blog_description='" + blog_description + '\'' +
                 ", status=" + status +
-                ", publish_date='" + publish_date + '\'' +
-                ", end_date='" + end_date + '\'' +
+                ", body='" + body + '\'' +
+                ", publish_date=" + publish_date +
+                ", end_date=" + end_date +
+                ", created=" + created +
+                ", headImagePath='" + headImagePath + '\'' +
+                ", contentImageOnePath='" + contentImageOnePath + '\'' +
                 '}';
     }
 }

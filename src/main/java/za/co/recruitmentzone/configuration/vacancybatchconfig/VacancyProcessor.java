@@ -2,7 +2,9 @@ package za.co.recruitmentzone.configuration.vacancybatchconfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
 import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.client.service.ClientService;
 import za.co.recruitmentzone.employee.entity.Employee;
@@ -12,49 +14,49 @@ import za.co.recruitmentzone.vacancy.entity.Vacancy;
 
 import java.time.LocalDate;
 
+@Component
 public class VacancyProcessor implements ItemProcessor<Vacancy, Vacancy> {
     private final Logger log = LoggerFactory.getLogger(VacancyProcessor.class);
 
-    private final ClientService clientService;
+/*    private final ClientService clientService;
     private final EmployeeService employeeService;
 
     public VacancyProcessor(ClientService clientService, EmployeeService employeeService) {
         this.clientService = clientService;
         this.employeeService = employeeService;
-    }
+    }*/
 
     @Override
     public Vacancy process(Vacancy vacancy) {
-        Client client = clientService.findClientByID(vacancy.getTheClientID());
-        Employee e = employeeService.getEmployeeByid(vacancy.getTheEmpID());
-        vacancy.setClient(client);
-        vacancy.setEmployee(e);
-        log.info("PROCESS Batch START");
-        log.info("<-----Vacancy Status Updater---->");
-        LocalDate currentDate = LocalDate.now();
+        log.info("<--- Vacancy Batch process --->");
+        log.info("vacancy in flight \n {}", vacancy.printVacancy());
+        //Client client = clientService.findClientByID(vacancy.getTheClientID());
+        //Employee e = employeeService.getEmployeeByid(vacancy.getTheEmpID());
+        //vacancy.setClient(client);
+        //vacancy.setEmployee(e);
 
+        LocalDate today = LocalDate.now();
         LocalDate vacancyPublishDate = vacancy.getPublish_date();
         LocalDate vacancyExpirationDate = vacancy.getEnd_date();
-        log.info("vacancy in flight \n {}", vacancy);
 
-        if (vacancyPublishDate.isBefore(currentDate) && vacancy.getStatus() != VacancyStatus.EXPIRED) {
-            if (vacancy.getStatus() != VacancyStatus.ACTIVE) {
+        //  check publish date, if publish date is before today, or equal to today, should be active
+        if (vacancy.getStatus() == VacancyStatus.PENDING) {
+            log.info("vacancy status is PENDING");
+
+            if (vacancyPublishDate.isBefore(today) || vacancyPublishDate.isEqual(today)) {
                 vacancy.setStatus(VacancyStatus.ACTIVE);
             }
         }
 
-        if (vacancyExpirationDate.isBefore(currentDate) && vacancy.getStatus() != VacancyStatus.PENDING) {
-            if (vacancy.getStatus() != VacancyStatus.EXPIRED) {
+        //  check expiration date, if expiration date is before today, should be expired
+        else if (vacancy.getStatus() == VacancyStatus.ACTIVE) {
+            log.info("vacancy status is ACTIVE");
+            if (vacancyExpirationDate.isBefore(today)) {
                 vacancy.setStatus(VacancyStatus.EXPIRED);
             }
         }
-
-        if (vacancy.getStatus() == VacancyStatus.PENDING && vacancyPublishDate.isBefore(currentDate)) {
-            vacancy.setStatus(VacancyStatus.ACTIVE);
-        }
-
-        if (vacancy.getStatus() == VacancyStatus.EXPIRED && vacancyPublishDate.isBefore(currentDate) && !vacancyExpirationDate.isBefore(currentDate)) {
-            vacancy.setStatus(VacancyStatus.ACTIVE);
+        else {
+            log.info("vacancy status is EXPIRED... skipping");
         }
 
         return vacancy;

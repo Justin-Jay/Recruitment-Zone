@@ -1,0 +1,55 @@
+<div class="container-fluid page-component">
+
+    <div class="row">
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
+        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${addImageResponse})}"></div>
+
+
+
+    </div>
+
+
+    <form id="blogForm" action="#" th:action="@{/Blog/save-blog-image}" th:object="${blogImageDTO}" th:method="POST"
+          enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+        <!-- Hidden input field to include the vacancyID in the POST request -->
+        <input type="hidden" th:name="blogID" th:value="${blogImageDTO.blogID}"/>
+        <br>
+
+
+        <!-- BLOG IMAGES -->
+
+        <div class="col-md-4">
+
+            <label for="blogImage">
+                Upload Blog Image:
+            </label>
+            <input th:type="file" th:name="blogImage" th:field="*{blogImage}"
+                   id="blogImage"
+                   class="form-control  "/>
+
+        </div>
+
+        <br>
+
+        <div class="col-md-4">
+            <label for="blogImageType">Select Image Type:</label>
+            <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('blogImageType')}"
+               th:errors="*{blogImageType}"></p>
+            <select class="form-select" aria-label=".form-select" id="blogImageType" th:field="*{blogImageType}">
+                <option th:each="type : ${T(za.co.recruitmentzone.util.enums.BlogImageType).values()}"
+                        th:value="${type}" th:text="${type.getPrintableImageType()}"></option>
+            </select>
+        </div>
+        <hr/>
+
+        <button class="btn btn-primary"
+                hx-post="/Blog/save-blog-image"
+                hx-target="#main-page-section"
+                hx-swap="innerHTML" > Upload Image
+        </button>
+
+
+    </form>
+
+</div>

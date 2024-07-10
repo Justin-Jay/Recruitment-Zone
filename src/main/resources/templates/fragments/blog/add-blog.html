@@ -61,7 +61,8 @@
                                    th:if="${#fields.hasErrors('blog_title')}"
                                    th:errors="*{blog_title}"
                                 ></p>
-                                <input type="text" id="blog_title" th:field="*{blog_title}" placeholder="Enter The Title"
+                                <input type="text" id="blog_title" th:field="*{blog_title}"
+                                       placeholder="Enter The Title"
                                        class="form-control">
                             </div>
                         </div>
@@ -116,14 +117,16 @@
                         </div>
 
                         <br/>
+                        <!--      <button class="btn btn-secondary"
+                                      hx-post="/Blog/save-blog"
+                                      hx-target="#body-container"
+                                      hx-swap="innerHTML"
+                                      id="submit">Save Blog
+                              </button>-->
                         <button class="btn btn-secondary"
-                                hx-post="/Blog/save-blog"
-                                hx-target="#blog-create-section"
-                                hx-swap="innerHTML"
                                 id="submit">Save Blog
                         </button>
-
-                        <a  class="btn btn-secondary" th:href="@{/Blog/blog-administration}">Cancel</a>
+                        <a class="btn btn-secondary" th:href="@{/Blog/blog-administration}">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -137,8 +140,16 @@
 <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
 
 <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+
 <script>
+
     var editor;
+    /*
+    ,{
+                    removePlugins: [ 'Heading', 'Link', 'CKFinder' ],
+                    toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
+                }
+     */
 
     ClassicEditor
         .create(document.querySelector('#blogBody'))

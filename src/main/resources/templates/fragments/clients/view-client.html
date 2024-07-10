@@ -1,8 +1,9 @@
-<div class="container-fluid" th:fragment="clientNotes(existingNotes)" id="clientNotes">
+<div class="container-fluid page-component" th:fragment="clientNotes(existingNotes)" id="clientNotes">
 
     <div class="row">
 
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findClientByIDResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${findClientByIDResponse})}"></div>
+        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewClientResponse})}"></div>
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
     </div>
 
@@ -12,50 +13,45 @@
         <!--  display client   -->
         <div th:insert="~{fragments/clients/client-fragment :: clientView(${client})}"></div>
 
-        <!-- Check if a condition is true -->
-        <div th:if="${noNotesFound}">
+
+        <div class="container-fluid" th:if="${totalItems < 1 }">
             <p>No client notes. Add one bellow.</p>
-
         </div>
-        <!-- If the condition is false, render this instead -->
-        <div th:else>
-            <!--     <table class="table table-hover sort-asc">   -->
-            <div class="container-fluid">
-                <table class="table table-hover table-responsive">
-                    <thead>
-                    <tr>
-                        <th>
-                            <a class="aRef"
-                               th:if="${currentPage != i}"
-                               th:href="@{'/Client/paginatedClientNotes/'  + ${client.clientID} + '/' + ${currentPage}+ '?sortField=dateCaptured&sortDir=' + ${reverseSortDir}}"
-                               onclick="loadHTMXFragment(this.href, 'main-page-section'); return false;"
-                            >Date Captured
-                            </a>
-                        </th>
-                        <th>Comment</th>
-                    </tr>
-                    </thead>
-                    <tbody>
 
-                    <tr th:each="note : ${existingNotes}">
-                        <td th:text="${#temporals.format(note.dateCaptured, 'dd-MM-yyyy HH:mm')}"></td>
-                        <td th:text="${note.comment}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
-					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+        <div class="container-fluid" th:if="${totalItems >= 1 }">
+            <table class="table table-hover ">
+                <caption th:if="${totalItems >= 1 }">
+                    <div class="col-sm-1" th:if="${totalPages > 1}" style="display: inline;">
+					    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
 						<a class="btn btn-secondary"
                            th:if="${currentPage != i}"
                            th:href="@{'/Client/paginatedClientNotes/' + ${client.clientID} + '/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
                            onclick="loadHTMXFragment(this.href, 'main-page-section'); return false;" th:text="${i}">
                         </a>  <span th:unless="${currentPage != i}">[[${i}]]</span>
-					</span>
-            </div>
-            <meta name="_csrf" th:content="${_csrf.token}"/>
-            <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+				    	</span>
+                    </div>
+                </caption>
+                <thead>
+                <tr>
+                    <th>
+                        <a class="aRef"
+                           th:if="${currentPage != i}"
+                           th:href="@{'/Client/paginatedClientNotes/'  + ${client.clientID} + '/' + ${currentPage}+ '?sortField=dateCaptured&sortDir=' + ${reverseSortDir}}"
+                           onclick="loadHTMXFragment(this.href, 'main-page-section'); return false;"
+                        >Date Captured
+                        </a>
+                    </th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
 
+                <tr th:each="note : ${existingNotes}">
+                    <td th:text="${#temporals.format(note.dateCaptured, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${note.comment}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
 
@@ -85,7 +81,7 @@
                           id="comment"></textarea>
             </div>
 
-            <button class=" btn btn-outline-secondary"
+            <button class=" btn btn-primary"
                     hx-post="/Client/save-client-note"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"
@@ -99,3 +95,7 @@
 
 
 </div>
+
+<!--     <meta name="_csrf" th:content="${_csrf.token}"/>
+            <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+-->

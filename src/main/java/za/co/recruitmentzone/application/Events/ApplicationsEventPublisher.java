@@ -23,7 +23,7 @@ public class ApplicationsEventPublisher {
             log.info("EVENT  publishWebsiteQueryReceivedEvent POSTED");
             return true;
         } catch (Exception e) {
-            log.error("Unable to post event");
+            log.error("Unable to post event \n",e);
             return false;
         }
 

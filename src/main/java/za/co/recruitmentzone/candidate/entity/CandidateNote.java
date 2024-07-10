@@ -15,10 +15,7 @@ public class CandidateNote implements Note, Serializable {
     @Column(name = "noteID")
     private Long noteID;
 
-    @ManyToOne(
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @ManyToOne()
     @JoinColumn(name = "candidateID")
     private Candidate candidate;
     @Column(name = "created")

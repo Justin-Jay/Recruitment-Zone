@@ -19,7 +19,7 @@ public class EmployeeDetailsService implements UserDetailsService {
     private EmployeeRepository employeeRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("Load user request: User --> {}",username);
+      //  log.info("Load user request: User --> {}",username);
         Optional<Employee> user = employeeRepository.findEmployeeByEmailIgnoreCase(username);
         return user.map(EmployeeDetails::new).orElseThrow(()->new UsernameNotFoundException("User Does Not Exist"));
     }

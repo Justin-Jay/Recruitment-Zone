@@ -45,16 +45,10 @@ public class Employee implements Principal, Serializable {
             })
     private List<Authority> authorities;
 
-    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER)
     private List<Blog> blogs;
 
-    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER,
-                cascade = {
-            CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH
-                })
+    @OneToMany(mappedBy = "employee",fetch = FetchType.EAGER)
     private List<Vacancy> vacancies;
 
 
