@@ -1,199 +1,241 @@
-<div class="container-fluid main-page-section">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en"> <!--  data-bs-theme="dark" -->
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/recruitmentZone.css}">
+    <link rel="icon" th:href="@{/icon/favicon.ico}" type="image/x-icon">
+    <title>Recruitment Zone</title>
+</head>
+<body>
 
-    <div class="row">
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${fileUploadError})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createCandidateResponse})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadVacanciesResponse})}"></div>
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+<!-- TOP Navbar -->
+<div th:replace="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
+
+<div class="container-fluid home-page-section" id="body-container">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${fileUploadError})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: genericMessage(${createCandidateResponse})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadVacanciesResponse})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+        </div>
+
+
+        <form action="#" th:action="@{/Candidate/create-application}" th:object="${newApplicationDTO}"
+              th:method="POST" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
+            <div class="form-group">
+
+                <label for="vacancyID">Select a Vacancy:</label>
+
+
+                <select class="form-select" aria-label=".form-select" name="vacancyID" id="vacancyID">
+                    <option th:each="v : ${vacancyList}" th:value="${v.vacancyID}" th:text="${v.jobTitle}"></option>
+                </select>
+
+                <br>
+
+                <div class="form-group">
+                    <label for="FirstName">
+                        First Name:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('first_name')}"
+                       th:errors="*{first_name}"
+                    ></p>
+                    <input type="text" th:field="*{first_name}" id="FirstName" placeholder="Enter First Name"
+                           class="form-control "/>
+                </div>
+
+
+                <div class="form-group padding-2">
+                    <label for="LastName">
+                        Last Name:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('last_name')}"
+                       th:errors="*{last_name}"
+                    ></p>
+                    <input type="text" th:field="*{last_name}" id="LastName" placeholder="Enter Last Name"
+                           class="form-control "/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="idNumber">
+                        ID Number:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('id_number')}"
+                       th:errors="*{id_number}"
+                    ></p>
+                    <input type="text" th:field="*{id_number}" id="idNumber" placeholder="ID Number"
+                           class="form-control "/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="email">
+                        Email Address:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('email_address')}"
+                       th:errors="*{email_address}"
+                    ></p>
+                    <input type="email" th:field="*{email_address}" id="email"
+                           placeholder="Enter Email Address"
+                           class="form-control "/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="phoneNumber">
+                        Phone Number:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('phone_number')}"
+                       th:errors="*{phone_number}"
+                    ></p>
+                    <input type="text" th:field="*{phone_number}" id="phoneNumber"
+                           placeholder="Enter Phone Number"
+                           class="form-control "/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="currentProvince">Current Location:
+                    </label>
+
+                    <select class="form-select" aria-label=".form-select" id="currentProvince"
+                            th:field="${newApplicationDTO.current_province}">
+                        <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
+                                th:value="${province}" th:text="${province.getPrintableProvinceName()}"></option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="CurrentRole">
+                        Current Role:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('current_role')}"
+                       th:errors="*{current_role}"
+                    ></p>
+                    <input type="text" th:field="*{current_role}" id="CurrentRole"
+                           placeholder="Enter Current Role"
+                           class="form-control "/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="employer">
+                        Current Employer:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('current_employer')}"
+                       th:errors="*{current_employer}"
+                    ></p>
+                    <input type="text" th:field="*{current_employer}" id="employer"
+                           placeholder="Enter Current Employer"
+                           class="form-control "/>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="seniorityLevel">
+                        Seniority Level:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('seniority_level')}"
+                       th:errors="*{seniority_level}"
+                    ></p>
+                    <input type="text" th:field="*{seniority_level}" id="seniorityLevel"
+                           placeholder="Enter Seniority Level"
+                           class="form-control "/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="EduLevel">Highest Education Level:
+                    </label>
+
+                    <select class="form-select" aria-label=".form-select" id="EduLevel"
+                            th:field="${newApplicationDTO.education_level}">
+                        <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
+                                th:value="${statusVal}" th:text="${statusVal.getPrintableEduLevel()}"></option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Willing to relocate?</label>
+                    <br>
+                    <div class="form-check form-check-inline">
+
+                        <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationYes" value="true"
+                               class="form-check-input"/>
+                        <label class="form-check-label" for="relocationYes">Yes</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationNo" value="false"
+                               class="form-check-input"/>
+                        <label class="form-check-label" for="relocationNo">No</label>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="documentAttachment">
+                        Attach CV:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('documentAttachment')}"
+                       th:errors="*{documentAttachment}"
+                    ></p>
+                    <input th:type="file" name="documentAttachment" th:value="*{documentAttachment}"
+                           id="documentAttachment"
+                           class="form-control "/>
+                </div>
+
+                <hr>
+            <!--    <button class="btn btn-secondary"
+                        hx-post="/Candidate/create-application"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML"
+                        hx-include="[newApplicationDTO='newApplicationDTO']"
+                        hx-indicator="#spinner">
+                    Submit Application
+                </button>-->
+                <button class="btn btn-secondary"
+                        hx-indicator="#spinner">
+                    Submit Application
+                </button>
+                <p class='htmx-indicator spinner' id="spinner"></p>
+
+                <!--   <button class="btn btn-secondary"
+                           hx-indicator="#spinner">
+                       Submit Application
+                   </button>-->
+
+
+            </div>
+        </form>
+
     </div>
 
+    <!--BOTTOM Navbar-->
+    <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
 
-    <form action="#" th:action="@{/Candidate/create-application}" th:object="${newApplicationDTO}"
-          th:method="POST" enctype="multipart/form-data" hx-encoding='multipart/form-data'>
-        <div class="form-group">
-
-            <label for="vacancyID">Select a Vacancy:</label>
-
-
-            <select class="form-select" aria-label=".form-select" name="vacancyID" id="vacancyID">
-                <option th:each="v : ${vacancyList}" th:value="${v.vacancyID}" th:text="${v.jobTitle}"></option>
-            </select>
-
-            <br>
-
-            <div class="form-group">
-                <label for="FirstName">
-                    First Name:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('first_name')}"
-                   th:errors="*{first_name}"
-                ></p>
-                <input type="text" th:field="*{first_name}" id="FirstName" placeholder="Enter First Name"
-                       class="form-control "/>
-            </div>
-
-
-            <div class="form-group padding-2">
-                <label for="LastName">
-                    Last Name:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('last_name')}"
-                   th:errors="*{last_name}"
-                ></p>
-                <input type="text" th:field="*{last_name}" id="LastName" placeholder="Enter Last Name"
-                       class="form-control "/>
-            </div>
-
-
-            <div class="form-group">
-                <label for="idNumber">
-                    ID Number:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('id_number')}"
-                   th:errors="*{id_number}"
-                ></p>
-                <input type="text" th:field="*{id_number}" id="idNumber" placeholder="ID Number"
-                       class="form-control "/>
-            </div>
-
-
-            <div class="form-group">
-                <label for="email">
-                    Email Address:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('email_address')}"
-                   th:errors="*{email_address}"
-                ></p>
-                <input type="email" th:field="*{email_address}" id="email"
-                       placeholder="Enter Email Address"
-                       class="form-control "/>
-            </div>
-
-
-            <div class="form-group">
-                <label for="phoneNumber">
-                    Phone Number:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('phone_number')}"
-                   th:errors="*{phone_number}"
-                ></p>
-                <input type="text" th:field="*{phone_number}" id="phoneNumber"
-                       placeholder="Enter Phone Number"
-                       class="form-control "/>
-            </div>
-
-
-            <div class="form-group">
-                <label for="currentProvince">Current Location:
-                </label>
-
-                <select class="form-select" aria-label=".form-select" id="currentProvince"
-                        th:field="${newApplicationDTO.current_province}">
-                    <option th:each="province : ${T(za.co.recruitmentzone.util.enums.Province).values()}"
-                            th:value="${province}" th:text="${province.getPrintableProvinceName()}"></option>
-                </select>
-            </div>
-
-
-            <div class="form-group">
-                <label for="CurrentRole">
-                    Current Role:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('current_role')}"
-                   th:errors="*{current_role}"
-                ></p>
-                <input type="text" th:field="*{current_role}" id="CurrentRole"
-                       placeholder="Enter Current Role"
-                       class="form-control "/>
-            </div>
-
-
-            <div class="form-group">
-                <label for="employer">
-                    Current Employer:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show"
-                   th:if="${#fields.hasErrors('current_employer')}"
-                   th:errors="*{current_employer}"
-                ></p>
-                <input type="text" th:field="*{current_employer}" id="employer"
-                       placeholder="Enter Current Employer"
-                       class="form-control "/>
-
-            </div>
-
-
-            <div class="form-group">
-                <label for="seniorityLevel">
-                    Seniority Level:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show"
-                   th:if="${#fields.hasErrors('seniority_level')}"
-                   th:errors="*{seniority_level}"
-                ></p>
-                <input type="text" th:field="*{seniority_level}" id="seniorityLevel"
-                       placeholder="Enter Seniority Level"
-                       class="form-control "/>
-            </div>
-
-
-            <div class="form-group">
-                <label for="EduLevel">Highest Education Level:
-                </label>
-
-                <select class="form-select" aria-label=".form-select" id="EduLevel"
-                        th:field="${newApplicationDTO.education_level}">
-                    <option th:each="statusVal : ${T(za.co.recruitmentzone.util.enums.EducationLevel).values()}"
-                            th:value="${statusVal}" th:text="${statusVal.getPrintableEduLevel()}"></option>
-                </select>
-            </div>
-
-
-            <div class="form-group">
-                <label>Willing to relocate?</label>
-                <br>
-                <div class="form-check form-check-inline">
-
-                    <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationYes" value="true"
-                           class="form-check-input"/>
-                    <label class="form-check-label" for="relocationYes">Yes</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                    <input type="radio" th:field="${newApplicationDTO.relocation}" id="relocationNo" value="false"
-                           class="form-check-input"/>
-                    <label class="form-check-label" for="relocationNo">No</label>
-                </div>
-
-            </div>
-
-
-            <div class="form-group">
-                <label for="documentAttachment">
-                    Attach CV:
-                </label>
-                <p class="alert alert-danger alert-dismissible fade show"
-                   th:if="${#fields.hasErrors('documentAttachment')}"
-                   th:errors="*{documentAttachment}"
-                ></p>
-                <input th:type="file" name="documentAttachment" th:value="*{documentAttachment}"
-                       id="documentAttachment"
-                       class="form-control "/>
-            </div>
-
-            <hr>
-            <button class="btn btn-secondary"
-                    hx-post="/Candidate/create-application"
-                    hx-target="#main-page-section"
-                    hx-swap="innerHTML"
-                    hx-include="[newApplicationDTO='newApplicationDTO']"
-                    hx-indicator="#spinner">
-                Submit Application
-            </button>
-            <p class='htmx-indicator spinner' id="spinner"></p>
-
-        </div>
-    </form>
-
+    <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
 </div>
+</body>
+</html>

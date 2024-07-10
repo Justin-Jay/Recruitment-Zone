@@ -1,5 +1,7 @@
 package za.co.recruitmentzone.service;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tika.Tika;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -8,6 +10,7 @@ import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,12 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 import za.co.recruitmentzone.application.dto.ApplicationDTO;
 import za.co.recruitmentzone.application.exception.ApplicationsNotFoundException;
 import za.co.recruitmentzone.blog.dto.BlogDTO;
+import za.co.recruitmentzone.blog.dto.BlogImageDTO;
 import za.co.recruitmentzone.blog.dto.BlogStatusDTO;
 import za.co.recruitmentzone.blog.entity.Blog;
 import za.co.recruitmentzone.blog.exception.BlogNotFoundException;
 import za.co.recruitmentzone.blog.exception.BlogNotSavedException;
 import za.co.recruitmentzone.blog.service.BlogService;
 import za.co.recruitmentzone.candidate.entity.CandidateFile;
+import za.co.recruitmentzone.candidate.events.CandidateAppliedEvent;
 import za.co.recruitmentzone.candidate.events.CandidateEventPublisher;
 import za.co.recruitmentzone.candidate.service.CandidateFileService;
 import za.co.recruitmentzone.candidate.dto.CandidateFileDTO;
@@ -42,9 +47,14 @@ import za.co.recruitmentzone.client.entity.ClientNote;
 import za.co.recruitmentzone.client.entity.ContactPerson;
 import za.co.recruitmentzone.client.events.ClientEventPublisher;
 import za.co.recruitmentzone.client.exception.*;
+import za.co.recruitmentzone.client.repository.ClientNoteRepository;
 import za.co.recruitmentzone.client.service.ClientFileService;
 import za.co.recruitmentzone.client.service.ClientService;
 import za.co.recruitmentzone.client.service.ContactPersonService;
+import za.co.recruitmentzone.communication.entity.AdminContactMessage;
+import za.co.recruitmentzone.communication.entity.ContactMessage;
+import za.co.recruitmentzone.communication.events.WebsiteMessageEvent;
+import za.co.recruitmentzone.communication.service.CommunicationService;
 import za.co.recruitmentzone.documents.*;
 import za.co.recruitmentzone.employee.dto.EmployeeDTO;
 import za.co.recruitmentzone.employee.entity.Authority;
@@ -56,23 +66,34 @@ import za.co.recruitmentzone.exception.NoResultsFoundException;
 import za.co.recruitmentzone.util.Constants;
 import za.co.recruitmentzone.util.enums.*;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
+import za.co.recruitmentzone.vacancy.dto.VacancyImageDTO;
 import za.co.recruitmentzone.vacancy.dto.VacancyStatusDTO;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 import za.co.recruitmentzone.vacancy.exception.VacancyException;
 import za.co.recruitmentzone.vacancy.service.VacancyService;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static za.co.recruitmentzone.util.enums.BlogStatus.ACTIVE;
-import static za.co.recruitmentzone.util.enums.BlogStatus.PENDING;
+import static za.co.recruitmentzone.util.enums.BlogStatus.*;
 import static za.co.recruitmentzone.util.enums.CandidateDocumentType.CURRICULUM_VITAE;
 import static za.co.recruitmentzone.util.enums.ROLE.*;
 
@@ -93,6 +114,8 @@ public class RecruitmentZoneService {
     private final ClientEventPublisher clientEventPublisher;
     private final TokenVerificationService tokenVerificationService;
     private final ContactPersonService contactPersonService;
+    private final ClientNoteRepository clientNoteRepository;
+    private final CommunicationService communicationService;
 
 
     @Value("${file.directory}")
@@ -101,8 +124,15 @@ public class RecruitmentZoneService {
     @Value("${upload.folder}")
     String Folder;
 
+    @Value("${blog.image.volume}")
+    private String BLOG_VOLUME_FULL_PATH;
+
+    @Value("${vacancy.image.volume}")
+    private String VACANCY_VOLUME_FULL_PATH;
+
+
     public RecruitmentZoneService(ApplicationService applicationService, VacancyService vacancyService, CandidateService candidateService,
-                                  EmployeeService employeeService, ClientService clientService, BlogService blogService, CandidateFileService candidateFileService, PasswordEncoder passwordEncoder, CandidateEventPublisher candidateEventPublisher, ClientFileService clientFileService, ClientEventPublisher clientEventPublisher, TokenVerificationService tokenVerificationService, ContactPersonService contactPersonService) {
+                                  EmployeeService employeeService, ClientService clientService, BlogService blogService, CandidateFileService candidateFileService, PasswordEncoder passwordEncoder, CandidateEventPublisher candidateEventPublisher, ClientFileService clientFileService, ClientEventPublisher clientEventPublisher, TokenVerificationService tokenVerificationService, ContactPersonService contactPersonService, ClientNoteRepository clientNoteRepository, CommunicationService communicationService) {
         this.applicationService = applicationService;
         this.vacancyService = vacancyService;
         this.candidateService = candidateService;
@@ -116,6 +146,8 @@ public class RecruitmentZoneService {
         this.clientEventPublisher = clientEventPublisher;
         this.tokenVerificationService = tokenVerificationService;
         this.contactPersonService = contactPersonService;
+        this.clientNoteRepository = clientNoteRepository;
+        this.communicationService = communicationService;
     }
 
     // APPLICATIONS
@@ -201,14 +233,21 @@ public class RecruitmentZoneService {
         log.info("<-- findApplicationByID  applicationID: {} -->", applicationID);
         try {
             Application optionalApplication = applicationService.findApplicationByID(applicationID);
-            log.info("<-- findApplicationByID Loading application to update \n {} -->", optionalApplication.printApplication());
+            log.info("<-- findApplicationByID Loading application to view \n {} -->", optionalApplication.printApplication());
             ApplicationDTO applicationDTO = new ApplicationDTO();
+
             applicationDTO.setApplicationID(optionalApplication.getApplicationID());
+            applicationDTO.setCandidateName(optionalApplication.getCandidate().getFirst_name());
+            applicationDTO.setVacancyName(optionalApplication.getVacancy().getJobTitle());
+            applicationDTO.setCreated(optionalApplication.getCreated());
+            applicationDTO.setDate_received(optionalApplication.getDate_received());
+            applicationDTO.setSubmission_date(optionalApplication.getSubmission_date());
             applicationDTO.setStatus(optionalApplication.getStatus());
-            model.addAttribute("vacancyApplicationDTO", applicationDTO);
+
+            model.addAttribute("vacancyApplication", applicationDTO);
             log.info("<-- findApplicationByID DTO LOADED {} -->", applicationDTO.printApplicationDTO());
         } catch (ApplicationsNotFoundException applicationsNotFoundException) {
-            model.addAttribute(" ", applicationsNotFoundException.getMessage());
+            model.addAttribute("findApplicationByIDResponse", applicationsNotFoundException.getMessage());
             log.info("<-- findApplicationByID applicationsNotFoundException {} -->", applicationsNotFoundException.getMessage());
         }
     }
@@ -239,8 +278,101 @@ public class RecruitmentZoneService {
 
     // CANDIDATES
 
+    public void findCandidate(long candidateID, Model model) {
+        try {
+            log.info("<--  findCandidate candidateID {} -->", candidateID);
+            Candidate candidate = candidateService.getcandidateByID(candidateID);
+
+       /* CandidateDTO candidateDTO = new CandidateDTO();
+        candidateDTO.setFirst_name(candidate.getFirst_name());
+        candidateDTO.setLast_name(candidate.getLast_name());
+        candidateDTO.setId_number(candidate.getId_number());
+        candidateDTO.setEmail_address(candidate.getEmail_address());
+        candidateDTO.setPhone_number(candidate.getPhone_number());
+        candidateDTO.setCurrent_province(candidate.getCurrent_province());
+        candidateDTO.setCurrent_role(candidate.getCurrent_role());
+        candidateDTO.setCurrent_employer(candidate.getCurrent_employer());
+        candidateDTO.setSeniority_level(candidate.getSeniority_level());
+        candidateDTO.setEducation_level(candidate.getEducation_level());
+        candidateDTO.setRelocation(candidate.getRelocation());
+*/
+            model.addAttribute("candidate", candidate);
+
+        } catch (CandidateNotFoundException candidateNotFoundException) {
+            log.info("<--  findCandidate candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
+            model.addAttribute("findCandidateResponse", candidateNotFoundException.getMessage());
+        }
+
+    }
+
+
+    public void saveUpdatedCandidate(Candidate candidate, Model model) {
+        log.info("<--  saveUpdatedCandidate candidate {} -->", candidate.printCandidate());
+
+        // CandidateNotFoundException
+        try {
+            Candidate existingCandidate = candidateService.getcandidateByID(candidate.getCandidateID());
+            if (existingCandidate != null) {
+                log.info("<--  saveUpdatedCandidate - existingCandidate {} -->", existingCandidate.printCandidate());
+
+                if (!candidate.getFirst_name().equalsIgnoreCase(existingCandidate.getFirst_name())) {
+                    existingCandidate.setFirst_name(candidate.getFirst_name());
+                }
+
+                if (!candidate.getLast_name().equalsIgnoreCase(existingCandidate.getLast_name())) {
+                    existingCandidate.setLast_name(candidate.getLast_name());
+                }
+
+                if (!candidate.getId_number().equalsIgnoreCase(existingCandidate.getId_number())) {
+                    existingCandidate.setLast_name(candidate.getLast_name());
+                }
+
+                if (!candidate.getEmail_address().equalsIgnoreCase(existingCandidate.getEmail_address())) {
+                    existingCandidate.setEmail_address(candidate.getEmail_address());
+                }
+
+                if (!candidate.getPhone_number().equalsIgnoreCase(existingCandidate.getPhone_number())) {
+                    existingCandidate.setPhone_number(candidate.getPhone_number());
+                }
+                if (candidate.getCurrent_province() != existingCandidate.getCurrent_province()) {
+                    existingCandidate.setCurrent_province(candidate.getCurrent_province());
+                }
+
+                if (!candidate.getCurrent_role().equalsIgnoreCase(existingCandidate.getCurrent_role())) {
+                    existingCandidate.setLast_name(candidate.getLast_name());
+                }
+                if (!candidate.getCurrent_employer().equalsIgnoreCase(existingCandidate.getCurrent_employer())) {
+                    existingCandidate.setCurrent_employer(candidate.getCurrent_employer());
+                }
+
+                if (!candidate.getSeniority_level().equalsIgnoreCase(existingCandidate.getSeniority_level())) {
+                    existingCandidate.setSeniority_level(candidate.getSeniority_level());
+                }
+
+                if (candidate.getEducation_level() != existingCandidate.getEducation_level()) {
+                    existingCandidate.setEducation_level(candidate.getEducation_level());
+                }
+
+                if (candidate.getRelocation() != existingCandidate.getRelocation()) {
+                    existingCandidate.setRelocation(candidate.getRelocation());
+                }
+
+
+                candidateService.save(existingCandidate);
+
+                model.addAttribute("saveUpdatedCandidateResponse", "Candidate Updated " + candidate.getFirst_name());
+            }
+        } catch (CandidateNotFoundException candidateNotFoundException) {
+
+            log.info("<--  saveUpdatedCandidate candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
+            model.addAttribute("saveUpdatedCandidateResponse", candidateNotFoundException.getMessage());
+        }
+
+
+    }
+
     //  candidate ,existingNotes , candidateNoteDTO
-    public void addCandidateNote(Model model, Long candidateID, int pageSize) {
+    public void addCandidateNote(Model model, Long candidateID, int notePageSize) {
         log.info("<--  addCandidateNote candidateID {} -->", candidateID);
         try {
             Candidate candidate = candidateService.getcandidateByID(candidateID);
@@ -251,7 +383,7 @@ public class RecruitmentZoneService {
             model.addAttribute("candidate", candidate);
 
             // List<CandidateNote> notes = candidate.getNotes();
-            Page<CandidateNote> notes = candidateService.findPaginatedCandidateNotes(1, pageSize, "dateCaptured",
+            Page<CandidateNote> notes = candidateService.findPaginatedCandidateNotes(1, notePageSize, "dateCaptured",
                     "desc", candidate);
             log.info("<-- addCandidateNote notes.getTotalPages {} -->", notes.getTotalPages());
             log.info("<-- addCandidateNote notes.getTotalElements {} -->", notes.getTotalElements());
@@ -259,6 +391,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("existingNotes", notes);
                 model.addAttribute("totalPages", notes.getTotalPages());
                 model.addAttribute("totalItems", notes.getTotalElements());
+                log.info(" addCandidateNote totalItems = {} ", notes.getTotalElements());
                 model.addAttribute("currentPage", 1);
                 model.addAttribute("sortField", "dateCaptured");
                 model.addAttribute("sortDir", "desc");
@@ -297,12 +430,14 @@ public class RecruitmentZoneService {
             Candidate candidate = candidateService.getcandidateByID(candidateID);
             log.info("<-- saveCandidateNote  candidate {} -->", candidate.printCandidate());
             //candidateNote.setDateCaptured(LocalDateTime.now());
-            candidate.addNote(candidateNote);
+            CandidateNote note = candidate.addNote(candidateNote);
+            candidateService.saveCandidateNote(note);
             try {
                 Candidate savedCandidate = candidateService.save(candidate);
                 if (savedCandidate != null) {
                     model.addAttribute("noteSaved", "Note Added");
                     int pageSize = 5;
+                    //
                     addCandidateNote(model, savedCandidate.getCandidateID(), pageSize);
                     log.info("<-- saveCandidateNote  savedCandidate {} -->", savedCandidate.printCandidate());
                 } else
@@ -321,7 +456,7 @@ public class RecruitmentZoneService {
         }
     }
 
-    public void findCandidateNotes(Long candidateID, Model model) {
+/*    public void findCandidateNotes(Long candidateID, Model model) {
         log.info("<--  findCandidateNotes candidateID {} -->", candidateID);
         try {
 
@@ -335,6 +470,35 @@ public class RecruitmentZoneService {
         } catch (CandidateNotFoundException candidateNotFoundException) {
             model.addAttribute("findCandidateNotesResponse", candidateNotFoundException.getMessage());
             log.info("<--  findCandidateNotes candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
+        }
+    }*/
+
+    public void findCandidateNotes(Long candidateID, Model model, int notePageSize) {
+        log.info("<--  findCandidateNotes candidateID {} -->", candidateID);
+        try {
+            Candidate candidate = candidateService.getcandidateByID(candidateID);
+
+            // List<CandidateNote> notes = candidate.getNotes();
+            Page<CandidateNote> notes = candidateService.findPaginatedCandidateNotes(1, notePageSize, "dateCaptured",
+                    "desc", candidate);
+            log.info("<-- findCandidateNotes notes.getTotalPages {} -->", notes.getTotalPages());
+            log.info("<-- findCandidateNotes notes.getTotalElements {} -->", notes.getTotalElements());
+            if (notes != null) {
+                model.addAttribute("existingNotes", notes);
+                model.addAttribute("totalPages", notes.getTotalPages());
+                model.addAttribute("totalItems", notes.getTotalElements());
+                log.info(" findCandidateNotes totalItems = {} ", notes.getTotalElements());
+                model.addAttribute("currentPage", 1);
+                model.addAttribute("sortField", "dateCaptured");
+                model.addAttribute("sortDir", "desc");
+                model.addAttribute("reverseSortDir", "asc".equals("asc") ? "desc" : "asc");
+                model.addAttribute("candidate", candidate);
+
+            } else throw new ClientNotFoundException("No clients found. contact system administrator");
+
+        } catch (CandidateNotFoundException candidateNotFoundException) {
+            model.addAttribute("addCandidateNoteResponse", candidateNotFoundException.getMessage());
+            log.info("<--  addCandidateNote candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
         }
     }
 
@@ -481,6 +645,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("candidateList", responseList);
                 model.addAttribute("totalPages", responseList.getTotalPages());
                 model.addAttribute("totalItems", responseList.getTotalElements());
+
                 model.addAttribute("currentPage", pageNo);
                 model.addAttribute("sortField", sortField);
                 model.addAttribute("sortDir", sortDirection);
@@ -501,8 +666,30 @@ public class RecruitmentZoneService {
             if (application != null) {
                 String outcome = "Application submitted successfully. Agent will be in touch";
                 // Application submitted successfully. Agent will be in touch
-                model.addAttribute("applicationOutcome", outcome
-                );
+                model.addAttribute("applicationOutcome", outcome);
+
+                // Notify All concerned parties
+
+                String subject = "New Application For: "+ application.getVacancy().getJobTitle();
+
+
+                String result = MessageFormat.format(" Application submitted for {0} submitted.", application.getVacancy().getJobTitle() );
+                String string = new StringBuilder(result).toString();
+                // what should the body of the email include
+
+                AdminContactMessage adminMessage = new AdminContactMessage(subject,string);
+
+
+                ContactMessage contactMessage = new ContactMessage();
+                contactMessage.setName(application.getCandidate().getFirst_name());
+                String candidateEmail = application.getCandidate().getEmail_address();
+               // contactMessage.setEmail();
+                contactMessage.setToEmail(candidateEmail);
+                String vacancyName  = application.getVacancy().getJobTitle();
+                contactMessage.setSubject("Application For: " + vacancyName +" submitted successfully" );
+
+                candidateEventPublisher.publishCandidateAppliedEvent(application,adminMessage,contactMessage);
+
                 log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
             }
         } catch (CandidateException e) {
@@ -510,6 +697,8 @@ public class RecruitmentZoneService {
             model.addAttribute("createCandidateApplicationResponse", "Failed to create application... Please try again.");
         }
     }
+
+
 
     public void createCandidateApplication(NewApplicationDTO newApplicationDTO, Model model) {
         log.info("<-- createCandidateApplication  newApplicationDTO: {} -->", newApplicationDTO.printNewApplicationDTO());
@@ -521,7 +710,7 @@ public class RecruitmentZoneService {
                 model.addAttribute("creationOutcome", outcome
                 );
                 // reload candidate
-                findCandidateNotes(application.getCandidate().getCandidateID(), model);
+                findCandidateNotes(application.getCandidate().getCandidateID(), model, 5);
 
                 Candidate candidate = application.getCandidate();
                 model.addAttribute("candidate", candidate);
@@ -529,7 +718,6 @@ public class RecruitmentZoneService {
                 CandidateNoteDTO candidateNoteDTO = new CandidateNoteDTO();
                 candidateNoteDTO.setCandidateID(candidate.getCandidateID());
                 model.addAttribute("candidateNoteDTO", candidateNoteDTO);
-
                 log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
             }
         } catch (CandidateException e) {
@@ -553,7 +741,7 @@ public class RecruitmentZoneService {
         candidate.setSeniority_level(newApplicationDTO.getSeniority_level());
         candidate.setEducation_level(newApplicationDTO.getEducation_level());
         candidate.setRelocation(newApplicationDTO.getRelocation());
-        candidate.setCreated(LocalDateTime.now());
+        //candidate.setCreated(LocalDateTime.now());
         log.info("New Candidate \n {}", candidate.printCandidate());
 
         // create candidate and save and link with document
@@ -575,19 +763,18 @@ public class RecruitmentZoneService {
         // link application with vacancy
         Vacancy v = vacancyService.findById(newApplicationDTO.getVacancyID());
         v.addApplication(application);
-
+        vacancyService.save(v);
         // link candidate with application
         candidate.AddApplication(application);
-
+        candidateService.save(candidate);
         log.info("About to Save New Application \n {}", application.printApplication());
 
         application = applicationService.save(application);
-
-
         if (application.getApplicationID() != null) {
             log.info("<-- createApplication application {} -->", application.printApplication());
 
-            // candidateEventPublisher.publishCandidateFileUploadedEvent();
+            candidateEventPublisher.publishCandidateGoogleFileEvent(file.getFileID(), file);
+
             return application;
         } else throw new CandidateException("Failed to create Candidate Application:");
     }
@@ -628,6 +815,7 @@ public class RecruitmentZoneService {
             model.addAttribute("vacancy", v);
 
             model.addAttribute("existingDocuments", vacancyDocs);
+
             model.addAttribute("totalPages", vacancyDocs.getTotalPages());
             model.addAttribute("totalItems", vacancyDocs.getTotalElements());
             model.addAttribute("currentPage", pageNo);
@@ -644,15 +832,26 @@ public class RecruitmentZoneService {
         }
     }
 
-    public void reloadVacancyDocuments(Model model, Long vacancyID) {
-        log.info("<-- findVacancyDocuments  {} -->", vacancyID);
+    public void reloadVacancyDocuments(Model model, Long vacancyID, int pageNo, int pageSize, String sortField, String sortDirection) {
+        log.info("<-- findVacancyDocuments vacancyID = {} -->", vacancyID);
         try {
-            List<ClientFile> vacancyDocs = clientFileService.loadVacancyDocs(vacancyID);
             Vacancy v = vacancyService.findById(vacancyID);
-            model.addAttribute("vacancy", v);
-            model.addAttribute("existingDocuments", vacancyDocs);
+//            List<ClientFile> vacancyDocs = clientFileService.loadVacancyDocs(vacancyID);
+            Page<ClientFile> vacancyDocs = clientFileService.findPaginatedVacancyDocs(pageNo, pageSize, sortField,
+                    sortDirection, v);
 
-            log.info("<-- findVacancyDocuments vacancyDocs size {} -->", vacancyDocs.size());
+            model.addAttribute("vacancy", v);
+
+            model.addAttribute("existingDocuments", vacancyDocs);
+            model.addAttribute("totalPages", vacancyDocs.getTotalPages());
+            model.addAttribute("totalItems", vacancyDocs.getTotalElements());
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("sortField", sortField);
+            model.addAttribute("sortDir", sortDirection);
+            model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
+
+
+            log.info("<-- findVacancyDocuments getTotalPages {} -->", vacancyDocs.getTotalPages());
         } catch (ClientNotFoundException clientNotFoundException) {
             model.addAttribute("findVacancyDocumentsResponse", clientNotFoundException.getMessage());
         }
@@ -855,8 +1054,8 @@ public class RecruitmentZoneService {
         findAllEmployees(model);
     }
 
-    public void updateVacancy(VacancyDTO vacancy, Model model) {
-        log.info("<--  updateVacancy vacancy {} -->", vacancy.printVacancy());
+    public void updateVacancy(Vacancy vacancy, Model model) {
+        //log.info("<--  updateVacancy vacancy {} -->", vacancy.printVacancy());
         // Retrieve the existing Vacancy from the database
         Vacancy existingVacancy = vacancyService.findById(vacancy.getVacancyID());
         log.info(" updateVacancy \n {}", existingVacancy.printVacancy());
@@ -907,8 +1106,8 @@ public class RecruitmentZoneService {
 
                 // Save the updated Vacancy
                 Vacancy updatedVacancy = vacancyService.save(existingVacancy);
-                VacancyDTO vacancyDTO = convertVacancy(updatedVacancy);
-                model.addAttribute("vacancy", vacancyDTO);
+                //VacancyDTO vacancyDTO = convertVacancy(updatedVacancy);
+                model.addAttribute("vacancy", updatedVacancy);
                 model.addAttribute("employeeName", updatedVacancy.getEmployee().getFirst_name());
                 log.info("<-- updateVacancy existingVacancy Saved -->");
                 model.addAttribute("saveVacancyResponse", "Vacancy : " + existingVacancy.getJobTitle() + " Updated");
@@ -940,12 +1139,14 @@ public class RecruitmentZoneService {
             if (client != null) {
                 //newVacancy.setClient(client);
                 client.addVacancy(newVacancy);
+                clientService.saveExistingClient(client);
             } else throw new VacancyException("Failed to set client to vacancy");
 
             Employee op = employeeService.getEmployeeByid(vacancy.getEmployeeID());
             if (op != null) {
                 // newVacancy.setEmployee(op);
                 op.addVacancy(newVacancy);
+                employeeService.save(op);
             } else throw new VacancyException("Failed to set employee to vacancy");
 
             newVacancy.setIndustry(client.getIndustry());
@@ -996,6 +1197,26 @@ public class RecruitmentZoneService {
         }
     }
 
+    public void findVacancyForUpdate(Long vacancyID, Model model) {
+        log.info("<--  findVacancy vacancyID  {} -->", vacancyID);
+        try {
+            Vacancy vacancy = vacancyService.findById(vacancyID);
+
+            //VacancyDTO vacancyDTO = convertVacancy(vacancy);
+
+            // clientName , vacancyName = jobTitle
+            model.addAttribute("vacancy", vacancy);
+            // model.addAttribute("employeeName", vacancy.getEmployee().getFirst_name());
+            //model.addAttribute("clientFileDTO", new ClientFileDTO());
+
+            log.info("<--  findVacancy vacancy != null  {} -->", vacancy.printVacancy());
+        } catch (VacancyException vacancyException) {
+
+            log.info("<-- findVacancy  vacancyException: {} -->", vacancyException.getMessage());
+            model.addAttribute("findVacancyResponse", vacancyException.getMessage());
+        }
+    }
+
     public VacancyDTO convertVacancy(Vacancy vacancy) {
         VacancyDTO vacancyDTO = new VacancyDTO();
         vacancyDTO.setJobTitle(vacancy.getJobTitle());
@@ -1014,6 +1235,7 @@ public class RecruitmentZoneService {
         vacancyDTO.setEmployeeID(vacancy.getTheEmpID());
         vacancyDTO.setApplicationCount(vacancy.getApplicationsSize());
         vacancyDTO.setClientName(vacancy.getClient().getName());
+        vacancyDTO.setVacancyImageRef(vacancy.getVacancyImageRef());
         return vacancyDTO;
     }
 
@@ -1058,6 +1280,7 @@ public class RecruitmentZoneService {
             log.info("<--  getAllVacancies vacancyApplicationList.getTotalPages {} -->", vacancyApplicationList.getTotalPages());
 
             model.addAttribute("vacancyList", vacancyApplicationList);
+
             model.addAttribute("totalPages", vacancyApplicationList.getTotalPages());
             model.addAttribute("totalItems", vacancyApplicationList.getTotalElements());
             model.addAttribute("currentPage", pageNo);
@@ -1071,37 +1294,7 @@ public class RecruitmentZoneService {
         }
     }
 
-    /*  public void reloadVacancySubmissions(Long vacancyID, Model model,int pageNo,int pageSize,String sortField,String sortDirection
-      ) {
-          log.info("<--  findVacancyById vacancyID  {} -->", vacancyID);
-          try {
-              Vacancy vacancy = vacancyService.findById(vacancyID);
-              VacancyDTO vacancyDTO = convertVacancy(vacancy);
-              //model.addAttribute("vacancy", vacancyDTO);
-  //            List<Application> vacancyApplicationList = vacancy.getApplications();
 
-              Page<Application> vacancyApplicationList = applicationService.findPaginatedApplications(pageNo,pageSize,sortField,
-                      sortDirection,vacancy);
-
-              //model.addAttribute("currentPage",pageNo);
-            //  model.addAttribute("totalPages",vacancyApplicationList.getTotalPages());
-              //model.addAttribute("totalItems",vacancyApplicationList.getTotalElements());
-              //model.addAttribute("sortField",sortField);
-              //model.addAttribute("sortDir",sortDirection);
-              //model.addAttribute("vacancyID",vacancyID);
-
-              //model.addAttribute("reverseSortDir",sortDirection.equals("asc")? "desc": "asc");
-
-              log.info("Vacancy Application Size {}", vacancyApplicationList.getTotalPages());
-              model.addAttribute("vacancyApplications", vacancyApplicationList);
-
-              log.info("<--  findVacancyById vacancy != null  {} -->", vacancy.printVacancy());
-          } catch (VacancyException vacancyException) {
-              log.info("<-- findVacancyById  vacancyException: {} -->", vacancyException.getFailureReason());
-              model.addAttribute("findVacancyResponse", vacancyException.getFailureReason());
-          }
-      }
-  */
     public void searchVacancyByTitle(String title, Model model) {
         log.info("<--  searchVacancyByTitle title {} -->", title);
         try {
@@ -1216,10 +1409,19 @@ public class RecruitmentZoneService {
     public void getActiveBlogs(Model model) {
         log.info("<--  getActiveBlogs -->");
         try {
-            List<Blog> blogResponse = blogService.getActiveBlogs(ACTIVE);
+            List<Blog> blogResponse = blogService.getBlogsByStatus(ACTIVE);
+
             if (!blogResponse.isEmpty()) {
                 log.info("<--  getActiveBlogs blogResponse {} -->", blogResponse.size());
                 model.addAttribute("blogs", blogResponse);
+
+                List<Blog> existingBlogs = blogService.getBlogsByStatus(EXPIRED);
+
+                if (!existingBlogs.isEmpty()) {
+                    model.addAttribute("existingBlogs", existingBlogs);
+                    log.info("<--  getActiveBlogs blogResponse {} -->", existingBlogs.size());
+                }
+
             } else throw new BlogNotFoundException("No Active Blogs");
         } catch (BlogNotFoundException blogNotFoundException) {
             model.addAttribute("activeBlogResponse", blogNotFoundException.getMessage());
@@ -1270,33 +1472,14 @@ public class RecruitmentZoneService {
         try {
             Blog blog = blogService.findById(blogID);
             model.addAttribute("blog", blog);
-            log.info("<--  findBlogById optionalBlog.isPresent {} -->", blog.printBlog());
+            log.info("<--  findBlogById blog {} -->", blog.printBlog());
         } catch (BlogNotFoundException blogNotFoundException) {
             log.info("<--  findBlogById blog is null  -->");
             model.addAttribute("findBlogResponse", blogNotFoundException.getMessage());
             log.info("<--  findBlogById blogNotSavedException {} -->", blogNotFoundException.getMessage());
         }
     }
-/*    public void findBlogDTO(Long blogID, Model model) {
-        log.info("<--  findBlogById blogID {} -->", blogID);
-        try {
-            Blog blog = blogService.findById(blogID);
-            BlogDTO blogDTO = new BlogDTO();
-            blogDTO.setBlogID(blog.getBlogID());
-            blogDTO.setStatus(blog.getStatus());
-            blogDTO.setBlog_title(blog.getBlog_title());
-            blogDTO.setBlog_description(blog.getBlog_description());
-            blogDTO.setBody(blog.getBody());
-            blogDTO.setPublish_date(blog.getPublish_date());
-            blogDTO.setEnd_date(blog.getEnd_date());
-            model.addAttribute("blog", blogDTO);
-            log.info("<--  findBlogById optionalBlog.isPresent {} -->", blog.printBlog());
-        } catch (BlogNotFoundException blogNotFoundException) {
-            log.info("<--  findBlogById blog is null  -->");
-            model.addAttribute("findBlogResponse", blogNotFoundException.getMessage());
-            log.info("<--  findBlogById blogNotSavedException {} -->", blogNotFoundException.getMessage());
-        }
-    }*/
+
 
     public void saveNewBlog(BlogDTO blogDTO, Principal principal, Model model) {
         log.info("<-- saveNewBlog Saving new blog for principal : {} -->", principal.getName());
@@ -1320,7 +1503,7 @@ public class RecruitmentZoneService {
                     newBlog.setStatus(ACTIVE);
                 }
                 Blog blog = blogService.save(newBlog);
-
+                employeeService.save(employee);
                 model.addAttribute("saveNewBlogResponse", "New Blog created " + blog.getBlogID());
                 model.addAttribute("blog", blog);
                 log.info("<--  saveNewBlog newBlog {} -->", newBlog.printBlog());
@@ -1333,6 +1516,7 @@ public class RecruitmentZoneService {
             model.addAttribute("saveNewBlogResponse", e.getMessage());
         }
     }
+
 
     public void saveUpdatedBlog(Blog updatedBlog, Model model) {
         log.info("<--  saveExistingBlog blog {} -->", updatedBlog.printBlog());
@@ -1356,12 +1540,21 @@ public class RecruitmentZoneService {
                 }
                 // publish date
 
-                if (!Objects.equals(updatedBlog.getPublish_date(), optionalBlog.getPublish_date())) {
+            /*    if (!Objects.equals(updatedBlog.getPublish_date(), optionalBlog.getPublish_date())) {
                     optionalBlog.setPublish_date(updatedBlog.getPublish_date());
 
                 }
                 // expiration date
                 if (!Objects.equals(updatedBlog.getEnd_date(), optionalBlog.getEnd_date())) {
+                    optionalBlog.setEnd_date(updatedBlog.getEnd_date());
+                }
+*/
+                if (updatedBlog.getPublish_date() != optionalBlog.getPublish_date()) {
+                    optionalBlog.setPublish_date(updatedBlog.getPublish_date());
+
+                }
+                // expiration date
+                if (updatedBlog.getEnd_date() != optionalBlog.getEnd_date()) {
                     optionalBlog.setEnd_date(updatedBlog.getEnd_date());
                 }
 
@@ -1389,11 +1582,256 @@ public class RecruitmentZoneService {
                 }
             } else throw new BlogNotFoundException("Blog not found: blog ID: " + updatedBlog.getBlogID());
         } catch (BlogNotFoundException blogNotFoundException) {
-            log.error("blogNotSavedException {}", blogNotFoundException.getMessage());
+            log.info("blogNotSavedException {}", blogNotFoundException.getMessage());
             model.addAttribute("updateBlogResponse", blogNotFoundException.getMessage());
         }
     }
 
+    public void saveBlogImage(BlogImageDTO blogImageDTO, Model model) {
+        log.info("<--  saveBlogImage blogImageDTO {} -->", blogImageDTO.printBlogImageDTO());
+        String returnMessage = "";
+
+        try {
+            Blog optionalBlog = blogService.findById(blogImageDTO.getBlogID());
+            log.info("<--  saveBlogImage existingBlog {} -->", optionalBlog.printBlog());
+            if (optionalBlog != null) {
+
+                if (blogImageDTO.getBlogImage() != null && !blogImageDTO.getBlogImage().isEmpty()) {
+
+                    switch (blogImageDTO.getBlogImageType()) {
+                        case HEADER -> {
+                            log.info("<-- saveBlogImage to data volume blogHeaderImage submitted for {}", optionalBlog.getBlog_title());
+//                            String blogHeaderPath = uploadBlogImage(blogImageDTO.getBlogImage(), optionalBlog.getBlogID(), blogImageDTO.getBlogImageType().toString());
+                            String blogHeaderPath = uploadBlogImage(blogImageDTO.getBlogImage());
+                            log.info("<-- saveBlogImage blogHeaderImage blogHeaderPath {}", blogHeaderPath);
+                            optionalBlog.setHeadImagePath(blogHeaderPath);
+
+                        }
+                        case CONTENT_IMAGE_ONE -> {
+                            log.info("<-- saveBlogImage to data volume CONTENT_IMAGE_ONE submitted for {}", optionalBlog.getBlog_title());
+//                            String blogContentOnePath = uploadBlogImage(blogImageDTO.getBlogImage(), optionalBlog.getBlogID(), blogImageDTO.getBlogImageType().toString());
+                            String blogContentOnePath = uploadBlogImage(blogImageDTO.getBlogImage());
+                            log.info("<-- saveBlogImage blogHeaderImage blogContentOnePath {}", blogContentOnePath);
+                            optionalBlog.setContentImageOnePath(blogContentOnePath);
+
+                        }
+                    }
+
+                    try {
+
+                        Blog savedBlog = blogService.save(optionalBlog);
+                        if (savedBlog != null) {
+                            returnMessage = "Blog Image Added";
+
+                            model.addAttribute("addImageResponse", returnMessage);
+                            log.info(" < --- saveBlogImage {} -->", savedBlog.printBlog());
+                            model.addAttribute("blog", savedBlog);
+                            log.info("<--  saveBlogImage returnMessage {} -->", returnMessage);
+                        } else throw new BlogNotSavedException("Failed to save blog image");
+
+                    } catch (BlogNotSavedException blogNotSavedException) {
+                        log.info("<--  saveExistingBlog blogNotSavedException {} -->", blogNotSavedException.getMessage());
+                        model.addAttribute("addImageResponse", blogNotSavedException.getMessage());
+                    }
+
+                } else {
+                    log.info("<-- NO IMAGE SUBMITTED ");
+                    returnMessage = "No images added";
+                    model.addAttribute("addImageResponse", returnMessage);
+                }
+
+            } else throw new BlogNotFoundException("Blog not found: blog ID: " + blogImageDTO.getBlogID());
+        } catch (BlogNotFoundException blogNotFoundException) {
+            log.info("blogNotSavedException {}", blogNotFoundException.getMessage());
+            model.addAttribute("addImageResponse", blogNotFoundException.getMessage());
+        }
+    }
+
+    public void saveVacancyImage(VacancyImageDTO vacancyImageDTO, Model model) {
+        log.info("<--  saveVacancyImage vacancyImage vacancy ID: {} -->", vacancyImageDTO.getVacancyID());
+        String returnMessage = "";
+
+        try {
+            Vacancy optionalVacancy = vacancyService.findById(vacancyImageDTO.getVacancyID());
+            log.info("<--  saveVacancyImage existingBlog {} -->", optionalVacancy.printVacancy());
+            if (optionalVacancy != null) {
+
+                if (vacancyImageDTO.getVacancyImage() != null && !vacancyImageDTO.getVacancyImage().isEmpty()) {
+
+                    log.info("<-- saveVacancyImage submitted for {}", optionalVacancy.getVacancyID());
+                    String vacancyImagePath = uploadVacancyImage(vacancyImageDTO.getVacancyImage());
+                    log.info("<-- saveVacancyImage vacancyImage {}", vacancyImagePath);
+                    optionalVacancy.setVacancyImageRef(vacancyImagePath);
+
+
+                    try {
+
+                        Vacancy savedVacancy = vacancyService.save(optionalVacancy);
+                        if (savedVacancy != null) {
+                            returnMessage = "Vacancy Image Added";
+
+                            model.addAttribute("addImageResponse", returnMessage);
+
+                            VacancyDTO vacancyDTO = convertVacancy(savedVacancy);
+                            model.addAttribute("vacancy", vacancyDTO);
+                            model.addAttribute("employeeName", savedVacancy.getEmployee().getFirst_name());
+
+
+                            log.info(" < --- saveVacancyImage {} -->", savedVacancy.printVacancy());
+
+                            log.info("<--  saveVacancyImage returnMessage {} -->", returnMessage);
+                        } else throw new VacancyException("Failed to save blog image");
+
+                    } catch (VacancyException vacancyException) {
+                        log.info("<--  saveVacancyImage blogNotSavedException {} -->", vacancyException.getMessage());
+                        model.addAttribute("addImageResponse", vacancyException.getMessage());
+                    }
+
+                } else {
+                    log.info("<-- NO IMAGE SUBMITTED ");
+                    returnMessage = "No images added";
+                    model.addAttribute("addImageResponse", returnMessage);
+                }
+
+            } else throw new VacancyException("Vacancy not found: vacancy ID: " + vacancyImageDTO.getVacancyID());
+        } catch (VacancyException vacancyException) {
+            log.info("vacancyException", vacancyException);
+            model.addAttribute("addImageResponse", vacancyException.getMessage());
+        }
+    }
+
+
+    private String uploadBlogImage(MultipartFile file) {
+        log.info("<-- saveBlogImage -->");
+        try {
+            //Path currentRelativePath = Paths.get("");
+            //String absolutePath = currentRelativePath.toAbsolutePath().toString();
+
+          /*  String uploadDir = absolutePath + BLOG_LOCAL_FULL_PATH;
+
+
+            String fileName = file.getOriginalFilename();
+            Path uploadPath = Paths.get(uploadDir);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                log.info("<-- saveBlogImage image saved -->");
+            }*/
+
+            // volume storage
+            //    /RecruitmentZoneApplication/BlogImages/{blogID}/{imageType}/
+
+            //String volumeDirectory = "/home/justin/RecruitmentZoneApplication/" + "BlogImages/";
+
+            String fileName = file.getOriginalFilename();
+            Path uploadPath = Paths.get(BLOG_VOLUME_FULL_PATH);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            File optimizedImage = optimizeImage(file, "jpg");
+
+            try (InputStream inputStream = new FileInputStream(optimizedImage)) {
+                Path filePath = uploadPath.resolve(optimizedImage.getName());
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                log.info("<-- saveBlogImage image saved to data volume -->");
+            }
+
+            return fileName;
+        } catch (IOException e) {
+            log.info("<-- saveBlogImage \n", e);
+            return null;
+        }
+    }
+
+    private String uploadVacancyImage(MultipartFile file) {
+        log.info("<-- uploadVacancyImage -->");
+        try {
+            String fileName = file.getOriginalFilename();
+            Path uploadPath = Paths.get(VACANCY_VOLUME_FULL_PATH);
+            log.info("<-- uploadVacancyImage fileName {} -->", fileName);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            log.info("<-- uploadVacancyImage uploadPath {} -->", uploadPath);
+            //File optimizedImage = optimizeImage(file, "jpg");
+
+            try (InputStream inputStream = file.getInputStream()) {
+                // Path filePath = uploadPath.resolve(optimizedImage.getName());
+                Path filePath = uploadPath.resolve(fileName);
+                log.info("<-- uploadVacancyImage filePath {} -->", filePath);
+
+
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                log.info("<-- uploadVacancyImage image saved to data volume -->");
+            }
+
+
+            log.info("<-- uploadVacancyImage return fileName {} -->", fileName);
+            return fileName;
+        } catch (IOException e) {
+            log.info("<-- uploadVacancyImage \n", e);
+            return null;
+        }
+    }
+
+    public File optimizeImage(MultipartFile multipartFile, String format) {
+        long fileSize = multipartFile.getSize();
+        String readableSize = convertSize(fileSize);
+        log.info("<--- optimizeImage Input File Size  {} ---> ", readableSize);
+
+
+        // File inputFile = new File("input_image.jpg");
+
+        File outputFile = new File(multipartFile.getName());
+
+        try {
+
+            BufferedImage inputImage = ImageIO.read(multipartFile.getInputStream());
+
+
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(format);
+            ImageWriter writer = writers.next();
+
+
+            ImageOutputStream outputStream = ImageIO.createImageOutputStream(outputFile);
+
+
+            writer.setOutput(outputStream);
+
+            ImageWriteParam params = writer.getDefaultWriteParam();
+            params.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            params.setCompressionQuality(0.5f);
+
+            writer.write(null, new IIOImage(inputImage, null, null), params);
+
+            outputStream.close();
+            writer.dispose();
+
+        } catch (Exception e) {
+            log.info("failed to do image ");
+        }
+
+
+        fileSize = outputFile.length();
+        readableSize = convertSize(fileSize);
+
+        log.info("<--- optimizeImage Output File Size  {} ---> ", readableSize);
+        return outputFile;
+    }
+
+    public String convertSize(long size) {
+        if (size <= 0) return "0 B";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return String.format("%.1f %s", size / Math.pow(1024, digitGroups), units[digitGroups]);
+    }
 
     public void findBlogStatus(Long blogID, Model model) {
         log.info("<-- findBlogStatus blogID {} -->", blogID);
@@ -1507,7 +1945,7 @@ public class RecruitmentZoneService {
         file.setDocumentLocation(storageLocation.toString());
 
         candidate.AddDocument(file);
-
+        candidateService.save(candidate);
         file = candidateFileService.saveCandidateFile(file);
 
 
@@ -1537,6 +1975,7 @@ public class RecruitmentZoneService {
         file.setClientDocumentType(fileDTO.getDocumentType());
         file.setCreated(LocalDateTime.now());
         log.info("New clientFile {}", file.printDocument());
+        vacancyService.save(vacancy);
         // Local file storage
 
         String docType = fileDTO.getDocumentType().toString();
@@ -1568,7 +2007,7 @@ public class RecruitmentZoneService {
 
 
         client.AddDocument(file);
-
+        clientService.saveExistingClient(client);
         ClientFile savedClientFile = clientFileService.saveClientFile(file);
 
         if (savedClientFile != null) {
@@ -1598,20 +2037,6 @@ public class RecruitmentZoneService {
         return null;
     }
 
-/*    public String getDocumentLocation(String term, Model model) {
-        log.info("<--  getDocumentLocation {} -->", term);
-        try {
-            String filesResponse = candidateFileService.getDocumentLocation(term);
-            if (filesResponse.isEmpty()) {
-                log.info("<--  getDocumentLocation filesResponse {} -->", filesResponse);
-                return filesResponse;
-            } else throw new FileContentException("Error trying to find term" + term);
-        } catch (FileContentException e) {
-            model.addAttribute("searchFileContentResponse", e.getMessage());
-            log.info("<--  getDocumentLocation FileContentException {} -->", e.getMessage());
-        }
-        return null;
-    }*/
 
     public void getFilesFromContent(SearchDocumentsDTO searchDocumentsDTO, Model model) {
         log.info("<--  getFilesFromContent -->");
@@ -1649,15 +2074,33 @@ public class RecruitmentZoneService {
     public boolean isValidContentType(MultipartFile file) {
         try {
             String detectedContentType = new Tika().detect(file.getInputStream());
-            return detectedContentType.equals("application/pdf") || detectedContentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            String[] validContentTypes = {
+                    "application/pdf",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            };
+            return Arrays.asList(validContentTypes).contains(detectedContentType);
         } catch (IOException e) {
-            //log.info(e.getMessage());
+            log.info("<--- isValidContentType ---> \n ", e);
             return false;
         }
     }
 
-    // STORAGE
+    public boolean isValidImage(MultipartFile file) {
+        try {
+            String detectedContentType = new Tika().detect(file.getInputStream());
+            String[] validContentTypes = {
+                    "image/png",
+                    "image/jpeg"
+            };
+            return Arrays.asList(validContentTypes).contains(detectedContentType);
+        } catch (IOException e) {
+            log.info("<--- isValidContentType ---> \n ", e);
+            return false;
+        }
+    }
 
+
+    // STORAGE
 
     public boolean publishCandidateGoogleFileEvent(Long fileID, Document document) {
         log.info("<-- publishCandidateFileUploadedEvent {} -->", document.printDocument());
@@ -1720,6 +2163,10 @@ public class RecruitmentZoneService {
                 String saveNewClientResponse = "Client Saved: " + clientResponse.getClientID();
                 model.addAttribute("saveNewClientResponse", saveNewClientResponse);
                 model.addAttribute("client", clientResponse);
+
+                int pageSize = 10;
+                findClientNotes(model, clientResponse.getClientID(), 1, pageSize, "dateCaptured", "desc");
+
 
             } else throw new SaveClientException("Failed to save new client {}" + newClientDTO.getName());
 
@@ -1797,7 +2244,8 @@ public class RecruitmentZoneService {
             if (client != null) {
                 log.info("<--  saveNewClientNote client {} -->", client.printClient());
                 model.addAttribute("client", client);
-                client.addNote(clientNoteDTO);
+                ClientNote clientNote = client.addNote(clientNoteDTO);
+                clientService.saveClientNote(clientNote);
                 clientService.saveExistingClient(client);
                 model.addAttribute("saveNoteToClientResponse", "Note saved");
 
@@ -1857,9 +2305,9 @@ public class RecruitmentZoneService {
 
                 model.addAttribute("existingNotes", notes);
                 model.addAttribute("client", clientResponse);
-                if (notes.isEmpty() && notes != null) {
+             /*   if (notes.isEmpty() && notes != null) {
                     model.addAttribute("noNotesFound", Boolean.TRUE);
-                }
+                }*/
 
                 ClientNoteDTO clientNoteDTO = new ClientNoteDTO();
                 clientNoteDTO.setClientID(clientResponse.getClientID());
@@ -2065,7 +2513,7 @@ public class RecruitmentZoneService {
 
     }
 
-    public boolean cleanData(VacancyDTO vacancy) {
+    public boolean cleanData(Vacancy vacancy) {
         vacancy.setJob_description(Jsoup.clean(vacancy.getJob_description(), Safelist.relaxed()));
         vacancy.setRequirements(Jsoup.clean(vacancy.getRequirements(), Safelist.relaxed()));
         boolean result = Jsoup.isValid(vacancy.getJob_description(), Safelist.relaxed())
@@ -2073,6 +2521,73 @@ public class RecruitmentZoneService {
         return result;
     }
 
+    public boolean validateImage(BlogImageDTO blogImageDTO, Model model) {
+        final long MAX_SIZE_MB = 5;
+        final long MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+        try {
+            if (blogImageDTO.getBlogImage().isEmpty()) {
+                log.info("<--  validateFile -- Please select an image to upload -->");
+                throw new FileUploadException("Please select an image to upload");
+            }
+            // Security check: Ensure the file name is not a path that could be exploited
+            else if (blogImageDTO.getBlogImage().getOriginalFilename().contains("..")) {
+                log.info("<--  validateFile -- Invalid image name -->");
+                throw new FileUploadException("Invalid image name");
+            } else if (blogImageDTO.getBlogImage().getSize() > MAX_SIZE_BYTES) {
+                log.info("<-- validateFile -- File size exceeds the maximum limit (" + MAX_SIZE_MB + "MB) -->");
+                throw new FileUploadException("Image size exceeds the maximum limit (" + MAX_SIZE_MB + "MB)");
+            }
+            // Security check: Ensure the file content is safe (detect content type)
+            else if (!isValidImage(blogImageDTO.getBlogImage())) {
+                log.info("<--  validateFile -- Invalid image type -->");
+                throw new FileUploadException("Invalid image type");
+            }
+
+            log.info("<--  Valid Image Received -->");
+            return true;
+
+        } catch (FileUploadException fileUploadException) {
+            log.info("<--- validateImage Exception ---> ", fileUploadException);
+            model.addAttribute("addImageResponse", fileUploadException.getMessage());
+            return false;
+        }
+
+    }
+
+    public boolean validateVacancyImage(VacancyImageDTO vacancyImageDTO, Model model) {
+        final long MAX_SIZE_MB = 5;
+        final long MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+        try {
+            if (vacancyImageDTO.getVacancyImage().isEmpty()) {
+                log.info("<--  validateFile -- Please select an image to upload -->");
+                throw new FileUploadException("Please select an image to upload");
+            }
+            // Security check: Ensure the file name is not a path that could be exploited
+            else if (vacancyImageDTO.getVacancyImage().getOriginalFilename().contains("..")) {
+                log.info("<--  validateFile -- Invalid image name -->");
+                throw new FileUploadException("Invalid image name");
+            } else if (vacancyImageDTO.getVacancyImage().getSize() > MAX_SIZE_BYTES) {
+                log.info("<-- validateFile -- File size exceeds the maximum limit (" + MAX_SIZE_MB + "MB) -->");
+                throw new FileUploadException("Image size exceeds the maximum limit (" + MAX_SIZE_MB + "MB)");
+            }
+            // Security check: Ensure the file content is safe (detect content type)
+            else if (!isValidImage(vacancyImageDTO.getVacancyImage())) {
+                log.info("<--  validateFile -- Invalid image type -->");
+                throw new FileUploadException("Invalid image type");
+            }
+
+            log.info("<--  Valid Image Received -->");
+            return true;
+
+        } catch (FileUploadException fileUploadException) {
+            log.info("<--- validateImage Exception ---> ", fileUploadException);
+            model.addAttribute("addImageResponse", fileUploadException.getMessage());
+            return false;
+        }
+
+    }
     // EVENTS
 
 /*    public boolean saveSubmissionEvent(Candidate candidate, Long vacancyID) {

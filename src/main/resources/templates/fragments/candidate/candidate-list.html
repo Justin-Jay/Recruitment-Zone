@@ -13,5 +13,19 @@
             </form>
         </a>
     </li>
+    <li >
+        <a class="dropdown-item" href="#">
+            <form class="list-group-item list-group-item-action" th:action="@{/Candidate/update-candidate}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="candidateID" th:value="*{candidate.candidateID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Candidate/update-candidate"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top">Update Candidate
+                </button>
+            </form>
+        </a>
+    </li>
 </ul>
 

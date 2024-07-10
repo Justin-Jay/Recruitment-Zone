@@ -114,7 +114,7 @@ public class StorageService {
     }
 
 
-    public String testMethod() throws IOException {
+/*    public String testMethod() throws IOException {
 
         log.info("Test method");
         String destinationFileName = "newFolder" + "/" + "New File Name.txt";
@@ -127,6 +127,6 @@ public class StorageService {
 
         log.info("saved result {}", saved.getName());
         return "File Uploaded Successfully" + saved.getName();
-    }
+    }*/
 
 }

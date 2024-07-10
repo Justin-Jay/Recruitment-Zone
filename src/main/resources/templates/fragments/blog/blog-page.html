@@ -22,139 +22,136 @@
 </div>
 
 
-<div class="container-fluid pt-2 pe-2" id="body-container">
+<!--MAIN PAGE SECTION -->
 
+<div class="container-fluid row  " id="page-content" style="padding: 10px;">
 
-    <!--MAIN PAGE SECTION -->
+    <!-- BLOG LEFT PAGE COLUMN -->
 
-    <div class="row-12 ">
+    <!-- <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+         <div class="container-fluid  " id="left-page-column">
+         &lt;!&ndash;    <div class="card">
+                 <h5>Older blog section ?</h5>
+                 <div class="img-fluid">
+                     &lt;!&ndash; <img src="https://picsum.photos/1600/900" alt="img"/>&ndash;&gt;
+                 </div>
+                 <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+             </div>&ndash;&gt;
+         </div>
+     </div>-->
 
-        <!--PAGE HEADING-->
+    <!--  BLOG  CENTER  PAGE COLUMN -->
 
-        <!-- <div class="container-fluid">
-             <h3> Blogs
-
-             </h3>
-             <hr>
-         </div>-->
-
-        <!--MESSAGE AREA-->
-
-
-        <!--PAGE CONTENT -->
-
-        <div class="container-fluid blog-main-page-section" id="page-content">
-
-
-            <div class="row">
-
-                <!-- BLOG LEFT PAGE COLUMN -->
-
-                <!-- <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                     <div class="container-fluid  " id="left-page-column">
-                     &lt;!&ndash;    <div class="card">
-                             <h5>Older blog section ?</h5>
-                             <div class="img-fluid">
-                                 &lt;!&ndash; <img src="https://picsum.photos/1600/900" alt="img"/>&ndash;&gt;
-                             </div>
-                             <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-                         </div>&ndash;&gt;
-                     </div>
-                 </div>-->
-
-                <!--  BLOG  CENTER  PAGE COLUMN -->
-
-                <div class="col-xxl-8 col-xl-8 col-lg-4 col-md-6 ">
-                    <div class="container-fluid " id="main-page-column">
-                        <!-- If-then-else -->
-                        <div th:if="${activeBlogResponse}">
-                            <p>Error: <span th:text="${activeBlogResponse}"></span></p>
-                        </div>
-                        <div th:else th:each="blog: ${blogs}">
-                            <!-- Display blog -->
-
-                            <div class="card" style="margin-bottom: 15px;">
-                                <img class="img-fluid" src="https://picsum.photos/800/350" alt="img"/>
-                                <h5 class="card-header fw-medium m-0" th:text="${blog.blog_title}">TITLE HEADING</h5>
-                                <p class="fw-normal m-2 overflow-hidden" th:text="${blog.blog_description}">Description</p>
-                                <p class="fw-light m-2" th:text="${'Author: ' + blog.employee.name.substring(0,blog.employee.name.indexOf('@')) + ' Publish Date: '+blog.publish_date}">
-                                    Author:</p>
-
-
-                                <form class="card-footer" action="#" th:action="@{/Blog/view-home-blog}" th:method="post">
-                                    <!-- Hidden input field to include the vacancyID in the POST request -->
-                                    <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
-
-                                    <button class="btn"
-                                            hx-post="/Blog/view-home-blog"
-                                            hx-target="#page-content"
-                                            hx-swap="innerHTML"
-                                            hx-include="[blogID='blogID']">Read More...
-                                    </button>
-
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- BLOG RIGHT PAGE COLUMN -->
-
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid" id="right-page-column">
-                        <div class="card">
-                            <h5>Blog Archive</h5>
-                            <div class="img-fluid">
-                                <p>list of older blogs</p>
-                            </div>
-                            <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-                        </div>
-                        <br/>
-                        <div class="card">
-                            <!-- imageOne = PATH -->
-                            <!--                            <img th:if="${blog.imageOne}" class="img-fluid" th:src="${blog.imageOne}" alt="img"/>
-                             th:else
-                             -->
-                            <img class="img-fluid" src="https://picsum.photos/450/300" alt="img"/>
-
-                            <h2>About Me</h2>
-                            <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-                            </img>
-                            <br/>
-                            <div class="card">
-
-                                <h3>Popular Post</h3>
-
-                                <br>
-                                <img class="img-fluid" src="https://picsum.photos/1600/900" alt="img"/>
-                                <br>
-                                <img class="img-fluid" src="https://picsum.photos/1600/900" alt="img"/>
-                            </div>
-                            <br/>
-                            <div class="card">
-                                <h3>Follow Me</h3>
-                                <p>Some text..</p>
-                            </div>
-                            <br/>
-                        </div>
-                    </div>
-
-                </div>
-
+    <div class="col-xxl-8 col-xl-8 col-lg-4 col-md-6 ">
+        <div class="container-fluid " id="main-page-section">
+            <!-- If-then-else -->
+            <div th:if="${activeBlogResponse}">
+                <h2 class="h2" th:text="${activeBlogResponse}"></h2>
             </div>
+            <div th:else th:each="blog: ${blogs}">
+                <!-- Display blog -->
 
+                <div class="card " style="margin-bottom: 15px;">
+
+                    <img th:if="${blog.headImagePath != null}" th:src="@{ ${BLOG_VOLUME} + ${blog.headImagePath}}"
+                         class="img-fluid" alt="Blog Image" style="height: 550px;"/>
+
+
+                    <img th:if="${blog.headImagePath == null}" class="img-fluid"
+                         src="https://picsum.photos/800/350" alt="img"/>
+                    <h5 class="card-header fw-medium m-0" th:text="${blog.blog_title}">TITLE HEADING</h5>
+                    <div class="card-body">
+
+                        <p class="overflow-hidden" th:utext="${blog.blog_description}">
+                            Description</p>
+                        <p class="fw-light"
+                           th:text="${'Author: ' + blog.employee.name.substring(0,blog.employee.name.indexOf('@')) + ' Publish Date: '+blog.publish_date}">
+                            Author:</p>
+                    </div>
+
+
+                    <form class="card-footer" action="#" th:action="@{/Blog/view-home-blog}"
+                          th:method="post">
+                        <!-- Hidden input field to include the vacancyID in the POST request -->
+                        <input type="hidden" name="blogID" th:value="*{blog.blogID}"/>
+
+                        <button class="btn"
+                                hx-post="/Blog/view-home-blog"
+                                hx-target="#page-content"
+                                hx-swap="innerHTML"
+                                hx-include="[blogID='blogID']">Read More...
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
         </div>
-
 
     </div>
 
+    <!-- BLOG RIGHT PAGE COLUMN -->
 
-    <!--BOTTOM Navbar-->
-    <div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+        <div class="container-fluid" id="right-page-column">
+            <div class="card" th:if="${existingBlogs}">
+                <div class="container-fluid" >
+                    <h5>Blog Archive</h5>
+                    <ul th:each="oldBlog : ${existingBlogs}">
+                      <li  >
+                          <a>
+                              <form action="#" th:action="@{/Blog/view-home-blog}" th:method="post">
+                                  <!-- Hidden input field to include the vacancyID in the POST request -->
+                                  <input type="hidden" name="blogID" th:value="*{oldBlog.blogID}"/>
+                                  <!-- Submit button to trigger the form submission -->
+                                  <button class="btn normal-button"
+                                          hx-post="/Blog/view-home-blog"
+                                          hx-target="#page-content"
+                                          hx-swap="innerHTML" >[[${oldBlog.blog_title}]]
+                                  </button>
+                              </form>
+                          </a>
+                      </li>
+                  </ul>
+                </div>
+            </div>
+            <br/>
+       <!--     <div class="card">
+                &lt;!&ndash; imageOne = PATH &ndash;&gt;
+                &lt;!&ndash;                            <img th:if="${blog.imageOne}" class="img-fluid" th:src="${blog.imageOne}" alt="img"/>
+                 th:else
+                 &ndash;&gt;
+                <img class="img-fluid" src="https://picsum.photos/450/300" alt="img"/>
 
-    <div th:replace="~{fragments/layout/scripts :: scripts}"></div>
+                <h2>About Me</h2>
+                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
 
+                <br/>
+                <div class="card">
+
+                    <h3>Popular Post</h3>
+
+                    <br>
+                    <img class="img-fluid" src="https://picsum.photos/1600/900" alt="img"/>
+                    <br>
+                    <img class="img-fluid" src="https://picsum.photos/1600/900" alt="img"/>
+                </div>
+                <br/>
+                <div class="card">
+                    <h3>Follow Me</h3>
+                    <p>Some text..</p>
+                </div>
+                <br/>
+            </div>-->
+        </div>
+
+    </div>
+
+</div>
+
+<!--BOTTOM Navbar-->
+<div th:replace="~{fragments/layout/bottom-nav}">Bottom Nav</div>
+
+<div th:replace="~{fragments/layout/scripts :: scripts}"></div>
 </body>
 </html>

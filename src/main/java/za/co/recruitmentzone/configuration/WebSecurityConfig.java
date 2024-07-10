@@ -27,10 +27,12 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
 
-        String[] myPaths = {"/css/**","/js/**","webjars/**","/ckeditor5/**","/home", "/Blog/blogs",
+        String[] myPaths = {"/css/**","/js/**","webjars/**","blog-images/**","vacancy-images/**","/ckeditor5/**","/home", "/Blog/blogs",
                 "/Blog/view-home-blog","/aboutus","/Communication/send-message","/Communication/contact-us",
                 "/Application/apply-now","/Application/save-application","/Employee/register/verifyEmail",
-                "/Document/searchDocuments","/Document/searchFileContents","/Vacancy/view-home-vacancy","/actuator/prometheus"};
+                "/Document/searchDocuments","/Document/searchFileContents","/Vacancy/view-home-vacancy"};
+
+        String[] promPaths = {"/actuator/prometheus/"};
 
         //var entryPoint = new HxRefreshHeaderAuthenticationEntryPoint();
         //var requestMatcher = new RequestHeaderRequestMatcher("HX-Request");
@@ -38,8 +40,10 @@ public class WebSecurityConfig {
         httpSecurity.authorizeHttpRequests(configurer ->
                         configurer
                                 .requestMatchers(myPaths).permitAll()
+                                .requestMatchers(promPaths).hasAuthority("PROMETHEUS")
                                 .anyRequest().authenticated()
                 )
+                .httpBasic(customizer -> { /* TODO CONFIG */ })
                 .formLogin(form ->
                         form.loginPage("/log-in")
                                 .loginProcessingUrl("/authenticateTheUser")

@@ -1,5 +1,5 @@
-<ul class="dropdown-menu" th:fragment="listOptions(vacancy)" >
-    <li class="list-group-item" >
+<ul class="dropdown-menu" th:fragment="listOptions(vacancy)" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <li class="list-group-item">
         <a class="list-group-item list-group-item-action">
             <form action="#" th:action="@{/Vacancy/view-vacancy}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
@@ -7,14 +7,13 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy"
-                        hx-target="#main-page-column"
-                        hx-swap="innerHTML show:top"
-                        hx-include="[vacancyID='vacancyID']"> View Vacancy
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top" > View Vacancy
                 </button>
             </form>
         </a>
     </li>
-    <li class="list-group-item" >
+    <li class="list-group-item">
         <a class="list-group-item list-group-item-action">
             <form action="#" th:action="@{/Vacancy/view-vacancy-submission}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
@@ -22,15 +21,14 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy-submission"
-                        hx-target="#main-page-column"
-                        hx-swap="innerHTML show:top"
-                        hx-include="[vacancyID='vacancyID']" > View Submissions
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top"> View Submissions
                 </button>
             </form>
         </a>
     </li>
 
-    <li class="list-group-item" >
+    <li class="list-group-item">
         <a class="list-group-item list-group-item-action">
             <form action="#" th:action="@{/Vacancy/view-vacancy-documents}" th:method="post">
                 <!-- Hidden input field to include the vacancyID in the POST request -->
@@ -38,11 +36,28 @@
                 <!-- Submit button to trigger the form submission -->
                 <button class="btn normal-button"
                         hx-post="/Vacancy/view-vacancy-documents"
-                        hx-target="#main-page-column"
-                        hx-swap="innerHTML show:top"
-                        hx-include="[vacancyID='vacancyID']" > View Documents <!-- hx-href="#main-page-section" -->
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top" > View Documents
                 </button>
             </form>
         </a>
     </li>
+
+
+    <li class="list-group-item" sec:authorize="hasRole('ROLE_ADMIN')">
+        <a class="list-group-item list-group-item-action">
+            <form action="#" th:action="@{/Vacancy/add-vacancy-image}" th:method="post">
+                <!-- Hidden input field to include the vacancyID in the POST request -->
+                <input type="hidden" name="vacancyID" th:value="*{vacancy.vacancyID}"/>
+                <!-- Submit button to trigger the form submission -->
+                <button class="btn normal-button"
+                        hx-post="/Vacancy/add-vacancy-image"
+                        hx-target="#main-page-section"
+                        hx-swap="innerHTML show:top">Add Image
+                </button>
+            </form>
+        </a>
+    </li>
+
+
 </ul>

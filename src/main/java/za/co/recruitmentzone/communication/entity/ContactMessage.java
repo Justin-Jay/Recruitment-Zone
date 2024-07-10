@@ -10,10 +10,9 @@ public class ContactMessage {
     public ContactMessage() {
     }
 
-    public ContactMessage(String name, String email, String messageBody) {
+    public ContactMessage(String name, String email) {
         this.name = name;
         this.email = email;
-        this.messageBody = messageBody;
     }
     public String getToEmail() {
         return toEmail;

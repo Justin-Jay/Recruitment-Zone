@@ -20,7 +20,7 @@
 <div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
 
-<div class="container-fluid create-vacancy-page-section" id="vacancy-create-section">
+<div class="container-fluid home-page-section" id="vacancy-create-section">
 
     <div class="row">
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${findAllClientsResponse})}"></div>
@@ -28,166 +28,170 @@
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
     </div>
 
-    <div class="container-fluid ">
+    <div class="container-fluid form-group">
         <form action="#" th:action="@{/Vacancy/save-vacancy}" th:object="${vacancyDTO}" method="POST">
-            <div class="col-12 form-group">
 
-                <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
-                <div class="row">
-                    <div class="col-4">
-                        <label for="jobTitle">
-                            Job Title:
-                        </label>
-                        <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('jobTitle')}"
-                           th:errors="${vacancyDTO.jobTitle}"
-                        ></p>
-                        <input type="text" th:field="*{jobTitle}" id="jobTitle" placeholder="Enter The Job Title"
+            <input type="hidden" name="name" th:value="${#authentication.principal.username}"/>
+            <div class="row">
+                <div class="col-6">
+                    <label for="jobTitle">
+                        Job Title:
+                    </label>
+                    <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('jobTitle')}"
+                       th:errors="${vacancyDTO.jobTitle}"
+                    ></p>
+                    <input type="text" th:field="*{jobTitle}" id="jobTitle" placeholder="Enter The Job Title"
+                           class="form-control">
+                </div>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-6">
+                    <label for="clientID">Select Client
+                        <select class="form-select" aria-label=".form-select" name="clientID">
+                            <option th:each="client : ${clientList}" th:text="${client.name}"
+                                    th:value="${client.clientID}"
+                                    th:selected="${client.clientID == client.clientID}"></option>
+                        </select>
+                        <input type="hidden" id="clientID" name="clientID" th:value="${vacancyDTO.clientID}"/>
+                    </label>
+                    <label for="employeeID">Select Employee
+                        <select class="form-select" aria-label=".form-select" name="employeeID">
+                            <option th:each="employee : ${employeeList}" th:text="${employee.username}"
+                                    th:value="${employee.employeeID}"
+                                    th:selected="${employee.employeeID == employee.employeeID}"></option>
+                        </select>
+                        <input type="hidden" id="employeeID" name="employeeID" th:value="${vacancyDTO.employeeID}"/>
+                    </label>
+                </div>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-6">
+                    <p class="alert alert-danger alert-dismissible fade show" role="alert"
+                       th:if="${#fields.hasErrors('location')}"
+                       th:errors="${vacancyDTO.location}">Error!</p>
+                    <label for="location">
+                        Job Location:
+                        <input type="text" th:field="*{location}" id="location" placeholder="Enter The Job Location"
                                class="form-control">
-                    </div>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-4">
-                        <label for="clientID">Select Client
-                            <select class="form-select" aria-label=".form-select" name="clientID">
-                                <option th:each="client : ${clientList}" th:text="${client.name}" th:value="${client.clientID}"
-                                        th:selected="${client.clientID == client.clientID}"></option>
-                            </select>
-                            <input type="hidden" id="clientID" name="clientID" th:value="${vacancyDTO.clientID}"/>
-                        </label>
-                        <label for="employeeID">Select Employee
-                            <select class="form-select" aria-label=".form-select" name="employeeID">
-                                <option th:each="employee : ${employeeList}" th:text="${employee.username}"
-                                        th:value="${employee.employeeID}"
-                                        th:selected="${employee.employeeID == employee.employeeID}"></option>
-                            </select>
-                            <input type="hidden" id="employeeID" name="employeeID" th:value="${vacancyDTO.employeeID}"/>
-                        </label>
-                    </div>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-4">
-                        <p class="alert alert-danger alert-dismissible fade show" role="alert"
-                           th:if="${#fields.hasErrors('location')}"
-                           th:errors="${vacancyDTO.location}">Error!</p>
-                        <label for="location">
-                            Job Location:
-                            <input type="text" th:field="*{location}" id="location" placeholder="Enter The Job Location"
-                                   class="form-control">
-                        </label>
+                    </label>
 
 
-                        <p class="alert alert-danger alert-dismissible fade show"
-                           th:if="${#fields.hasErrors('seniority_level')}"
-                           th:errors="${vacancyDTO.seniority_level}"
-                        ></p>
-                        <label for="seniorityLevel">
-                            Seniority Level:
-                            <input type="text" th:field="*{seniority_level}" id="seniorityLevel"
-                                   placeholder="Enter The Seniority Level"
-                                   class="form-control">
-                        </label>
-
-                    </div>
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('seniority_level')}"
+                       th:errors="${vacancyDTO.seniority_level}"
+                    ></p>
+                    <label for="seniorityLevel">
+                        Seniority Level:
+                        <input type="text" th:field="*{seniority_level}" id="seniorityLevel"
+                               placeholder="Enter The Seniority Level"
+                               class="form-control">
+                    </label>
 
                 </div>
-                <br>
 
-                <div class="row">
-                    <div class="col-4">
-                        <p class="alert alert-danger alert-dismissible fade show"
-                           th:if="${#fields.hasErrors('publish_date')}"
-                           th:errors="${vacancyDTO.publish_date}"
-                        ></p>
-                        <label for="publish_date">
-                            Publish Date:
-                            <input type="date" th:field="*{publish_date}" id="publish_date"
-                                   placeholder="Enter The Date to be published" class="form-control">
-                        </label>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-6">
+                    <p class="alert alert-danger alert-dismissible fade show"
+                       th:if="${#fields.hasErrors('publish_date')}"
+                       th:errors="${vacancyDTO.publish_date}"
+                    ></p>
+                    <label for="publish_date">
+                        Publish Date:
+                        <input type="date" th:field="*{publish_date}" id="publish_date"
+                               placeholder="Enter The Date to be published" class="form-control">
+                    </label>
 
 
-                        <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('end_date')}"
-                           th:errors="${vacancyDTO.end_date}"
-                        ></p>
-                        <label for="end_date">
-                            End Date:
-                            <input type="date" th:field="*{end_date}" id="end_date" placeholder="Enter The Expiration Date"
-                                   class="form-control">
-                        </label>
-                    </div>
+                    <p class="alert alert-danger alert-dismissible fade show" th:if="${#fields.hasErrors('end_date')}"
+                       th:errors="${vacancyDTO.end_date}"
+                    ></p>
+                    <label for="end_date">
+                        End Date:
+                        <input type="date" th:field="*{end_date}" id="end_date" placeholder="Enter The Expiration Date"
+                               class="form-control">
+                    </label>
+                </div>
+
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-4">
+                    <label for="jobType">Select Job Type:
+                        <select class="form-select" aria-label=".form-select" id="jobType" th:field="*{jobType}">
+                            <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
+                                    th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </label>
+
+
+                    <label for="empType">Select Employment Type:
+                        <select class="form-select" aria-label=".form-select" id="empType" th:field="*{empType}">
+                            <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
+                                    th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </label>
 
                 </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-4">
-                        <label for="jobType">Select Job Type:
-                            <select class="form-select" aria-label=".form-select" id="jobType" th:field="*{jobType}">
-                                <option th:each="type : ${T(za.co.recruitmentzone.util.enums.JobType).values()}"
-                                        th:value="${type}" th:text="${type}"></option>
-                            </select>
-                        </label>
-
-
-                        <label for="empType">Select Employment Type:
-                            <select class="form-select" aria-label=".form-select" id="empType" th:field="*{empType}">
-                                <option th:each="type : ${T(za.co.recruitmentzone.util.enums.EmpType).values()}"
-                                        th:value="${type}" th:text="${type}"></option>
-                            </select>
-                        </label>
-
-                    </div>
-
-
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-12">
-                        <label>
-                            <p class="alert alert-danger alert-dismissible fade show"
-                               th:if="${#fields.hasErrors('job_description')}"
-                               th:errors="${vacancyDTO.job_description}"
-                            ></p>
-                            Job Description:
-                            <textarea class="form-control" th:field="*{job_description}" id="jb_description"
-                            ></textarea>
-                        </label>
-                    </div>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-12">
-                        <label>
-                            <p class="alert alert-danger alert-dismissible fade show"
-                               th:if="${#fields.hasErrors('requirements')}"
-                               th:errors="${vacancyDTO.requirements}"
-                            ></p>
-                            Requirements:
-                            <textarea class="form-control mb-4 text-black-50" th:field="*{requirements}"
-                            ></textarea>
-                        </label>
-                    </div>
-                </div>
-                <br>
-
-
-                <button class="btn btn-secondary"
-                        hx-post="/Vacancy/save-vacancy"
-                        hx-target="#vacancy-create-section"
-                        hx-swap="innerHTML"
-                        hx-include="[vacancyDTO='vacancyDTO']"
-                        id="submit">Save vacancy
-                </button>
-                <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary"
-                   th:href="@{/Vacancy/vacancy-administration}">Back to vacancy admin</a>
 
 
             </div>
+            <br>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>
+                        <p class="alert alert-danger alert-dismissible fade show"
+                           th:if="${#fields.hasErrors('job_description')}"
+                           th:errors="${vacancyDTO.job_description}"
+                        ></p>
+                        Job Description:
+                        <textarea class="form-control" th:field="*{job_description}" id="jb_description"
+                        ></textarea>
+                    </label>
+                </div>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>
+                        <p class="alert alert-danger alert-dismissible fade show"
+                           th:if="${#fields.hasErrors('requirements')}"
+                           th:errors="${vacancyDTO.requirements}"
+                        ></p>
+                        Requirements:
+                        <textarea class="form-control mb-4 text-black-50" th:field="*{requirements}"
+                        ></textarea>
+                    </label>
+                </div>
+
+            </div>
+            <br>
+
+            <!--      <button class="btn btn-secondary"
+                          hx-post="/Vacancy/save-vacancy"
+                          hx-target="#vacancy-create-section"
+                          hx-swap="innerHTML"
+                          hx-include="[vacancyDTO='vacancyDTO']"
+                          id="submit">Save vacancy
+                  </button>-->
+
+            <button class="btn btn-secondary"
+                    id="submit">Save vacancy
+            </button>
+            <!--               <a th:if="${#authorization.expression('isAuthenticated()')}" class="btn btn-secondary"
+                              th:href="@{/Vacancy/vacancy-administration}">Back to vacancy admin</a>-->
+            <a class="btn btn-secondary"
+               th:href="@{/Vacancy/vacancy-administration}">Cancel</a>
+
         </form>
     </div>
 

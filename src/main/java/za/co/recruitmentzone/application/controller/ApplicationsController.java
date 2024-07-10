@@ -24,6 +24,7 @@ import static za.co.recruitmentzone.util.Constants.ErrorMessages.INTERNAL_SERVER
 public class ApplicationsController {
     private final RecruitmentZoneService recruitmentZoneService;
 
+    private final int pageSize = 10;
 
     private final Logger log = LoggerFactory.getLogger(ApplicationsController.class);
 
@@ -35,10 +36,9 @@ public class ApplicationsController {
     @GetMapping("/applications-administration")
     public String applications(Model model) {
         try {
-            int pageSize = 10;
-            recruitmentZoneService.findAllApplications(model,1, pageSize, "created", "desc");
+            recruitmentZoneService.findAllApplications(model, 1, pageSize, "created", "desc");
         } catch (Exception e) {
-            log.error("<-- applications -->  Exception \n {}", e.getMessage());
+            log.error("<-- applications -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // applicationsList , findAllApplicationsResponse , internalServerError
@@ -47,12 +47,16 @@ public class ApplicationsController {
 
     @GetMapping("/paginatedApplications/{pageNo}")
     public String findPaginatedApplications(@PathVariable(value = "pageNo") int pageNo,
-                                     @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
-        int pageSize = 10;
+                                            @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDirection, Model model) {
         log.info("Page number  {}", pageNo);
         log.info("sortField {}", sortField);
         log.info("sortDirection {}", sortDirection);
-        recruitmentZoneService.findAllApplications(model,pageNo, pageSize, sortField, sortDirection);
+        try {
+            recruitmentZoneService.findAllApplications(model, pageNo, pageSize, sortField, sortDirection);
+        } catch (Exception e) {
+            log.error("<-- findPaginatedApplications -->  Exception \n ", e);
+            model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
+        }
         return "fragments/applications/application-administration :: applications-admin-table";
     }
 
@@ -63,7 +67,7 @@ public class ApplicationsController {
         try {
             recruitmentZoneService.vacancyApplicationForm(model, vacancyID);
         } catch (Exception e) {
-            log.info("<-- showVacancyApplicationForm -->  Exception \n {}", e.getMessage());
+            log.error("<-- showVacancyApplicationForm -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //  vacancyName , vacancyID , newApplicationDTO , internalServerError , vacancyApplicationFormResponse , newApplicationDTO
@@ -72,20 +76,14 @@ public class ApplicationsController {
 
     @PostMapping("/save-application")
     public String saveSubmission(@Valid @ModelAttribute("newApplicationDTO") NewApplicationDTO newApplicationDTO,
-                                 BindingResult bindingResult, Model model ) {
+                                 BindingResult bindingResult, Model model) {
         if (bindingResult.hasFieldErrors()) {
 
-            recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
+            //recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
 
-         /*   List<ObjectError> errors = bindingResult.getAllErrors();
-            for (ObjectError error : errors) {
-                System.out.println(error.getDefaultMessage());
-            }*/
             //  vacancyName , vacancyID , newApplicationDTO , vacancyApplicationFormResponse , newApplicationDTO , bindingResult
             return "fragments/applications/apply-now";
-        }
-
-        else {
+        } else {
             try {
                 recruitmentZoneService.saveApplication(newApplicationDTO, model);
                 // applicationOutcome , createCandidateApplication , invalidFileException
@@ -97,7 +95,7 @@ public class ApplicationsController {
                 }
 
             } catch (Exception e) {
-                log.error("<-- saveSubmission -->  Exception \n {}", e.getMessage());
+                log.error("<-- saveSubmission -->  Exception \n ", e);
                 model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
                 recruitmentZoneService.vacancyApplicationForm(model, newApplicationDTO.getVacancyID());
                 // ContactMessage  =   emailEventPublisher.publishWebsiteQueryReceivedEvent(message);
@@ -106,7 +104,7 @@ public class ApplicationsController {
             }
         }
 
-        // applicationOutcome
+        //
         return "fragments/applications/application-submitted";
     }
 
@@ -117,7 +115,7 @@ public class ApplicationsController {
             recruitmentZoneService.findApplicationByID(applicationID, model);
 
         } catch (Exception e) {
-            log.error("<-- viewApplication -->  Exception \n {}", e.getMessage());
+            log.error("<-- viewApplication -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // vacancyApplication , findApplicationByIDResponse , internalServerError
@@ -131,7 +129,7 @@ public class ApplicationsController {
             recruitmentZoneService.findApplicationByID(applicationID, model);
 
         } catch (Exception e) {
-            log.error("<-- updateApplication -->  Exception \n {}", e.getMessage());
+            log.error("<-- updateApplication -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         //vacancyApplication  findApplicationByIDResponse , internalServerError
@@ -153,14 +151,14 @@ public class ApplicationsController {
             recruitmentZoneService.findApplicationByID(applicationDTO.getApplicationID(), model);
 
         } catch (Exception e) {
-            log.error("<-- saveUpdatedApplicationStatus -->  Exception \n {}", e.getMessage());
+            log.info("<-- saveUpdatedApplicationStatus -->  Exception \n ", e);
             model.addAttribute("internalServerError", INTERNAL_SERVER_ERROR);
         }
         // saveApplicationStatusResponse , saveApplicationStatusResponse
         //applicationsList ,findAllApplicationsResponse
-        return "fragments/applications/update-application";
+        // return "fragments/applications/update-application";
+        return "fragments/applications/view-application";
     }
-
 
 
 }

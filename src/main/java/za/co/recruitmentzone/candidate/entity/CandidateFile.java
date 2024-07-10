@@ -32,10 +32,7 @@ public class CandidateFile implements Document, Serializable {
 
     @Column(name = "created")
     private LocalDateTime created;
-    @ManyToOne(
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @ManyToOne()
     @JoinColumn(name = "candidateID")
     private Candidate candidate;
     @Enumerated(EnumType.STRING)

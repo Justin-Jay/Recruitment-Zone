@@ -14,6 +14,8 @@ import java.time.LocalDate;
 
 @Data
 public class BlogDTO implements Serializable {
+
+    long blogID;
     @NotEmpty(message = "Must not be empty")
     private String blog_title;
     @NotEmpty(message = "Please enter description")

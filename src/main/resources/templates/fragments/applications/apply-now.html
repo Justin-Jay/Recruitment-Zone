@@ -3,8 +3,8 @@
 
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
 
-        <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
-
+  <!--      <div th:insert="~{fragments/layout/response-messages :: failureMessage(${bindingResult})}"></div>
+-->
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${invalidFileException})}"></div>
 
         <div th:insert="~{fragments/layout/response-messages :: failureMessage(${vacancyApplicationFormResponse})}"></div>
@@ -137,7 +137,10 @@
         <label for="documentAttachment">
             Attach CV:
         </label>
-
+        <p class="alert alert-danger alert-dismissible fade show"
+           th:if="*{#fields.hasErrors('documentAttachment')}"
+           th:errors="${newApplicationDTO.documentAttachment}"
+        ></p>
         <input th:type="file" name="documentAttachment" th:value="${newApplicationDTO.documentAttachment}"
                id="documentAttachment"
                class="form-control mb-4 w-25"/>

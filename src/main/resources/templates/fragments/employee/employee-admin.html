@@ -18,7 +18,7 @@
 <div th:insert="~{fragments/layout/top-nav}">Top-Nav-Bar</div>
 
 
-<div class="container-fluid home-page-section" id="body-container">
+<div class="container-fluid" id="body-container">
 
     <!--MAIN PAGE SECTION -->
 
@@ -39,6 +39,8 @@
         <div class="container-fluid">
             <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
             <div th:insert="~{fragments/layout/response-messages :: failureMessage(${loadEmployeesResponse})}"></div>
+            <div th:insert="~{fragments/layout/response-messages :: genericMessage(${saveNewEmployeeResponse})}"></div>
+
         </div>
 
         <!--PAGE CONTENT -->
@@ -49,8 +51,8 @@
 
                 <!--LEFT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
-                    <div class="container-fluid left-page-frame" id="left-page-column">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 left-page-frame">
+                    <div class="container-fluid " id="left-page-column">
                         <form class="container d-none d-md-block" action="#" th:action="@{/Employee/add-employee}"
                               th:method="post">
 
@@ -70,9 +72,8 @@
                                 Employee Name:</p>
 
 
-                            <p th:text="*{employee.enabled == true ? 'Employee Status: Active':'Not Active'}"
-                               th:value="${employee}"></p>
-
+                            <p th:text="*{employee.enabled} ? 'Employee Status: Active':'Not Active'"
+                                ></p>
                             <!--     <p th:text="*{'Status: ' + employee.enabled}"
                                     th:value="${employee}"></p>-->
 
@@ -107,7 +108,7 @@
 
                 <!--RIGHT PAGE COLUMN -->
 
-                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 ">
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
                     <div class="container-fluid " id="right-page-column">
 
                     </div>

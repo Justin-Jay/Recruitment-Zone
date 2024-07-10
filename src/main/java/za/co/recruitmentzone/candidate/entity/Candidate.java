@@ -31,23 +31,16 @@ public class Candidate implements Serializable {
     private Boolean relocation;
     @Column(name = "created")
     private LocalDateTime created;
-    @OneToMany(mappedBy = "candidate",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "candidate")
     private List<Application> applications;
-    @OneToMany(mappedBy = "candidate",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "candidate")
     private List<CandidateNote> notes;
 
-    @OneToMany(mappedBy = "candidate",
-            cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @OneToMany(mappedBy = "candidate")
     private List<CandidateFile> documents;
 
     public Candidate() {
-        // received
+        this.created = LocalDateTime.now();
     }
 
     public Candidate(String first_name, String last_name,
@@ -70,10 +63,6 @@ public class Candidate implements Serializable {
 
     public LocalDateTime getCreated() {
         return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
     }
 
     public List<CandidateFile> getDocuments() {
@@ -239,7 +228,7 @@ public class Candidate implements Serializable {
     }
 
 
-    public void addNote(CandidateNoteDTO noteDTO) {
+    public CandidateNote addNote(CandidateNoteDTO noteDTO) {
  /*       if (noteDTO == null) {
             throw new IllegalArgumentException("noteDTO cannot be null");
         }*/
@@ -250,16 +239,26 @@ public class Candidate implements Serializable {
         newNote.setCandidate(this);
         newNote.setDateCaptured(noteDTO.getDateCaptured());
         notes.add(newNote);
+       return newNote;
     }
-
+//
 
     public String printCandidate() {
         return "Candidate{" +
-                "first_name='" + first_name + '\'' +
+                "candidateID=" + candidateID +
+                ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
+                ", id_number='" + id_number + '\'' +
+                ", email_address='" + email_address + '\'' +
+                ", phone_number='" + phone_number + '\'' +
+                ", current_province=" + current_province +
+                ", current_role='" + current_role + '\'' +
+                ", current_employer='" + current_employer + '\'' +
+                ", seniority_level='" + seniority_level + '\'' +
+                ", relocation=" + relocation +
+                ", created=" + created +
                 '}';
     }
-
 
     public String printEducationLevel() {
         switch (education_level) {

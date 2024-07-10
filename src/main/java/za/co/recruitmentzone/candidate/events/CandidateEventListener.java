@@ -11,6 +11,7 @@ import za.co.recruitmentzone.communication.events.publisher.EmailEventPublisher;
 import za.co.recruitmentzone.storage.StorageService;
 
 
+
 @Component
 public class CandidateEventListener {
 
@@ -60,7 +61,7 @@ public class CandidateEventListener {
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.info("onCandidateGoogleFileEvent Exception \n",e);
             message = " onCandidateFileUploadEvent \n" +
                     "   File Upload to GCP Failed \n " +
                     e.getMessage();
@@ -68,10 +69,14 @@ public class CandidateEventListener {
 
 
         if (!message.isEmpty()) {
-            emailEventPublisher.publishFileUpload( new AdminContactMessage("CANDIDATE_FILE_UPLOAD",message));
+            emailEventPublisher.publishAdminContactMessageEvent(new AdminContactMessage("CANDIDATE_FILE_UPLOAD", message));
         }
 
     }
+
+    //
+
+
 
 }
 

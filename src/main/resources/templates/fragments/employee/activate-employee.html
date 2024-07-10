@@ -1,4 +1,4 @@
-<div class="container-fluid main-page-section">
+<div class="container-fluid page-component">
 
     <div class="container-fluid"><h2>Activate Employee</h2></div>
 
@@ -12,9 +12,11 @@
     <div class="container-fluid">
         <form action="#" th:action="@{/Employee/enable-employee}" th:object="${employee}" th:method="POST">
             <!-- Hidden input field to include the vacancyID in the POST request -->
+<!--
+            <p th:field="*{'Activate Employee: ' + employee.first_name}"  ></p>-->
             <input type="hidden" th:field="*{employeeID}" />
 
-            <button class="btn normal-button"
+            <button class="btn btn-primary"
                     hx-post="/Employee/enable-employee"
                     hx-target="#main-page-section"
                     hx-swap="innerHTML"

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Website Query</title>
+</head>
+<body>
+<div>
+    <p>Hello <!--<span th:text="${User}"></span>,</p>-->
+    <p>Website Query Details:</p>
+    <ul>
+        <li><strong>Name:</strong> <span th:text="${User}"></span></li>
+        <li><strong>Email:</strong> <span th:text="${UserEmail}"></span></li>
+        <li><strong>Query:</strong> <span th:text="${UserQuery}"></span></li>
+    </ul>
+    <p>Recruitment Zone</p>
+</div>
+</body>
+</html>

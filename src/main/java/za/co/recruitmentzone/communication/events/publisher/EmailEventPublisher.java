@@ -32,7 +32,7 @@ public class EmailEventPublisher {
         }
     }
 
-    public boolean publishFileUpload(AdminContactMessage message) {
+    public boolean publishAdminContactMessageEvent(AdminContactMessage message) {
         AdminMessageEvent wc = new AdminMessageEvent(message);
         log.info("Executing publishFileUpload Admin Message \n {} ",wc.getMessage().printAdminContactMessage());
         try {
@@ -45,7 +45,6 @@ public class EmailEventPublisher {
         }
 
     }
-
 
 
 

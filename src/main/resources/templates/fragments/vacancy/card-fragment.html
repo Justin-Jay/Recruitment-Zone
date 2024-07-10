@@ -1,18 +1,25 @@
 <div class=" card-body m-2">
-    <img src="https://picsum.photos/450/300" class="card-img-top"  alt="img"> <!-- class="img-fluid" -->
- <!--   <img src="/images/unsplash.jpg" class="card-img-top"  alt="img"/>
--->
+
+    <img th:if="${vacancy.vacancyImageRef != null}"
+         th:src="@{ ${VACANCY_IMAGE_VOL} + ${vacancy.vacancyImageRef}}"
+         class="card-img-top" alt="Vacancy Image" />
+
+    <img th:if="${vacancy.vacancyImageRef == null}"
+         src="https://picsum.photos/450/300" class="card-img-top" alt="img">
+
 
     <h5 class="card-title" th:text="${vacancy.jobTitle}">Title</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Location: ' + vacancy.location}">Location</h6>
-    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Publish Date: ' + vacancy.publish_date}">Publish Date</h6>
+    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Publish Date: ' + vacancy.publish_date}">Publish
+        Date</h6>
     <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Closing Date: ' + vacancy.end_date}">End Date</h6>
-    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Contract Type: ' + vacancy.jobType}">Contract Type</h6>
+    <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Contract Type: ' + vacancy.jobType}">Contract
+        Type</h6>
     <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${'Time: ' + vacancy.empType}">Contract Type</h6>
     <!--   Hybrid ? ,  -->
- <!--   <p class="card-text card-truncate-text" th:text="${vacancy.job_description}"></p>-->
+    <!--   <p class="card-text card-truncate-text" th:text="${vacancy.job_description}"></p>-->
 
-    <form th:action="@{/Application/apply-now}" th:method="post">
+    <form th:action="@{/Vacancy/view-home-vacancy}" th:method="post">
         <!-- Hidden input field to include the vacancyID in the POST request -->
         <input type="hidden" name="vacancyID" th:value="${vacancy.vacancyID}"/>
 

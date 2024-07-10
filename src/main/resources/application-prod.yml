@@ -17,8 +17,8 @@ spring:
     protocol: smtp
   servlet:
     multipart:
-    max-file-size: 25MB
-    max-request-size: 25MB
+      max-file-size: 25MB
+      max-request-size: 25MB
   batch:
     job:
       enabled: false
@@ -106,4 +106,13 @@ google:
   storage:
     pre: ${G_PRE_PATH}
 
-#docker run --network host --name my-dev-database -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Khum0Ram0 -d mysql:8.3.0
+blog:
+  image:
+    path: /blog-images/
+#    volume: /home/jenkins/RecruitmentZoneApplication/BlogImages/
+    volume: /RecruitmentZoneApplication/BlogImages/
+
+vacancy:
+  image:
+    path: /vacancy-images/
+    volume: /RecruitmentZoneApplication/VacancyImages/
