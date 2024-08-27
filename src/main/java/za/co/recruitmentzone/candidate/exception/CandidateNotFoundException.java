@@ -7,4 +7,7 @@ public class CandidateNotFoundException extends RzoneException {
         super(message);
     }
 
+    public CandidateNotFoundException(String failureReason, Throwable cause) {
+        super(failureReason, cause);
+    }
 }

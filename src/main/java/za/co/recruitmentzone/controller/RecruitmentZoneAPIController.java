@@ -74,7 +74,7 @@ public class RecruitmentZoneAPIController {
         try {
             vacancyService.deleteVacancy(id);
             return new ResponseEntity<>("Vacancy Deleted", HttpStatus.CREATED);
-        } catch (VacancyException exception) {
+        } catch (Exception exception) {
             log.info("Error while deleting vacancy", exception);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

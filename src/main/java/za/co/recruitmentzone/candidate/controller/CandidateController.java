@@ -234,7 +234,7 @@ public class CandidateController {
                         //recruitmentZoneService.findAllCandidates(model);
                         recruitmentZoneService.findAllCandidates(model, 1, pageSize, "created", "desc");
 
-                    } catch (CandidateException candidateException) {
+                    } catch (Exception candidateException) {
                         log.info("<-- candidateException -->   \n {}", candidateException.getMessage());
                         //candidateFormAttributes(model, candidateException.getMessage(), false);
                         model.addAttribute("createCandidateResponse", candidateException.getMessage());

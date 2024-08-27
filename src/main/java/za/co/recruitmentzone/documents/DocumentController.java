@@ -17,8 +17,6 @@ import za.co.recruitmentzone.candidate.entity.CandidateFile;
 import za.co.recruitmentzone.client.dto.ClientFileDTO;
 import za.co.recruitmentzone.client.exception.FileContentException;
 import za.co.recruitmentzone.controller.RecruitmentZoneAPIController;
-import za.co.recruitmentzone.exception.DocumentLocationError;
-import za.co.recruitmentzone.exception.NoResultsFoundException;
 import za.co.recruitmentzone.service.RecruitmentZoneService;
 
 import java.io.FileInputStream;

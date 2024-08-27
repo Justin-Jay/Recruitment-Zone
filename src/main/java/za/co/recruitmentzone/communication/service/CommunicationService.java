@@ -60,11 +60,10 @@ public class CommunicationService {
             log.info("<---AUTO EMAIL RESPONSE SUCCESS MESSAGE SENT--->");
 
         } catch (MessagingException e) {
-            log.info("<--- sendWebsiteQuery MessagingException ---> \n",e);
+            log.info("<--- sendWebsiteQuery MessagingException ---> \n", e);
             // Handle exception (log or throw custom exception)
-        }
-        catch (Exception e) {
-            log.info("<--- sendWebsiteQuery Exception ---> \n",e);
+        } catch (Exception e) {
+            log.info("<--- sendWebsiteQuery Exception ---> \n", e);
         }
     }
 
@@ -91,10 +90,9 @@ public class CommunicationService {
             log.info("<---AUTO EMAIL RESPONSE SUCCESS MESSAGE SENT--->");
 
         } catch (MessagingException e) {
-            log.info("<--- sendAutoResponse MessagingException ---> \n",e);
-        }
-        catch (Exception e) {
-            log.info("<--- sendAutoResponse Exception ---> \n",e);
+            log.info("<--- sendAutoResponse MessagingException ---> \n", e);
+        } catch (Exception e) {
+            log.info("<--- sendAutoResponse Exception ---> \n", e);
         }
     }
 
@@ -124,11 +122,10 @@ public class CommunicationService {
 
             return true;
         } catch (MessagingException e) {
-            log.info("<--- sendRegistrationEmail MessagingException ---> \n",e);
+            log.info("<--- sendRegistrationEmail MessagingException ---> \n", e);
             return false;
-        }
-        catch (Exception e) {
-            log.info("<--- sendWebsiteQuery Exception ---> \n",e);
+        } catch (Exception e) {
+            log.info("<--- sendWebsiteQuery Exception ---> \n", e);
             return false;
         }
     }
@@ -139,17 +136,16 @@ public class CommunicationService {
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         try {
             helper.setFrom(rzoneMailAddress);
-//            helper.setTo(message.getEventToEmail());
-            helper.setTo("admin.agent@kiunga.co.za");
+            helper.setTo(message.getToEmail());
+            // helper.setTo("admin.agent@kiunga.co.za");
             helper.setSubject(message.getSubject());
             helper.setText(message.getMessageBody());
             javaMailSender.send(mimeMessage);
             log.info("<--- sendAdminNotification Message Sent successfully --->");
         } catch (MessagingException e) {
-            log.info("<--- sendAdminNotification MessagingException --->",e);
-        }
-        catch (Exception e) {
-            log.info("<--- sendAdminNotification Exception ---> \n",e);
+            log.info("<--- sendAdminNotification MessagingException --->", e);
+        } catch (Exception e) {
+            log.info("<--- sendAdminNotification Exception ---> \n", e);
 
         }
 
@@ -177,12 +173,10 @@ public class CommunicationService {
             javaMailSender.send(mimeMessage);
             log.info("<--- sendApplicationAcknowledgement sent --->");
 
-        }
-        catch (MessagingException e) {
+        } catch (MessagingException e) {
             log.info("<--- sendApplicationAcknowledgement MessagingException \n --->", e);
-        }
-        catch (Exception e) {
-            log.info("<--- sendApplicationAcknowledgement Exception ---> \n",e);
+        } catch (Exception e) {
+            log.info("<--- sendApplicationAcknowledgement Exception ---> \n", e);
 
         }
     }

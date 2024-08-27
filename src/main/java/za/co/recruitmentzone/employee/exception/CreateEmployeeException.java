@@ -7,6 +7,7 @@ public class CreateEmployeeException extends RzoneException {
     public CreateEmployeeException(String message) {
         super(message);
     }
+
     public CreateEmployeeException(String message, Throwable cause) {
         super(message, cause);
     }

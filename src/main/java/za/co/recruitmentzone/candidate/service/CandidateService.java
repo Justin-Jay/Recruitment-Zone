@@ -41,7 +41,7 @@ public class CandidateService {
         return candidateRepository.save(candidate);
     }
 
-    public Candidate getcandidateByID(Long clientID) {
+    public Candidate getcandidateByID(Long clientID) throws CandidateNotFoundException {
         Optional<Candidate> optionalCandidate = candidateRepository.findById(clientID);
         return optionalCandidate.orElseThrow(() -> new CandidateNotFoundException("Could not find candidate with ID " + clientID));
     }

@@ -7,4 +7,8 @@ public class CandidateException extends RzoneException {
     public CandidateException(String message) {
         super(message);
     }
+
+    public CandidateException(String failureReason, Throwable cause) {
+        super(failureReason, cause);
+    }
 }

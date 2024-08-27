@@ -110,9 +110,8 @@ public class EmployeeService {
     public boolean saveUpdatedEmployee(Employee updated) {
         log.info("<--  saveUpdatedEmployee - employee {} -->", updated.printEmployee());
 
-//        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByUsername(updated.getUsername());
-        Employee optionalEmployee = findEmployeeByID(updated.getEmployeeID());
-        if (optionalEmployee != null) {
+        try {
+            Employee optionalEmployee = findEmployeeByID(updated.getEmployeeID());
             log.info("<--  saveUpdatedEmployee - optionalEmployee.isPresent {} -->", updated);
 
             if (!updated.getFirst_name().equalsIgnoreCase(optionalEmployee.getFirst_name())) {
@@ -131,25 +130,24 @@ public class EmployeeService {
                     createUserNameAndEmail(optionalEmployee.getFirst_name(), optionalEmployee.getLast_name())
             );
 
-            Employee e = employeeRepository.save(optionalEmployee);
-
-            if (e != null) {
-                return true;
-            } else throw new EmployeeNotSavedException("Employee not found");
-
-        } else throw new EmployeeNotFoundException("Employee not found");
-
+            employeeRepository.save(optionalEmployee);
+            return true;
+        } catch (EmployeeNotFoundException e) {
+            log.info("<--- saveUpdatedEmployee - EmployeeNotFoundException {} -->", e.getMessage());
+            return false;
+        }
     }
 
     public boolean enableEmployee(Employee employee) {
         try {
             employee.setEnabled(true);
             employeeRepository.save(employee);
+            return true;
+        } catch (Exception e) {
+            log.info("<--  enableEmployee - exception {} -->", e.getMessage());
+            return false;
         }
-        catch (Exception e) {
-            log.info("<--  enableEmployee - exception {}", e.getMessage());
-        }
-        return true;
+
     }
 
     public String createUserNameAndEmail(String firstName, String LastName) {
@@ -166,7 +164,7 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee getEmployeeByid(Long employeeID) {
+    public Employee getEmployeeByid(Long employeeID) throws EmployeeNotFoundException {
         Optional<Employee> op = employeeRepository.findById(employeeID);
         return op.orElseThrow(() -> new EmployeeNotFoundException("<--- getEmployeeByid Employee Not Found: " + employeeID + "--->"));
     }
@@ -175,12 +173,12 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee findEmployeeByUsername(String username) {
+    public Employee findEmployeeByUsername(String username) throws EmployeeNotFoundException {
         Optional<Employee> op = employeeRepository.findEmployeeByUsername(username);
         return op.orElseThrow(() -> new EmployeeNotFoundException("Employee Not found " + username));
     }
 
-    public Employee findEmployeeByID(Long id) {
+    public Employee findEmployeeByID(Long id) throws EmployeeNotFoundException {
         Optional<Employee> op = employeeRepository.findById(id);
         return op.orElseThrow(() -> new EmployeeNotFoundException("EmployeeID Not found " + id));
     }

@@ -13,14 +13,24 @@ public class AdminContactMessage {
     private final String messageBody;
     private final String subject;
 
+    private String toEmail;
+
     public AdminContactMessage(String subject,String messageBody) {
         this.subject = subject;
         this.messageBody = messageBody;
-
+    }
+    public AdminContactMessage(String subject,String messageBody,String toEmail) {
+        this.subject = subject;
+        this.messageBody = messageBody;
+        this.toEmail = toEmail;
     }
 
     public String getEventToEmail() {
         return eventToEmail;
+    }
+
+    public String getToEmail() {
+        return toEmail;
     }
 
     public String getName() {
@@ -42,6 +52,7 @@ public class AdminContactMessage {
         return "AdminContactMessage{" +
                 ", subject='" + subject + '\'' +
                 ", messageBody='" + messageBody + '\'' +
+                ", toEmail='" + (toEmail!=null? toEmail: "toEMail is null") + '\'' +
                 '}';
     }
 }

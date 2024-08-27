@@ -34,8 +34,8 @@ public class WebSecurityConfig {
 
         String[] promPaths = {"/actuator/prometheus/"};
 
-        //var entryPoint = new HxRefreshHeaderAuthenticationEntryPoint();
-        //var requestMatcher = new RequestHeaderRequestMatcher("HX-Request");
+        var entryPoint = new HxRefreshHeaderAuthenticationEntryPoint();
+        var requestMatcher = new RequestHeaderRequestMatcher("HX-Request");
 
         httpSecurity.authorizeHttpRequests(configurer ->
                         configurer
@@ -48,10 +48,10 @@ public class WebSecurityConfig {
                         form.loginPage("/log-in")
                                 .loginProcessingUrl("/authenticateTheUser")
                                 .permitAll())
-                .logout(LogoutConfigurer::permitAll);
-                //.exceptionHandling(exception ->
-                       // exception.defaultAuthenticationEntryPointFor(entryPoint,
-                        //        requestMatcher));
+                .logout(LogoutConfigurer::permitAll)
+                .exceptionHandling(exception ->
+                        exception.defaultAuthenticationEntryPointFor(entryPoint,
+                                requestMatcher));
 
         return httpSecurity.build();
     }

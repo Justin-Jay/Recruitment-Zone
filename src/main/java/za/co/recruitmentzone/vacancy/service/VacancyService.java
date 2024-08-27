@@ -12,6 +12,7 @@ import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.util.enums.VacancyStatus;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 import za.co.recruitmentzone.vacancy.exception.VacancyException;
+import za.co.recruitmentzone.vacancy.exception.VacancyNotFoundException;
 import za.co.recruitmentzone.vacancy.repository.VacancyRepository;
 
 import java.util.List;
@@ -31,10 +32,10 @@ public class VacancyService {
         return vacancyRepository.findAll();
     }
 
-    public Vacancy findById(Long id){
+    public Vacancy findById(Long id) throws VacancyNotFoundException {
         log.info(" <--- VacancyService findById {} ",id);
         Optional<Vacancy> op = vacancyRepository.findById(id);
-        return op.orElseThrow(()-> new VacancyException("Vacancy not found: "+id));
+        return op.orElseThrow(()-> new VacancyNotFoundException("Vacancy not found: "+id));
     }
 
     public List<Vacancy> findVacanciesByTitle(String title){

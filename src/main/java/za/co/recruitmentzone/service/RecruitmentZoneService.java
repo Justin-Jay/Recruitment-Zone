@@ -1,7 +1,5 @@
 package za.co.recruitmentzone.service;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tika.Tika;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -10,7 +8,6 @@ import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +23,6 @@ import za.co.recruitmentzone.blog.exception.BlogNotFoundException;
 import za.co.recruitmentzone.blog.exception.BlogNotSavedException;
 import za.co.recruitmentzone.blog.service.BlogService;
 import za.co.recruitmentzone.candidate.entity.CandidateFile;
-import za.co.recruitmentzone.candidate.events.CandidateAppliedEvent;
 import za.co.recruitmentzone.candidate.events.CandidateEventPublisher;
 import za.co.recruitmentzone.candidate.service.CandidateFileService;
 import za.co.recruitmentzone.candidate.dto.CandidateFileDTO;
@@ -53,7 +49,6 @@ import za.co.recruitmentzone.client.service.ClientService;
 import za.co.recruitmentzone.client.service.ContactPersonService;
 import za.co.recruitmentzone.communication.entity.AdminContactMessage;
 import za.co.recruitmentzone.communication.entity.ContactMessage;
-import za.co.recruitmentzone.communication.events.WebsiteMessageEvent;
 import za.co.recruitmentzone.communication.service.CommunicationService;
 import za.co.recruitmentzone.documents.*;
 import za.co.recruitmentzone.employee.dto.EmployeeDTO;
@@ -62,7 +57,7 @@ import za.co.recruitmentzone.employee.entity.Employee;
 import za.co.recruitmentzone.employee.exception.*;
 import za.co.recruitmentzone.employee.service.EmployeeService;
 import za.co.recruitmentzone.employee.service.TokenVerificationService;
-import za.co.recruitmentzone.exception.NoResultsFoundException;
+import za.co.recruitmentzone.documents.NoResultsFoundException;
 import za.co.recruitmentzone.util.Constants;
 import za.co.recruitmentzone.util.enums.*;
 import za.co.recruitmentzone.vacancy.dto.VacancyDTO;
@@ -70,6 +65,7 @@ import za.co.recruitmentzone.vacancy.dto.VacancyImageDTO;
 import za.co.recruitmentzone.vacancy.dto.VacancyStatusDTO;
 import za.co.recruitmentzone.vacancy.entity.Vacancy;
 import za.co.recruitmentzone.vacancy.exception.VacancyException;
+import za.co.recruitmentzone.vacancy.exception.VacancyNotFoundException;
 import za.co.recruitmentzone.vacancy.service.VacancyService;
 
 import javax.imageio.IIOImage;
@@ -398,7 +394,17 @@ public class RecruitmentZoneService {
                 model.addAttribute("reverseSortDir", "asc".equals("asc") ? "desc" : "asc");
                 model.addAttribute("candidateNoteDTO", candidateNoteDTO);
 
-            } else throw new ClientNotFoundException("No clients found. contact system administrator");
+            } else {
+                model.addAttribute("totalPages", notes.getTotalPages());
+                model.addAttribute("totalItems", notes.getTotalElements());
+                log.info(" addCandidateNote totalItems = {} ", notes.getTotalElements());
+                model.addAttribute("currentPage", 1);
+                model.addAttribute("sortField", "dateCaptured");
+                model.addAttribute("sortDir", "desc");
+                model.addAttribute("reverseSortDir", "asc".equalsIgnoreCase("asc") ? "desc" : "asc");
+                model.addAttribute("candidateNoteDTO", candidateNoteDTO);
+                model.addAttribute("NO notes to display ");
+            }
 
         } catch (CandidateNotFoundException candidateNotFoundException) {
             model.addAttribute("addCandidateNoteResponse", candidateNotFoundException.getMessage());
@@ -483,19 +489,20 @@ public class RecruitmentZoneService {
                     "desc", candidate);
             log.info("<-- findCandidateNotes notes.getTotalPages {} -->", notes.getTotalPages());
             log.info("<-- findCandidateNotes notes.getTotalElements {} -->", notes.getTotalElements());
-            if (notes != null) {
+
+            if (notes.getTotalElements() > 0) {
+
                 model.addAttribute("existingNotes", notes);
                 model.addAttribute("totalPages", notes.getTotalPages());
                 model.addAttribute("totalItems", notes.getTotalElements());
-                log.info(" findCandidateNotes totalItems = {} ", notes.getTotalElements());
                 model.addAttribute("currentPage", 1);
                 model.addAttribute("sortField", "dateCaptured");
                 model.addAttribute("sortDir", "desc");
                 model.addAttribute("reverseSortDir", "asc".equals("asc") ? "desc" : "asc");
                 model.addAttribute("candidate", candidate);
-
-            } else throw new ClientNotFoundException("No clients found. contact system administrator");
-
+            } else {
+                model.addAttribute("findCandidateNotesResponse", "No notes to display");
+            }
         } catch (CandidateNotFoundException candidateNotFoundException) {
             model.addAttribute("addCandidateNoteResponse", candidateNotFoundException.getMessage());
             log.info("<--  addCandidateNote candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
@@ -530,12 +537,14 @@ public class RecruitmentZoneService {
 
                 } else throw new CandidateNotFoundException("No clients found. contact system administrator");
 
-
-            } else throw new ClientNotFoundException("Client Note Found");
+            } else  {
+                model.addAttribute("findCandidateNotesResponse", "CandidateNotFound "+ candidateID);
+                log.info("<--  findAllClients candidate not found {} -->",candidateID);
+            }
 
         } catch (CandidateNotFoundException candidateNotFoundException) {
-            model.addAttribute("findCandidateNotes", candidateNotFoundException.getMessage());
-            log.info("<--  findAllClients clientNotFoundException {} -->", candidateNotFoundException.getMessage());
+            model.addAttribute("findCandidateNotesResponse", "CandidateNotFound "+ candidateID);
+            log.info("<--  findAllClients candidateNotFoundException {} -->", candidateNotFoundException.getMessage());
         }
     }
 
@@ -660,69 +669,66 @@ public class RecruitmentZoneService {
     }
 
     public void submitCandidateApplication(NewApplicationDTO newApplicationDTO, Model model) {
-        log.info("<-- createCandidateApplication  newApplicationDTO: {} -->", newApplicationDTO.printNewApplicationDTO());
-        try {
-            Application application = createApplication(newApplicationDTO);
-            if (application != null) {
-                String outcome = "Application submitted successfully. Agent will be in touch";
-                // Application submitted successfully. Agent will be in touch
-                model.addAttribute("applicationOutcome", outcome);
+        log.info("<-- submitCandidateApplication  newApplicationDTO: {} -->", newApplicationDTO.printNewApplicationDTO());
+        Application application = createApplication(newApplicationDTO);
+        if (application != null) {
+            String outcome = "Application submitted successfully. Agent will be in touch";
+            // Application submitted successfully. Agent will be in touch
+            model.addAttribute("applicationOutcome", outcome);
 
-                // Notify All concerned parties
+            // Notify All concerned parties
 
-                String subject = "New Application For: "+ application.getVacancy().getJobTitle();
-
-
-                String result = MessageFormat.format(" Application submitted for {0} submitted.", application.getVacancy().getJobTitle() );
-                String string = new StringBuilder(result).toString();
-                // what should the body of the email include
-
-                AdminContactMessage adminMessage = new AdminContactMessage(subject,string);
+            String subject = "New Application For: " + application.getVacancy().getJobTitle();
 
 
-                ContactMessage contactMessage = new ContactMessage();
-                contactMessage.setName(application.getCandidate().getFirst_name());
-                String candidateEmail = application.getCandidate().getEmail_address();
-               // contactMessage.setEmail();
-                contactMessage.setToEmail(candidateEmail);
-                String vacancyName  = application.getVacancy().getJobTitle();
-                contactMessage.setSubject("Application For: " + vacancyName +" submitted successfully" );
+            String result = MessageFormat.format(" Application submitted for {0} submitted.", application.getVacancy().getJobTitle());
+            String messageBody = new StringBuilder(result).toString();
+            // what should the body of the email include
+            String employeeEmailAddress = application.getVacancy().getEmployee().getEmail();
 
-                candidateEventPublisher.publishCandidateAppliedEvent(application,adminMessage,contactMessage);
+            AdminContactMessage adminMessage = new AdminContactMessage(subject, messageBody, employeeEmailAddress);
 
-                log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
-            }
-        } catch (CandidateException e) {
-            log.info("<-- createCandidateApplication  CandidateException: {} -->", e.getMessage());
-            model.addAttribute("createCandidateApplicationResponse", "Failed to create application... Please try again.");
+
+            ContactMessage contactMessage = new ContactMessage();
+            contactMessage.setName(application.getCandidate().getFirst_name());
+            String candidateEmail = application.getCandidate().getEmail_address();
+            // contactMessage.setEmail();
+            contactMessage.setToEmail(candidateEmail);
+            String vacancyName = application.getVacancy().getJobTitle();
+            contactMessage.setSubject("Application For: " + vacancyName + " submitted successfully");
+
+            candidateEventPublisher.publishCandidateAppliedEvent(application, adminMessage, contactMessage);
+
+            log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
+        } else {
+            log.info("<-- createCandidateApplication Failed to create application -->");
+            model.addAttribute("submitCandidateApplicationResponse", "Failed to create application");
         }
     }
 
 
-
     public void createCandidateApplication(NewApplicationDTO newApplicationDTO, Model model) {
         log.info("<-- createCandidateApplication  newApplicationDTO: {} -->", newApplicationDTO.printNewApplicationDTO());
-        try {
-            Application application = createApplication(newApplicationDTO);
-            if (application != null) {
-                String outcome = "Candidate created successfully.";
-                // Application submitted successfully. Agent will be in touch
-                model.addAttribute("creationOutcome", outcome
-                );
-                // reload candidate
-                findCandidateNotes(application.getCandidate().getCandidateID(), model, 5);
+        Application application = createApplication(newApplicationDTO);
+        if (application != null) {
+            String outcome = "Candidate created successfully.";
+            // Application submitted successfully. Agent will be in touch
+            model.addAttribute("creationOutcome", outcome
+            );
+            // reload candidate
+            findCandidateNotes(application.getCandidate().getCandidateID(), model, 5);
 
-                Candidate candidate = application.getCandidate();
-                model.addAttribute("candidate", candidate);
-                model.addAttribute("existingNotes", candidate.getNotes());
-                CandidateNoteDTO candidateNoteDTO = new CandidateNoteDTO();
-                candidateNoteDTO.setCandidateID(candidate.getCandidateID());
-                model.addAttribute("candidateNoteDTO", candidateNoteDTO);
-                log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
-            }
-        } catch (CandidateException e) {
-            log.info("<-- createCandidateApplication  CandidateException: {} -->", e.getMessage());
+            Candidate candidate = application.getCandidate();
+            model.addAttribute("candidate", candidate);
+            model.addAttribute("existingNotes", candidate.getNotes());
+            CandidateNoteDTO candidateNoteDTO = new CandidateNoteDTO();
+            candidateNoteDTO.setCandidateID(candidate.getCandidateID());
+            model.addAttribute("candidateNoteDTO", candidateNoteDTO);
+            log.info("<-- createCandidateApplication  application != null : {} -->", outcome);
+        } else {
+            log.info("<-- createCandidateApplication  CandidateException: {} -->");
             model.addAttribute("createCandidateApplicationResponse", "Failed to create application");
+
         }
     }
 
@@ -761,9 +767,17 @@ public class RecruitmentZoneService {
         }
         Application application = new Application();
         // link application with vacancy
-        Vacancy v = vacancyService.findById(newApplicationDTO.getVacancyID());
-        v.addApplication(application);
-        vacancyService.save(v);
+
+
+        try {
+            Vacancy v = vacancyService.findById(newApplicationDTO.getVacancyID());
+            v.addApplication(application);
+            vacancyService.save(v);
+        } catch (VacancyNotFoundException vacancyNotFoundException) {
+            log.info("<--- Failed to link application with vacancy : new application {} ---> ", newApplicationDTO.getVacancyID());
+            log.info("About to Save New Application \n {}", vacancyNotFoundException.getMessage());
+
+        }
         // link candidate with application
         candidate.AddApplication(application);
         candidateService.save(candidate);
@@ -776,7 +790,10 @@ public class RecruitmentZoneService {
             candidateEventPublisher.publishCandidateGoogleFileEvent(file.getFileID(), file);
 
             return application;
-        } else throw new CandidateException("Failed to create Candidate Application:");
+        } else {
+            log.info("<--- createApplication Application not saved --->");
+            return null;
+        }
     }
 
     public void findClientDocuments(Model model, Long clientID) {
@@ -827,8 +844,8 @@ public class RecruitmentZoneService {
             model.addAttribute("clientFileDTO", fileDTO);
 
             log.info("<-- findVacancyDocuments getTotalPages {} -->", vacancyDocs.getTotalPages());
-        } catch (ClientNotFoundException clientNotFoundException) {
-            model.addAttribute("findVacancyDocumentsResponse", clientNotFoundException.getMessage());
+        } catch (VacancyNotFoundException vacancyNotFoundException) {
+            model.addAttribute("findVacancyDocumentsResponse", vacancyNotFoundException.getMessage());
         }
     }
 
@@ -852,8 +869,8 @@ public class RecruitmentZoneService {
 
 
             log.info("<-- findVacancyDocuments getTotalPages {} -->", vacancyDocs.getTotalPages());
-        } catch (ClientNotFoundException clientNotFoundException) {
-            model.addAttribute("findVacancyDocumentsResponse", clientNotFoundException.getMessage());
+        } catch (VacancyNotFoundException vacancyNotFoundException) {
+            model.addAttribute("findVacancyDocumentsResponse", vacancyNotFoundException.getMessage());
         }
     }
 
@@ -900,37 +917,33 @@ public class RecruitmentZoneService {
 
     public void saveExistingEmployee(Principal principal, Employee employee, Model model) {
         log.info("<--  saveExistingEmployee {} -->", employee.printEmployee());
-        try {
-            boolean employeeResponse = employeeService.saveUpdatedEmployee(employee);
-            log.info("<--  saveExistingEmployee - Employee Saved {} -->", employeeResponse);
-            if (employeeResponse) {
-                model.addAttribute("saveExistingEmployeeResponse", "Employee updated");
-                loadAuthorities(principal, model);
-                findAllEmployees(model);
-            } else throw new EmployeeNotFoundException("Failed to update employee");
-        } catch (EmployeeNotFoundException | EmployeeNotSavedException e) {
+        boolean employeeResponse = employeeService.saveUpdatedEmployee(employee);
+        log.info("<--  saveExistingEmployee - Employee Saved {} -->", employeeResponse);
+        if (employeeResponse) {
+            model.addAttribute("saveExistingEmployeeResponse", "Employee updated");
             loadAuthorities(principal, model);
             findAllEmployees(model);
-            model.addAttribute("saveExistingEmployeeResponse", e.getMessage());
-            log.info("<--  saveExistingEmployee EmployeeNotFoundException {} -->", e.getMessage());
+        } else {
+            loadAuthorities(principal, model);
+            findAllEmployees(model);
+            model.addAttribute("saveExistingEmployeeResponse", "Employee not updated");
+            log.info("<--  saveExistingEmployee Employee Not Updated -->");
         }
     }
 
     public void enableEmployee(Principal principal, Employee employee, Model model) {
         log.info("<--  saveExistingEmployee {} -->", employee.printEmployee());
-        try {
-            boolean employeeResponse = employeeService.enableEmployee(employee);
-            log.info("<--  saveExistingEmployee - Employee Saved {} -->", employeeResponse);
-            if (employeeResponse) {
-                model.addAttribute("enableEmployeeResponse", "Employee activated");
-                loadAuthorities(principal, model);
-                findAllEmployees(model);
-            } else throw new EmployeeNotFoundException("Failed to update employee");
-        } catch (EmployeeNotFoundException | EmployeeNotSavedException e) {
+        boolean employeeResponse = employeeService.enableEmployee(employee);
+        log.info("<--  saveExistingEmployee - Employee Saved {} -->", employeeResponse);
+        if (employeeResponse) {
+            model.addAttribute("enableEmployeeResponse", "Employee activated");
             loadAuthorities(principal, model);
             findAllEmployees(model);
-            model.addAttribute("enableEmployeeResponse", e.getMessage());
-            log.info("<--  enableEmployee EmployeeNotFoundException | EmployeeNotSavedException {} -->", e.getMessage());
+        } else {
+            log.info("<--  enableEmployee Employee Not activated -->");
+            model.addAttribute("enableEmployeeResponse", "Employee Not activated : " + employee.getName());
+            loadAuthorities(principal, model);
+            findAllEmployees(model);
         }
     }
 
@@ -948,10 +961,8 @@ public class RecruitmentZoneService {
             try {
                 List<ROLE> authorities = findEmployeeAuthorities(e);
                 //authorities = findAllAuthorities();
-                if (authorities != null) {
-                    model.addAttribute("authorities", authorities);
-                    log.info("<--  loadAuthorities authorities != null {} -->", authorities);
-                } else throw new RolesNotFoundException("Failed to load Authorities");
+                model.addAttribute("authorities", authorities);
+                log.info("<--  loadAuthorities authorities != null {} -->", authorities);
 
             } catch (RolesNotFoundException rolesNotFoundException) {
                 log.info("<--  loadAuthorities rolesNotFoundException {} -->", rolesNotFoundException.getMessage());
@@ -973,11 +984,8 @@ public class RecruitmentZoneService {
             try {
                 List<ROLE> authorities = findEmployeeAuthorities(e);
                 // authorities = findAllAuthorities();
-                if (authorities != null) {
-                    model.addAttribute("authorities", authorities);
-                    log.info("<--  reloadAuthorities authorities != null {} -->", authorities);
-                } else throw new RolesNotFoundException("Failed to load Authorities");
-
+                model.addAttribute("authorities", authorities);
+                log.info("<--  reloadAuthorities authorities != null {} -->", authorities);
             } catch (RolesNotFoundException rolesNotFoundException) {
                 log.info("<--  reloadAuthorities rolesNotFoundException {} -->", rolesNotFoundException.getMessage());
                 model.addAttribute("loadAuthoritiesResponse", rolesNotFoundException.getMessage());
@@ -989,7 +997,7 @@ public class RecruitmentZoneService {
 
     }
 
-    public Employee findEmployeeByEmail(String email) {
+    public Employee findEmployeeByEmail(String email) throws EmployeeNotFoundException {
         log.info(" findEmployeeByEmail  {}", email);
         Employee oe = employeeService.getEmployeeByEmail(email);
         if (oe != null) {
@@ -1010,32 +1018,28 @@ public class RecruitmentZoneService {
         }
     }
 
-    public List<ROLE> findEmployeeAuthorities(Employee employee) {
+    public List<ROLE> findEmployeeAuthorities(Employee employee) throws RolesNotFoundException {
         List<ROLE> returnList = new ArrayList<>();
-        try {
-            log.info("Searching for Employee: {}", employee.printEmployee());
-            List<Authority> userAuths = employee.getAuthorities();
-            log.info("Employee Authority list size: \n {}", userAuths.size());
-            Authority admin = new Authority(ROLE_ADMIN);
-            admin.setEmployee(employee);
-            Authority manager = new Authority(ROLE_MANAGER);
-            manager.setEmployee(employee);
-            Authority emp = new Authority(ROLE_EMPLOYEE);
-            emp.setEmployee(employee);
-            if (userAuths.contains(admin)) {
-                returnList = new ArrayList<>();
-                returnList.add(ROLE_ADMIN);
-                returnList.add(ROLE_MANAGER);
-                returnList.add(ROLE_EMPLOYEE);
-            } else if (!userAuths.contains(admin) && userAuths.contains(manager)) {
-                returnList = new ArrayList<>();
-                returnList.add(ROLE_MANAGER);
-                returnList.add(ROLE_EMPLOYEE);
-            } else {
-                returnList = null;
-            }
-        } catch (Exception e) {
-            log.info(e.getMessage());
+        log.info("Searching for Employee: {}", employee.printEmployee());
+        List<Authority> userAuths = employee.getAuthorities();
+        log.info("Employee Authority list size: \n {}", userAuths.size());
+        Authority admin = new Authority(ROLE_ADMIN);
+        admin.setEmployee(employee);
+        Authority manager = new Authority(ROLE_MANAGER);
+        manager.setEmployee(employee);
+        Authority emp = new Authority(ROLE_EMPLOYEE);
+        emp.setEmployee(employee);
+        if (userAuths.contains(admin)) {
+            returnList = new ArrayList<>();
+            returnList.add(ROLE_ADMIN);
+            returnList.add(ROLE_MANAGER);
+            returnList.add(ROLE_EMPLOYEE);
+        } else if (!userAuths.contains(admin) && userAuths.contains(manager)) {
+            returnList = new ArrayList<>();
+            returnList.add(ROLE_MANAGER);
+            returnList.add(ROLE_EMPLOYEE);
+        } else {
+            throw new RolesNotFoundException("No Authorities Found for " + employee.getEmail());
         }
         return returnList;
     }
@@ -1057,69 +1061,72 @@ public class RecruitmentZoneService {
     public void updateVacancy(Vacancy vacancy, Model model) {
         //log.info("<--  updateVacancy vacancy {} -->", vacancy.printVacancy());
         // Retrieve the existing Vacancy from the database
-        Vacancy existingVacancy = vacancyService.findById(vacancy.getVacancyID());
-        log.info(" updateVacancy \n {}", existingVacancy.printVacancy());
-        // Check if the existingVacancy is not null (it exists in the database)
+
         try {
-            if (existingVacancy != null) {
-                log.info("<--  existingVacancy != null {} -->", existingVacancy.printVacancy());
-                // Compare and update fields
-                if (existingVacancy.getJobTitle() != null && !existingVacancy.getJobTitle().equals(vacancy.getJobTitle())) {
-                    existingVacancy.setJobTitle(vacancy.getJobTitle());
-                }
-                if (existingVacancy.getJob_description() != null && !existingVacancy.getJob_description().equals(vacancy.getJob_description())) {
-                    existingVacancy.setJob_description(vacancy.getJob_description());
-                }
-                if (existingVacancy.getSeniority_level() != null && !existingVacancy.getSeniority_level().equals(vacancy.getSeniority_level())) {
-                    existingVacancy.setSeniority_level(vacancy.getSeniority_level());
-                }
-                if (existingVacancy.getRequirements() != null && !existingVacancy.getRequirements()
-                        .equals(vacancy.getRequirements())) {
-                    existingVacancy.setRequirements(vacancy.getRequirements());
-                }
-                if (existingVacancy.getLocation() != null && !existingVacancy.getLocation().equals(vacancy.getLocation())) {
-                    existingVacancy.setLocation(vacancy.getLocation());
-                }
-                if (existingVacancy.getIndustry() != null && !existingVacancy.getIndustry().equals(vacancy.getIndustry())) {
-                    existingVacancy.setIndustry(vacancy.getIndustry());
-                }
+            Vacancy existingVacancy = vacancyService.findById(vacancy.getVacancyID());
+            log.info(" updateVacancy \n {}", existingVacancy.printVacancy());
+            log.info("<--  existingVacancy != null {} -->", existingVacancy.printVacancy());
+            // Compare and update fields
+            if (existingVacancy.getJobTitle() != null && !existingVacancy.getJobTitle().equals(vacancy.getJobTitle())) {
+                existingVacancy.setJobTitle(vacancy.getJobTitle());
+            }
+            if (existingVacancy.getJob_description() != null && !existingVacancy.getJob_description().equals(vacancy.getJob_description())) {
+                existingVacancy.setJob_description(vacancy.getJob_description());
+            }
+            if (existingVacancy.getSeniority_level() != null && !existingVacancy.getSeniority_level().equals(vacancy.getSeniority_level())) {
+                existingVacancy.setSeniority_level(vacancy.getSeniority_level());
+            }
+            if (existingVacancy.getRequirements() != null && !existingVacancy.getRequirements()
+                    .equals(vacancy.getRequirements())) {
+                existingVacancy.setRequirements(vacancy.getRequirements());
+            }
+            if (existingVacancy.getLocation() != null && !existingVacancy.getLocation().equals(vacancy.getLocation())) {
+                existingVacancy.setLocation(vacancy.getLocation());
+            }
+            if (existingVacancy.getIndustry() != null && !existingVacancy.getIndustry().equals(vacancy.getIndustry())) {
+                existingVacancy.setIndustry(vacancy.getIndustry());
+            }
 
-                if (vacancy.getPublish_date() != null && vacancy.getPublish_date() != existingVacancy.getPublish_date()) {
-                    existingVacancy.setPublish_date(vacancy.getPublish_date());
+            if (vacancy.getPublish_date() != null && vacancy.getPublish_date() != existingVacancy.getPublish_date()) {
+                existingVacancy.setPublish_date(vacancy.getPublish_date());
 
-                }
-                if (vacancy.getEnd_date() != null && vacancy.getEnd_date() != existingVacancy.getEnd_date()) {
-                    existingVacancy.setEnd_date(vacancy.getEnd_date());
-                }
-
-
-                if (existingVacancy.getStatus() != null && !existingVacancy.getStatus().equals(vacancy.getStatus())) {
-                    existingVacancy.setStatus(vacancy.getStatus());
-                }
-                if (existingVacancy.getJobType() != null && !existingVacancy.getJobType().equals(vacancy.getJobType())) {
-                    existingVacancy.setJobType(vacancy.getJobType());
-                }
-                if (existingVacancy.getEmpType() != null && !existingVacancy.getEmpType().equals(vacancy.getEmpType())) {
-                    existingVacancy.setEmpType(vacancy.getEmpType());
-                }
+            }
+            if (vacancy.getEnd_date() != null && vacancy.getEnd_date() != existingVacancy.getEnd_date()) {
+                existingVacancy.setEnd_date(vacancy.getEnd_date());
+            }
 
 
-                // Save the updated Vacancy
-                Vacancy updatedVacancy = vacancyService.save(existingVacancy);
-                //VacancyDTO vacancyDTO = convertVacancy(updatedVacancy);
-                model.addAttribute("vacancy", updatedVacancy);
-                model.addAttribute("employeeName", updatedVacancy.getEmployee().getFirst_name());
-                log.info("<-- updateVacancy existingVacancy Saved -->");
-                model.addAttribute("saveVacancyResponse", "Vacancy : " + existingVacancy.getJobTitle() + " Updated");
-            } else throw new VacancyException("No Existing Vacancy Found");
-        } catch (VacancyException vacancyException) {
-            log.info("<--  updateVacancy vacancyException {} -->", vacancyException.getMessage());
-            model.addAttribute("updateVacancyResponse", vacancyException.getMessage());
+            if (existingVacancy.getStatus() != null && !existingVacancy.getStatus().equals(vacancy.getStatus())) {
+                existingVacancy.setStatus(vacancy.getStatus());
+            }
+            if (existingVacancy.getJobType() != null && !existingVacancy.getJobType().equals(vacancy.getJobType())) {
+                existingVacancy.setJobType(vacancy.getJobType());
+            }
+            if (existingVacancy.getEmpType() != null && !existingVacancy.getEmpType().equals(vacancy.getEmpType())) {
+                existingVacancy.setEmpType(vacancy.getEmpType());
+            }
+
+
+            // Save the updated Vacancy
+            Vacancy updatedVacancy = vacancyService.save(existingVacancy);
+            //VacancyDTO vacancyDTO = convertVacancy(updatedVacancy);
+            model.addAttribute("vacancy", updatedVacancy);
+            model.addAttribute("employeeName", updatedVacancy.getEmployee().getFirst_name());
+            log.info("<-- updateVacancy existingVacancy Saved -->");
+            model.addAttribute("saveVacancyResponse", "Vacancy : " + existingVacancy.getJobTitle() + " Updated");
+        } catch (VacancyNotFoundException vacancyNotFoundException) {
+            log.info("<--  updateVacancy vacancyException {} -->", vacancyNotFoundException.getMessage());
+            model.addAttribute("updateVacancyResponse", vacancyNotFoundException.getMessage());
         }
+
     }
 
     public void saveNewVacancy(VacancyDTO vacancy, Model model) {
         try {
+            Client client = clientService.findClientByID(vacancy.getClientID());
+            Employee op = employeeService.getEmployeeByid(vacancy.getEmployeeID());
+
+
             // create vacancy
             log.info("<-- saveNewVacancy Creating vacancy VacancyDTO {} -->", vacancy.printVacancy());
             Vacancy newVacancy = new Vacancy();
@@ -1135,19 +1142,14 @@ public class RecruitmentZoneService {
             newVacancy.setJobType(vacancy.getJobType());
             newVacancy.setEmpType(vacancy.getEmpType());
 
-            Client client = clientService.findClientByID(vacancy.getClientID());
-            if (client != null) {
-                //newVacancy.setClient(client);
-                client.addVacancy(newVacancy);
-                clientService.saveExistingClient(client);
-            } else throw new VacancyException("Failed to set client to vacancy");
+            //newVacancy.setClient(client);
+            client.addVacancy(newVacancy);
+            clientService.saveExistingClient(client);
 
-            Employee op = employeeService.getEmployeeByid(vacancy.getEmployeeID());
-            if (op != null) {
-                // newVacancy.setEmployee(op);
-                op.addVacancy(newVacancy);
-                employeeService.save(op);
-            } else throw new VacancyException("Failed to set employee to vacancy");
+
+            // newVacancy.setEmployee(op);
+            op.addVacancy(newVacancy);
+            employeeService.save(op);
 
             newVacancy.setIndustry(client.getIndustry());
             newVacancy.setCreated(LocalDateTime.now());
@@ -1171,9 +1173,10 @@ public class RecruitmentZoneService {
             model.addAttribute("vacancy", vacancyDTO);
             model.addAttribute("employeeName", saved.getEmployee().getFirst_name());
             model.addAttribute("saveVacancyResponse", newVacancy.getJobTitle() + " vacancy saved");
-        } catch (VacancyException vacancyException) {
-            log.info("<-- saveVacancy  vacancyException: {} -->", vacancyException.getMessage());
-            model.addAttribute("saveVacancyResponse", vacancyException.getMessage());
+
+        } catch (ClientNotFoundException | EmployeeNotFoundException e) {
+            log.info("<-- saveVacancy  vacancyException: {} -->", e.getMessage());
+            model.addAttribute("saveVacancyResponse", e.getMessage());
         }
     }
 
@@ -1273,12 +1276,12 @@ public class RecruitmentZoneService {
 
     public void getAllVacancies(Model model, int pageNo, int pageSize, String sortField, String sortDirection) {
         log.info("<--  getAllVacancies -->");
-        try {
-            Page<Vacancy> vacancyApplicationList = vacancyService.findPaginatedVacancies(pageNo, pageSize, sortField,
-                    sortDirection);
-            log.info("<--  getAllVacancies vacancyApplicationList.getTotalElements {} -->", vacancyApplicationList.getTotalElements());
-            log.info("<--  getAllVacancies vacancyApplicationList.getTotalPages {} -->", vacancyApplicationList.getTotalPages());
+        Page<Vacancy> vacancyApplicationList = vacancyService.findPaginatedVacancies(pageNo, pageSize, sortField,
+                sortDirection);
+        log.info("<--  getAllVacancies vacancyApplicationList.getTotalElements {} -->", vacancyApplicationList.getTotalElements());
+        log.info("<--  getAllVacancies vacancyApplicationList.getTotalPages {} -->", vacancyApplicationList.getTotalPages());
 
+        if (vacancyApplicationList.getTotalElements() > 0) {
             model.addAttribute("vacancyList", vacancyApplicationList);
 
             model.addAttribute("totalPages", vacancyApplicationList.getTotalPages());
@@ -1288,9 +1291,17 @@ public class RecruitmentZoneService {
             model.addAttribute("sortDir", sortDirection);
             model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
 
-        } catch (VacancyException vacancyException) {
-            log.info("<-- findVacancyById  vacancyException: {} -->", vacancyException.getMessage());
-            model.addAttribute("findVacancyResponse", vacancyException.getMessage());
+        } else {
+            model.addAttribute("vacancyList", vacancyApplicationList);
+
+            model.addAttribute("totalPages", vacancyApplicationList.getTotalPages());
+            model.addAttribute("totalItems", vacancyApplicationList.getTotalElements());
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("sortField", sortField);
+            model.addAttribute("sortDir", sortDirection);
+            model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
+
+            model.addAttribute("findVacancyResponse", "No Vacancies Found");
         }
     }
 
@@ -1750,6 +1761,7 @@ public class RecruitmentZoneService {
         }
     }
 
+
     private String uploadVacancyImage(MultipartFile file) {
         log.info("<-- uploadVacancyImage -->");
         try {
@@ -1834,14 +1846,19 @@ public class RecruitmentZoneService {
     }
 
     public void findBlogStatus(Long blogID, Model model) {
-        log.info("<-- findBlogStatus blogID {} -->", blogID);
-        Blog blog = blogService.findById(blogID);
-        BlogStatusDTO status = new BlogStatusDTO();
-        log.info("<-- findBlogStatus new status {} -->", status.printBlogStatusDTO());
-        status.setBlogID(blogID);
-        log.info("<-- findBlogStatus new blogID {} -->", blogID);
-        status.setStatus(blog.getStatus());
-        model.addAttribute("blogStatusDTO", status);
+        try {
+            log.info("<-- findBlogStatus blogID {} -->", blogID);
+            Blog blog = blogService.findById(blogID);
+            BlogStatusDTO status = new BlogStatusDTO();
+            log.info("<-- findBlogStatus new status {} -->", status.printBlogStatusDTO());
+            status.setBlogID(blogID);
+            log.info("<-- findBlogStatus new blogID {} -->", blogID);
+            status.setStatus(blog.getStatus());
+            model.addAttribute("blogStatusDTO", status);
+        } catch (BlogNotFoundException blogNotFoundException) {
+            log.info("<--  findBlogStatus blogNotFoundException {} -->", blogNotFoundException.getMessage());
+            model.addAttribute("saveNewBlogStatusResponse", blogNotFoundException.getMessage());
+        }
     }
 
     public void saveNewBlogStatus(BlogStatusDTO blogStatusDTO, Model model) {
@@ -1899,127 +1916,146 @@ public class RecruitmentZoneService {
         }*/
 
 
-        log.info("<--  createCandidateFile  {} -->", fileDTO.printCandidateFileDTO());
-        CandidateFile file = new CandidateFile();
-
-        Candidate candidate = candidateService.getcandidateByID(fileDTO.getCandidateID());
-        log.info("<--  createCandidateFile candidate.isPresent( {} -->", candidate.printCandidate());
-        file.setCandidate(candidate);
-
-        file.setContent_type(fileDTO.getDocumentAttachment().getContentType());
-// save bytes to database
-        file.setFile_data(null);
-
-        file.setFile_name(fileDTO.getDocumentAttachment().getOriginalFilename());
-        file.setFile_size(Long.toString(fileDTO.getDocumentAttachment().getSize()));
-        file.setCandidateDocumentType(fileDTO.getDocumentType());
-        file.setCreated(LocalDateTime.now());
-        log.info("New CandidateFile {}", file.printDocument());
-        // Local file storage
-
-        String docType = fileDTO.getDocumentType().toString();
-        String candidateIDNumber = candidate.getId_number();
-        String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
-
-        log.info("fileDirectory/Folder: {}{}", fileDirectory, "CANDIDATE_FILES");
-        String directory = fileDirectory + "/CANDIDATE_FILES/" + candidateIDNumber + "/" + docType + "/" + formattedDate;
-
-
-        // Local storage
-
-        Path storageLocation = null;
         try {
-            Path uploadPath = Path.of(directory);
-            if (Files.notExists(uploadPath)) {
-                Files.createDirectories(uploadPath);
+
+            log.info("<--  createCandidateFile  {} -->", fileDTO.printCandidateFileDTO());
+            CandidateFile file = new CandidateFile();
+
+            Candidate candidate = candidateService.getcandidateByID(fileDTO.getCandidateID());
+            log.info("<--  createCandidateFile candidate.isPresent( {} -->", candidate.printCandidate());
+            file.setCandidate(candidate);
+
+            file.setContent_type(fileDTO.getDocumentAttachment().getContentType());
+// save bytes to database
+            file.setFile_data(null);
+
+            file.setFile_name(fileDTO.getDocumentAttachment().getOriginalFilename());
+            file.setFile_size(Long.toString(fileDTO.getDocumentAttachment().getSize()));
+            file.setCandidateDocumentType(fileDTO.getDocumentType());
+            file.setCreated(LocalDateTime.now());
+            log.info("New CandidateFile {}", file.printDocument());
+            // Local file storage
+
+            String docType = fileDTO.getDocumentType().toString();
+            String candidateIDNumber = candidate.getId_number();
+            String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+
+            log.info("fileDirectory/Folder: {}{}", fileDirectory, "CANDIDATE_FILES");
+            String directory = fileDirectory + "/CANDIDATE_FILES/" + candidateIDNumber + "/" + docType + "/" + formattedDate;
+
+
+            // Local storage
+
+            Path storageLocation = null;
+            try {
+                Path uploadPath = Path.of(directory);
+                if (Files.notExists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String fileName = fileDTO.getDocumentAttachment().getOriginalFilename();
+                storageLocation = uploadPath.resolve(fileName);
+                Files.copy(fileDTO.getDocumentAttachment().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
+                log.info("<--- File saved storageLocation: {} --->", storageLocation);
+            } catch (Exception e) {
+                log.info("<--  createCandidateFile Exception {} -->", e.getMessage());
             }
 
-            String fileName = fileDTO.getDocumentAttachment().getOriginalFilename();
-            storageLocation = uploadPath.resolve(fileName);
-            Files.copy(fileDTO.getDocumentAttachment().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
-            log.info("File saved storageLocation: {}", storageLocation);
-        } catch (Exception e) {
-            log.info("<--  createCandidateFile Exception {} -->", e.getMessage());
+            file.setDocumentLocation(storageLocation.toString());
+
+            candidate.AddDocument(file);
+            candidateService.save(candidate);
+            file = candidateFileService.saveCandidateFile(file);
+
+
+            if (file.getFileID() != null) {
+                // Google cloud storage
+                publishCandidateGoogleFileEvent(file.getFileID(), file);
+                return file;
+            } else throw new SaveFileException("Failed to create file ");
+
+        } catch (CandidateNotFoundException candidateNotFoundException) {
+            log.info("<--- createCandidateFile candidateNotFoundException message: {} --->", candidateNotFoundException.getMessage());
+            return null;
         }
-
-        file.setDocumentLocation(storageLocation.toString());
-
-        candidate.AddDocument(file);
-        candidateService.save(candidate);
-        file = candidateFileService.saveCandidateFile(file);
-
-
-        if (file.getFileID() != null) {
-            // Google cloud storage
-            publishCandidateGoogleFileEvent(file.getFileID(), file);
-            return file;
-        } else throw new SaveFileException("Failed to create file ");
-
 
     }
 
     public ClientFile createClientFile(ClientFileDTO fileDTO) {
-        log.info("<--  createClientFile  {} -->", fileDTO.printClientFileDTO());
-        ClientFile file = new ClientFile();
-        Client client = clientService.findClientByID(fileDTO.getClientID());
-        Vacancy vacancy = vacancyService.findById(fileDTO.getVacancyID());
-        log.info("<--  createClientFile client.isPresent( {} -->", client.printClient());
-        file.setClient(client);
-
-        file.setContent_type(fileDTO.getFileMultipart().getContentType());
-
-        file.setFile_data(null);
-        file.setVacancy(vacancy);
-        file.setFile_name(fileDTO.getFileMultipart().getOriginalFilename());
-        file.setFile_size(Long.toString(fileDTO.getFileMultipart().getSize()));
-        file.setClientDocumentType(fileDTO.getDocumentType());
-        file.setCreated(LocalDateTime.now());
-        log.info("New clientFile {}", file.printDocument());
-        vacancyService.save(vacancy);
-        // Local file storage
-
-        String docType = fileDTO.getDocumentType().toString();
-
-        String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
-
-        log.info("fileDirectory/Folder: {} {}", fileDirectory, "CLIENT_FILES");
-        String directory = fileDirectory + "/CLIENT_FILES/" + client.getName() + "/" + docType + "/" + formattedDate;
-
-
-        // Local storage
-
-        Path storageLocation = null;
         try {
-            Path uploadPath = Path.of(directory);
-            if (Files.notExists(uploadPath)) {
-                Files.createDirectories(uploadPath);
+            log.info("<--  createClientFile  {} -->", fileDTO.printClientFileDTO());
+            ClientFile file = new ClientFile();
+            Client client = clientService.findClientByID(fileDTO.getClientID());
+            try {
+                Vacancy vacancy = vacancyService.findById(fileDTO.getVacancyID());
+                log.info("<--  createClientFile client.isPresent( {} -->", client.printClient());
+                file.setClient(client);
+
+                file.setContent_type(fileDTO.getFileMultipart().getContentType());
+
+                file.setFile_data(null);
+                file.setVacancy(vacancy);
+                file.setFile_name(fileDTO.getFileMultipart().getOriginalFilename());
+                file.setFile_size(Long.toString(fileDTO.getFileMultipart().getSize()));
+                file.setClientDocumentType(fileDTO.getDocumentType());
+                file.setCreated(LocalDateTime.now());
+                log.info("New clientFile {}", file.printDocument());
+                vacancyService.save(vacancy);
+                // Local file storage
+
+                String docType = fileDTO.getDocumentType().toString();
+
+                String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+
+                log.info("fileDirectory/Folder: {} {}", fileDirectory, "CLIENT_FILES");
+                String directory = fileDirectory + "/CLIENT_FILES/" + client.getName() + "/" + docType + "/" + formattedDate;
+
+
+                // Local storage
+
+                Path storageLocation = null;
+                try {
+                    Path uploadPath = Path.of(directory);
+                    if (Files.notExists(uploadPath)) {
+                        Files.createDirectories(uploadPath);
+                    }
+
+                    String fileName = fileDTO.getFileMultipart().getOriginalFilename();
+                    storageLocation = uploadPath.resolve(fileName);
+                    Files.copy(fileDTO.getFileMultipart().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
+                    log.info("File saved storageLocation: {}", storageLocation);
+                } catch (Exception e) {
+                    log.info("<--  createClientFile Exception {} -->", e.getMessage());
+                }
+
+                file.setDocumentLocation(storageLocation.toString());
+
+
+                client.AddDocument(file);
+                clientService.saveExistingClient(client);
+                ClientFile savedClientFile = clientFileService.saveClientFile(file);
+
+                if (savedClientFile != null) {
+                    // Google cloud storage
+
+                    publishClientGoogleFileEvent(file.getFileID(), client.getName(), file);
+
+
+                    return file;
+
+                } else {
+                    log.info("<--  File not saved savedClientFile ==  null -->");
+                    return null;
+                }
+            } catch (VacancyException vacancyException) {
+                log.info("<--  createClientFile vacancyException {} -->", vacancyException.getMessage());
+                return null;
             }
 
-            String fileName = fileDTO.getFileMultipart().getOriginalFilename();
-            storageLocation = uploadPath.resolve(fileName);
-            Files.copy(fileDTO.getFileMultipart().getInputStream(), storageLocation, StandardCopyOption.REPLACE_EXISTING);
-            log.info("File saved storageLocation: {}", storageLocation);
-        } catch (Exception e) {
-            log.info("<--  createClientFile Exception {} -->", e.getMessage());
+        } catch (ClientNotFoundException clientNotFoundException) {
+            log.info("<--  createClientFile clientNotFoundException {} -->", clientNotFoundException.getMessage());
+            return null;
         }
-
-        file.setDocumentLocation(storageLocation.toString());
-
-
-        client.AddDocument(file);
-        clientService.saveExistingClient(client);
-        ClientFile savedClientFile = clientFileService.saveClientFile(file);
-
-        if (savedClientFile != null) {
-            // Google cloud storage
-
-            publishClientGoogleFileEvent(file.getFileID(), client.getName(), file);
-
-
-            return file;
-
-        } else throw new SaveFileException("Failed to create file ");
-
     }
 
     public String getDocumentLocation(String term) {
@@ -2031,7 +2067,6 @@ public class RecruitmentZoneService {
                 return filesResponse;
             } else throw new FileContentException("Error trying to find term: " + term);
         } catch (FileContentException e) {
-            //model.addAttribute("searchFileContentResponse", e.getMessage());
             log.info("<--  getDocumentLocation FileContentException {} -->", e.getMessage());
         }
         return null;
@@ -2057,17 +2092,14 @@ public class RecruitmentZoneService {
 
     public void searchFiles(Model model, SearchDocumentsDTO searchDocumentsDTO) {
         log.info("<--  searchFiles searchDocumentsDTO.term {} -->", searchDocumentsDTO.getTerm());
-        try {
-            List<String> returnList = candidateFileService.searchFiles(searchDocumentsDTO.getTerm());
-            if (!returnList.isEmpty()) {
-                model.addAttribute("resultCount", returnList.size());
-                model.addAttribute("resultList", returnList);
-                model.addAttribute("term", searchDocumentsDTO);
-                log.info("<--  searchFiles returnList size {} -->", returnList.size());
-            }
-        } catch (NoResultsFoundException noResultsFoundException) {
-            log.info("<--  searchFiles returnList size {} -->", noResultsFoundException.getMessage());
-            model.addAttribute("searchFilesResponse", noResultsFoundException.getMessage());
+        List<String> returnList = candidateFileService.searchFiles(searchDocumentsDTO.getTerm());
+        if (!returnList.isEmpty()) {
+            model.addAttribute("resultCount", returnList.size());
+            model.addAttribute("resultList", returnList);
+            model.addAttribute("term", searchDocumentsDTO);
+            log.info("<--  searchFiles returnList size {} -->", returnList.size());
+        } else {
+            log.info("<--  searchFiles returnList is Empty -->");
         }
     }
 
@@ -2204,16 +2236,13 @@ public class RecruitmentZoneService {
         try {
             Client client = clientService.findClientByID(clientID);
             List<ContactPerson> contactPersonList = client.getContactPeople();
-            if (contactPersonList != null) {
-                log.info("<-- findClientContacts contactPersonList.size() = {} -->", contactPersonList.size());
-                model.addAttribute("clientID", client.getClientID());
-                model.addAttribute("contactPersonList", contactPersonList);
-                log.info("<--  findClientContacts contactPersonList {} -->", contactPersonList.size());
-            } else throw new ContactNotFoundException("No contacts found" + client.getClientID());
-
-        } catch (ContactNotFoundException contactNotFoundException) {
-            model.addAttribute("findClientContactsResponse", contactNotFoundException.getMessage());
-            log.info("<--  findClientContacts contactNotFoundException {} -->", contactNotFoundException.getMessage());
+            log.info("<-- findClientContacts contactPersonList.size() = {} -->", contactPersonList.size());
+            model.addAttribute("clientID", client.getClientID());
+            model.addAttribute("contactPersonList", contactPersonList);
+            log.info("<--  findClientContacts contactPersonList {} -->", contactPersonList.size());
+        } catch (ClientNotFoundException clientNotFoundException) {
+            model.addAttribute("findClientContactsResponse", clientNotFoundException.getMessage());
+            log.info("<--  findClientContacts contactNotFoundException {} -->", clientNotFoundException.getMessage());
         }
     }
 
@@ -2358,7 +2387,7 @@ public class RecruitmentZoneService {
         try {
             Client c = clientService.findClientByID(client.getClientID());
             if (c != null) {
-                boolean valChange = false;
+                var valChange = false;
                 if (!client.getName().equalsIgnoreCase(c.getName())) {
                     c.setName(client.getName());
                     valChange = true;
@@ -2382,10 +2411,10 @@ public class RecruitmentZoneService {
                     model.addAttribute("client", c);
                     model.addAttribute("saveUpdatedClientResponse", updateClientResponse);
                 }
-            } else throw new SaveUpdatedClientException("Failed to save Updated client " + client.getClientID());
-        } catch (SaveUpdatedClientException saveUpdatedClientException) {
-            log.info("Exception {}", saveUpdatedClientException.getMessage());
-            model.addAttribute("saveUpdatedClientResponse", saveUpdatedClientException.getMessage());
+            }
+        } catch (ClientNotFoundException clientNotFoundException) {
+            log.info("Exception {}", clientNotFoundException.getMessage());
+            model.addAttribute("saveUpdatedClientResponse", clientNotFoundException.getMessage());
         }
     }
 

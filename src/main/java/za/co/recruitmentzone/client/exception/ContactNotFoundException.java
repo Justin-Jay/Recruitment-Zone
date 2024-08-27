@@ -4,12 +4,11 @@ import za.co.recruitmentzone.exception.RzoneException;
 
 public class ContactNotFoundException extends RzoneException {
 
-    public ContactNotFoundException(String message) {
-        super(message);
+    public ContactNotFoundException(String failureReason) {
+        super(failureReason);
     }
 
-    public ContactNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+    public ContactNotFoundException(String failureReason, Throwable cause) {
+        super(failureReason, cause);
     }
-
 }

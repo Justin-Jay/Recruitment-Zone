@@ -6,7 +6,9 @@
                 <div class="row-cols-8">
                     <div th:insert="~{fragments/layout/response-messages :: successMessage(${applicationOutcome})}"></div>
                     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${invalidFileException})}"></div>
+                    <div th:insert="~{fragments/layout/response-messages :: failureMessage(${submitCandidateApplicationResponse})}"></div>
                     <div th:insert="~{fragments/layout/response-messages :: failureMessage(${internalServerError})}"></div>
+
 
 
                 </div>

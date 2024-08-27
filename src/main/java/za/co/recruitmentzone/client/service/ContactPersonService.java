@@ -1,8 +1,13 @@
 package za.co.recruitmentzone.client.service;
 
 import org.springframework.stereotype.Component;
+import za.co.recruitmentzone.client.entity.Client;
 import za.co.recruitmentzone.client.entity.ContactPerson;
+import za.co.recruitmentzone.client.exception.ClientNotFoundException;
+import za.co.recruitmentzone.client.exception.ContactNotFoundException;
 import za.co.recruitmentzone.client.repository.ContactPersonRepository;
+
+import java.util.Optional;
 
 @Component
 public class ContactPersonService {
@@ -17,7 +22,7 @@ public class ContactPersonService {
         return contactPersonRepository.save(contactPerson);
     }
 
-    public ContactPerson findByID(long id){
-        return contactPersonRepository.findById(id).orElseThrow();
+    public ContactPerson findByID(long id) throws ContactNotFoundException {
+        return contactPersonRepository.findById(id).orElseThrow(()-> new ContactNotFoundException("Client not found" + id) );
     }
 }

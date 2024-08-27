@@ -61,8 +61,8 @@ public class StorageService {
             filename = GSTORAGE_PRE + BUCKET_NAME + filePathSplit + uploadedFile.getName();
             log.info("Google Cloud Storage File name: {}", filename);
 
-        } catch (CandidateNotFoundException | IOException candidateNotFoundException) {
-            return "File upload failed: " + candidateNotFoundException.getMessage();
+        } catch (Exception e) {
+            return "File upload failed: " + e.getMessage();
         }
         return filename;
     }
@@ -91,8 +91,8 @@ public class StorageService {
             filename = GSTORAGE_PRE + BUCKET_NAME + filePathSplit + uploadedFile.getName();
             log.info("Google Cloud Storage File name: {}", filename);
 
-        } catch (CandidateNotFoundException | IOException candidateNotFoundException) {
-            return "File upload failed: " + candidateNotFoundException.getMessage();
+        } catch (Exception e) {
+            return "File upload failed: " + e.getMessage();
         }
         return filename;
     }

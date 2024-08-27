@@ -41,7 +41,7 @@ public class BlogService {
         return blogRepository.save(blog);
     }
 
-    public Blog findById(Long id){
+    public Blog findById(Long id) throws BlogNotFoundException {
         Optional<Blog> blog = blogRepository.findById(id);
         return blog.orElseThrow(()-> new BlogNotFoundException("Blog not found: "+id));    }
 

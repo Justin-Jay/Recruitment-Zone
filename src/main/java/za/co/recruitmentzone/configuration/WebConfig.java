@@ -26,4 +26,3 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResolver(new EncodedResourceResolver());
     }
 }
-//
