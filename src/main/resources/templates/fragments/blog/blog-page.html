@@ -98,7 +98,7 @@
                 <div class="container-fluid" >
                     <h5>Blog Archive</h5>
                     <ul th:each="oldBlog : ${existingBlogs}">
-                      <li  >
+                      <li>
                           <a>
                               <form action="#" th:action="@{/Blog/view-home-blog}" th:method="post">
                                   <!-- Hidden input field to include the vacancyID in the POST request -->

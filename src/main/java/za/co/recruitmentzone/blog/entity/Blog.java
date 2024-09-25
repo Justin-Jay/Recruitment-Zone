@@ -18,6 +18,7 @@ public class Blog implements Serializable {
     private Long blogID;
     private String blog_title;
     private String blog_description;
+    
     @Enumerated(EnumType.STRING)
     private BlogStatus status;
     @Column(name = "body", length = 65535)

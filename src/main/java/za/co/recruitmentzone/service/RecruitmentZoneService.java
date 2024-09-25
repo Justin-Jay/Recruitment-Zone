@@ -731,6 +731,14 @@ public class RecruitmentZoneService {
 
         }
     }
+    public Application createCandidateApplication(NewApplicationDTO newApplicationDTO) {
+        log.info("<-- createCandidateApplication  newApplicationDTO: {} -->", newApplicationDTO.printNewApplicationDTO());
+        Application application = createApplication(newApplicationDTO);
+        if (application != null) {
+            return application;
+        }
+        return null;
+    }
 
     public Application createApplication(NewApplicationDTO newApplicationDTO) {
         log.info("<-- createApplication newApplicationDTO {} -->", newApplicationDTO.printNewApplicationDTO());

@@ -1,6 +1,6 @@
 package za.co.recruitmentzone.exception;
 
-public class RzoneException extends Exception {
+public class RzoneException extends RuntimeException {
 
     public RzoneException(String failureReason) {
         super(failureReason);
